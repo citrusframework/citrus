@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.StopTimerAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StopTimerTest extends AbstractXmlActionTest {
 
@@ -31,16 +31,16 @@ public class StopTimerTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "StopTimerTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), StopTimerAction.class);
+        Assertions.assertEquals("StopTimerTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(StopTimerAction.class, result.getTestAction(0).getClass());
 
         StopTimerAction action = (StopTimerAction) result.getTestAction(0);
-        Assert.assertNull(action.getTimerId());
+        Assertions.assertNull(action.getTimerId());
 
         action = (StopTimerAction) result.getTestAction(1);
-        Assert.assertEquals(action.getTimerId(), "timer#1");
+        Assertions.assertEquals("timer#1", action.getTimerId());
     }
 }

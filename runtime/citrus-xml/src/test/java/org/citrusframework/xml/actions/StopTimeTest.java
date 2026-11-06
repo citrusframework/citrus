@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.StopTimeAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StopTimeTest extends AbstractXmlActionTest {
 
@@ -31,16 +31,16 @@ public class StopTimeTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "StopTimeTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), StopTimeAction.class);
+        Assertions.assertEquals("StopTimeTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(StopTimeAction.class, result.getTestAction(0).getClass());
 
         StopTimeAction action = (StopTimeAction) result.getTestAction(0);
-        Assert.assertEquals(action.getId(), "CITRUS_TIMELINE");
+        Assertions.assertEquals("CITRUS_TIMELINE", action.getId());
 
         action = (StopTimeAction) result.getTestAction(1);
-        Assert.assertEquals(action.getId(), "timer#1");
+        Assertions.assertEquals("timer#1", action.getId());
     }
 }

@@ -31,9 +31,11 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 public class TestCaseSchemaTest {
@@ -46,12 +48,12 @@ public class TestCaseSchemaTest {
 
     @Test
     public void shouldKeepSchemaCopiesIdentical() throws IOException, URISyntaxException {
-        Assert.assertEquals(readResource(findVersionedSchema()), readResource(SCHEMA));
+        Assertions.assertArrayEquals(readResource(SCHEMA), readResource(findVersionedSchema()));
     }
 
     @Test
     public void shouldCompileVersionedSchema() throws SAXException, IOException, URISyntaxException {
-        Assert.assertNotNull(loadSchema(findVersionedSchema()));
+        Assertions.assertNotNull(loadSchema(findVersionedSchema()));
     }
 
     @Test
@@ -59,13 +61,13 @@ public class TestCaseSchemaTest {
         validate(loadSchema(SCHEMA), SAMPLE);
     }
 
-    @Test(dataProvider = "xmlTestCases")
+    @ParameterizedTest
+    @MethodSource("xmlTestCases")
     public void shouldValidateXmlTestCase(String testCase) throws SAXException, IOException {
         validate(loadSchema(SCHEMA), testCase);
     }
 
-    @DataProvider
-    public Object[][] xmlTestCases() throws IOException, URISyntaxException {
+    static Stream<Arguments> xmlTestCases() throws IOException, URISyntaxException {
         // test-classes/org/citrusframework/xml/schema/schema-sample.xml
         Path root = Path.of(getResource(SAMPLE).toURI()).getParent().getParent().getParent().getParent().getParent();
         try (Stream<Path> files = Files.walk(root.resolve("org/citrusframework/xml"))) {
@@ -74,8 +76,8 @@ public class TestCaseSchemaTest {
                     .map(file -> root.relativize(file).toString().replace('\\', '/'))
                     .sorted()
                     .toList();
-            Assert.assertFalse(testCases.isEmpty());
-            return testCases.stream().map(testCase -> new Object[] { testCase }).toArray(Object[][]::new);
+            Assertions.assertFalse(testCases.isEmpty());
+            return testCases.stream().map(Arguments::of);
         }
     }
 
@@ -91,7 +93,7 @@ public class TestCaseSchemaTest {
                     .filter(name -> VERSIONED_SCHEMA_PATTERN.matcher(name).matches())
                     .sorted()
                     .toList();
-            Assert.assertEquals(candidates.size(), 1,
+            Assertions.assertEquals(1, candidates.size(),
                     "Expected exactly one versioned testcase schema, found: " + candidates);
             return SCHEMA_PATH + candidates.get(0);
         }
@@ -127,9 +129,9 @@ public class TestCaseSchemaTest {
         }
     }
 
-    private URL getResource(String path) {
-        URL resource = getClass().getClassLoader().getResource(path);
-        Assert.assertNotNull(resource, "Missing classpath resource: " + path);
+    private static URL getResource(String path) {
+        URL resource = TestCaseSchemaTest.class.getClassLoader().getResource(path);
+        Assertions.assertNotNull(resource, "Missing classpath resource: " + path);
         return resource;
     }
 }

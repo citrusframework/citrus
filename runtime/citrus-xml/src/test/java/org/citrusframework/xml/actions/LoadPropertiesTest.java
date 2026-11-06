@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.LoadPropertiesAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LoadPropertiesTest extends AbstractXmlActionTest {
 
@@ -31,15 +31,15 @@ public class LoadPropertiesTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "LoadPropertiesTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), LoadPropertiesAction.class);
+        Assertions.assertEquals("LoadPropertiesTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(LoadPropertiesAction.class, result.getTestAction(0).getClass());
 
         LoadPropertiesAction action = (LoadPropertiesAction) result.getTestAction(0);
-        Assert.assertEquals(action.getFilePath(), "classpath:org/citrusframework/xml/load.properties");
+        Assertions.assertEquals("classpath:org/citrusframework/xml/load.properties", action.getFilePath());
 
-        Assert.assertEquals(context.getVariable("property.load.test"), "Citrus rocks!");
+        Assertions.assertEquals("Citrus rocks!", context.getVariable("property.load.test"));
     }
 }

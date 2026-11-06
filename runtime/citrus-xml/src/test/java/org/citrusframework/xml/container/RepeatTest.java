@@ -23,8 +23,8 @@ import org.citrusframework.api.container.IterationCountConditionExpression;
 import org.citrusframework.container.RepeatUntilTrue;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.AbstractXmlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RepeatTest extends AbstractXmlActionTest {
 
@@ -34,42 +34,42 @@ public class RepeatTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "RepeatTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
+        Assertions.assertEquals("RepeatTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), RepeatUntilTrue.class);
+        Assertions.assertEquals(RepeatUntilTrue.class, result.getTestAction(0).getClass());
 
         RepeatUntilTrue action = (RepeatUntilTrue) result.getTestAction(0);
-        Assert.assertEquals(action.getCondition(), "i lt 3");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getActionCount(), 1);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
+        Assertions.assertEquals("i lt 3", action.getCondition());
+        Assertions.assertEquals("i", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(1, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
 
         action = (RepeatUntilTrue) result.getTestAction(1);
-        Assert.assertEquals(action.getCondition(), "index lt= 2");
-        Assert.assertEquals(action.getIndexName(), "index");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getActionCount(), 1);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
+        Assertions.assertEquals("index lt= 2", action.getCondition());
+        Assertions.assertEquals("index", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(1, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
 
         action = (RepeatUntilTrue) result.getTestAction(2);
-        Assert.assertEquals(action.getCondition(), "i lt= 10");
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getActionCount(), 2);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
-        Assert.assertEquals(action.getTestAction(1).getClass(), EchoAction.class);
+        Assertions.assertEquals("i lt= 10", action.getCondition());
+        Assertions.assertEquals("i", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(2, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(1).getClass());
 
         action = (RepeatUntilTrue) result.getTestAction(3);
-        Assert.assertNull(action.getCondition());
-        Assert.assertTrue(action.getConditionExpression() instanceof IterationCountConditionExpression);
-        Assert.assertEquals(((IterationCountConditionExpression) action.getConditionExpression()).getNumberOfIterations(), 5);
-        Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getStart(), 1);
-        Assert.assertEquals(action.getActionCount(), 1);
-        Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
+        Assertions.assertNull(action.getCondition());
+        Assertions.assertTrue(action.getConditionExpression() instanceof IterationCountConditionExpression);
+        Assertions.assertEquals(5, ((IterationCountConditionExpression) action.getConditionExpression()).getNumberOfIterations());
+        Assertions.assertEquals("i", action.getIndexName());
+        Assertions.assertEquals(1, action.getStart());
+        Assertions.assertEquals(1, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getTestAction(0).getClass());
     }
 }

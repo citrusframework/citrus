@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BeansTest extends AbstractXmlActionTest {
 
@@ -31,19 +31,19 @@ public class BeansTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "BeansTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
+        Assertions.assertEquals("BeansTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("myValidator"));
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("myValidator", DefaultTextEqualsMessageValidator.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("myValidator"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("myValidator", DefaultTextEqualsMessageValidator.class));
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("myBean"));
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("myBean", FooBean.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("myBean"));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("myBean", FooBean.class));
 
         FooBean fooBean = context.getReferenceResolver().resolve("myBean", FooBean.class);
-        Assert.assertEquals(fooBean.getMessage(), "Hello Citrus!");
-        Assert.assertEquals(fooBean.getCount(), 42);
+        Assertions.assertEquals("Hello Citrus!", fooBean.getMessage());
+        Assertions.assertEquals(42, fooBean.getCount());
     }
 }

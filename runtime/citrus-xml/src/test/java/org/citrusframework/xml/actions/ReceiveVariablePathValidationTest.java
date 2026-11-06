@@ -20,8 +20,8 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.context.path.DynamicPathExpressionValidationContext;
 import org.citrusframework.validation.context.xml.XpathMessageValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Reproduction test for GitHub issue #676.
@@ -36,13 +36,13 @@ public class ReceiveVariablePathValidationTest {
     public void shouldCreateDynamicValidationContextForVariablePathExpression() {
         ReceiveMessageAction action = createReceiveAction("${VERSION_PATH}");
 
-        Assert.assertTrue(action.getValidationContexts()
+        Assertions.assertTrue(action.getValidationContexts()
                 .stream()
                 .anyMatch(DynamicPathExpressionValidationContext.class::isInstance));
-        Assert.assertFalse(action.getValidationContexts()
+        Assertions.assertFalse(action.getValidationContexts()
                 .stream()
                 .anyMatch(JsonPathMessageValidationContext.class::isInstance));
-        Assert.assertFalse(action.getValidationContexts()
+        Assertions.assertFalse(action.getValidationContexts()
                 .stream()
                 .anyMatch(XpathMessageValidationContext.class::isInstance));
     }
@@ -51,10 +51,10 @@ public class ReceiveVariablePathValidationTest {
     public void shouldCreateXpathValidationContextForStaticPathExpression() {
         ReceiveMessageAction action = createReceiveAction("/root/version/@number");
 
-        Assert.assertTrue(action.getValidationContexts()
+        Assertions.assertTrue(action.getValidationContexts()
                 .stream()
                 .anyMatch(XpathMessageValidationContext.class::isInstance));
-        Assert.assertFalse(action.getValidationContexts()
+        Assertions.assertFalse(action.getValidationContexts()
                 .stream()
                 .anyMatch(JsonPathMessageValidationContext.class::isInstance));
     }
@@ -63,10 +63,10 @@ public class ReceiveVariablePathValidationTest {
     public void shouldCreateJsonPathValidationContextForStaticJsonPathExpression() {
         ReceiveMessageAction action = createReceiveAction("$.version.number");
 
-        Assert.assertTrue(action.getValidationContexts()
+        Assertions.assertTrue(action.getValidationContexts()
                 .stream()
                 .anyMatch(JsonPathMessageValidationContext.class::isInstance));
-        Assert.assertFalse(action.getValidationContexts()
+        Assertions.assertFalse(action.getValidationContexts()
                 .stream()
                 .anyMatch(XpathMessageValidationContext.class::isInstance));
     }
