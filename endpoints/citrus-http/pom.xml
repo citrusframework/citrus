@@ -14,6 +14,21 @@
 
   <build>
     <plugins>
+      <!-- Share only the evaluation fixture with SOAP tests; production artifacts are unchanged. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>vertx-evaluation-fixture</id>
+            <goals><goal>test-jar</goal></goals>
+            <configuration>
+              <classifier>vertx-evaluation</classifier>
+              <includes><include>org/citrusframework/http/vertx/**</include></includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxb2-maven-plugin</artifactId>
@@ -107,6 +122,13 @@
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
+    </dependency>
+
+    <!-- Test-only Vert.x HTTP server evaluation prototype (Approach C): no production dependency on Vert.x -->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>

@@ -1,0 +1,270 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file:/Users/asuruceanu/.m2/wrapper/dists/apache-maven-3.9.8-bin/77ob9fsoslr05hv92g6n8167dn/apache-maven-3.9.8/lib/jansi-2.4.1.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/Users/asuruceanu/.m2/wrapper/dists/apache-maven-3.9.8-bin/77ob9fsoslr05hv92g6n8167dn/apache-maven-3.9.8/lib/guava-33.2.1-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] gitflow-incremental-builder is disabled.
+[INFO] 
+[INFO] ------------------< org.citrusframework:citrus-http >-------------------
+[INFO] Building Citrus :: Endpoints :: HTTP 5.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jaxb2:4.1.0:xjc (default) @ citrus-http ---
+[INFO] No changes detected in schema or binding files - skipping JAXB generation.
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ citrus-http ---
+[INFO] Copying 20 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ citrus-http ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ citrus-http ---
+[INFO] Copying 59 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ citrus-http ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 137 source files with javac [debug release 17] to target/test-classes
+[WARNING] /Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpTls.java:[56,17] setJdkSslEngineOptions(io.vertx.core.net.JdkSSLEngineOptions) in io.vertx.core.http.HttpServerOptions has been deprecated
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ citrus-http ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.citrusframework.http.vertx.VertxHttpInterceptorTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.359 s -- in org.citrusframework.http.vertx.VertxHttpInterceptorTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ citrus-http ---
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ citrus-http ---
+[INFO] 
+[INFO] --- javadoc:3.12.0:jar (attach-javadocs) @ citrus-http ---
+[INFO] Building jar: /Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-http/target/citrus-http-5.1.0-SNAPSHOT-javadoc.jar
+[INFO] 
+[INFO] --- jar:3.5.1:test-jar (vertx-evaluation-fixture) @ citrus-http ---
+[INFO] Building jar: /Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-http/target/citrus-http-5.1.0-SNAPSHOT-vertx-evaluation.jar
+[INFO] 
+[INFO] --- failsafe:3.5.6:integration-test (integration-tests) @ citrus-http ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.citrusframework.http.integration.VertxHttpInterceptorIT
+2026-10-14 23:01:18.935  INFO 16297 --- [           main] g.config.xml.SchemaRepositoryParser : Found schema repository bean definition parser class org.citrusframework.xml.config.xml.XsdSchemaRepositoryParser from resource META-INF/citrus/schema-repository/parser/xml
+2026-10-14 23:01:18.938  INFO 16297 --- [           main] work.spring.config.xml.SchemaParser : Found schema bean definition parser class org.citrusframework.xml.config.xml.XsdSchemaParser from resource META-INF/citrus/schema/parser/xsd
+2026-10-14 23:01:18.939  INFO 16297 --- [           main] g.config.xml.SchemaRepositoryParser : Found schema repository bean definition parser class org.citrusframework.json.config.xml.JsonSchemaRepositoryParser from resource META-INF/citrus/schema-repository/parser/json
+2026-10-14 23:01:18.939  INFO 16297 --- [           main] work.spring.config.xml.SchemaParser : Found schema bean definition parser class org.citrusframework.json.config.xml.JsonSchemaParser from resource META-INF/citrus/schema/parser/json
+2026-10-14 23:01:19.083  WARN 16297 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusSpringConfig' of type [org.citrusframework.spring.config.CitrusSpringConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [citrusComponentInitializer] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-10-14 23:01:19.087  WARN 16297 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusReferenceResolver' of type [org.citrusframework.spring.context.SpringBeanReferenceResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [citrusComponentInitializer]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-10-14 23:01:19.339  WARN 16297 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalDTD property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+2026-10-14 23:01:19.340  WARN 16297 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalSchema property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+2026-10-14 23:01:19.511  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'helloHttpServer-servlet'
+2026-10-14 23:01:19.640  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 129 ms
+2026-10-14 23:01:19.647  INFO 16297 --- [           main] rusframework.http.server.HttpServer : Started server: helloHttpServer
+2026-10-14 23:01:19.653  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'helloHttpServerWithRedirect-servlet'
+2026-10-14 23:01:19.674  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 21 ms
+2026-10-14 23:01:19.675  INFO 16297 --- [           main] rusframework.http.server.HttpServer : Started server: helloHttpServerWithRedirect
+2026-10-14 23:01:19.680  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'echoHttpServer-servlet'
+2026-10-14 23:01:19.704  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 24 ms
+2026-10-14 23:01:19.704  INFO 16297 --- [           main] rusframework.http.server.HttpServer : Started server: echoHttpServer
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.apache.activemq.artemis.nativo.jlibaio.LibaioContext in an unnamed module (file:/Users/asuruceanu/.m2/repository/org/apache/activemq/activemq-artemis-native/2.0.0/activemq-artemis-native-2.0.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-10-14 23:01:19.845  WARN 16297 --- [           main] apache.activemq.artemis.core.server : AMQ222018: AIO was not located on this platform, it will fall back to using pure Java NIO. If your platform is Linux, install LibAIO to enable the AIO journal
+2026-10-14 23:01:19.845  WARN 16297 --- [           main] apache.activemq.artemis.core.server : AMQ222269: Please use a fixed value for "journal-pool-files". Default changed per https://issues.apache.org/jira/browse/ARTEMIS-1628
+2026-10-14 23:01:20.007  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'httpServerJms-servlet'
+2026-10-14 23:01:20.034  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 27 ms
+2026-10-14 23:01:20.035  INFO 16297 --- [           main] rusframework.http.server.HttpServer : Started server: httpServerJms
+2026-10-14 23:01:20.039  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'httpStandaloneServer-servlet'
+2026-10-14 23:01:20.058  INFO 16297 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 19 ms
+2026-10-14 23:01:20.059  INFO 16297 --- [           main] rusframework.http.server.HttpServer : Started server: httpStandaloneServer
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter :        .__  __                       
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter : _/ ___\|  \   __\_  __ \  |  \/  ___/
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter : \  \___|  ||  |  |  | \/  |  /\___ \ 
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter :  \___  >__||__|  |__|  |____//____  >
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter :      \/                           \/
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.069  INFO 16297 --- [           main] rusframework.report.LoggingReporter : C I T R U S  T E S T S  5.1.0-SNAPSHOT
+2026-10-14 23:01:20.070  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.070  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+2026-10-14 23:01:20.070  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.118  WARN 16297 --- [           main] dns.DnsServerAddressStreamProviders : Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+2026-10-14 23:01:20.143  INFO 16297 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxInterceptors
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/asuruceanu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-14 23:01:20.507  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.507  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:20.507  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxHttpInterceptorIT.interceptorFiresForCustomHandlerTraffic (org.citrusframework.http.integration)
+2026-10-14 23:01:20.508  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:20.508  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.jctools.util.UnsafeAccess (file:/Users/asuruceanu/.m2/repository/org/jctools/jctools-core/4.0.6/jctools-core-4.0.6.jar)
+WARNING: Please consider reporting this to the maintainers of class org.jctools.util.UnsafeAccess
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+2026-10-14 23:01:20.619  WARN 16297 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222165: No Dead Letter Address configured for queue JMS.Citrus.Http.Request.Forward in AddressSettings
+2026-10-14 23:01:20.619  WARN 16297 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222166: No Expiry Address configured for queue JMS.Citrus.Http.Request.Forward in AddressSettings
+2026-10-14 23:01:20.652  WARN 16297 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222165: No Dead Letter Address configured for queue JMS.Citrus.Http.Request.Ack in AddressSettings
+2026-10-14 23:01:20.652  WARN 16297 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222166: No Expiry Address configured for queue JMS.Citrus.Http.Request.Ack in AddressSettings
+2026-10-14 23:01:20.701  INFO 16297 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 38cb4b2c-7381-4774-8349-48e3432c3a0e
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ GET http://127.0.0.1:52316/custom
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain;charset=UTF-8
+    │ Content-Length:0
+    └────────────────────────────────────────────────────────
+
+2026-10-14 23:01:20.759  INFO 16297 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ c502f66e-0862-4df3-8619-5e474ee7660b
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ X-Wrapped:yes
+    │ Content-Type:text/plain;charset=UTF-8
+    │ Vary:Accept-Encoding
+    │ 
+    │ custom
+    └────────────────────────────────────────────────────────
+
+2026-10-14 23:01:20.762  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ http:send-request
+2026-10-14 23:01:20.765  INFO 16297 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 23:01:20.779  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 23:01:20.781  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.781  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:20.782  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxHttpInterceptorIT.interceptorFiresForCustomHandlerTraffic
+2026-10-14 23:01:20.782  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:20.782  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.788  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.788  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:20.788  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxHttpInterceptorIT.scopedInterceptorFiresForAdapterTraffic (org.citrusframework.http.integration)
+2026-10-14 23:01:20.788  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:20.788  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:20.831  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 23:01:20.832  INFO 16297 --- [      Thread-50] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxInterceptors' (timeout: 5000ms)
+2026-10-14 23:01:20.834  INFO 16297 --- [      Thread-49] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ c78c9ddb-902f-41d6-a38d-174780bb91f8
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ POST http://127.0.0.1:52316/api/orders
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain;charset=UTF-8
+    │ Content-Length:5
+    │ 
+    │ order
+    └────────────────────────────────────────────────────────
+
+2026-10-14 23:01:21.344  INFO 16297 --- [      Thread-49] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 36594267-d299-4622-abe9-743aea546df0
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ X-Wrapped:yes
+    │ Content-Type:text/plain;charset=UTF-8
+    │ Vary:Accept-Encoding
+    │ 
+    │ stored
+    └────────────────────────────────────────────────────────
+
+2026-10-14 23:01:21.347  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 23:01:21.347  INFO 16297 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 23:01:21.349  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 23:01:21.350  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.350  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:21.350  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxHttpInterceptorIT.scopedInterceptorFiresForAdapterTraffic
+2026-10-14 23:01:21.350  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:21.350  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.356  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.356  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:21.356  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxHttpInterceptorIT.scopedInterceptorSkipsOtherPaths (org.citrusframework.http.integration)
+2026-10-14 23:01:21.356  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:21.356  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.396  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 23:01:21.397  INFO 16297 --- [      Thread-52] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxInterceptors' (timeout: 5000ms)
+2026-10-14 23:01:21.398  INFO 16297 --- [      Thread-51] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ c1201558-6301-40bc-91c3-cd999613bb26
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ POST http://127.0.0.1:52316/other
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain;charset=UTF-8
+    │ Content-Length:5
+    │ 
+    │ order
+    └────────────────────────────────────────────────────────
+
+2026-10-14 23:01:21.907  INFO 16297 --- [      Thread-51] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ fb243823-5e9e-43e4-845f-6798e35811c8
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain;charset=UTF-8
+    │ Vary:Accept-Encoding
+    │ 
+    │ stored
+    └────────────────────────────────────────────────────────
+
+2026-10-14 23:01:21.908  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 23:01:21.909  INFO 16297 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 23:01:21.909  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 23:01:21.910  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.910  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:21.910  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxHttpInterceptorIT.scopedInterceptorSkipsOtherPaths
+2026-10-14 23:01:21.910  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 23:01:21.910  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.923  INFO 16297 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxInterceptors
+2026-10-14 23:01:21.933  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.936  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.936  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ✔ CITRUS TEST RESULTS
+2026-10-14 23:01:21.936  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.937  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS ( 274ms) VertxHttpInterceptorIT.interceptorFiresForCustomHandlerTraffic
+2026-10-14 23:01:21.937  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS ( 562ms) VertxHttpInterceptorIT.scopedInterceptorFiresForAdapterTraffic
+2026-10-14 23:01:21.937  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS ( 553ms) VertxHttpInterceptorIT.scopedInterceptorSkipsOtherPaths
+2026-10-14 23:01:21.937  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.937  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   TOTAL:    3
+2026-10-14 23:01:21.937  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   PASSED:   3 (100.0%)
+2026-10-14 23:01:21.937  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   FAILED:   0 (0.0%)
+2026-10-14 23:01:21.938  INFO 16297 --- [           main] rusframework.report.LoggingReporter :   TIME:     1389 ms
+2026-10-14 23:01:21.938  INFO 16297 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 23:01:21.938  INFO 16297 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.576 s -- in org.citrusframework.http.integration.VertxHttpInterceptorIT
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.6:verify (integration-tests) @ citrus-http ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.513 s
+[INFO] Finished at: 2026-10-14T23:01:22+03:00
+[INFO] ------------------------------------------------------------------------
+EXIT=0

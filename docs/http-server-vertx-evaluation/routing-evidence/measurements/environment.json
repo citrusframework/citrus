@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-14T11:52:46.965805+00:00",
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)\n",
+  "citrusCommit": "e0a55e10e6de5617c6046f1e6b8f40eb2b75fdf0",
+  "gitStatus": " M pom.xml\n?? src/test/java/org/citrusframework/http/integration/VertxHttpServerRoundtripIT.java\n?? src/test/java/org/citrusframework/http/vertx/\n?? src/test/resources/vertx-evaluation/\n",
+  "javaHome": "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home",
+  "jvmFlags": [
+    "-Xms128m",
+    "-Xmx256m",
+    "-XX:+UseG1GC"
+  ],
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "logicalCpus": 14,
+  "runsPerEnginePerFixture": 5,
+  "clients": 8,
+  "warmupPerProcess": 100,
+  "requestsPerProcess": 1000,
+  "childTimeoutSeconds": 120,
+  "jarCount": 157,
+  "jarBytes": 75122867,
+  "hardware": "hw.model: Mac16,5\nhw.memsize: 38654705664\nmachdep.cpu.brand_string: Apple M4 Max\n"
+}

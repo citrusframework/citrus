@@ -170,6 +170,19 @@
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.citrusframework</groupId>
+      <artifactId>citrus-http</artifactId>
+      <version>${project.version}</version>
+      <classifier>vertx-evaluation</classifier>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-jms</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
