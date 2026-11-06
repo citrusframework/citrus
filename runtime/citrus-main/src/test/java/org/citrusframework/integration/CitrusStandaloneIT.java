@@ -33,35 +33,43 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @since 2.2
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { CitrusSpringConfig.class, CitrusStandaloneIT.Config.class } )
-public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests implements TestActionSupport {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class CitrusStandaloneIT implements TestActionSupport {
 
     private Citrus citrus;
 
     private TestCaseRunner test;
 
     @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
     private DirectEndpoint endpoint;
 
-    @BeforeClass
+    @BeforeAll
     public void beforeAll() {
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void start() {
         TestContext context = citrus.getCitrusContext().createTestContext();
         test = new DefaultTestCaseRunner(context);
@@ -69,7 +77,7 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests impleme
         test.start();
     }
 
-    @AfterMethod
+    @AfterEach
     public void stop() {
         test.stop();
     }
@@ -147,7 +155,7 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests impleme
                 @Override
                 public void validateMessage(Message receivedMessage, Message controlMessage,
                                             TestContext context, ValidationContext validationContext) {
-                    Assert.assertEquals(controlMessage.getPayload(String.class), receivedMessage.getPayload(String.class), "Validation failed - " +
+                    Assertions.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload(String.class), "Validation failed - " +
                             "expected message contents not equal!");
                 }
 

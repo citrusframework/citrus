@@ -18,42 +18,48 @@ package org.citrusframework.main.scan;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.citrusframework.TestClass;
 import org.citrusframework.base.main.scan.ClassPathTestScanner;
 import org.citrusframework.junit.scan.SampleJUnit4Test;
+import org.citrusframework.junit.scan.SampleJUnitTest;
 import org.citrusframework.testng.scan.SampleTestNGTest;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * @since 2.7.4
  */
 public class ClassPathTestScannerTest {
 
-    @Test(dataProvider = "scannerDataProvider")
+    @ParameterizedTest
+    @MethodSource("scannerDataProvider")
     public void testFindTestsInPackage(String pattern, Class<?> testClass, Class<? extends Annotation> annotationType, long expectedFindings) {
         List<TestClass> findings;
         findings = new ClassPathTestScanner(annotationType, pattern).findTestsInPackage(testClass.getPackage().getName());
-        Assert.assertEquals(findings.size(), expectedFindings);
+        Assertions.assertEquals(expectedFindings, findings.size());
 
         if (expectedFindings > 0) {
-            Assert.assertEquals(findings.get(0).getName(), testClass.getName());
+            Assertions.assertEquals(testClass.getName(), findings.get(0).getName());
         }
     }
 
-    @DataProvider
-    public Object[][] scannerDataProvider() {
-        return new Object[][] {
-                new Object[] { ".*Test", SampleJUnit4Test.class, org.junit.Test.class, 1L},
-                new Object[] { ".*Test", SampleJUnit4Test.class, org.testng.annotations.Test.class, 0L},
-                new Object[] { ".*Test", SampleTestNGTest.class, org.junit.Test.class, 0L},
-                new Object[] { ".*IT", SampleJUnit4Test.class, org.junit.Test.class, 0L},
-                new Object[] { ".*Test", SampleTestNGTest.class, org.testng.annotations.Test.class, 1L},
-                new Object[] { ".*Test", SampleTestNGTest.class, org.junit.Test.class, 0L},
-                new Object[] { ".*Test", SampleJUnit4Test.class, org.testng.annotations.Test.class, 0L},
-                new Object[] { ".*IT", SampleTestNGTest.class, org.testng.annotations.Test.class, 0L},
-        };
+    static Stream<Arguments> scannerDataProvider() {
+        return Stream.of(
+                Arguments.of(".*Test", SampleJUnit4Test.class, org.junit.Test.class, 1L),
+                Arguments.of(".*Test", SampleTestNGTest.class, org.junit.Test.class, 0L),
+                Arguments.of(".*IT", SampleJUnit4Test.class, org.junit.Test.class, 0L),
+                Arguments.of(".*Test", SampleJUnitTest.class, org.junit.jupiter.api.Test.class, 1L),
+                Arguments.of(".*Test", SampleJUnitTest.class, org.testng.annotations.Test.class, 0L),
+                Arguments.of(".*Test", SampleTestNGTest.class, org.junit.jupiter.api.Test.class, 0L),
+                Arguments.of(".*IT", SampleJUnitTest.class, org.junit.jupiter.api.Test.class, 0L),
+                Arguments.of(".*Test", SampleTestNGTest.class, org.testng.annotations.Test.class, 1L),
+                Arguments.of(".*Test", SampleTestNGTest.class, org.junit.jupiter.api.Test.class, 0L),
+                Arguments.of(".*Test", SampleJUnitTest.class, org.testng.annotations.Test.class, 0L),
+                Arguments.of(".*IT", SampleTestNGTest.class, org.testng.annotations.Test.class, 0L)
+        );
     }
 }

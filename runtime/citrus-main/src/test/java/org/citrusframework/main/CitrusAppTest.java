@@ -17,8 +17,8 @@
 package org.citrusframework.main;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.5
@@ -36,12 +36,9 @@ public class CitrusAppTest {
         CitrusApp.main(new String[] { "-s", "true", "-d", "200" });
         CitrusApp.main(new String[] { "-s", "true", "--duration", "200" });
 
-        try {
-            CitrusApp.main(new String[] { "-s", "true", "-d" });
-            Assert.fail("Missing exception due to invalid option parameter usage");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Missing parameter value for -d/--duration option");
-        }
+        CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> CitrusApp.main(new String[] { "-s", "true", "-d" }));
+        Assertions.assertEquals("Missing parameter value for -d/--duration option", e.getMessage());
     }
 
     @Test
@@ -49,18 +46,12 @@ public class CitrusAppTest {
         CitrusApp.main(new String[] { "-s", "true", "-d", "200", "-c", CustomConfig.class.getName() });
         CitrusApp.main(new String[] { "-s", "true", "-d", "200", "--config", CustomConfig.class.getName() });
 
-        try {
-            CitrusApp.main(new String[] { "-s", "true", "-d", "200", "--config" });
-            Assert.fail("Missing exception due to invalid option parameter usage");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Missing parameter value for -c/--config option");
-        }
+        CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> CitrusApp.main(new String[] { "-s", "true", "-d", "200", "--config" }));
+        Assertions.assertEquals("Missing parameter value for -c/--config option", e.getMessage());
 
-        try {
-            CitrusApp.main(new String[] { "-s", "true", "-c", "unknown.Class" });
-            Assert.fail("Missing exception due to invalid option parameter usage");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getCause().getClass(), ClassNotFoundException.class);
-        }
+        e = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> CitrusApp.main(new String[] { "-s", "true", "-c", "unknown.Class" }));
+        Assertions.assertEquals(ClassNotFoundException.class, e.getCause().getClass());
     }
 }
