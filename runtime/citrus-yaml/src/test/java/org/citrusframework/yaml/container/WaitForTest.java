@@ -31,9 +31,9 @@ import org.citrusframework.message.MessageStore;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.util.TestUtils.HTTPS_CITRUSFRAMEWORK_ORG;
 
@@ -48,7 +48,7 @@ public class WaitForTest extends AbstractYamlActionTest {
     public void shouldLoadWaitFor() {
 
         if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because citrus is not reachable. We are probably running behind a proxy.");
+            Assumptions.abort("Test skipped because citrus is not reachable. We are probably running behind a proxy.");
         }
         String filePath = "classpath:org/citrusframework/yaml/test-request-payload.xml";
 
@@ -60,12 +60,12 @@ public class WaitForTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "WaitForTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 6L);
+        Assertions.assertEquals("WaitForTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(6L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), Wait.class);
+        Assertions.assertEquals(Wait.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
@@ -119,35 +119,35 @@ public class WaitForTest extends AbstractYamlActionTest {
     }
 
     private void validateWaitAction(Wait action, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
-        Assert.assertEquals(action.getTime(), expectedMilliseconds);
-        Assert.assertEquals(action.getInterval(), expectedInterval);
+        Assertions.assertEquals(expectedMilliseconds, action.getTime());
+        Assertions.assertEquals(expectedInterval, action.getInterval());
 
         if (!(expectedCondition instanceof ActionCondition)) {
-            Assert.assertEquals(action.getCondition().getClass(), expectedCondition.getClass());
+            Assertions.assertEquals(expectedCondition.getClass(), action.getCondition().getClass());
         }
 
         if (expectedCondition instanceof HttpCondition) {
             HttpCondition condition = (HttpCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getUrl(), ((HttpCondition) expectedCondition).getUrl());
-            Assert.assertEquals(condition.getTimeout(), ((HttpCondition) expectedCondition).getTimeout());
-            Assert.assertEquals(condition.getMethod(), ((HttpCondition) expectedCondition).getMethod());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+            Assertions.assertEquals(((HttpCondition) expectedCondition).getUrl(), condition.getUrl());
+            Assertions.assertEquals(((HttpCondition) expectedCondition).getTimeout(), condition.getTimeout());
+            Assertions.assertEquals(((HttpCondition) expectedCondition).getMethod(), condition.getMethod());
         } else if (expectedCondition instanceof FileCondition) {
             FileCondition condition = (FileCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getFilePath(), ((FileCondition) expectedCondition).getFilePath());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+            Assertions.assertEquals(((FileCondition) expectedCondition).getFilePath(), condition.getFilePath());
         } else if (expectedCondition instanceof MessageCondition) {
             MessageCondition condition = (MessageCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getName(), expectedCondition.getName());
-            Assert.assertEquals(condition.getMessageName(), ((MessageCondition) expectedCondition).getMessageName());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+            Assertions.assertEquals(((MessageCondition) expectedCondition).getMessageName(), condition.getMessageName());
         } else if (expectedCondition instanceof ActionCondition) {
             ActionCondition condition = (ActionCondition) action.getCondition();
-            Assert.assertNotNull(condition);
-            Assert.assertEquals(condition.getAction().getName(), ((ActionCondition) expectedCondition).getAction().getName());
-            Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
+            Assertions.assertNotNull(condition);
+            Assertions.assertEquals(((ActionCondition) expectedCondition).getAction().getName(), condition.getAction().getName());
+            Assertions.assertEquals(((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage(), ((EchoAction) condition.getAction()).getMessage());
         }
     }
 }

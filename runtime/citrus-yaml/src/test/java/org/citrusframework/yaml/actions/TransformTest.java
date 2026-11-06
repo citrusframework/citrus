@@ -21,8 +21,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.TransformAction;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TransformTest extends AbstractYamlActionTest {
 
@@ -32,32 +32,32 @@ public class TransformTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "TransformTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), TransformAction.class);
+        Assertions.assertEquals("TransformTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(TransformAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         TransformAction action = (TransformAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getTargetVariable(), "result");
-        Assert.assertTrue(StringUtils.hasText(action.getXmlData()));
-        Assert.assertNull(action.getXmlResourcePath());
-        Assert.assertTrue(StringUtils.hasText(action.getXsltData()));
-        Assert.assertNull(action.getXsltResourcePath());
+        Assertions.assertEquals("result", action.getTargetVariable());
+        Assertions.assertTrue(StringUtils.hasText(action.getXmlData()));
+        Assertions.assertNull(action.getXmlResourcePath());
+        Assertions.assertTrue(StringUtils.hasText(action.getXsltData()));
+        Assertions.assertNull(action.getXsltResourcePath());
 
-        Assert.assertTrue(context.getVariable("result").contains("<p>Message: Hello World!</p>"));
+        Assertions.assertTrue(context.getVariable("result").contains("<p>Message: Hello World!</p>"));
 
         action = (TransformAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(action.getTargetVariable(), "transform-result");
-        Assert.assertFalse(StringUtils.hasText(action.getXmlData()));
-        Assert.assertNotNull(action.getXmlResourcePath());
-        Assert.assertEquals(action.getXmlResourcePath(), "classpath:org/citrusframework/yaml/transform-source.xml");
-        Assert.assertFalse(StringUtils.hasText(action.getXsltData()));
-        Assert.assertNotNull(action.getXsltResourcePath());
-        Assert.assertEquals(action.getXsltResourcePath(), "classpath:org/citrusframework/yaml/transform.xslt");
+        Assertions.assertEquals("transform-result", action.getTargetVariable());
+        Assertions.assertFalse(StringUtils.hasText(action.getXmlData()));
+        Assertions.assertNotNull(action.getXmlResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/yaml/transform-source.xml", action.getXmlResourcePath());
+        Assertions.assertFalse(StringUtils.hasText(action.getXsltData()));
+        Assertions.assertNotNull(action.getXsltResourcePath());
+        Assertions.assertEquals("classpath:org/citrusframework/yaml/transform.xslt", action.getXsltResourcePath());
 
-        Assert.assertTrue(context.getVariable("transform-result").contains("<p>Message: Hello World!</p>"));
+        Assertions.assertTrue(context.getVariable("transform-result").contains("<p>Message: Hello World!</p>"));
     }
 }

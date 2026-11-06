@@ -17,15 +17,15 @@
 package org.citrusframework.yaml;
 
 import org.citrusframework.api.common.TestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestLoaderTest {
 
     @Test
     public void shouldLookupTestLoader() {
-        Assert.assertTrue(TestLoader.lookup().containsKey(TestLoader.YAML));
-        Assert.assertTrue(TestLoader.lookup(TestLoader.YAML).isPresent());
-        Assert.assertEquals(TestLoader.lookup(TestLoader.YAML).get().getClass(), YamlTestLoader.class);
+        Assertions.assertTrue(TestLoader.lookup().containsKey(TestLoader.YAML));
+        Assertions.assertTrue(TestLoader.lookup(TestLoader.YAML).isPresent());
+        Assertions.assertEquals(YamlTestLoader.class, TestLoader.lookup(TestLoader.YAML).get().getClass());
     }
 }

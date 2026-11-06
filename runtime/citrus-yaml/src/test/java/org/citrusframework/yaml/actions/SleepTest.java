@@ -22,8 +22,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SleepTest extends AbstractYamlActionTest {
 
@@ -33,13 +33,13 @@ public class SleepTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "SleepTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), SleepAction.class);
-        Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTime(), "500");
-        Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTimeUnit(), TimeUnit.MILLISECONDS);
+        Assertions.assertEquals("SleepTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(SleepAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("500", ((SleepAction) result.getTestAction(0)).getTime());
+        Assertions.assertEquals(TimeUnit.MILLISECONDS, ((SleepAction) result.getTestAction(0)).getTimeUnit());
     }
 
     @Test
@@ -48,12 +48,12 @@ public class SleepTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "DelayTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), SleepAction.class);
-        Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTime(), "500");
-        Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTimeUnit(), TimeUnit.MILLISECONDS);
+        Assertions.assertEquals("DelayTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(SleepAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("500", ((SleepAction) result.getTestAction(0)).getTime());
+        Assertions.assertEquals(TimeUnit.MILLISECONDS, ((SleepAction) result.getTestAction(0)).getTimeUnit());
     }
 }

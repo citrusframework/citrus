@@ -22,8 +22,8 @@ import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Parallel;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ParallelTest extends AbstractYamlActionTest {
 
@@ -33,23 +33,23 @@ public class ParallelTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "ParallelTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assertions.assertEquals("ParallelTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
 
-        Assert.assertEquals(result.getTestAction(0).getClass(), Parallel.class);
+        Assertions.assertEquals(Parallel.class, result.getTestAction(0).getClass());
 
         Parallel action = (Parallel) result.getTestAction(0);
-        Assert.assertEquals(action.getActionCount(), 2);
-        Assert.assertEquals(action.getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
+        Assertions.assertEquals(2, action.getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(0).getClass());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(1).getClass());
 
         action = (Parallel) result.getTestAction(1);
-        Assert.assertEquals(action.getActionCount(), 3);
-        Assert.assertEquals(action.getActions().get(0).getClass(), Parallel.class);
-        Assert.assertEquals(((Parallel)action.getActions().get(0)).getActionCount(), 2);
-        Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(action.getActions().get(2).getClass(), EchoAction.class);
+        Assertions.assertEquals(3, action.getActionCount());
+        Assertions.assertEquals(Parallel.class, action.getActions().get(0).getClass());
+        Assertions.assertEquals(2, ((Parallel)action.getActions().get(0)).getActionCount());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(1).getClass());
+        Assertions.assertEquals(EchoAction.class, action.getActions().get(2).getClass());
     }
 }
