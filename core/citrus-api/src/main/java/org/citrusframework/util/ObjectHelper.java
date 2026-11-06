@@ -44,20 +44,22 @@ public class ObjectHelper {
      * For String values check if given String can be parsed as a number.
      */
     public static boolean isNumeric(Object value) {
-        if (value == null) {
-            return false;
-        }
-
-        if (value instanceof Number) {
-            return true;
-        }
-
-        if (value instanceof String stringValue) {
-            try {
-                Double.parseDouble(stringValue);
-                return true;
-            } catch (NumberFormatException e) {
+        switch (value) {
+            case null -> {
                 return false;
+            }
+            case Number number -> {
+                return true;
+            }
+            case String stringValue -> {
+                try {
+                    Double.parseDouble(stringValue);
+                    return true;
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+            default -> {
             }
         }
 

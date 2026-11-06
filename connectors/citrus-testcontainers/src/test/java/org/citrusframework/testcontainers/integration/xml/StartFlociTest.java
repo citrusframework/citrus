@@ -26,8 +26,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.aws2.StartFlociAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.services.s3.S3Client;
 
 public class StartFlociTest extends AbstractXmlActionTest {
@@ -38,17 +38,17 @@ public class StartFlociTest extends AbstractXmlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "StartFlociTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), StartFlociAction.class);
-        Assert.assertTrue(result.getTestResult().isSuccess());
+        Assertions.assertEquals("StartFlociTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(StartFlociAction.class, result.getTestAction(0).getClass());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
 
         verifyContainer(context);
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
-        Assert.assertNotNull(context.getReferenceResolver().resolve("s3Client", S3Client.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("s3Client"));
+        Assertions.assertNotNull(context.getReferenceResolver().resolve("s3Client", S3Client.class));
     }
 
     private void verifyContainer(TestContext context) {
@@ -56,8 +56,8 @@ public class StartFlociTest extends AbstractXmlActionTest {
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_FLOCI_CONTAINER_ID}"))
                     .exec();
 
-            Assert.assertNotNull(response.getState().getRunning());
-            Assert.assertTrue(response.getState().getRunning());
+            Assertions.assertNotNull(response.getState().getRunning());
+            Assertions.assertTrue(response.getState().getRunning());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         }

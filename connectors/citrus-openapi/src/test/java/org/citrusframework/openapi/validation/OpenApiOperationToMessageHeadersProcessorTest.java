@@ -24,8 +24,8 @@ import org.citrusframework.openapi.OpenApiMessageHeaders;
 import org.citrusframework.openapi.OpenApiMessageType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
@@ -42,7 +42,7 @@ public class OpenApiOperationToMessageHeadersProcessorTest {
     private Message message;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         openApiSpecification = mock(OpenApiSpecification.class);
         operationKey = "testOperationId";

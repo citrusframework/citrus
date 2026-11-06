@@ -19,17 +19,17 @@ package org.citrusframework.openapi.validation;
 import java.util.Map;
 
 import org.citrusframework.validation.context.ValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class OpenApiMessageValidationContextBuilderTest {
 
     @Test
     public void shouldLookupValidationContextBuilder() {
         Map<String, ValidationContext.Builder<?, ?>> endpointBuilders = ValidationContext.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("openapi"));
+        Assertions.assertTrue(endpointBuilders.containsKey("openapi"));
 
-        Assert.assertTrue(ValidationContext.lookup("openapi").isPresent());
-        Assert.assertEquals(ValidationContext.lookup("openapi").get().getClass(), OpenApiMessageValidationContext.Builder.class);
+        Assertions.assertTrue(ValidationContext.lookup("openapi").isPresent());
+        Assertions.assertEquals(OpenApiMessageValidationContext.Builder.class, ValidationContext.lookup("openapi").get().getClass());
     }
 }

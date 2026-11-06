@@ -19,17 +19,18 @@ package org.citrusframework.testcontainers;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PingCmd;
 import org.citrusframework.kubernetes.KubernetesSettings;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class TestcontainersActorTest {
 
     @Mock
@@ -41,12 +42,10 @@ public class TestcontainersActorTest {
     @Mock
     PingCmd disconnected;
 
-    @BeforeClass
+    @BeforeEach
     public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-
-        doNothing().when(connected).exec();
-        doThrow(IllegalStateException.class).when(disconnected).exec();
+        lenient().doNothing().when(connected).exec();
+        lenient().doThrow(IllegalStateException.class).when(disconnected).exec();
     }
 
     @Test
@@ -54,7 +53,7 @@ public class TestcontainersActorTest {
         try {
             when(dockerClient.pingCmd()).thenReturn(connected);
             TestcontainersActor.resetConnectionState();
-            Assert.assertFalse(new TestcontainersActor(dockerClient).isDisabled());
+            Assertions.assertFalse(new TestcontainersActor(dockerClient).isDisabled());
         } finally {
             TestcontainersActor.resetConnectionState();
             reset(dockerClient);
@@ -62,7 +61,7 @@ public class TestcontainersActorTest {
 
         try {
             when(dockerClient.pingCmd()).thenReturn(disconnected);
-            Assert.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
+            Assertions.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
         } finally {
             TestcontainersActor.resetConnectionState();
             reset(dockerClient);
@@ -76,7 +75,7 @@ public class TestcontainersActorTest {
             System.setProperty("citrus.testcontainers.enabled", "false");
             when(dockerClient.pingCmd()).thenReturn(connected);
             TestcontainersActor.resetConnectionState();
-            Assert.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
+            Assertions.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
         } finally {
             System.setProperty("citrus.testcontainers.enabled", Boolean.toString(initial));
             TestcontainersActor.resetConnectionState();
@@ -87,7 +86,7 @@ public class TestcontainersActorTest {
         try {
             System.setProperty("citrus.test.actor.testcontainers.enabled", "false");
             when(dockerClient.pingCmd()).thenReturn(connected);
-            Assert.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
+            Assertions.assertTrue(new TestcontainersActor(dockerClient).isDisabled());
         } finally {
             System.setProperty("citrus.test.actor.testcontainers.enabled", Boolean.toString(initial));
             TestcontainersActor.resetConnectionState();

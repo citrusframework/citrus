@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.CreateEndpointAction;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateEndpointTest extends AbstractGroovyActionDslTest {
 
@@ -31,18 +31,18 @@ public class CreateEndpointTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateEndpointTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActions().get(0).getClass(), CreateEndpointAction.class);
-        Assert.assertEquals(result.getActions().get(1).getClass(), CreateEndpointAction.class);
+        Assertions.assertEquals("CreateEndpointTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(CreateEndpointAction.class, result.getActions().get(0).getClass());
+        Assertions.assertEquals(CreateEndpointAction.class, result.getActions().get(1).getClass());
 
         CreateEndpointAction action = (CreateEndpointAction)result.getActions().get(0);
-        Assert.assertEquals(action.getName(), "create-endpoint");
-        Assert.assertEquals(action.getEndpointUri(), "direct:hello");
+        Assertions.assertEquals("create-endpoint", action.getName());
+        Assertions.assertEquals("direct:hello", action.getEndpointUri());
 
         action = (CreateEndpointAction)result.getActions().get(1);
-        Assert.assertEquals(action.getName(), "create-endpoint");
-        Assert.assertEquals(action.getEndpointUri(), "direct?queueName=hello&timeout=2000");
+        Assertions.assertEquals("create-endpoint", action.getName());
+        Assertions.assertEquals("direct?queueName=hello&timeout=2000", action.getEndpointUri());
     }
 }

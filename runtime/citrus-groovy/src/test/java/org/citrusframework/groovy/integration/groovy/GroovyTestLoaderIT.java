@@ -16,26 +16,43 @@
 
 package org.citrusframework.groovy.integration.groovy;
 
+import java.util.stream.Stream;
+
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.CitrusTestFactory;
+import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.1
  */
-@Test
-public class GroovyTestLoaderIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GroovyTestLoaderIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.GROOVY, name = { "sample.citrus.it" })
     public void GroovyTestLoader_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.GROOVY, name = { "echo.citrus.test", "delay.citrus.test" }, packageName = "org.citrusframework.groovy.integration.actions")
-    public void GroovyTestLoader_2_IT() {}
+    @CitrusTestFactory
+    public Stream<DynamicTest> GroovyTestLoader_2_IT() {
+        return Stream.of(
+                CitrusTestFactorySupport.groovy().dynamicTest("org.citrusframework.groovy.integration.actions", "echo.citrus.test.groovy"),
+                CitrusTestFactorySupport.groovy().dynamicTest("org.citrusframework.groovy.integration.actions", "delay.citrus.test.groovy")
+        );
+    }
 
-    @CitrusTestSource(type = TestLoader.GROOVY, packageScan = "org.citrusframework.groovy.integration.groovy")
-    public void GroovyTestLoader_3_IT() {}
+    @CitrusTestFactory
+    public Stream<DynamicTest> GroovyTestLoader_3_IT() {
+        return CitrusTestFactorySupport.groovy().packageScan("org.citrusframework.groovy.integration.groovy");
+    }
 
+    @Test
     @CitrusTestSource(type = TestLoader.GROOVY, sources = { "classpath:org/citrusframework/groovy/integration/actions/createVariables.citrus.test.groovy" })
     public void GroovyTestLoader_4_IT() {}
 }

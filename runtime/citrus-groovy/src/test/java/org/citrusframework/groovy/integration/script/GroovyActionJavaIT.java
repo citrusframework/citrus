@@ -16,30 +16,36 @@
 
 package org.citrusframework.groovy.integration.script;
 
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GroovyActionJavaIT implements TestActionSupport {
 
     /** OS new line */
     private static final String NEWLINE = System.lineSeparator();
 
+    @Test
     @CitrusTest
-    public void groovyAction() {
-        variable("date", "citrus:currentDate()");
-        variable("greetingText", "Hello Citrus!");
+    public void groovyAction(@CitrusResource TestCaseRunner runner) {
+        runner.variable("date", "citrus:currentDate()");
+        runner.variable("greetingText", "Hello Citrus!");
 
-        description("This example executes groovy scripts using both inline script definition and external file resource.");
+        runner.description("This example executes groovy scripts using both inline script definition and external file resource.");
 
-        run(script().groovy("println 'Hello Citrus'"));
+        runner.run(script().groovy("println 'Hello Citrus'"));
 
-        run(script().groovy("println 'Current date is ${date}!'"));
+        runner.run(script().groovy("println 'Current date is ${date}!'"));
 
-        run(script().groovy("import org.citrusframework.*" + NEWLINE +
+        runner.run(script().groovy("import org.citrusframework.*" + NEWLINE +
                 "import org.citrusframework.variable.*" + NEWLINE +
                 "import org.citrusframework.context.TestContext" + NEWLINE +
                 "import org.citrusframework.groovy.actions.GroovyAction.ScriptExecutor" + NEWLINE +
@@ -51,28 +57,28 @@ public class GroovyActionJavaIT extends TestNGCitrusSpringSupport implements Tes
                     "}" + NEWLINE +
                 "}"));
 
-        run(script().groovy("println context.getVariable(\"date\")" + NEWLINE +
+        runner.run(script().groovy("println context.getVariable(\"date\")" + NEWLINE +
                 "assert context.getVariable(\"greetingText\").equals(\"Hello Citrus!\")" + NEWLINE +
                 "assert context.getVariable(\"greetingText\").equals(\"${greetingText}\")"));
 
-        run(script().groovy("println 'Hello Citrus'").skipTemplate());
+        runner.run(script().groovy("println 'Hello Citrus'").skipTemplate());
 
-        run(script().groovy("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
+        runner.run(script().groovy("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
                 "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
                 "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")")
                 .template("classpath:org/citrusframework/groovy/integration/script/custom-script-template.groovy"));
 
-        run(script().groovy("import org.testng.Assert" + NEWLINE +
+        runner.run(script().groovy("import org.testng.Assert" + NEWLINE +
                   "Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
                   "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
                   "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")"));
 
-        run(script().groovy("public class MyCustomClass {" + NEWLINE +
+        runner.run(script().groovy("public class MyCustomClass {" + NEWLINE +
                     "public void run() {" + NEWLINE +
                         "println 'Just executed a custom class with run method!'" + NEWLINE +
                     "}" + NEWLINE +
                   "}"));
 
-        run(script().groovy(Resources.fromClasspath("org/citrusframework/groovy/integration/script/example.groovy")));
+        runner.run(script().groovy(Resources.fromClasspath("org/citrusframework/groovy/integration/script/example.groovy")));
     }
 }

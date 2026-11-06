@@ -16,9 +16,9 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -29,9 +29,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.MouseAction.Command;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.ScrollMode;
@@ -42,7 +42,7 @@ class MouseActionTest {
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -55,7 +55,7 @@ class MouseActionTest {
         return mock(Locator.class);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -82,7 +82,7 @@ class MouseActionTest {
 
     @Test
     void shouldRejectUnsupportedScrollMode() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new MouseAction.Builder(Command.CLICK).locator("#save").scroll("maybe").build());
 
         assertTrue(exception.getMessage().contains("maybe"), exception.getMessage());
@@ -90,7 +90,7 @@ class MouseActionTest {
 
     @Test
     void shouldRejectScrollOnCommandThatCannotHonourIt() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new MouseAction.Builder(Command.FOCUS).locator("#save").scroll("none").build());
 
         assertTrue(exception.getMessage().contains("FOCUS"), exception.getMessage());
@@ -143,6 +143,6 @@ class MouseActionTest {
 
     @Test
     void shouldFailFastWhenLocatorMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new MouseAction.Builder(Command.CLICK).build());
+        assertThrows(CitrusRuntimeException.class, () -> new MouseAction.Builder(Command.CLICK).build());
     }
 }

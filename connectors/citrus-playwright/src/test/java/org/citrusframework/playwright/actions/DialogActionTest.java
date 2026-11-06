@@ -16,8 +16,8 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -28,9 +28,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Dialog;
 
@@ -40,7 +40,7 @@ class DialogActionTest {
     private TestContext context;
     private Dialog dialog;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -49,7 +49,7 @@ class DialogActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -119,7 +119,7 @@ class DialogActionTest {
 
     @Test
     void shouldFailFastWhenCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new DialogAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new DialogAction.Builder().build());
     }
 
     @Test
@@ -132,7 +132,7 @@ class DialogActionTest {
 
         when(dialog.message()).thenReturn("Different");
 
-        ValidationException exception = expectThrows(ValidationException.class,
+        ValidationException exception = assertThrows(ValidationException.class,
                 () -> captor.getValue().accept(dialog));
         assertTrue(exception.getMessage().contains("Confirm?"));
     }
@@ -163,7 +163,7 @@ class DialogActionTest {
         DialogAction action = new DialogAction.Builder().verifyClosed().build();
         action.execute(context);
 
-        ValidationException exception = expectThrows(ValidationException.class, action::assertClosed);
+        ValidationException exception = assertThrows(ValidationException.class, action::assertClosed);
         assertTrue(exception.getMessage().toLowerCase().contains("dialog"), exception.getMessage());
     }
 }

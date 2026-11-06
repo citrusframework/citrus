@@ -26,10 +26,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
@@ -58,10 +58,13 @@ import org.citrusframework.log.CitrusLogSettings;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.playwright.model.SecretPatternRedactor;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import jakarta.servlet.http.Cookie;
 import org.mockito.ArgumentCaptor;
 import org.springframework.core.io.ClassPathResource;
@@ -69,22 +72,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 /**
  * Runs the real Citrus {@link HttpClient} and {@code http()} actions over the browser-session
  * transport, with only the driver mocked. Proves that everything above the transport — URL
  * composition, conversion, error strategy, validation — behaves exactly as for a plain client.
  */
-class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
+class PlaywrightApiClientHttpClientTest extends AbstractUnitTest {
 
     private MockPlaywrightBrowser browser;
     private APIRequestContext api;
     private HttpClient client;
 
-    @BeforeMethod
+    @BeforeEach
     void createClient() {
         api = mock(APIRequestContext.class);
         browser = new MockPlaywrightBrowser() {
@@ -101,7 +101,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
                 .build();
     }
 
-    @AfterMethod
+    @AfterEach
     void stopBrowser() {
         browser.stop();
     }
@@ -118,9 +118,9 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
         ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<RequestOptions> options = ArgumentCaptor.forClass(RequestOptions.class);
         verify(api).fetch(url.capture(), options.capture());
-        assertEquals(url.getValue(), "http://localhost:8080/api/orders?source=ui");
-        assertEquals(field(options.getValue(), "method"), "POST");
-        assertEquals(new String((byte[]) field(options.getValue(), "data"), StandardCharsets.UTF_8), "{\"item\":\"book\"}");
+        assertEquals("http://localhost:8080/api/orders?source=ui", url.getValue());
+        assertEquals("POST", field(options.getValue(), "method"));
+        assertEquals("{\"item\":\"book\"}", new String((byte[]) field(options.getValue(), "data"), StandardCharsets.UTF_8));
         @SuppressWarnings("unchecked")
         Map<String, String> headers = (Map<String, String>) field(options.getValue(), "headers");
         assertTrue(headers.get("Content-Type").startsWith("application/json"), String.valueOf(headers));
@@ -159,7 +159,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
 
         RequestOptions options = captureOptions();
         assertTrue(headers(options).get("Content-Type").startsWith(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
-        assertEquals(new String((byte[]) field(options, "data"), StandardCharsets.UTF_8), "name=citrus&item=book");
+        assertEquals("name=citrus&item=book", new String((byte[]) field(options, "data"), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -185,7 +185,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
         http().client(client).send().get("/api/me").build().execute(context);
         Message received = client.createConsumer().receive(context, 1000L);
 
-        assertEquals(received.getPayload(String.class), json);
+        assertEquals(json, received.getPayload(String.class));
     }
 
     @Test
@@ -209,7 +209,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
         respond(404, "Not Found", "", List.of());
 
         http().client(client).send().get("/api/missing").build().execute(context);
-        expectThrows(ValidationException.class,
+        assertThrows(ValidationException.class,
                 () -> http().client(client).receive().response(HttpStatus.OK).build().execute(context));
     }
 
@@ -234,7 +234,7 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
         Message received = client.createConsumer().receive(context, 1000L);
 
         // HttpClient joins repeated header values with a comma, exactly as for a plain client.
-        assertEquals(received.getHeader("Set-Cookie"), "SID=abc; Path=/,API_SID=xyz; Path=/");
+        assertEquals("SID=abc; Path=/,API_SID=xyz; Path=/", received.getHeader("Set-Cookie"));
     }
 
     @Test
@@ -252,8 +252,8 @@ class PlaywrightApiClientHttpClientTest extends AbstractTestNGUnitTest {
         HttpMessage received = (HttpMessage) cookieClient.createConsumer().receive(context, 1000L);
 
         // citrus-http's cookie converter does not keep header order.
-        assertEquals(received.getCookies().size(), 2);
-        assertEquals(received.getCookies().stream().map(Cookie::getName).collect(Collectors.toSet()), Set.of("SID", "API_SID"));
+        assertEquals(2, received.getCookies().size());
+        assertEquals(Set.of("SID", "API_SID"), received.getCookies().stream().map(Cookie::getName).collect(Collectors.toSet()));
     }
 
     @Test

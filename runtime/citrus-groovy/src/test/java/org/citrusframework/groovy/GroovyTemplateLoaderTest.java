@@ -17,8 +17,8 @@
 package org.citrusframework.groovy;
 
 import org.citrusframework.container.Template;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyTemplateLoaderTest extends UnitTestSupport {
 
@@ -28,25 +28,25 @@ public class GroovyTemplateLoaderTest extends UnitTestSupport {
                 .withReferenceResolver(context.getReferenceResolver())
                 .load("classpath:org/citrusframework/groovy/template.groovy");
 
-        Assert.assertEquals(template.getTemplateName(), "myTemplate");
-        Assert.assertEquals(template.getName(), "template:myTemplate");
-        Assert.assertEquals(template.getParameter().size(), 0);
-        Assert.assertEquals(template.getActions().size(), 1);
-        Assert.assertTrue(template.isGlobalContext());
+        Assertions.assertEquals("myTemplate", template.getTemplateName());
+        Assertions.assertEquals("template:myTemplate", template.getName());
+        Assertions.assertEquals(0, template.getParameter().size());
+        Assertions.assertEquals(1, template.getActions().size());
+        Assertions.assertTrue(template.isGlobalContext());
 
         template = new GroovyTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
                 .load("classpath:org/citrusframework/groovy/template-parameters.groovy");
-        Assert.assertEquals(template.getTemplateName(), "myTemplate");
-        Assert.assertEquals(template.getName(), "template:myTemplate");
-        Assert.assertEquals(template.getParameter().size(), 3);
-        Assert.assertEquals(template.getParameter().get("foo"), "");
-        Assert.assertEquals(template.getParameter().get("bar"), "barValue");
-        Assert.assertEquals(template.getParameter().get("baz"), """
+        Assertions.assertEquals("myTemplate", template.getTemplateName());
+        Assertions.assertEquals("template:myTemplate", template.getName());
+        Assertions.assertEquals(3, template.getParameter().size());
+        Assertions.assertEquals("", template.getParameter().get("foo"));
+        Assertions.assertEquals("barValue", template.getParameter().get("bar"));
+        Assertions.assertEquals("""
                 foo
                         bar
-                        baz""");
-        Assert.assertEquals(template.getActions().size(), 2);
-        Assert.assertFalse(template.isGlobalContext());
+                        baz""", template.getParameter().get("baz"));
+        Assertions.assertEquals(2, template.getActions().size());
+        Assertions.assertFalse(template.isGlobalContext());
     }
 }

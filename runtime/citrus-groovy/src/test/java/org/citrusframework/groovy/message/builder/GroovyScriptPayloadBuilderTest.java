@@ -17,14 +17,14 @@
 package org.citrusframework.groovy.message.builder;
 
 import org.citrusframework.message.ScriptPayloadBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyScriptPayloadBuilderTest {
 
     @Test
     public void shouldLookupPayloadBuilder() {
-        Assert.assertTrue(ScriptPayloadBuilder.lookup("groovy").isPresent());
-        Assert.assertEquals(ScriptPayloadBuilder.lookup("groovy").get().getClass(), GroovyScriptPayloadBuilder.class);
+        Assertions.assertTrue(ScriptPayloadBuilder.lookup("groovy").isPresent());
+        Assertions.assertEquals(GroovyScriptPayloadBuilder.class, ScriptPayloadBuilder.lookup("groovy").get().getClass());
     }
 }

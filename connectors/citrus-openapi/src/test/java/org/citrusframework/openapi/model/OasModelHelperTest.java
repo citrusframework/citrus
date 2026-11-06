@@ -18,8 +18,8 @@ package org.citrusframework.openapi.model;
 
 import java.util.List;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class OasModelHelperTest {
 
@@ -32,11 +32,11 @@ public class OasModelHelperTest {
         List<String> result = OasModelHelper.toAcceptedRandomizableMediaTypes(accept);
 
         // Then
-        Assert.assertNotNull(result, "Result should not be null");
-        Assert.assertTrue(result.contains("application/json"), "Result should contain 'application/json'");
-        Assert.assertTrue(result.contains("application/json;charset=UTF-8"), "Result should contain 'text/plain'");
-        Assert.assertTrue(result.contains("text/plain"), "Result should contain 'text/plain'");
-        Assert.assertFalse(result.contains("application/xml"), "Result should not contain 'application/xml'");
+        Assertions.assertNotNull(result, "Result should not be null");
+        Assertions.assertTrue(result.contains("application/json"), "Result should contain 'application/json'");
+        Assertions.assertTrue(result.contains("application/json;charset=UTF-8"), "Result should contain 'text/plain'");
+        Assertions.assertTrue(result.contains("text/plain"), "Result should contain 'text/plain'");
+        Assertions.assertFalse(result.contains("application/xml"), "Result should not contain 'application/xml'");
     }
 
     @Test
@@ -48,8 +48,8 @@ public class OasModelHelperTest {
         List<String> result = OasModelHelper.toAcceptedRandomizableMediaTypes(accept);
 
         // Then
-        Assert.assertNotNull(result, "Result should not be null");
-        Assert.assertEquals(result, OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, "Should return the default media types");
+        Assertions.assertNotNull(result, "Result should not be null");
+        Assertions.assertEquals(OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, result, "Should return the default media types");
     }
 
     @Test
@@ -61,8 +61,8 @@ public class OasModelHelperTest {
         List<String> result = OasModelHelper.toAcceptedRandomizableMediaTypes(accept);
 
         // Then
-        Assert.assertNotNull(result, "Result should not be null");
-        Assert.assertEquals(result, OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, "Should return the default media types");
+        Assertions.assertNotNull(result, "Result should not be null");
+        Assertions.assertEquals(OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES, result, "Should return the default media types");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class OasModelHelperTest {
         List<String> result = OasModelHelper.toAcceptedRandomizableMediaTypes(accept);
 
         // Then
-        Assert.assertNotNull(result, "Result should not be null");
-        Assert.assertTrue(result.isEmpty(), "Result should be empty for unrelated media types");
+        Assertions.assertNotNull(result, "Result should not be null");
+        Assertions.assertTrue(result.isEmpty(), "Result should be empty for unrelated media types");
     }
 }

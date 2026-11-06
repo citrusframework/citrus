@@ -21,27 +21,29 @@ import java.io.IOException;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
 import org.citrusframework.testcontainers.mongodb.MongoDBSettings;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StartMongoDBContainerIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldStartContainer() {
-        given(doFinally().actions(testcontainers().stop()
+    public void shouldStartContainer(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName(MongoDBSettings.CONTAINER_NAME_DEFAULT)));
 
-        when(testcontainers()
+        runner.when(testcontainers()
                 .mongoDB()
                 .start());
 
-        then(this::verifyContainer);
+        runner.then(this::verifyContainer);
     }
 
     private void verifyContainer(TestContext context) {
@@ -49,8 +51,8 @@ public class StartMongoDBContainerIT extends AbstractTestcontainersIT implements
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_MONGODB_CONTAINER_ID}"))
                     .exec();
 
-            Assert.assertNotNull(response.getState().getRunning());
-            Assert.assertTrue(response.getState().getRunning());
+            Assertions.assertNotNull(response.getState().getRunning());
+            Assertions.assertTrue(response.getState().getRunning());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         }

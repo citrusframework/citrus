@@ -37,15 +37,13 @@ public interface OpenApiActionBuilder<T extends TestAction, S extends Specificat
 
     @SuppressWarnings("unchecked")
     default OpenApiActionBuilder<T, S, B> specification(Object spec) {
-        if (spec instanceof Specification) {
-            return specification((S) spec);
-        } else if (spec instanceof URL) {
-            return specification((URL) spec);
-        } else if (spec instanceof String) {
-            return specification((String) spec);
-        } else {
-            throw new IllegalArgumentException("Invalid OpenApi specification type '%s'".formatted(spec.getClass().getName()));
-        }
+        return switch (spec) {
+            case Specification specification -> specification((S) spec);
+            case URL url -> specification(url);
+            case String s -> specification(s);
+            default ->
+                    throw new IllegalArgumentException("Invalid OpenApi specification type '%s'".formatted(spec.getClass().getName()));
+        };
     }
 
     /**

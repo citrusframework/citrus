@@ -20,8 +20,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateVariablesTest extends AbstractGroovyActionDslTest {
 
@@ -31,23 +31,23 @@ public class CreateVariablesTest extends AbstractGroovyActionDslTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateVariablesTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActions().get(0).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(result.getActions().get(1).getClass(), CreateVariablesAction.class);
-        Assert.assertEquals(result.getActions().get(2).getClass(), CreateVariablesAction.class);
+        Assertions.assertEquals("CreateVariablesTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(CreateVariablesAction.class, result.getActions().get(0).getClass());
+        Assertions.assertEquals(CreateVariablesAction.class, result.getActions().get(1).getClass());
+        Assertions.assertEquals(CreateVariablesAction.class, result.getActions().get(2).getClass());
 
         CreateVariablesAction action = (CreateVariablesAction)result.getActions().get(0);
-        Assert.assertEquals(action.getName(), "create-variables");
-        Assert.assertEquals(action.getVariables().toString(), "{foo=bar}");
+        Assertions.assertEquals("create-variables", action.getName());
+        Assertions.assertEquals("{foo=bar}", action.getVariables().toString());
 
         action = (CreateVariablesAction)result.getActions().get(1);
-        Assert.assertEquals(action.getName(), "create-variables");
-        Assert.assertEquals(action.getVariables().toString(), "{text=Hello Citrus!}");
+        Assertions.assertEquals("create-variables", action.getName());
+        Assertions.assertEquals("{text=Hello Citrus!}", action.getVariables().toString());
 
         action = (CreateVariablesAction)result.getActions().get(2);
-        Assert.assertEquals(action.getName(), "create-variables");
-        Assert.assertEquals(action.getVariables().toString(), "{foobar=bars}");
+        Assertions.assertEquals("create-variables", action.getName());
+        Assertions.assertEquals("{foobar=bars}", action.getVariables().toString());
     }
 }

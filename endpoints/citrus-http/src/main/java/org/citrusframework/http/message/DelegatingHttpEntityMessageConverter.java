@@ -133,14 +133,15 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
                 .findFirst()
                 .orElse(defaultResponseMessageConverter);
 
-        if (delegate instanceof ByteArrayHttpMessageConverter byteArrayHttpMessageConverter) {
-            byteArrayHttpMessageConverter.write(convertIfNecessary(responseBody, byte[].class), outputMessage.getHeaders().getContentType(), outputMessage);
-        } else if (delegate instanceof StringHttpMessageConverter stringHttpMessageConverter) {
-            stringHttpMessageConverter.write(convertIfNecessary(responseBody, String.class), outputMessage.getHeaders().getContentType(), outputMessage);
-        } else if (delegate instanceof FormHttpMessageConverter formHttpMessageConverter) {
-            formHttpMessageConverter.write(convertIfNecessary(responseBody, MultiValueMap.class), outputMessage.getHeaders().getContentType(), outputMessage);
-        } else {
-            throw new HttpMessageNotWritableException(format("Failed to find proper message converter for contentType '%s'", outputMessage.getHeaders().getContentType()));
+        switch (delegate) {
+            case ByteArrayHttpMessageConverter byteArrayHttpMessageConverter ->
+                    byteArrayHttpMessageConverter.write(convertIfNecessary(responseBody, byte[].class), outputMessage.getHeaders().getContentType(), outputMessage);
+            case StringHttpMessageConverter stringHttpMessageConverter ->
+                    stringHttpMessageConverter.write(convertIfNecessary(responseBody, String.class), outputMessage.getHeaders().getContentType(), outputMessage);
+            case FormHttpMessageConverter formHttpMessageConverter ->
+                    formHttpMessageConverter.write(convertIfNecessary(responseBody, MultiValueMap.class), outputMessage.getHeaders().getContentType(), outputMessage);
+            case null, default ->
+                    throw new HttpMessageNotWritableException(format("Failed to find proper message converter for contentType '%s'", outputMessage.getHeaders().getContentType()));
         }
     }
 

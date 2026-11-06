@@ -16,12 +16,12 @@
 
 package org.citrusframework.playwright.config.annotation;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusEndpointAnnotations;
@@ -34,8 +34,8 @@ import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
 import org.citrusframework.playwright.http.PlaywrightClientHttpRequestFactory;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightApiClientConfigParserTest {
 
@@ -63,7 +63,7 @@ class PlaywrightApiClientConfigParserTest {
     private TestContext context;
     private PlaywrightBrowser browser;
 
-    @BeforeMethod
+    @BeforeEach
     void createContext() {
         context = TestContextFactory.newInstance().getObject();
         browser = PlaywrightEndpoints.playwright().browser().baseUrl("http://localhost:8080").build();
@@ -74,8 +74,7 @@ class PlaywrightApiClientConfigParserTest {
     @Test
     void shouldLookupParserByQualifier() {
         assertTrue(AnnotationConfigParser.lookup().containsKey("playwright.api-client"));
-        assertEquals(AnnotationConfigParser.lookup("playwright.api-client").orElseThrow().getClass(),
-                PlaywrightApiClientConfigParser.class);
+        assertEquals(PlaywrightApiClientConfigParser.class, AnnotationConfigParser.lookup("playwright.api-client").orElseThrow().getClass());
     }
 
     @Test
@@ -84,15 +83,15 @@ class PlaywrightApiClientConfigParserTest {
 
         PlaywrightClientHttpRequestFactory factory = factory(client);
         assertSame(factory.getBrowser(), browser);
-        assertEquals(factory.getContextAlias(), "admin");
-        assertEquals(factory.getTimeout(), 10_000.0);
-        assertEquals(factory.getMaxRedirects(), Integer.valueOf(0));
-        assertEquals(factory.getMaxRetries(), Integer.valueOf(2));
+        assertEquals("admin", factory.getContextAlias());
+        assertEquals(10_000.0, factory.getTimeout());
+        assertEquals(Integer.valueOf(0), factory.getMaxRedirects());
+        assertEquals(Integer.valueOf(2), factory.getMaxRetries());
         assertTrue(factory.isIgnoreHttpsErrors());
 
         HttpEndpointConfiguration configuration = client.getEndpointConfiguration();
-        assertEquals(configuration.getRequestUrl(), "http://api.localhost:9090");
-        assertEquals(configuration.getTimeout(), 10_000L);
+        assertEquals("http://api.localhost:9090", configuration.getRequestUrl());
+        assertEquals(10_000L, configuration.getTimeout());
         assertTrue(configuration.isHandleCookies());
     }
 
@@ -106,13 +105,13 @@ class PlaywrightApiClientConfigParserTest {
         assertNull(factory.getMaxRedirects());
         assertNull(factory.getMaxRetries());
         assertFalse(factory.isIgnoreHttpsErrors());
-        assertEquals(client.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080");
+        assertEquals("http://localhost:8080", client.getEndpointConfiguration().getRequestUrl());
         assertFalse(client.getEndpointConfiguration().isHandleCookies());
     }
 
     @Test
     void shouldFailForAnUnknownBrowser() {
-        CitrusRuntimeException error = expectThrows(CitrusRuntimeException.class, () -> parse("unknownBrowser"));
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class, () -> parse("unknownBrowser"));
 
         assertTrue(error.getMessage().contains("'missing'"), error.getMessage());
     }
@@ -122,7 +121,7 @@ class PlaywrightApiClientConfigParserTest {
         CitrusEndpointAnnotations.injectEndpoints(this, context);
 
         assertSame(factory(browserApi).getBrowser(), browser);
-        assertEquals(browserApi.getName(), "browserApi");
+        assertEquals("browserApi", browserApi.getName());
     }
 
     private HttpClient parse(String field) throws NoSuchFieldException {

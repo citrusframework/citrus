@@ -16,19 +16,19 @@
 
 package org.citrusframework.openapi;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OpenApiMessageTypeTest {
 
     @Test
     public void testToHeaderNameRequest() {
-        assertEquals(OpenApiMessageType.REQUEST.toHeaderName(), OpenApiMessageHeaders.REQUEST_TYPE);
+        assertEquals(OpenApiMessageHeaders.REQUEST_TYPE, OpenApiMessageType.REQUEST.toHeaderName());
     }
 
     @Test
     public void testToHeaderNameResponse() {
-        assertEquals(OpenApiMessageType.RESPONSE.toHeaderName(), OpenApiMessageHeaders.RESPONSE_TYPE);
+        assertEquals(OpenApiMessageHeaders.RESPONSE_TYPE, OpenApiMessageType.RESPONSE.toHeaderName());
     }
 }

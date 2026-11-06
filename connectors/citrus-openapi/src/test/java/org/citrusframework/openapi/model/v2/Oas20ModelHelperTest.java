@@ -29,10 +29,10 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Responses;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import org.citrusframework.openapi.model.OasModelHelper;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Oas20ModelHelperTest {
 
@@ -78,7 +78,7 @@ public class Oas20ModelHelperTest {
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                 document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
-        assertEquals(responseForRandomGeneration.get().getStatusCode(), "403");
+        assertEquals("403", responseForRandomGeneration.get().getStatusCode());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class Oas20ModelHelperTest {
         Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                 document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
-        assertEquals(responseForRandomGeneration.get().getStatusCode(), "407");
+        assertEquals("407", responseForRandomGeneration.get().getStatusCode());
     }
 
     @Test
@@ -139,9 +139,9 @@ public class Oas20ModelHelperTest {
         assertTrue(schemaOptional.isPresent());
 
         OasSchema parameterSchema = schemaOptional.get();
-        assertEquals(parameterSchema.title, "testParameter");
-        assertEquals(parameterSchema.type, "string");
-        assertEquals(parameterSchema.format, "date-time");
+        assertEquals("testParameter", parameterSchema.title);
+        assertEquals("string", parameterSchema.type);
+        assertEquals("date-time", parameterSchema.format);
         assertEquals(parameter.items, parameterSchema.items);
         assertEquals(parameter.multipleOf, parameterSchema.multipleOf);
         assertEquals(parameter.default_, parameterSchema.default_);

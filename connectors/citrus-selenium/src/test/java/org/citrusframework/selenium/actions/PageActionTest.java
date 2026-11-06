@@ -21,28 +21,31 @@ import org.citrusframework.api.actions.selenium.WebPage;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.pages.UserFormPage;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 
 /**
  * @since 2.7
  */
-public class PageActionTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class PageActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
 
@@ -55,28 +58,26 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     @Mock
     private PageValidator<WebPage, SeleniumBrowser> validator;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
         reset(webDriver, formElement, inputElement);
 
         seleniumBrowser.setWebDriver(webDriver);
 
-        when(formElement.getTagName()).thenReturn("form");
-        when(formElement.isEnabled()).thenReturn(true);
-        when(formElement.isDisplayed()).thenReturn(true);
-        when(inputElement.getTagName()).thenReturn("input");
-        when(inputElement.isEnabled()).thenReturn(true);
-        when(inputElement.isDisplayed()).thenReturn(true);
+        lenient().when(formElement.getTagName()).thenReturn("form");
+        lenient().when(formElement.isEnabled()).thenReturn(true);
+        lenient().when(formElement.isDisplayed()).thenReturn(true);
+        lenient().when(inputElement.getTagName()).thenReturn("input");
+        lenient().when(inputElement.isEnabled()).thenReturn(true);
+        lenient().when(inputElement.isDisplayed()).thenReturn(true);
 
-        when(webDriver.findElement(By.id("userForm"))).thenReturn(formElement);
-        when(webDriver.findElement(By.id("username"))).thenReturn(inputElement);
+        lenient().when(webDriver.findElement(By.id("userForm"))).thenReturn(formElement);
+        lenient().when(webDriver.findElement(By.id("username"))).thenReturn(inputElement);
     }
 
     @Test
     public void testExecutePageValidation() {
-        when(inputElement.getAttribute("value")).thenReturn("TestUser");
+        lenient().when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
@@ -88,7 +89,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecutePageType() {
-        when(inputElement.getAttribute("value")).thenReturn("TestUser");
+        lenient().when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
@@ -100,7 +101,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecutePageValidator() {
-        when(inputElement.getAttribute("value")).thenReturn("TestUser");
+        lenient().when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         UserFormPage userForm = new UserFormPage();
 
@@ -131,7 +132,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteActionWithArguments() {
-        when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
+        lenient().when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
 
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
@@ -166,9 +167,10 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         verify(formElement, times(4)).submit();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unsupported method signature for page action.*")
+    @Test
     public void testExecuteActionNotMatchingArguments() {
-        when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        lenient().when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
 
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
@@ -177,25 +179,26 @@ public class PageActionTest extends AbstractTestNGUnitTest {
                 .argument("Citrus")
                 .build();
         action.execute(context);
-
-        verify(inputElement).clear();
-        verify(inputElement).sendKeys("Citrus");
-
-        verify(formElement).submit();
+    });
+        Assertions.assertTrue(e.getMessage().matches("Unsupported method signature for page action.*"), e.getMessage());
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Page validation failed!")
+    @Test
     public void testExecuteValidationFailed() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
                 .action("validate")
                 .page(new UserFormPage())
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Page validation failed!"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access page type.*")
+    @Test
     public void testInvalidPageType() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)
@@ -203,6 +206,8 @@ public class PageActionTest extends AbstractTestNGUnitTest {
                 .type(UserFormPage.class.getPackage().getName() + ".UnknownPage")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to access page type.*"), e.getMessage());
     }
 
     public static class TestPage implements WebPage {
@@ -214,17 +219,17 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         }
 
         public void submitWithContext(TestContext context) {
-            Assert.assertNotNull(context);
+            Assertions.assertNotNull(context);
             form.submit();
         }
 
         public void submitWithArgument(String arg) {
-            Assert.assertNotNull(arg);
+            Assertions.assertNotNull(arg);
             form.submit();
         }
 
         public void submitWithArgumentAndContext(String arg, TestContext context) {
-            Assert.assertNotNull(arg);
+            Assertions.assertNotNull(arg);
             form.submit();
         }
     }

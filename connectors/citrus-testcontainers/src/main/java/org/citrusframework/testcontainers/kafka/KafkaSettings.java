@@ -216,16 +216,12 @@ public class KafkaSettings {
             context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), container.getMappedPort(KafkaSettings.KAFKA_PORT));
             context.setVariable(getEnvVarName(containerType, "PORT"), container.getMappedPort(KafkaSettings.KAFKA_PORT));
 
-            String bootstrapServers;
-            if (container instanceof KafkaContainer kafkaContainer) {
-                bootstrapServers = kafkaContainer.getBootstrapServers();
-            } else if (container instanceof ConfluentKafkaContainer confluentContainer) {
-                bootstrapServers = confluentContainer.getBootstrapServers();
-            } else if (container instanceof StrimziContainer strimziContainer) {
-                bootstrapServers = strimziContainer.getBootstrapServers();
-            } else {
-                bootstrapServers = "localhost:%d".formatted(container.getMappedPort(KafkaSettings.KAFKA_PORT));
-            }
+            String bootstrapServers = switch (container) {
+                case KafkaContainer kafkaContainer -> kafkaContainer.getBootstrapServers();
+                case ConfluentKafkaContainer confluentContainer -> confluentContainer.getBootstrapServers();
+                case StrimziContainer strimziContainer -> strimziContainer.getBootstrapServers();
+                default -> "localhost:%d".formatted(container.getMappedPort(KafkaSettings.KAFKA_PORT));
+            };
 
             context.setVariable(getEnvVarName(containerType, "LOCAL_BOOTSTRAP_SERVERS"), bootstrapServers);
             context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_BOOTSTRAP_SERVERS"), bootstrapServers);

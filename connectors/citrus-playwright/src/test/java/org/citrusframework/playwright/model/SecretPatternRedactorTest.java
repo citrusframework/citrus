@@ -16,15 +16,15 @@
 
 package org.citrusframework.playwright.model;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.log.CitrusLogSettings;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class SecretPatternRedactorTest {
 
@@ -63,7 +63,7 @@ class SecretPatternRedactorTest {
 
     @Test
     void shouldDefaultToCitrusLogMaskKeywords() {
-        assertEquals(CitrusLogSettings.getLogMaskValue(), SecretPatternRedactor.MASK);
+        assertEquals(SecretPatternRedactor.MASK, CitrusLogSettings.getLogMaskValue());
 
         // secretKey is a citrus.logger default keyword but nothing else is hard-coded
         SecretPatternRedactor redactor = new SecretPatternRedactor();

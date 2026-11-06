@@ -26,42 +26,45 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
 import org.citrusframework.testcontainers.kafka.KafkaImplementation;
 import org.citrusframework.testcontainers.kafka.KafkaSettings;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-@Test(singleThreaded = true)
 public class StartKafkaContainerIT extends AbstractTestcontainersIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void shouldStartContainer() {
-        given(doFinally().actions(testcontainers().stop()
+    public void shouldStartContainer(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName(KafkaSettings.CONTAINER_NAME_DEFAULT)));
 
-        when(testcontainers()
+        runner.when(testcontainers()
                 .kafka()
                 .start());
 
-        then(this::verifyContainer);
+        runner.then(this::verifyContainer);
     }
 
+    @Test
     @CitrusTest
-    public void shouldAutoCreateTopics() {
-        given(doFinally().actions(testcontainers().stop()
+    public void shouldAutoCreateTopics(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().stop()
                 .containerName(KafkaSettings.CONTAINER_NAME_DEFAULT)));
 
-        when(testcontainers()
+        runner.when(testcontainers()
                 .kafka()
                 .start()
                 .implementation(KafkaImplementation.APACHE.name())
                 .topics("test-topic-1", "test-topic-2"));
 
-        then(this::verifyTopics);
+        runner.then(this::verifyTopics);
     }
 
     private void verifyContainer(TestContext context) {
@@ -69,8 +72,8 @@ public class StartKafkaContainerIT extends AbstractTestcontainersIT implements T
             InspectContainerResponse response = dockerClient.inspectContainerCmd(context.getVariable("${CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_ID}"))
                     .exec();
 
-            Assert.assertNotNull(response.getState().getRunning());
-            Assert.assertTrue(response.getState().getRunning());
+            Assertions.assertNotNull(response.getState().getRunning());
+            Assertions.assertTrue(response.getState().getRunning());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to verify Docker container", e);
         }
@@ -81,8 +84,8 @@ public class StartKafkaContainerIT extends AbstractTestcontainersIT implements T
 
         try (Admin adminClient = Admin.create(Collections.singletonMap(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers))) {
             Set<String> topics = adminClient.listTopics().names().get();
-            Assert.assertTrue(topics.contains("test-topic-1"), "Topic 'test-topic-1' should exist");
-            Assert.assertTrue(topics.contains("test-topic-2"), "Topic 'test-topic-2' should exist");
+            Assertions.assertTrue(topics.contains("test-topic-1"), "Topic 'test-topic-1' should exist");
+            Assertions.assertTrue(topics.contains("test-topic-2"), "Topic 'test-topic-2' should exist");
         } catch (ExecutionException | InterruptedException e) {
             throw new CitrusRuntimeException("Failed to verify Kafka topics", e);
         }

@@ -29,13 +29,13 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatusCode;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
@@ -43,10 +43,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(MockitoExtension.class)
 public class OpenApiResponseValidatorTest {
 
     @Mock
@@ -73,21 +75,12 @@ public class OpenApiResponseValidatorTest {
     @InjectMocks
     private OpenApiResponseValidator openApiResponseValidator;
 
-    private AutoCloseable mockCloseable;
-
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
-        mockCloseable = MockitoAnnotations.openMocks(this);
-
         doReturn(openApiValidationContextMock).when(openApiSpecificationMock).getOpenApiValidationContext();
         doReturn(openApiInteractionValidatorMock).when(openApiValidationContextMock).getOpenApiInteractionValidator();
 
         openApiResponseValidator = new OpenApiResponseValidator(openApiSpecificationMock);
-    }
-
-    @AfterMethod
-    public void afterMethod() throws Exception {
-        mockCloseable.close();
     }
 
     @Test
@@ -110,7 +103,7 @@ public class OpenApiResponseValidatorTest {
         verify(validationReportMock).hasErrors();
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldValidateWithErrors() {
         // Given
         when(openApiInteractionValidatorMock.validateResponse(anyString(), any(Method.class), any(Response.class)))
@@ -123,7 +116,8 @@ public class OpenApiResponseValidatorTest {
         when(httpMessageMock.getStatusCode()).thenReturn(HttpStatusCode.valueOf(200));
 
         // When
-        openApiResponseValidator.validateResponse(operationPathAdapterMock, httpMessageMock);
+        assertThrows(ValidationException.class,
+                () -> openApiResponseValidator.validateResponse(operationPathAdapterMock, httpMessageMock));
 
         // Then
         verify(openApiInteractionValidatorMock).validateResponse(anyString(), any(Method.class), any(Response.class));
@@ -135,7 +129,6 @@ public class OpenApiResponseValidatorTest {
         // Given
         when(httpMessageMock.getPayload()).thenReturn("payload");
         when(httpMessageMock.getHeaders()).thenReturn(Map.of("Content-Type", APPLICATION_JSON_VALUE));
-        when(httpMessageMock.getStatusCode()).thenReturn(HttpStatusCode.valueOf(200));
 
         // When
         Response response = openApiResponseValidator.createResponseFromMessage(httpMessageMock, 200);
@@ -143,9 +136,9 @@ public class OpenApiResponseValidatorTest {
         // Then
         assertNotNull(response);
         assertTrue(response.getResponseBody().isPresent());
-        assertEquals(response.getResponseBody().get().toString(StandardCharsets.UTF_8), "payload");
+        assertEquals("payload", response.getResponseBody().get().toString(StandardCharsets.UTF_8));
         assertTrue(response.getHeaderValue("Content-Type").isPresent());
-        assertEquals(response.getHeaderValue("Content-Type").get(), APPLICATION_JSON_VALUE);
-        assertEquals(response.getStatus(), Integer.valueOf(200));
+        assertEquals(APPLICATION_JSON_VALUE, response.getHeaderValue("Content-Type").get());
+        assertEquals(Integer.valueOf(200), response.getStatus());
     }
 }

@@ -21,9 +21,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,10 +36,10 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 class ScreencastActionTest {
 
@@ -47,7 +47,7 @@ class ScreencastActionTest {
     private TestContext context;
     private Screencast screencast;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -57,7 +57,7 @@ class ScreencastActionTest {
         when(browser.page().screencast()).thenReturn(screencast);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -131,7 +131,7 @@ class ScreencastActionTest {
 
     @Test
     void shouldRejectUnsupportedAnnotationPosition() {
-        CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = assertThrows(CitrusRuntimeException.class,
                 () -> new ScreencastAction.Builder().showActions().position("middle").build());
 
         assertTrue(exception.getMessage().contains("middle"), exception.getMessage());
@@ -195,19 +195,19 @@ class ScreencastActionTest {
 
     @Test
     void shouldFailFastWhenOverlayHtmlMissing() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new ScreencastAction.Builder().showOverlay("  ").build());
     }
 
     @Test
     void shouldFailFastWhenSizeWithoutStart() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new ScreencastAction.Builder().stop().size(1280, 720).build());
     }
 
     @Test
     void shouldFailFastWhenSizeNotPositive() {
-        expectThrows(CitrusRuntimeException.class,
+        assertThrows(CitrusRuntimeException.class,
                 () -> new ScreencastAction.Builder().start("target/playwright/run.webm").size(0, 720).build());
     }
 
@@ -219,17 +219,17 @@ class ScreencastActionTest {
         field.setAccessible(true);
         field.set(builder, Integer.valueOf(1280));
 
-        expectThrows(CitrusRuntimeException.class, builder::build);
+        assertThrows(CitrusRuntimeException.class, builder::build);
     }
 
     @Test
     void shouldFailFastWhenCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new ScreencastAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new ScreencastAction.Builder().build());
     }
 
     @Test
     void shouldFailFastWhenStartPathMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new ScreencastAction.Builder().start("").build());
+        assertThrows(CitrusRuntimeException.class, () -> new ScreencastAction.Builder().start("").build());
     }
 
     @Test

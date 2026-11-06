@@ -17,28 +17,30 @@
 package org.citrusframework.selenium.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PressKeysActionTest extends AbstractTestNGUnitTest {
+
+public class PressKeysActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
     private final WebElement element = Mockito.mock(WebElement.class);
     private final WebDriver.TargetLocator targetLocator = Mockito.mock(WebDriver.TargetLocator.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, element, targetLocator);
 
@@ -123,9 +125,9 @@ public class PressKeysActionTest extends AbstractTestNGUnitTest {
         verify(element).sendKeys(Keys.TAB);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Unknown key 'ENTR' - use a Selenium key name such as ENTER, TAB or ESCAPE or a single character")
+    @Test
     public void testUnknownKeyName() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.findElement(By.id("username"))).thenReturn(element);
 
         PressKeysAction action = new PressKeysAction.Builder()
@@ -134,11 +136,13 @@ public class PressKeysActionTest extends AbstractTestNGUnitTest {
                 .keys("ENTR")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Unknown key 'ENTR' - use a Selenium key name such as ENTER, TAB or ESCAPE or a single character"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing keys to press")
+    @Test
     public void testMissingKeys() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.findElement(By.id("username"))).thenReturn(element);
 
         PressKeysAction action = new PressKeysAction.Builder()
@@ -146,5 +150,7 @@ public class PressKeysActionTest extends AbstractTestNGUnitTest {
                 .element("id", "username")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing keys to press"), e.getMessage());
     }
 }

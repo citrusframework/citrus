@@ -39,8 +39,8 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
@@ -66,18 +66,18 @@ public class SendTest extends AbstractGroovyActionDslTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "SendTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 9L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals("SendTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(9L, result.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, result.getTestAction(0).getClass());
 
         int actionIndex = 0;
 
         SendMessageAction action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.build(context, MessageType.PLAINTEXT.name()).getPayload(String.class), "Hello from Citrus!");
+        Assertions.assertEquals("Hello from Citrus!", messageBuilder.build(context, MessageType.PLAINTEXT.name()).getPayload(String.class));
 
         Message controlMessage = new DefaultMessage("Hello from Citrus!")
                                         .setHeader("operation", "sayHello");
@@ -86,16 +86,16 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sayHello");
-        Assert.assertEquals(action.getMessageProcessors().size(), 0);
-        Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(1, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("sayHello", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals(0, action.getMessageProcessors().size());
+        Assertions.assertEquals("helloEndpoint", action.getEndpointUri());
 
-        Assert.assertNull(action.getDataDictionary());
+        Assertions.assertNull(action.getDataDictionary());
 
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
@@ -104,20 +104,20 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-                "            <TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sayHello");
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-                "            <Header xmlns=\"http://citrusframework.org/test\"><operation>hello</operation></Header>");
-        Assert.assertEquals(action.getMessageProcessors().size(), 0);
-        Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+                "            <TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(1, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("sayHello", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals(1, messageBuilder.buildMessageHeaderData(context).size());
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+                "            <Header xmlns=\"http://citrusframework.org/test\"><operation>hello</operation></Header>", messageBuilder.buildMessageHeaderData(context).get(0).trim());
+        Assertions.assertEquals(0, action.getMessageProcessors().size());
+        Assertions.assertEquals("helloEndpoint", action.getEndpointUri());
 
-        Assert.assertNull(action.getDataDictionary());
+        Assertions.assertNull(action.getDataDictionary());
 
         controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "            <TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>")
@@ -127,14 +127,13 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()),
-                FileUtils.readToString(FileUtils.getFileResource("classpath:org/citrusframework/groovy/test-request-payload.xml")));
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0);
-        Assert.assertEquals(action.getMessageProcessors().size(), 0);
-        Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
+        Assertions.assertEquals(FileUtils.readToString(FileUtils.getFileResource("classpath:org/citrusframework/groovy/test-request-payload.xml")), messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(0, action.getMessageProcessors().size());
+        Assertions.assertEquals("helloEndpoint", action.getEndpointUri());
 
         controlMessage = new DefaultMessage("""
                 <?xml version="1.0" encoding="UTF-8"?>
@@ -146,27 +145,27 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assertions.assertEquals(1, action.getVariableExtractors().size());
+        Assertions.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
 
-        Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
-        Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
-        Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
+        Assertions.assertEquals(1, headerVariableExtractor.getHeaderMappings().size());
+        Assertions.assertEquals("operation", headerVariableExtractor.getHeaderMappings().get("operation"));
+        Assertions.assertEquals("helloEndpoint", action.getEndpointUri());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
+        Assertions.assertEquals(1, action.getMessageProcessors().size());
+        Assertions.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
         DelegatingPathExpressionProcessor messageProcessor = (DelegatingPathExpressionProcessor)action.getMessageProcessors().get(0);
 
-        Assert.assertEquals(messageProcessor.getPathExpressions().size(), 1);
-        Assert.assertEquals(messageProcessor.getPathExpressions().get("/TestMessage/text()"), "newValue");
+        Assertions.assertEquals(1, messageProcessor.getPathExpressions().size());
+        Assertions.assertEquals("newValue", messageProcessor.getPathExpressions().get("/TestMessage/text()"));
 
-        Assert.assertNotNull(action.getDataDictionary());
+        Assertions.assertNotNull(action.getDataDictionary());
 
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
@@ -175,24 +174,24 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 8);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("intValue"), 5);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("longValue"), 10L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("floatValue"), 10.0F);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("doubleValue"), 10.0D);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("byteValue"), (byte) 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("shortValue"), (short) 10);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("boolValue"), true);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("stringValue"), "Hello Citrus");
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(8, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(5, messageBuilder.buildMessageHeaders(context).get("intValue"));
+        Assertions.assertEquals(10L, messageBuilder.buildMessageHeaders(context).get("longValue"));
+        Assertions.assertEquals(10.0F, messageBuilder.buildMessageHeaders(context).get("floatValue"));
+        Assertions.assertEquals(10.0D, messageBuilder.buildMessageHeaders(context).get("doubleValue"));
+        Assertions.assertEquals((byte) 1, messageBuilder.buildMessageHeaders(context).get("byteValue"));
+        Assertions.assertEquals((short) 10, messageBuilder.buildMessageHeaders(context).get("shortValue"));
+        Assertions.assertEquals(true, messageBuilder.buildMessageHeaders(context).get("boolValue"));
+        Assertions.assertEquals("Hello Citrus", messageBuilder.buildMessageHeaders(context).get("stringValue"));
 
-        Assert.assertNull(action.getEndpoint());
-        Assert.assertEquals(action.getEndpointUri(), "direct:helloQueue");
+        Assertions.assertNull(action.getEndpoint());
+        Assertions.assertEquals("direct:helloQueue", action.getEndpointUri());
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assertions.assertEquals(0, action.getMessageProcessors().size());
 
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .setHeader("intValue" ,5)
@@ -208,19 +207,19 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
+        Assertions.assertEquals("helloEndpoint", action.getEndpointUri());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
+        Assertions.assertEquals("{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}", messageBuilder.buildMessagePayload(context, action.getMessageType()));
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
+        Assertions.assertEquals(1, action.getMessageProcessors().size());
+        Assertions.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
         DelegatingPathExpressionProcessor jsonMessageProcessor = (DelegatingPathExpressionProcessor)action.getMessageProcessors().get(0);
 
-        Assert.assertEquals(jsonMessageProcessor.getPathExpressions().size(), 1);
-        Assert.assertEquals(jsonMessageProcessor.getPathExpressions().get("$.FooMessage.foo"), "newValue");
+        Assertions.assertEquals(1, jsonMessageProcessor.getPathExpressions().size());
+        Assertions.assertEquals("newValue", jsonMessageProcessor.getPathExpressions().get("$.FooMessage.foo"));
 
         controlMessage = new DefaultMessage("{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
         receivedMessage = helloQueue.receive();
@@ -228,9 +227,9 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(action.isSchemaValidation());
-        Assert.assertEquals(action.getSchema(), "fooSchema");
-        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
+        Assertions.assertTrue(action.isSchemaValidation());
+        Assertions.assertEquals("fooSchema", action.getSchema());
+        Assertions.assertEquals("fooRepository", action.getSchemaRepository());
 
         controlMessage = new DefaultMessage("{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
         receivedMessage = helloQueue.receive();
@@ -238,9 +237,9 @@ public class SendTest extends AbstractGroovyActionDslTest {
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());
 
         action = (SendMessageAction) result.getTestAction(actionIndex);
-        Assert.assertTrue(action.isSchemaValidation());
-        Assert.assertEquals(action.getSchema(), "fooSchema");
-        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
+        Assertions.assertTrue(action.isSchemaValidation());
+        Assertions.assertEquals("fooSchema", action.getSchema());
+        Assertions.assertEquals("fooRepository", action.getSchemaRepository());
 
         controlMessage = new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>");
         receivedMessage = helloQueue.receive();

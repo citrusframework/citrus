@@ -38,19 +38,18 @@ import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertListContains;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiServerTest extends AbstractGroovyActionDslTest {
 
@@ -65,7 +64,7 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         .build());
     private HttpServer httpServer;
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         ((AbstractEndpointAdapter) endpointAdapter).setTestContextFactory(testContextFactory);
 
@@ -114,63 +113,63 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        assertEquals(result.getName(), "OpenApiServerTest");
-        assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        assertEquals(result.getActionCount(), 4L);
-        assertEquals(result.getTestAction(0).getClass(), ReceiveMessageAction.class);
-        assertEquals(result.getTestAction(0).getName(), "openapi:receive-request");
+        assertEquals("OpenApiServerTest", result.getName());
+        assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        assertEquals(4L, result.getActionCount());
+        assertEquals(ReceiveMessageAction.class, result.getTestAction(0).getClass());
+        assertEquals("openapi:receive-request", result.getTestAction(0).getName());
 
-        assertEquals(result.getTestAction(1).getClass(), SendMessageAction.class);
-        assertEquals(result.getTestAction(1).getName(), "openapi:send-response");
+        assertEquals(SendMessageAction.class, result.getTestAction(1).getClass());
+        assertEquals("openapi:send-response", result.getTestAction(1).getName());
 
         int actionIndex = 0;
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
-        assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
+        assertEquals(3, receiveMessageAction.getValidationContexts().size());
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(DefaultMessageValidationContext.class::isInstance), "List must contain DefaultMessageValidationContext");
+        assertEquals(0L, receiveMessageAction.getReceiveTimeout());
 
         assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
         HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
-        assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 2L);
+        assertEquals("", httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()));
+        assertEquals(2L, httpMessageBuilder.getMessage().getHeaders().size());
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        assertEquals(receiveMessageAction.getEndpoint(), httpServer);
-        assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
+        assertEquals(httpServer, receiveMessageAction.getEndpoint());
+        assertEquals(0, receiveMessageAction.getControlMessageProcessors().size());
 
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
 
         assertTrue(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()).toString().startsWith("{\"id\": "));
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
+        assertEquals(5L, httpMessageBuilder.getMessage().getHeaders().size());
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
-        assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), APPLICATION_JSON_VALUE);
+        assertEquals(200, httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        assertEquals("OK", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        assertEquals(APPLICATION_JSON_VALUE, httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE));
 
-        Assert.assertNull(sendMessageAction.getEndpoint());
-        assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
-        assertEquals(sendMessageAction.getMessageProcessors().size(), 1);
+        assertNull(sendMessageAction.getEndpoint());
+        assertEquals("httpServer", sendMessageAction.getEndpointUri());
+        assertEquals(1, sendMessageAction.getMessageProcessors().size());
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            HeaderValidationContext.class::isInstance, "List must contain HeaderValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            OpenApiMessageValidationContext.class::isInstance, "List must contain OpenApiMessageValidationContext");
-        assertListContains(receiveMessageAction.getValidationContexts(),
-            DefaultMessageValidationContext.class::isInstance, "List must contain DefaultMessageValidationContext");
-        assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
+        assertEquals(3, receiveMessageAction.getValidationContexts().size());
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(HeaderValidationContext.class::isInstance), "List must contain HeaderValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(OpenApiMessageValidationContext.class::isInstance), "List must contain OpenApiMessageValidationContext");
+        assertTrue(receiveMessageAction.getValidationContexts().stream()
+            .anyMatch(DefaultMessageValidationContext.class::isInstance), "List must contain DefaultMessageValidationContext");
+        assertEquals(2000L, receiveMessageAction.getReceiveTimeout());
 
         httpMessageBuilder = ((HttpMessageBuilder) receiveMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
@@ -178,21 +177,21 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
 
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        assertEquals(requestHeaders.size(), 0L);
-        Assert.assertNull(receiveMessageAction.getEndpointUri());
-        assertEquals(receiveMessageAction.getEndpoint(), httpServer);
+        assertEquals(0L, requestHeaders.size());
+        assertNull(receiveMessageAction.getEndpointUri());
+        assertEquals(httpServer, receiveMessageAction.getEndpoint());
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex);
         httpMessageBuilder = ((HttpMessageBuilder) sendMessageAction.getMessageBuilder());
         assertNotNull(httpMessageBuilder);
-        assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
+        assertEquals("", httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Map<String, Object> responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        assertEquals(responseHeaders.size(), 2L);
-        assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), 201);
-        assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "CREATED");
-        Assert.assertNull(sendMessageAction.getEndpoint());
-        assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
+        assertEquals(2L, responseHeaders.size());
+        assertEquals(201, responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        assertEquals("CREATED", responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        assertNull(sendMessageAction.getEndpoint());
+        assertEquals("httpServer", sendMessageAction.getEndpointUri());
     }
 }

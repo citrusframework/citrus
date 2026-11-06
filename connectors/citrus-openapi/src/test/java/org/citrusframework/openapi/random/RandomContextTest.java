@@ -22,17 +22,17 @@ import java.util.Map;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import org.citrusframework.openapi.OpenApiSpecification;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class RandomContextTest {
 
@@ -42,7 +42,7 @@ public class RandomContextTest {
 
     private Map<String, OasSchema> schemaDefinitions;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         RandomModelBuilder randomModelBuilderMock = mock();
         specificationMock = mock();
@@ -80,7 +80,7 @@ public class RandomContextTest {
 
     @Test
     public void testGetSpecification() {
-        assertEquals(randomContext.getSpecification(), specificationMock);
+        assertEquals(specificationMock, randomContext.getSpecification());
     }
 
     @Test

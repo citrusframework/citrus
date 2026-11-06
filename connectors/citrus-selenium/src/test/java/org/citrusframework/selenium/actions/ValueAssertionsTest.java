@@ -17,13 +17,15 @@
 package org.citrusframework.selenium.actions;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * @since 5.1
  */
-public class ValueAssertionsTest extends AbstractTestNGUnitTest {
+public class ValueAssertionsTest extends AbstractUnitTest {
 
     @Test
     public void shouldAssertEqualValue() {
@@ -42,14 +44,20 @@ public class ValueAssertionsTest extends AbstractTestNGUnitTest {
         ValueAssertions.assertValue("text", "@contains('Citrus')@", "Hello Citrus", context);
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, text expected 'Hello', but was 'Citrus'")
+    @Test
     public void shouldFailOnValueMismatch() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         ValueAssertions.assertValue("text", "Hello", "Citrus", context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, text expected 'Hello', but was 'Citrus'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, attribute 'type' expected 'submit', but was 'button'")
+    @Test
     public void shouldFailOnValueMismatchWithLabel() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         ValueAssertions.assertValue("attribute 'type'", "submit", "button", context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, attribute 'type' expected 'submit', but was 'button'"), e.getMessage());
     }
 
     @Test

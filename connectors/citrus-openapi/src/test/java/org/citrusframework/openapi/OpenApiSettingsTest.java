@@ -19,8 +19,8 @@ package org.citrusframework.openapi;
 import java.util.Optional;
 
 import org.citrusframework.util.SystemProvider;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.api.openapi.AutoFillType.ALL;
 import static org.citrusframework.api.openapi.AutoFillType.NONE;
@@ -44,15 +44,15 @@ import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.REP
 import static org.citrusframework.openapi.validation.OpenApiValidationPolicy.STRICT;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiSettingsTest {
 
     private SystemProvider systemProvider;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
         systemProvider = mock();
     }
@@ -180,89 +180,89 @@ public class OpenApiSettingsTest {
     @Test
     public void testRequestAutoFillRandomValuesAllByProperty()  {
         doReturn(Optional.of("ALL")).when(systemProvider).getProperty(REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY);
-        assertEquals(OpenApiSettings.getRequestAutoFillRandomValues(systemProvider), ALL);
+        assertEquals(ALL, OpenApiSettings.getRequestAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testRequestAutoFillRandomValuesNoneByProperty()  {
         doReturn(Optional.of("NONE")).when(systemProvider).getProperty(REQUEST_AUTO_FILL_RANDOM_VALUES_PROPERTY);
-        assertEquals(OpenApiSettings.getRequestAutoFillRandomValues(systemProvider), NONE);
+        assertEquals(NONE, OpenApiSettings.getRequestAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testRequestAutoFillRandomValuesAllEnvVar()  {
         doReturn(Optional.of("ALL")).when(systemProvider).getEnv(REQUEST_AUTO_FILL_RANDOM_VALUES_ENV);
-        assertEquals(OpenApiSettings.getRequestAutoFillRandomValues(systemProvider), ALL);
+        assertEquals(ALL, OpenApiSettings.getRequestAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testRequestAutoFillRandomValuesNoneEnvVar()  {
         doReturn(Optional.of("NONE")).when(systemProvider).getEnv(REQUEST_AUTO_FILL_RANDOM_VALUES_ENV);
-        assertEquals(OpenApiSettings.getRequestAutoFillRandomValues(systemProvider), NONE);
+        assertEquals(NONE, OpenApiSettings.getRequestAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testRequestAutoFillRandomValuesRequiredByDefault()  {
-        assertEquals(OpenApiSettings.getRequestAutoFillRandomValues(systemProvider), REQUIRED);
+        assertEquals(REQUIRED, OpenApiSettings.getRequestAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testResponseAutoFillRandomValuesAllByProperty()  {
         doReturn(Optional.of("ALL")).when(systemProvider).getProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY);
-        assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(systemProvider), ALL);
+        assertEquals(ALL, OpenApiSettings.getResponseAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testResponseAutoFillRandomValuesNoneByProperty()  {
         doReturn(Optional.of("NONE")).when(systemProvider).getProperty(RESPONSE_AUTO_FILL_RANDOM_VALUES_PROPERTY);
-        assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(systemProvider), NONE);
+        assertEquals(NONE, OpenApiSettings.getResponseAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testResponseAutoFillRandomValuesAllEnvVar()  {
         doReturn(Optional.of("ALL")).when(systemProvider).getEnv(RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV);
-        assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(systemProvider), ALL);
+        assertEquals(ALL, OpenApiSettings.getResponseAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testResponseAutoFillRandomValuesNoneEnvVar()  {
         doReturn(Optional.of("NONE")).when(systemProvider).getEnv(RESPONSE_AUTO_FILL_RANDOM_VALUES_ENV);
-        assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(systemProvider), NONE);
+        assertEquals(NONE, OpenApiSettings.getResponseAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testResponseAutoFillRandomValuesRequiredByDefault()  {
-        assertEquals(OpenApiSettings.getResponseAutoFillRandomValues(systemProvider), REQUIRED);
+        assertEquals(REQUIRED, OpenApiSettings.getResponseAutoFillRandomValues(systemProvider));
     }
 
     @Test
     public void testOpenApiValidationPolicyIgnoreByProperty()  {
         doReturn(Optional.of("IGNORE")).when(systemProvider).getProperty(OPEN_API_VALIDATION_POLICY_PROPERTY);
-        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(systemProvider),
-            IGNORE);
+        assertEquals(IGNORE,
+            OpenApiSettings.getOpenApiValidationPolicy(systemProvider));
     }
 
     @Test
     public void testOpenApiValidationPolicyStrictByProperty()  {
         doReturn(Optional.of("STRICT")).when(systemProvider).getProperty(OPEN_API_VALIDATION_POLICY_PROPERTY);
-        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(systemProvider), STRICT);
+        assertEquals(STRICT, OpenApiSettings.getOpenApiValidationPolicy(systemProvider));
     }
 
     @Test
     public void testOpenApiValidationPolicyIgnoreByEnvVar()  {
         doReturn(Optional.of("IGNORE")).when(systemProvider).getEnv(OPEN_API_VALIDATION_POLICY_ENV);
-        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(systemProvider), IGNORE);
+        assertEquals(IGNORE, OpenApiSettings.getOpenApiValidationPolicy(systemProvider));
     }
 
     @Test
     public void testOpenApiValidationPolicyStrictByEnvVar()  {
         doReturn(Optional.of("STRICT")).when(systemProvider).getEnv(OPEN_API_VALIDATION_POLICY_ENV);
-        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(systemProvider), STRICT);
+        assertEquals(STRICT, OpenApiSettings.getOpenApiValidationPolicy(systemProvider));
     }
 
     @Test
     public void testOpenApiValidationPolicyStrictByDefault()  {
-        assertEquals(OpenApiSettings.getOpenApiValidationPolicy(systemProvider), REPORT);
+        assertEquals(REPORT, OpenApiSettings.getOpenApiValidationPolicy(systemProvider));
     }
 
 }

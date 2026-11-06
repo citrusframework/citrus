@@ -24,30 +24,32 @@ import java.net.http.HttpResponse;
 import org.citrusframework.TestAction;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.integration.AbstractTestcontainersIT;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ComposeIT extends AbstractTestcontainersIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void shouldStartContainer() {
-        given(doFinally().actions(testcontainers().compose()
+    public void shouldStartContainer(@CitrusResource TestCaseRunner runner) {
+        runner.given(doFinally().actions(testcontainers().compose()
                 .down()));
 
-        when(testcontainers()
+        runner.when(testcontainers()
                 .compose()
                 .up(Resources.create("compose.yaml", ComposeIT.class)));
 
-        then(waitFor().http().url("http://localhost:8880"));
+        runner.then(waitFor().http().url("http://localhost:8880"));
 
-        then(verifyExposedHttpEndpoint());
+        runner.then(verifyExposedHttpEndpoint());
     }
 
     private TestAction verifyExposedHttpEndpoint() {
@@ -61,9 +63,10 @@ public class ComposeIT extends AbstractTestcontainersIT implements TestActionSup
                                     .GET()
                                     .build(), HttpResponse.BodyHandlers.ofString());
 
-                    Assert.assertEquals(response.statusCode(), 200);
-                    Assert.assertEquals(response.body(),
-                            FileUtils.readToString(Resources.create("html/index.html", ComposeIT.class)));
+                    Assertions.assertEquals(200, response.statusCode());
+                    Assertions.assertEquals(
+                            FileUtils.readToString(Resources.create("html/index.html", ComposeIT.class)),
+                            response.body());
                 } catch (Exception e) {
                     throw new CitrusRuntimeException("Failed to verify exposed Http endpoint", e);
                 }

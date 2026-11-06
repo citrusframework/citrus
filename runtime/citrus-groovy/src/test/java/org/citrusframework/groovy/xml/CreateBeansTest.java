@@ -21,8 +21,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.groovy.actions.CreateBeansAction;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateBeansTest extends AbstractXmlActionTest {
 
@@ -30,20 +30,20 @@ public class CreateBeansTest extends AbstractXmlActionTest {
     public void shouldLoadGroovyActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/xml/create-beans.citrus.it.xml");
 
-        Assert.assertFalse(context.getReferenceResolver().isResolvable(DefaultTextEqualsMessageValidator.class));
+        Assertions.assertFalse(context.getReferenceResolver().isResolvable(DefaultTextEqualsMessageValidator.class));
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateBeansTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateBeansAction.class);
+        Assertions.assertEquals("CreateBeansTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(CreateBeansAction.class, result.getTestAction(0).getClass());
 
         CreateBeansAction action = (CreateBeansAction) result.getTestAction(0);
-        Assert.assertNull(action.getScriptResourcePath());
-        Assert.assertNotNull(action.getScript().trim());
+        Assertions.assertNull(action.getScriptResourcePath());
+        Assertions.assertNotNull(action.getScript().trim());
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable(DefaultTextEqualsMessageValidator.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable(DefaultTextEqualsMessageValidator.class));
     }
 }

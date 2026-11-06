@@ -17,21 +17,23 @@
 package org.citrusframework.selenium.actions;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Coordinates;
 import org.openqa.selenium.remote.RemoteWebElement;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class DragAndDropActionTest extends AbstractTestNGUnitTest {
+
+public class DragAndDropActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
@@ -39,7 +41,7 @@ public class DragAndDropActionTest extends AbstractTestNGUnitTest {
     private final RemoteWebElement source = Mockito.mock(RemoteWebElement.class);
     private final RemoteWebElement target = Mockito.mock(RemoteWebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, source, target);
 
@@ -84,9 +86,9 @@ public class DragAndDropActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to find element 'By.id: target' on page")
+    @Test
     public void testMissingTargetElement() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.findElement(By.id("source"))).thenReturn(source);
         when(webDriver.findElement(By.id("target"))).thenThrow(new NoSuchElementException("No such element"));
 
@@ -96,11 +98,13 @@ public class DragAndDropActionTest extends AbstractTestNGUnitTest {
                 .target("id", "target")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to find element 'By\\.id: target' on page"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing target element for drag and drop action")
+    @Test
     public void testMissingTargetSelector() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.findElement(By.id("source"))).thenReturn(source);
 
         DragAndDropAction action = new DragAndDropAction.Builder()
@@ -108,15 +112,19 @@ public class DragAndDropActionTest extends AbstractTestNGUnitTest {
                 .element("id", "source")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing target element for drag and drop action"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Invalid element identifier object, expected By object but got null")
+    @Test
     public void testNullTargetObject() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new DragAndDropAction.Builder()
                 .browser(seleniumBrowser)
                 .element("id", "source")
                 .target((Object) null)
                 .build();
+    });
+        Assertions.assertTrue(e.getMessage().matches("Invalid element identifier object, expected By object but got null"), e.getMessage());
     }
 }

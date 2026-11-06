@@ -18,15 +18,15 @@ package org.citrusframework.playwright.model;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 import org.citrusframework.context.TestContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 import org.citrusframework.playwright.util.LocatorResolver;
 
 class LocatorSpecTest {

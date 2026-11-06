@@ -21,31 +21,32 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 2.7
  */
-public class OpenWindowActionTest extends AbstractTestNGUnitTest {
+public class OpenWindowActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private final WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, locator);
 
@@ -71,15 +72,16 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
-        Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "new_window");
-        Assert.assertEquals(context.getVariable("myNewWindow"), "new_window");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
+        Assertions.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW), "new_window");
+        Assertions.assertEquals(context.getVariable("myNewWindow"), "new_window");
 
         verify(locator).window("new_window");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to open new window")
+    @Test
     public void testOpenWindowFailed() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(webDriver.getWindowHandles()).thenReturn(Collections.singleton("active_window"));
         when(webDriver.getWindowHandle()).thenReturn("active_window");
 
@@ -90,5 +92,7 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
                 .window("myNewWindow")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to open new window"), e.getMessage());
     }
 }

@@ -20,8 +20,8 @@ import java.util.List;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DATE;
 import static org.citrusframework.openapi.OpenApiConstants.FORMAT_DATE_TIME;
@@ -31,15 +31,15 @@ import static org.citrusframework.openapi.OpenApiConstants.TYPE_STRING;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OasRandomConfigurationTest {
 
     private RandomConfiguration randomConfiguration;
 
-    @BeforeClass
+    @BeforeEach
     public void setUp() {
         randomConfiguration = RandomConfiguration.RANDOM_CONFIGURATION;
     }

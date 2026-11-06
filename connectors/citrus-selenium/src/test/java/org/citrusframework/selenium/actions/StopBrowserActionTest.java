@@ -16,28 +16,29 @@
 
 package org.citrusframework.selenium.actions;
 
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Browser;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
+
 /**
  * @since 2.7
  */
-public class StopBrowserActionTest extends AbstractTestNGUnitTest {
+public class StopBrowserActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver);
 
@@ -54,8 +55,8 @@ public class StopBrowserActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertFalse(context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER));
-        Assert.assertNull(seleniumBrowser.getWebDriver());
+        Assertions.assertFalse(context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER));
+        Assertions.assertNull(seleniumBrowser.getWebDriver());
 
         verify(webDriver).quit();
     }

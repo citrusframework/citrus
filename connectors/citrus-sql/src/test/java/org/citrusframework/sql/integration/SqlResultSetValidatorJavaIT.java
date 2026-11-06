@@ -22,24 +22,32 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.sql.validation.SqlPojoValidationCallback;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Plain-Java result-set validation against a real database (T5): the validator from
  * citrus#619 runs without any script, POJOs map end to end, and the new branches
  * compose with the pre-existing validation paths.
  */
-@Test
-public class SqlResultSetValidatorJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@Isolated("ITs share one HSQLDB in-memory database (jdbc:hsqldb:mem:test)")
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class SqlResultSetValidatorJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("testDataSource")
@@ -57,8 +65,8 @@ public class SqlResultSetValidatorJavaIT extends TestNGCitrusSpringSupport imple
         }
     }
 
-    private void seed() {
-        run(sql().dataSource(dataSource)
+    private void seed(TestCaseRunner runner) {
+        runner.run(sql().dataSource(dataSource)
             .sqlResource("classpath:org/citrusframework/sql/integration/script.sql"));
     }
 
@@ -72,78 +80,80 @@ public class SqlResultSetValidatorJavaIT extends TestNGCitrusSpringSupport imple
         return false;
     }
 
+    @Test
     @CitrusTest
-    public void plainValidatorRunsWithoutScript() {
-        seed();
+    public void plainValidatorRunsWithoutScript(@CitrusResource TestCaseRunner runner) {
+        seed(runner);
 
         List<Map<String, Object>> captured = new ArrayList<>();
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select DESCRIPTION from ORDERS where ORDER_ID=1")
             .validator((resultSet, context) -> captured.addAll(resultSet)));
 
-        Assert.assertEquals(captured.size(), 1);
-        Assert.assertEquals(String.valueOf(captured.get(0).get("DESCRIPTION")), "Migrate");
+        Assertions.assertEquals(1, captured.size());
+        Assertions.assertEquals("Migrate", String.valueOf(captured.get(0).get("DESCRIPTION")));
     }
 
+    @Test
     @CitrusTest
-    public void failingPlainValidatorFailsTest() {
-        seed();
+    public void failingPlainValidatorFailsTest(@CitrusResource TestCaseRunner runner) {
+        seed(runner);
 
-        try {
-            run(query().dataSource(dataSource)
+        TestCaseFailedException e = Assertions.assertThrows(TestCaseFailedException.class, () ->
+            runner.run(query().dataSource(dataSource)
                 .statement("select DESCRIPTION from ORDERS where ORDER_ID=1")
                 .validator((resultSet, context) -> {
                     throw new ValidationException("always fails");
-                }));
-        } catch (Exception e) {
-            Assert.assertTrue(containsCause(e, "always fails"),
-                    "expected the validator failure in the cause chain, got: " + e);
-            return;
-        }
-
-        Assert.fail("Expected ValidationException from failing plain validator");
+                })));
+        Assertions.assertInstanceOf(ValidationException.class, e.getCause(),
+                "expected a ValidationException as cause, got: " + e.getCause());
+        Assertions.assertTrue(containsCause(e, "always fails"),
+                "expected the validator failure in the cause chain, got: " + e);
     }
 
+    @Test
     @CitrusTest
-    public void pojoCallbackEndToEnd() {
-        seed();
+    public void pojoCallbackEndToEnd(@CitrusResource TestCaseRunner runner) {
+        seed(runner);
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select DESCRIPTION from ORDERS order by ORDER_ID")
             .validator(new SqlPojoValidationCallback<OrderDescription>(OrderDescription.class) {
                 @Override
                 protected void validate(OrderDescription row, TestContext context) {
-                    Assert.assertEquals(row.getDescription(), "Migrate");
+                    Assertions.assertEquals("Migrate", row.getDescription());
                 }
             }));
     }
 
+    @Test
     @CitrusTest
-    public void plainValidatorSeesMultiStatementUnion() {
-        seed();
+    public void plainValidatorSeesMultiStatementUnion(@CitrusResource TestCaseRunner runner) {
+        seed(runner);
 
         List<Map<String, Object>> captured = new ArrayList<>();
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select DESCRIPTION from ORDERS")
             .statement("select NAME from CUSTOMERS")
             .validator((resultSet, context) -> captured.addAll(resultSet)));
 
-        Assert.assertEquals(captured.size(), 3);
+        Assertions.assertEquals(3, captured.size());
     }
 
+    @Test
     @CitrusTest
-    public void plainValidatorComposesWithControlResultSet() {
-        seed();
+    public void plainValidatorComposesWithControlResultSet(@CitrusResource TestCaseRunner runner) {
+        seed(runner);
 
         boolean[] called = {false};
 
-        run(query().dataSource(dataSource)
+        runner.run(query().dataSource(dataSource)
             .statement("select DESCRIPTION from ORDERS where ORDER_ID=1")
             .validate("DESCRIPTION", "Migrate")
             .validator((resultSet, context) -> called[0] = true));
 
-        Assert.assertTrue(called[0], "plain validator did not run alongside control validation");
+        Assertions.assertTrue(called[0], "plain validator did not run alongside control validation");
     }
 }

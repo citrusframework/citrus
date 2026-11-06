@@ -18,28 +18,29 @@ package org.citrusframework.selenium.actions;
 
 import java.net.URL;
 
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Browser;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+
 
 /**
  * @since 2.7
  */
-public class NavigateActionTest extends AbstractTestNGUnitTest {
+public class NavigateActionTest extends AbstractUnitTest {
 
     private SeleniumBrowser seleniumBrowser;
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebDriver.Navigation navigation = Mockito.mock(WebDriver.Navigation.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, navigation);
 
@@ -53,7 +54,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     public void testNavigatePageUrl() {
         seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.CHROME.browserName());
         doAnswer((Answer<Object>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
+            Assertions.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
             return null;
         }).when(navigation).to(any(URL.class));
 
@@ -70,7 +71,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     public void testNavigatePageUrlInternetExplorer() {
         seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());
         doAnswer((Answer<Object>) invocation -> {
-            Assert.assertTrue(invocation.getArguments()[0].toString().startsWith("http://localhost:8080?timestamp="));
+            Assertions.assertTrue(invocation.getArguments()[0].toString().startsWith("http://localhost:8080?timestamp="));
             return null;
         }).when(navigation).to(any(URL.class));
 

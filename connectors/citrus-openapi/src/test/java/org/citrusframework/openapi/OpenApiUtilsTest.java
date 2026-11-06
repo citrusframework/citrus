@@ -20,10 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.citrusframework.spi.ReferenceResolver;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -31,29 +28,17 @@ import static org.citrusframework.openapi.util.OpenApiUtils.getKnownOpenApiAlias
 import static org.citrusframework.openapi.util.OpenApiUtils.getMethodPath;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenApiUtilsTest {
-
-    private AutoCloseable mockCloseable;
-
-    @BeforeMethod
-    public void beforeMethod() {
-        mockCloseable = MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterMethod
-    public void afterMethod() throws Exception {
-        mockCloseable.close();
-    }
 
     @Test
     public void shouldReturnFormattedMethodPathWhenMethodAndPathAreProvided() {
         // When
         String methodPath = getMethodPath("POST", "/api/path");
         // Then
-        assertEquals(methodPath, "POST_/api/path");
+        assertEquals("POST_/api/path", methodPath);
     }
 
     @Test
@@ -61,7 +46,7 @@ public class OpenApiUtilsTest {
         // When
         String methodPath = getMethodPath("", "/api/path");
         // Then
-        assertEquals(methodPath, "_/api/path");
+        assertEquals("_/api/path", methodPath);
     }
 
     @Test
@@ -69,7 +54,7 @@ public class OpenApiUtilsTest {
         // When
         String methodPath = getMethodPath("", "");
         // Then
-        assertEquals(methodPath, "_/");
+        assertEquals("_/", methodPath);
     }
 
     @Test
@@ -121,6 +106,6 @@ public class OpenApiUtilsTest {
         String result = getKnownOpenApiAliases(resolver);
 
         // Verify the result
-        assertEquals(result, "");
+        assertEquals("", result);
     }
 }

@@ -16,10 +16,10 @@
 
 package org.citrusframework.playwright.endpoint;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -32,7 +32,7 @@ import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
 import java.util.List;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.options.HttpCredentials;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class PlaywrightEndpointBuilderTest {
 
@@ -79,9 +79,9 @@ class PlaywrightEndpointBuilderTest {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Map<String, EndpointComponent> endpointComponents = EndpointComponent.lookup();
 
-        assertEquals(actionBuilders.get("playwright").getClass(), PlaywrightActionBuilder.class);
-        assertEquals(endpointBuilders.get("playwright").getClass(), PlaywrightEndpointBuilder.class);
-        assertEquals(endpointComponents.get("playwright").getClass(), PlaywrightEndpointComponent.class);
+        assertEquals(PlaywrightActionBuilder.class, actionBuilders.get("playwright").getClass());
+        assertEquals(PlaywrightEndpointBuilder.class, endpointBuilders.get("playwright").getClass());
+        assertEquals(PlaywrightEndpointComponent.class, endpointComponents.get("playwright").getClass());
     }
 
     @Test

@@ -478,20 +478,14 @@ public class FtpMessage extends DefaultMessage {
      * @param command
      */
     private void setCommandHeader(CommandType command) {
-        String header;
-        if (command instanceof ConnectCommand) {
-            header = FtpMessage.OPEN_COMMAND;
-        } else if (command instanceof GetCommand) {
-            header = FTPCmd.RETR.getCommand();
-        } else if (command instanceof PutCommand) {
-            header = FTPCmd.STOR.getCommand();
-        } else if (command instanceof ListCommand) {
-            header = FTPCmd.LIST.getCommand();
-        } else if (command instanceof DeleteCommand) {
-            header = FTPCmd.DELE.getCommand();
-        } else {
-            header = command.getSignal();
-        }
+        String header = switch (command) {
+            case ConnectCommand connectCommand -> FtpMessage.OPEN_COMMAND;
+            case GetCommand getCommand -> FTPCmd.RETR.getCommand();
+            case PutCommand putCommand -> FTPCmd.STOR.getCommand();
+            case ListCommand listCommand -> FTPCmd.LIST.getCommand();
+            case DeleteCommand deleteCommand -> FTPCmd.DELE.getCommand();
+            default -> command.getSignal();
+        };
 
         setHeader(FtpMessageHeaders.FTP_COMMAND, header);
     }

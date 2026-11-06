@@ -91,32 +91,28 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
     @SchemaProperty(description = "Sets the Http client used to send requests. " +
             "Uses an endpoint URI or references an endpoint name.")
     public void setClient(String httpClient) {
-        if (builder == null) {
-            builder = new OpenApiActionBuilder().client(httpClient);
-        } else if (builder instanceof OpenApiActionBuilder openApiActionBuilder) {
-            builder = openApiActionBuilder.client(httpClient);
-        } else if (builder instanceof OpenApiClientActionBuilder openApiClientActionBuilder) {
-            openApiClientActionBuilder.client(httpClient);
-        }  else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(httpClient);
-        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(httpClient);
+        switch (builder) {
+            case null -> builder = new OpenApiActionBuilder().client(httpClient);
+            case OpenApiActionBuilder openApiActionBuilder -> builder = openApiActionBuilder.client(httpClient);
+            case OpenApiClientActionBuilder openApiClientActionBuilder -> openApiClientActionBuilder.client(httpClient);
+            case SendActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(httpClient);
+            case ReceiveActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(httpClient);
+            default -> {
+            }
         }
     }
 
     @SchemaProperty(description = "Sets the Http server that provides the Http API. " +
             "Uses an endpoint URI or references an endpoint name.")
     public void setServer(String httpServer) {
-        if (builder == null) {
-            builder = new OpenApiActionBuilder().server(httpServer);
-        } else if (builder instanceof OpenApiActionBuilder openApiActionBuilder) {
-            builder = openApiActionBuilder.server(httpServer);
-        } else if (builder instanceof OpenApiServerActionBuilder openApiServerActionBuilder) {
-            openApiServerActionBuilder.server(httpServer);
-        } else if (builder instanceof SendActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(httpServer);
-        } else if (builder instanceof ReceiveActionBuilder<?,?,?> messageActionBuilder) {
-            messageActionBuilder.endpoint(httpServer);
+        switch (builder) {
+            case null -> builder = new OpenApiActionBuilder().server(httpServer);
+            case OpenApiActionBuilder openApiActionBuilder -> builder = openApiActionBuilder.server(httpServer);
+            case OpenApiServerActionBuilder openApiServerActionBuilder -> openApiServerActionBuilder.server(httpServer);
+            case SendActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(httpServer);
+            case ReceiveActionBuilder<?, ?, ?> messageActionBuilder -> messageActionBuilder.endpoint(httpServer);
+            default -> {
+            }
         }
     }
 

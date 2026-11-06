@@ -156,15 +156,15 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
 
         if (interceptors != null) {
             for (Object interceptor : interceptors) {
-                if (interceptor instanceof MappedInterceptor mappedInterceptor) {
-                    mappedInterceptor.setPathMatcher(new AntPathMatcher());
-                    handlerInterceptors.add(new MappedInterceptorAdapter(mappedInterceptor));
-                } else if (interceptor instanceof HandlerInterceptor handlerInterceptor) {
-                    handlerInterceptors.add(handlerInterceptor);
-                } else if (interceptor instanceof WebRequestInterceptor webRequestInterceptor) {
-                    handlerInterceptors.add(new WebRequestHandlerInterceptorAdapter(webRequestInterceptor));
-                } else {
-                    logger.warn("Unsupported interceptor type: {}", interceptor.getClass().getName());
+                switch (interceptor) {
+                    case MappedInterceptor mappedInterceptor -> {
+                        mappedInterceptor.setPathMatcher(new AntPathMatcher());
+                        handlerInterceptors.add(new MappedInterceptorAdapter(mappedInterceptor));
+                    }
+                    case HandlerInterceptor handlerInterceptor -> handlerInterceptors.add(handlerInterceptor);
+                    case WebRequestInterceptor webRequestInterceptor ->
+                            handlerInterceptors.add(new WebRequestHandlerInterceptorAdapter(webRequestInterceptor));
+                    default -> logger.warn("Unsupported interceptor type: {}", interceptor.getClass().getName());
                 }
             }
         }

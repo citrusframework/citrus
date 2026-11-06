@@ -16,34 +16,39 @@
 
 package org.citrusframework.selenium.actions;
 
+import java.util.stream.Stream;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 2.7
  */
-public class FindElementActionTest extends AbstractTestNGUnitTest {
+public class FindElementActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
     private final WebElement element = Mockito.mock(WebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, element);
 
@@ -54,13 +59,14 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         when(element.getTagName()).thenReturn("button");
     }
 
-    @Test(dataProvider = "findByProvider")
+    @ParameterizedTest(name = "findByProvider={0}")
+    @MethodSource("findByProvider")
     public void testExecuteFindBy(String property, String value, final By by) {
         when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
             By select = (By) invocation.getArguments()[0];
 
-            Assert.assertEquals(select.getClass(), by.getClass());
-            Assert.assertEquals(select.toString(), by.toString());
+            Assertions.assertEquals(select.getClass(), by.getClass());
+            Assertions.assertEquals(select.toString(), by.toString());
             return element;
         });
 
@@ -70,20 +76,19 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariableObject("button"), element);
+        Assertions.assertEquals(context.getVariableObject("button"), element);
     }
 
-    @DataProvider
-    public Object[][] findByProvider() {
-        return new Object[][] {
-            new Object[] { "id", "myId", By.id("myId") },
-            new Object[] { "name", "myName", By.name("myName") },
-            new Object[] { "tag-name", "button", By.tagName("button") },
-            new Object[] { "class-name", "myClass", By.className("myClass") },
-            new Object[] { "link-text", "myLinkText", By.linkText("myLinkText") },
-            new Object[] { "css-selector", "myCss", By.cssSelector("myCss") },
-            new Object[] { "xpath", "myXpath", By.xpath("myXpath") }
-        };
+    static Stream<Arguments> findByProvider() {
+        return Stream.of(
+            Arguments.of("id", "myId", By.id("myId")),
+            Arguments.of("name", "myName", By.name("myName")),
+            Arguments.of("tag-name", "button", By.tagName("button")),
+            Arguments.of("class-name", "myClass", By.className("myClass")),
+            Arguments.of("link-text", "myLinkText", By.linkText("myLinkText")),
+            Arguments.of("css-selector", "myCss", By.cssSelector("myCss")),
+            Arguments.of("xpath", "myXpath", By.xpath("myXpath"))
+        );
     }
 
     @Test
@@ -91,8 +96,8 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
             By select = (By) invocation.getArguments()[0];
 
-            Assert.assertEquals(select.getClass(), By.ById.class);
-            Assert.assertEquals(select.toString(), By.id("clickMe").toString());
+            Assertions.assertEquals(select.getClass(), By.ById.class);
+            Assertions.assertEquals(select.toString(), By.id("clickMe").toString());
             return element;
         });
 
@@ -104,7 +109,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariableObject("button"), element);
+        Assertions.assertEquals(context.getVariableObject("button"), element);
     }
 
     @Test
@@ -116,8 +121,8 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
             By select = (By) invocation.getArguments()[0];
 
-            Assert.assertEquals(select.getClass(), By.ByName.class);
-            Assert.assertEquals(select.toString(), By.name("clickMe").toString());
+            Assertions.assertEquals(select.getClass(), By.ByName.class);
+            Assertions.assertEquals(select.toString(), By.name("clickMe").toString());
             return element;
         });
 
@@ -131,10 +136,11 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        Assert.assertEquals(context.getVariableObject("button"), element);
+        Assertions.assertEquals(context.getVariableObject("button"), element);
     }
 
-    @Test(dataProvider = "validationErrorProvider")
+    @ParameterizedTest(name = "validationErrorProvider={0}")
+    @MethodSource("validationErrorProvider")
     public void testExecuteFindByValidationFailed(String tagName, String text, String attribute, String cssStyle, boolean displayed, boolean enabled, String errorMsg) {
         when(element.getTagName()).thenReturn("button");
         when(element.getText()).thenReturn("Click Me!");
@@ -144,8 +150,8 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
             By select = (By) invocation.getArguments()[0];
 
-            Assert.assertEquals(select.getClass(), By.ByName.class);
-            Assert.assertEquals(select.toString(), By.name("clickMe").toString());
+            Assertions.assertEquals(select.getClass(), By.ByName.class);
+            Assertions.assertEquals(select.toString(), By.name("clickMe").toString());
             return element;
         });
 
@@ -161,22 +167,21 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
                 .build();
         try {
             action.execute(context);
-            Assert.fail("Missing exception to to validation error");
+            Assertions.fail("Missing exception to to validation error");
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().endsWith(errorMsg), e.getMessage());
+            Assertions.assertTrue(e.getMessage().endsWith(errorMsg), e.getMessage());
         }
     }
 
-    @DataProvider
-    public Object[][] validationErrorProvider() {
-        return new Object[][] {
-                new Object[] { "input", "Click Me!", "submit", "red", true, true, "tag-name expected 'input', but was 'button'" },
-                new Object[] { "button", "Click!", "submit", "red", true, true, "text expected 'Click!', but was 'Click Me!'" },
-                new Object[] { "button", "Click Me!", "cancel", "red", true, true, "attribute 'type' expected 'cancel', but was 'submit'" },
-                new Object[] { "button", "Click Me!", "submit", "red", false, true, "'displayed' expected 'false', but was 'true'" },
-                new Object[] { "button", "Click Me!", "submit", "red", true, false, "'enabled' expected 'false', but was 'true'" },
-                new Object[] { "button", "Click Me!", "submit", "blue", true, true, "css style 'color' expected 'blue', but was 'red'" }
-        };
+    static Stream<Arguments> validationErrorProvider() {
+        return Stream.of(
+                Arguments.of("input", "Click Me!", "submit", "red", true, true, "tag-name expected 'input', but was 'button'"),
+                Arguments.of("button", "Click!", "submit", "red", true, true, "text expected 'Click!', but was 'Click Me!'"),
+                Arguments.of("button", "Click Me!", "cancel", "red", true, true, "attribute 'type' expected 'cancel', but was 'submit'"),
+                Arguments.of("button", "Click Me!", "submit", "red", false, true, "'displayed' expected 'false', but was 'true'"),
+                Arguments.of("button", "Click Me!", "submit", "red", true, false, "'enabled' expected 'false', but was 'true'"),
+                Arguments.of("button", "Click Me!", "submit", "blue", true, true, "css style 'color' expected 'blue', but was 'red'")
+        );
     }
 
     @Test
@@ -190,19 +195,22 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
 
         try {
             action.execute(context);
-            Assert.fail("Missing CitrusRuntimeException on missing element");
+            Assertions.fail("Missing CitrusRuntimeException on missing element");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to find element 'By.id: myButton' on page");
-            Assert.assertTrue(e.getCause() instanceof NoSuchElementException, e.getCause().getClass().getName());
+            Assertions.assertEquals(e.getMessage(), "Failed to find element 'By.id: myButton' on page");
+            Assertions.assertTrue(e.getCause() instanceof NoSuchElementException, e.getCause().getClass().getName());
         }
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown selector type: unsupported")
+    @Test
     public void testElementUnsupportedProperty() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         FindElementAction action =  new FindElementAction.Builder()
                 .browser(seleniumBrowser)
                 .element("unsupported", "wrong")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Unknown selector type: unsupported"), e.getMessage());
     }
 }

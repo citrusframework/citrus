@@ -16,8 +16,8 @@
 
 package org.citrusframework.playwright.actions;
 
-import static org.testng.Assert.expectThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -32,9 +32,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Request;
 import com.microsoft.playwright.Response;
@@ -46,7 +46,7 @@ class NetworkActionTest {
     private MockPlaywrightBrowser browser;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     void setUp() {
         browser = new MockPlaywrightBrowser();
         context = new TestContext();
@@ -54,7 +54,7 @@ class NetworkActionTest {
         PlaywrightBrowserScope.bind(browser, context);
     }
 
-    @AfterMethod
+    @AfterEach
     void clearScope() {
         PlaywrightBrowserScope.clear();
     }
@@ -79,7 +79,7 @@ class NetworkActionTest {
 
         NetworkAction action = new NetworkAction.Builder().verifyUrlContains("/orders").build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("/orders"));
     }
 
@@ -178,7 +178,7 @@ class NetworkActionTest {
         NetworkAction action = new NetworkAction.Builder().waitForResponse().urlContains("/orders")
                 .verifyServerAddress("10.0.0.1", 443).build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("10.0.0.1"));
     }
 
@@ -197,7 +197,7 @@ class NetworkActionTest {
         NetworkAction action = new NetworkAction.Builder().waitForResponse().urlContains("/orders")
                 .verifySecurityDetails("TLSv1.2").build();
 
-        ValidationException exception = expectThrows(ValidationException.class, () -> action.execute(context));
+        ValidationException exception = assertThrows(ValidationException.class, () -> action.execute(context));
         assertTrue(exception.getMessage().contains("TLSv1.2"));
     }
 
@@ -252,17 +252,17 @@ class NetworkActionTest {
 
     @Test
     void shouldFailFastWhenCommandMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new NetworkAction.Builder().build());
+        assertThrows(CitrusRuntimeException.class, () -> new NetworkAction.Builder().build());
     }
 
     @Test
     void shouldFailFastWhenRouteUrlPatternMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new NetworkAction.Builder().abort().build());
+        assertThrows(CitrusRuntimeException.class, () -> new NetworkAction.Builder().abort().build());
     }
 
     @Test
     void shouldFailFastWhenVerifyTextMissing() {
-        expectThrows(CitrusRuntimeException.class, () -> new NetworkAction.Builder().verifyUrlContains(null).build());
+        assertThrows(CitrusRuntimeException.class, () -> new NetworkAction.Builder().verifyUrlContains(null).build());
     }
 
     private void seedNetwork(String url) {

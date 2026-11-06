@@ -20,27 +20,28 @@ import java.util.Date;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CookieActionTest extends AbstractTestNGUnitTest {
+
+public class CookieActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
     private final WebDriver.Options options = Mockito.mock(WebDriver.Options.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         Mockito.reset(webDriver, options);
 
@@ -66,14 +67,14 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
         verify(options).addCookie(cookieCaptor.capture());
 
         Cookie cookie = cookieCaptor.getValue();
-        Assert.assertEquals(cookie.getName(), "token");
-        Assert.assertEquals(cookie.getValue(), "abc");
-        Assert.assertEquals(cookie.getDomain(), "localhost");
-        Assert.assertEquals(cookie.getPath(), "/");
-        Assert.assertNotNull(cookie.getExpiry());
-        Assert.assertTrue(cookie.isSecure());
-        Assert.assertTrue(cookie.isHttpOnly());
-        Assert.assertEquals(cookie.getSameSite(), "Lax");
+        Assertions.assertEquals(cookie.getName(), "token");
+        Assertions.assertEquals(cookie.getValue(), "abc");
+        Assertions.assertEquals(cookie.getDomain(), "localhost");
+        Assertions.assertEquals(cookie.getPath(), "/");
+        Assertions.assertNotNull(cookie.getExpiry());
+        Assertions.assertTrue(cookie.isSecure());
+        Assertions.assertTrue(cookie.isHttpOnly());
+        Assertions.assertEquals(cookie.getSameSite(), "Lax");
     }
 
     @Test
@@ -89,7 +90,7 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
 
         ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
         verify(options).addCookie(cookieCaptor.capture());
-        Assert.assertEquals(cookieCaptor.getValue().getExpiry(), expiry);
+        Assertions.assertEquals(cookieCaptor.getValue().getExpiry(), expiry);
     }
 
     @Test
@@ -102,7 +103,7 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
                 .build()
                 .execute(context);
 
-        Assert.assertEquals(context.getVariable("language"), "en");
+        Assertions.assertEquals(context.getVariable("language"), "en");
     }
 
     @Test
@@ -144,8 +145,9 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
         verify(options).getCookieNamed("token");
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, cookie 'token' expected 'absent', but was present")
+    @Test
     public void shouldFailOnVerifyAbsentWhenPresent() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(options.getCookieNamed("token")).thenReturn(new Cookie("token", "abc"));
 
         new CookieAction.Builder()
@@ -153,10 +155,13 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
                 .verifyAbsent("token")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, cookie 'token' expected 'absent', but was present"), e.getMessage());
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Selenium validation failed, cookie 'lang' expected 'de', but was 'en'")
+    @Test
     public void shouldFailOnVerifyMismatch() {
+        var e = Assertions.assertThrows(ValidationException.class, () -> {
         when(options.getCookieNamed("lang")).thenReturn(new Cookie("lang", "en"));
 
         new CookieAction.Builder()
@@ -164,10 +169,13 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
                 .verify("lang", "de")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Selenium validation failed, cookie 'lang' expected 'de', but was 'en'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find cookie 'token'")
+    @Test
     public void shouldFailOnReadMissingCookie() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(options.getCookieNamed("token")).thenReturn(null);
 
         new CookieAction.Builder()
@@ -175,6 +183,8 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
                 .read("token", "t")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Failed to find cookie 'token'"), e.getMessage());
     }
 
     @Test
@@ -199,25 +209,32 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
         verify(options).deleteAllCookies();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing cookies command - use one of add, read, verify, verify-absent, delete, delete-all")
+    @Test
     public void shouldFailOnMissingCommand() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new CookieAction.Builder()
                 .browser(seleniumBrowser)
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing cookies command - use one of add, read, verify, verify-absent, delete, delete-all"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unsupported cookies command 'unknown' - use one of add, read, verify, verify-absent, delete, delete-all")
+    @Test
     public void shouldFailOnUnsupportedCommand() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         new CookieAction.Builder()
                 .browser(seleniumBrowser)
                 .command("unknown")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Unsupported cookies command 'unknown' - use one of add, read, verify, verify-absent, delete, delete-all"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Missing variable name for cookies command 'read'")
+    @Test
     public void shouldFailOnReadWithoutVariable() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         when(options.getCookieNamed("lang")).thenReturn(new Cookie("lang", "en"));
 
         new CookieAction.Builder()
@@ -226,5 +243,7 @@ public class CookieActionTest extends AbstractTestNGUnitTest {
                 .name("lang")
                 .build()
                 .execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing variable name for cookies command 'read'"), e.getMessage());
     }
 }

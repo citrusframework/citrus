@@ -17,16 +17,19 @@
 package org.citrusframework.selenium.model;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * @since 5.1
  */
-public class ElementLocatorTest extends AbstractTestNGUnitTest {
+public class ElementLocatorTest extends AbstractUnitTest {
 
     @Test
     public void testResolveBy() {
@@ -81,8 +84,11 @@ public class ElementLocatorTest extends AbstractTestNGUnitTest {
         assertEquals(ElementLocator.of("id", "${buttonId}").resolve(context), By.id("myButton"));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown selector type: unknown")
+    @Test
     public void testUnknownSelectorType() {
+        var e = assertThrows(CitrusRuntimeException.class, () -> {
         ElementLocator.of("unknown", "myButton").resolve(context);
+    });
+        assertTrue(e.getMessage().matches("Unknown selector type: unknown"), e.getMessage());
     }
 }

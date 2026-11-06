@@ -16,6 +16,16 @@
 
 package org.citrusframework.base.report;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestResult;
@@ -41,16 +51,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Duration;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -1186,8 +1186,9 @@ public class TestFlowReporterTest {
             generateReportForSuccessfulTest(reporter, "fooTest");
 
             List<Path> reportFiles = listReportFiles(reportDirectory);
-            assertThat(reportFiles).hasSize(1);
-            assertThat(reportFiles.get(0).getFileName().toString()).matches("fooTest-flow-\\d+\\.json");
+            assertThat(reportFiles).hasSize(2);
+            assertThat(reportFiles).anySatisfy(f -> assertThat(f.getFileName().toString()).matches("fooTest-flow-\\d+\\.json"));
+            assertThat(reportDirectory.resolve("fooTest-flow.json")).exists();
 
             try (var entries = Files.list(reportDirectory)) {
                 assertThat(entries.filter(Files::isDirectory).toList()).isEmpty();
@@ -1211,16 +1212,16 @@ public class TestFlowReporterTest {
             TestFlowReporter reporter = new TestFlowReporter();
             generateReportForSuccessfulTest(reporter, "fooTest");
             List<Path> reportFiles = listReportFiles(reportDirectory);
-            assertThat(reportFiles).hasSize(1);
-            Path firstReportFile = reportFiles.get(0);
+            assertThat(reportFiles).hasSize(2);
 
             generateReportForSuccessfulTest(reporter, "fooTest");
 
             List<Path> reportFilesAfterSecondGeneration = listReportFiles(reportDirectory);
-            assertThat(reportFilesAfterSecondGeneration).hasSize(2);
-            assertThat(firstReportFile).exists();
+            assertThat(reportFilesAfterSecondGeneration).hasSize(3);
+            assertThat(reportDirectory.resolve("fooTest-flow.json")).exists();
             assertThat(reportFilesAfterSecondGeneration)
-                    .allSatisfy(reportFile -> assertThat(reportFile.getFileName().toString()).matches("fooTest-flow-\\d+(-\\d+)?\\.json"))
+                    .anySatisfy(f -> assertThat(f.getFileName().toString()).matches("fooTest-flow-\\d+\\.json"))
+                    .anySatisfy(f -> assertThat(f.getFileName().toString()).isEqualTo("fooTest-flow.json"))
                     .doesNotHaveDuplicates();
         } finally {
             restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);

@@ -31,9 +31,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,7 +70,7 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         return factory;
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         executeSQLQueryAction = new ExecuteSQLQueryAction.Builder()
                 .jdbcTemplate(jdbcTemplate);
@@ -92,10 +92,10 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.extract("STATUS", "status");
         executeSQLQueryAction.build().execute(context);
 
-        Assert.assertNotNull(context.getVariable("${orderType}"));
-        Assert.assertEquals(context.getVariable("${orderType}"), "small");
-        Assert.assertNotNull(context.getVariable("${status}"));
-        Assert.assertEquals(context.getVariable("${status}"), "in_progress");
+        Assertions.assertNotNull(context.getVariable("${orderType}"));
+        Assertions.assertEquals("small", context.getVariable("${orderType}"));
+        Assertions.assertNotNull(context.getVariable("${status}"));
+        Assertions.assertEquals("in_progress", context.getVariable("${status}"));
     }
 
     @Test
@@ -118,10 +118,10 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
 
         verify(transactionManager).commit(transactionStatusMock);
 
-        Assert.assertNotNull(context.getVariable("${orderType}"));
-        Assert.assertEquals(context.getVariable("${orderType}"), "small");
-        Assert.assertNotNull(context.getVariable("${status}"));
-        Assert.assertEquals(context.getVariable("${status}"), "in_progress");
+        Assertions.assertNotNull(context.getVariable("${orderType}"));
+        Assertions.assertEquals("small", context.getVariable("${orderType}"));
+        Assertions.assertNotNull(context.getVariable("${status}"));
+        Assertions.assertEquals("in_progress", context.getVariable("${status}"));
     }
 
     @Test
@@ -140,10 +140,10 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.extract("STATUS", "status");
         executeSQLQueryAction.build().execute(context);
 
-        Assert.assertNotNull(context.getVariable("${orderType}"));
-        Assert.assertEquals(context.getVariable("${orderType}"), "small");
-        Assert.assertNotNull(context.getVariable("${status}"));
-        Assert.assertEquals(context.getVariable("${status}"), "in_progress");
+        Assertions.assertNotNull(context.getVariable("${orderType}"));
+        Assertions.assertEquals("small", context.getVariable("${orderType}"));
+        Assertions.assertNotNull(context.getVariable("${status}"));
+        Assertions.assertEquals("in_progress", context.getVariable("${status}"));
     }
 
     @Test
@@ -185,18 +185,18 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.extract("FRAMEWORK_NAME", "frameworkName");
         executeSQLQueryAction.build().execute(context);
 
-        Assert.assertNotNull(context.getVariable("${orderType}"));
-        Assert.assertEquals(context.getVariable("${orderType}"), "small");
-        Assert.assertNotNull(context.getVariable("${status}"));
-        Assert.assertEquals(context.getVariable("${status}"), "in_progress");
-        Assert.assertNotNull(context.getVariable("${name}"));
-        Assert.assertEquals(context.getVariable("${name}"), "Mickey Mouse");
-        Assert.assertNotNull(context.getVariable("${height}"));
-        Assert.assertEquals(context.getVariable("${height}"), "0,3");
-        Assert.assertNotNull(context.getVariable("${id}"));
-        Assert.assertEquals(context.getVariable("${id}"), "1234");
-        Assert.assertNotNull(context.getVariable("${frameworkName}"));
-        Assert.assertEquals(context.getVariable("${frameworkName}"), "citrusframework/citrus");
+        Assertions.assertNotNull(context.getVariable("${orderType}"));
+        Assertions.assertEquals("small", context.getVariable("${orderType}"));
+        Assertions.assertNotNull(context.getVariable("${status}"));
+        Assertions.assertEquals("in_progress", context.getVariable("${status}"));
+        Assertions.assertNotNull(context.getVariable("${name}"));
+        Assertions.assertEquals("Mickey Mouse", context.getVariable("${name}"));
+        Assertions.assertNotNull(context.getVariable("${height}"));
+        Assertions.assertEquals("0,3", context.getVariable("${height}"));
+        Assertions.assertNotNull(context.getVariable("${id}"));
+        Assertions.assertEquals("1234", context.getVariable("${id}"));
+        Assertions.assertNotNull(context.getVariable("${frameworkName}"));
+        Assertions.assertEquals("citrusframework/citrus", context.getVariable("${frameworkName}"));
     }
 
     @Test
@@ -247,26 +247,28 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.extract("STATUS", "orderStatus");
         executeSQLQueryAction.build().execute(context);
 
-        Assert.assertNotNull(context.getVariable("${orderStatus}"));
-        Assert.assertEquals(context.getVariable("${orderStatus}"), "in_progress");
-        Assert.assertNotNull(context.getVariable("${orderType}"));
-        Assert.assertEquals(context.getVariable("${orderType}"), "small");
+        Assertions.assertNotNull(context.getVariable("${orderStatus}"));
+        Assertions.assertEquals("in_progress", context.getVariable("${orderStatus}"));
+        Assertions.assertNotNull(context.getVariable("${orderType}"));
+        Assertions.assertEquals("small", context.getVariable("${orderType}"));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test
     public void testExtractToVariablesUnknownColumnMapping() {
-        String sql = DB_STMT_1;
-        reset(jdbcTemplate);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            String sql = DB_STMT_1;
+            reset(jdbcTemplate);
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("ORDERTYPE", "small");
-        resultMap.put("STATUS", "in_progress");
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("ORDERTYPE", "small");
+            resultMap.put("STATUS", "in_progress");
 
-        when(jdbcTemplate.queryForList(sql)).thenReturn(Collections.singletonList(resultMap));
+            when(jdbcTemplate.queryForList(sql)).thenReturn(Collections.singletonList(resultMap));
 
-        executeSQLQueryAction.statements(Collections.singletonList(sql));
-        executeSQLQueryAction.extract("UNKNOWN_COLUMN", "orderStatus");
-        executeSQLQueryAction.build().execute(context);
+            executeSQLQueryAction.statements(Collections.singletonList(sql));
+            executeSQLQueryAction.extract("UNKNOWN_COLUMN", "orderStatus");
+            executeSQLQueryAction.build().execute(context);
+        });
     }
 
     @Test
@@ -335,16 +337,9 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.validate("ORDERTYPE", "xxl"); //this is supposed to cause an error
         executeSQLQueryAction.validate("STATUS", "in_progress");
 
-        try {
-            executeSQLQueryAction.build().execute(context);
-        } catch (ValidationException e) {
-            Assert.assertNull(context.getVariables().get("${ORDERTYPE}"));
-            Assert.assertNull(context.getVariables().get("${STATUS}"));
-
-            return;
-        }
-
-        Assert.fail("Expected test to fail with " + ValidationException.class + " but was successful");
+        Assertions.assertThrows(ValidationException.class, () -> executeSQLQueryAction.build().execute(context));
+        Assertions.assertNull(context.getVariables().get("${ORDERTYPE}"));
+        Assertions.assertNull(context.getVariables().get("${STATUS}"));
     }
 
     @Test
@@ -460,10 +455,10 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.validate("STATUS", "started", "in_progress", "finished");
         executeSQLQueryAction.build().execute(context);
 
-        Assert.assertNotNull(context.getVariable("orderType"));
-        Assert.assertEquals(context.getVariable("orderType"), "small;NULL;big");
-        Assert.assertNotNull(context.getVariable("orderStatus"));
-        Assert.assertEquals(context.getVariable("orderStatus"), "started;in_progress;finished");
+        Assertions.assertNotNull(context.getVariable("orderType"));
+        Assertions.assertEquals("small;NULL;big", context.getVariable("orderType"));
+        Assertions.assertNotNull(context.getVariable("orderStatus"));
+        Assertions.assertEquals("started;in_progress;finished", context.getVariable("orderStatus"));
     }
 
     @Test
@@ -494,18 +489,11 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.validate("NAME", "Donald Duck"); //this is supposed to cause an error
         executeSQLQueryAction.validate("HEIGHT", "0,3");
 
-        try {
-            executeSQLQueryAction.build().execute(context);
-        } catch (ValidationException e) {
-            Assert.assertNull(context.getVariables().get("${ORDERTYPE}"));
-            Assert.assertNull(context.getVariables().get("${STATUS}"));
-            Assert.assertNull(context.getVariables().get("${NAME}"));
-            Assert.assertNull(context.getVariables().get("${HEIGHT}"));
-
-            return;
-        }
-
-        Assert.fail("Expected test to fail with " + ValidationException.class + " but was successful");
+        Assertions.assertThrows(ValidationException.class, () -> executeSQLQueryAction.build().execute(context));
+        Assertions.assertNull(context.getVariables().get("${ORDERTYPE}"));
+        Assertions.assertNull(context.getVariables().get("${STATUS}"));
+        Assertions.assertNull(context.getVariables().get("${NAME}"));
+        Assertions.assertNull(context.getVariables().get("${HEIGHT}"));
     }
 
     @Test
@@ -533,14 +521,14 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.extract("HEIGHT", "height");
         executeSQLQueryAction.build().execute(context);
 
-        Assert.assertNotNull(context.getVariable("${orderType}"));
-        Assert.assertEquals(context.getVariable("${orderType}"), "small");
-        Assert.assertNotNull(context.getVariable("${status}"));
-        Assert.assertEquals(context.getVariable("${status}"), "in_progress");
-        Assert.assertNotNull(context.getVariable("${name}"));
-        Assert.assertEquals(context.getVariable("${name}"), "Mickey Mouse");
-        Assert.assertNotNull(context.getVariable("${height}"));
-        Assert.assertEquals(context.getVariable("${height}"), "0,3");
+        Assertions.assertNotNull(context.getVariable("${orderType}"));
+        Assertions.assertEquals("small", context.getVariable("${orderType}"));
+        Assertions.assertNotNull(context.getVariable("${status}"));
+        Assertions.assertEquals("in_progress", context.getVariable("${status}"));
+        Assertions.assertNotNull(context.getVariable("${name}"));
+        Assertions.assertEquals("Mickey Mouse", context.getVariable("${name}"));
+        Assertions.assertNotNull(context.getVariable("${height}"));
+        Assertions.assertEquals("0,3", context.getVariable("${height}"));
     }
 
     @Test
@@ -650,14 +638,8 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
 
         doThrow(new ValidationException("Failed validation script", new AssertionError())).when(resultSetScriptValidator).validateSqlResultSet(any(List.class), any(ScriptValidationContext.class), eq(context));
 
-        try {
-            executeSQLQueryAction.build().execute(context);
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getCause() instanceof AssertionError);
-            return;
-        }
-
-        Assert.fail("Missing validation exception due to script validation error");
+        ValidationException e = Assertions.assertThrows(ValidationException.class, () -> executeSQLQueryAction.build().execute(context));
+        Assertions.assertTrue(e.getCause() instanceof AssertionError);
         verify(resultSetScriptValidator).validateSqlResultSet(any(List.class), any(ScriptValidationContext.class), eq(context));
     }
 
@@ -723,9 +705,9 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.extract("BINARY_DATA", "binaryData");
         executeSQLQueryAction.build().execute(context);
 
-        Assert.assertNotNull(context.getVariable("${binaryData}"));
-        Assert.assertEquals(context.getVariable("${binaryData}"), Base64.encodeBase64String("some_binary_data".getBytes()));
-        Assert.assertEquals(new String(Base64.decodeBase64(context.getVariable("${binaryData}"))), "some_binary_data");
+        Assertions.assertNotNull(context.getVariable("${binaryData}"));
+        Assertions.assertEquals(Base64.encodeBase64String("some_binary_data".getBytes()), context.getVariable("${binaryData}"));
+        Assertions.assertEquals("some_binary_data", new String(Base64.decodeBase64(context.getVariable("${binaryData}"))));
     }
 
     @Test
@@ -763,9 +745,9 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.statements(Collections.singletonList(sql));
         executeSQLQueryAction.validate("ORDERTYPE", "small");
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> executeSQLQueryAction.build().execute(context));
-        Assert.assertTrue(exception.getMessage().contains("expected rows count: 1 but was 0"));
+        Assertions.assertTrue(exception.getMessage().contains("expected rows count: 1 but was 0"));
     }
 
     @Test
@@ -784,9 +766,9 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction.statements(Collections.singletonList(sql));
         executeSQLQueryAction.validate("ORDRETYPE");
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> executeSQLQueryAction.build().execute(context));
-        Assert.assertTrue(exception.getMessage().contains("Could not find column 'ORDRETYPE' in SQL result set"));
+        Assertions.assertTrue(exception.getMessage().contains("Could not find column 'ORDRETYPE' in SQL result set"));
     }
 
     @Test
@@ -795,8 +777,8 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
         executeSQLQueryAction = new ExecuteSQLQueryAction.Builder().jdbcTemplate(null);
         executeSQLQueryAction.statements(Collections.singletonList("statement"));
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class, () -> executeSQLQueryAction.build().execute(context));
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class, () -> executeSQLQueryAction.build().execute(context));
 
-        Assert.assertEquals(exception.getMessage(), "No JdbcTemplate configured for query execution!");
+        Assertions.assertEquals("No JdbcTemplate configured for query execution!", exception.getMessage());
     }
 }

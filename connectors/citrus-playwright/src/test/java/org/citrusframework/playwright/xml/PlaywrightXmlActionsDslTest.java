@@ -20,10 +20,10 @@ import org.citrusframework.TestCase;
 import org.citrusframework.playwright.dsl.AbstractDslLoaderTest;
 import org.citrusframework.playwright.dsl.PlaywrightActionsAssertions;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Loads every context, page, network and diagnostics Playwright action from XML.
@@ -34,7 +34,7 @@ class PlaywrightXmlActionsDslTest extends AbstractDslLoaderTest {
     void shouldLoadDiagnosticsAndContextActions() {
         TestCase result = loadTestCase();
 
-        assertEquals(result.getName(), "PlaywrightActionsDslTest");
+        assertEquals("PlaywrightActionsDslTest", result.getName());
         PlaywrightActionsAssertions.assertDiagnosticsAndContextActions(result);
     }
 

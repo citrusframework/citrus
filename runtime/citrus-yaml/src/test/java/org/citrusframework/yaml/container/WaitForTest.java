@@ -126,28 +126,34 @@ public class WaitForTest extends AbstractYamlActionTest {
             Assertions.assertEquals(expectedCondition.getClass(), action.getCondition().getClass());
         }
 
-        if (expectedCondition instanceof HttpCondition) {
-            HttpCondition condition = (HttpCondition) action.getCondition();
-            Assertions.assertNotNull(condition);
-            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
-            Assertions.assertEquals(((HttpCondition) expectedCondition).getUrl(), condition.getUrl());
-            Assertions.assertEquals(((HttpCondition) expectedCondition).getTimeout(), condition.getTimeout());
-            Assertions.assertEquals(((HttpCondition) expectedCondition).getMethod(), condition.getMethod());
-        } else if (expectedCondition instanceof FileCondition) {
-            FileCondition condition = (FileCondition) action.getCondition();
-            Assertions.assertNotNull(condition);
-            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
-            Assertions.assertEquals(((FileCondition) expectedCondition).getFilePath(), condition.getFilePath());
-        } else if (expectedCondition instanceof MessageCondition) {
-            MessageCondition condition = (MessageCondition) action.getCondition();
-            Assertions.assertNotNull(condition);
-            Assertions.assertEquals(expectedCondition.getName(), condition.getName());
-            Assertions.assertEquals(((MessageCondition) expectedCondition).getMessageName(), condition.getMessageName());
-        } else if (expectedCondition instanceof ActionCondition) {
-            ActionCondition condition = (ActionCondition) action.getCondition();
-            Assertions.assertNotNull(condition);
-            Assertions.assertEquals(((ActionCondition) expectedCondition).getAction().getName(), condition.getAction().getName());
-            Assertions.assertEquals(((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage(), ((EchoAction) condition.getAction()).getMessage());
+        switch (expectedCondition) {
+            case HttpCondition httpCondition -> {
+                HttpCondition condition = (HttpCondition) action.getCondition();
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+                Assertions.assertEquals(httpCondition.getUrl(), condition.getUrl());
+                Assertions.assertEquals(httpCondition.getTimeout(), condition.getTimeout());
+                Assertions.assertEquals(httpCondition.getMethod(), condition.getMethod());
+            }
+            case FileCondition fileCondition -> {
+                FileCondition condition = (FileCondition) action.getCondition();
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+                Assertions.assertEquals(fileCondition.getFilePath(), condition.getFilePath());
+            }
+            case MessageCondition messageCondition -> {
+                MessageCondition condition = (MessageCondition) action.getCondition();
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(expectedCondition.getName(), condition.getName());
+                Assertions.assertEquals(messageCondition.getMessageName(), condition.getMessageName());
+            }
+            case ActionCondition actionCondition -> {
+                ActionCondition condition = (ActionCondition) action.getCondition();
+                Assertions.assertNotNull(condition);
+                Assertions.assertEquals(actionCondition.getAction().getName(), condition.getAction().getName());
+                Assertions.assertEquals(((EchoAction) actionCondition.getAction()).getMessage(), ((EchoAction) condition.getAction()).getMessage());
+            }
+            default -> Assertions.fail("Unexpected condition type: " + expectedCondition.getClass());
         }
     }
 }

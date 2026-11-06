@@ -18,12 +18,12 @@ package org.citrusframework.groovy.config.xml;
 
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ReceiveMessageActionParserTest extends AbstractActionParserTest<ReceiveMessageAction> {
 
@@ -36,37 +36,37 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         // 1st action
         ReceiveMessageAction action = getNextTestActionFromTest();
-        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assertions.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header1"), "Test");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header2"), "Test");
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(2, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("Test", messageBuilder.buildMessageHeaders(context).get("header1"));
+        Assertions.assertEquals("Test", messageBuilder.buildMessageHeaders(context).get("header2"));
 
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
-        Assert.assertNull(action.getMessageSelector());
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertTrue(action.getMessageSelectorMap().isEmpty());
+        Assertions.assertNull(action.getMessageSelector());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class), action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assertions.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assertions.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
     }
 }

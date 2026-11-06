@@ -19,33 +19,34 @@ package org.citrusframework.selenium.actions;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
  * @since 2.7
  */
-public class WaitUntilActionTest extends AbstractTestNGUnitTest {
+public class WaitUntilActionTest extends AbstractUnitTest {
 
     private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private final WebDriver webDriver = Mockito.mock(WebDriver.class);
     private final WebElement element = Mockito.mock(WebElement.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         reset(webDriver, element);
 
@@ -70,8 +71,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(element).isDisplayed();
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForVisibleTimeout() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(false);
 
@@ -82,6 +84,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .timeout(500L)
                 .build();
         action.execute(context);
+    });
     }
 
     @Test
@@ -113,8 +116,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).findElement(any(By.class));
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForHiddenTimeout() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(true);
 
@@ -125,6 +129,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .timeout(500L)
                 .build();
         action.execute(context);
+    });
     }
 
     @Test
@@ -172,8 +177,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).findElements(By.className("clickable"));
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForAbsentTimeout() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
         when(webDriver.findElements(any(By.class))).thenReturn(Collections.singletonList(element));
 
         WaitUntilAction action =  new WaitUntilAction.Builder()
@@ -183,6 +189,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .timeout(500L)
                 .build();
         action.execute(context);
+    });
     }
 
     @Test
@@ -200,8 +207,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(element).isEnabled();
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForClickableTimeout() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isEnabled()).thenReturn(false);
 
@@ -212,6 +220,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .timeout(500L)
                 .build();
         action.execute(context);
+    });
     }
 
     @Test
@@ -229,8 +238,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(element).getText();
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForTextTimeout() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.getText()).thenReturn("This is the element text");
 
@@ -241,6 +251,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .timeout(500L)
                 .build();
         action.execute(context);
+    });
     }
 
     @Test
@@ -256,8 +267,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).getCurrentUrl();
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForUrlTimeout() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
         when(webDriver.getCurrentUrl()).thenReturn("https://citrusframework.org/selenium/test");
 
         WaitUntilAction action =  new WaitUntilAction.Builder()
@@ -266,6 +278,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .timeout(500L)
                 .build();
         action.execute(context);
+    });
     }
 
     @Test
@@ -281,8 +294,9 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).getTitle();
     }
 
-    @Test(expectedExceptions = TimeoutException.class)
+    @Test
     public void testWaitForTitleTimeout() {
+        Assertions.assertThrows(TimeoutException.class, () -> {
         when(webDriver.getTitle()).thenReturn("Citrus Selenium Test");
 
         WaitUntilAction action =  new WaitUntilAction.Builder()
@@ -291,6 +305,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .timeout(500L)
                 .build();
         action.execute(context);
+    });
     }
 
     @Test
@@ -307,46 +322,54 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         verify(webDriver).getTitle();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing expected value for wait condition 'text'")
+    @Test
     public void testWaitForTextWithoutExpectedValue() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         WaitUntilAction action =  new WaitUntilAction.Builder()
                 .browser(seleniumBrowser)
                 .element("id", "myButton")
                 .condition("text")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing expected value for wait condition 'text'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing expected value for wait condition 'url'")
+    @Test
     public void testWaitForUrlWithoutExpectedValue() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         WaitUntilAction action =  new WaitUntilAction.Builder()
                 .browser(seleniumBrowser)
                 .condition("url")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing expected value for wait condition 'url'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Missing element selector for wait condition 'visible'")
+    @Test
     public void testWaitWithoutElementSelector() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         WaitUntilAction action =  new WaitUntilAction.Builder()
                 .browser(seleniumBrowser)
                 .condition("visible")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Missing element selector for wait condition 'visible'"), e.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Unsupported wait condition 'unknown' - use one of visible, hidden, present, absent, clickable, text, url, title")
+    @Test
     public void testUnsupportedWaitCondition() {
+        var e = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
         WaitUntilAction action =  new WaitUntilAction.Builder()
                 .browser(seleniumBrowser)
                 .element("class-name", "clickable")
                 .condition("unknown")
                 .build();
         action.execute(context);
+    });
+        Assertions.assertTrue(e.getMessage().matches("Unsupported wait condition 'unknown' - use one of visible, hidden, present, absent, clickable, text, url, title"), e.getMessage());
     }
 
     @Test
@@ -357,7 +380,7 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .condition("title")
                 .expected("Citrus")
                 .build();
-        Assert.assertEquals(action.getTimeout(), Long.valueOf(5000L));
+        Assertions.assertEquals(action.getTimeout(), Long.valueOf(5000L));
     }
 
     @Test
@@ -367,6 +390,6 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
                 .element("id", "myButton")
                 .condition("Visible")
                 .build();
-        Assert.assertEquals(action.getCondition(), "visible");
+        Assertions.assertEquals(action.getCondition(), "visible");
     }
 }

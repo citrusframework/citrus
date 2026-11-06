@@ -25,15 +25,15 @@ import java.util.List;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
-public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
+public class ExecuteSQLActionTest extends AbstractUnitTest {
 
     private static final String DB_STMT_1 = "DELETE * FROM ERRORS WHERE STATUS='resolved'";
     private static final String DB_STMT_2 = "DELETE * FROM CONFIGURATION WHERE VERSION=1";
@@ -53,7 +53,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         executeSQLActionBuilder = new ExecuteSQLAction.Builder()
                 .jdbcTemplate(jdbcTemplate);
@@ -128,8 +128,8 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
         ExecuteSQLAction action = executeSQLActionBuilder.build();
 
-        Assert.assertTrue(action.getSqlResourcePaths().isEmpty());
-        Assert.assertEquals(action.getSqlStatementSources().size(), 1);
+        Assertions.assertTrue(action.getSqlResourcePaths().isEmpty());
+        Assertions.assertEquals(1, action.getSqlStatementSources().size());
 
         reset(jdbcTemplate);
 
@@ -170,10 +170,10 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
     public void testSQLExecutionWithMissingFileSystemResource() {
         executeSQLActionBuilder.sqlResource("file:/nonexistent/path/to/sql-script.sql");
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> executeSQLActionBuilder.build().execute(context));
 
-        Assert.assertTrue(exception.getMessage().contains("sql-script.sql"),
+        Assertions.assertTrue(exception.getMessage().contains("sql-script.sql"),
                 "Exception message should name the missing resource but was: " + exception.getMessage());
     }
 
@@ -181,16 +181,16 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
     public void testSQLExecutionWithMissingClasspathResource() {
         executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/nonexistent-sql-script.sql");
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class,
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> executeSQLActionBuilder.build().execute(context));
 
-        Assert.assertTrue(exception.getMessage().contains("nonexistent-sql-script.sql"),
+        Assertions.assertTrue(exception.getMessage().contains("nonexistent-sql-script.sql"),
                 "Exception message should name the missing resource but was: " + exception.getMessage());
     }
 
     private static String absolutePathOf(String classpathLocation) throws Exception {
         URL resource = ExecuteSQLActionTest.class.getClassLoader().getResource(classpathLocation);
-        Assert.assertNotNull(resource, "Test resource not found on classpath: " + classpathLocation);
+        Assertions.assertNotNull(resource, "Test resource not found on classpath: " + classpathLocation);
         return new File(resource.toURI()).getAbsolutePath();
     }
 
@@ -200,10 +200,10 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/sql/actions/test-sql-statements-2.sql");
 
         ExecuteSQLAction action = executeSQLActionBuilder.build();
-        Assert.assertEquals(action.getSqlResourcePaths(),
-                List.of("classpath:org/citrusframework/sql/actions/test-sql-statements.sql",
-                        "classpath:org/citrusframework/sql/actions/test-sql-statements-2.sql"));
-        Assert.assertEquals(action.getSqlResourcePath(), "classpath:org/citrusframework/sql/actions/test-sql-statements.sql");
+        Assertions.assertEquals(List.of("classpath:org/citrusframework/sql/actions/test-sql-statements.sql",
+                        "classpath:org/citrusframework/sql/actions/test-sql-statements-2.sql"),
+                action.getSqlResourcePaths());
+        Assertions.assertEquals("classpath:org/citrusframework/sql/actions/test-sql-statements.sql", action.getSqlResourcePath());
 
         reset(jdbcTemplate);
 
@@ -299,22 +299,24 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         verify(jdbcTemplate).execute(DB_STMT_1);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testSQLExecutionErrorForwarding() {
-        List<String> stmts = new ArrayList<>();
-        stmts.add(DB_STMT_1);
-        stmts.add(DB_STMT_2);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            List<String> stmts = new ArrayList<>();
+            stmts.add(DB_STMT_1);
+            stmts.add(DB_STMT_2);
 
-        executeSQLActionBuilder.statements(stmts);
-        executeSQLActionBuilder.ignoreErrors(false);
+            executeSQLActionBuilder.statements(stmts);
+            executeSQLActionBuilder.ignoreErrors(false);
 
-        reset(jdbcTemplate);
+            reset(jdbcTemplate);
 
-        doThrow(new DataAccessException("Something went wrong!") {
-        }).when(jdbcTemplate).execute(DB_STMT_2);
+            doThrow(new DataAccessException("Something went wrong!") {
+            }).when(jdbcTemplate).execute(DB_STMT_2);
 
-        executeSQLActionBuilder.build().execute(context);
-        verify(jdbcTemplate).execute(DB_STMT_1);
+            executeSQLActionBuilder.build().execute(context);
+            verify(jdbcTemplate).execute(DB_STMT_1);
+        });
     }
 
     @Test
@@ -323,8 +325,8 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         executeSQLActionBuilder = new ExecuteSQLAction.Builder().jdbcTemplate(null);
         executeSQLActionBuilder.statements(Collections.singletonList("statement"));
 
-        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class, () -> executeSQLActionBuilder.build().execute(context));
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class, () -> executeSQLActionBuilder.build().execute(context));
 
-        Assert.assertEquals(exception.getMessage(), "No JdbcTemplate configured for sql execution!");
+        Assertions.assertEquals("No JdbcTemplate configured for sql execution!", exception.getMessage());
     }
 }
