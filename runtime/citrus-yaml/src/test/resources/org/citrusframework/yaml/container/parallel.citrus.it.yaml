@@ -6,18 +6,18 @@ actions:
   - parallel:
       actions:
         - echo:
-            message: 1
+            message: "1"
         - echo:
-            message: 2
+            message: "2"
   - parallel:
       actions:
         - parallel:
             actions:
               - echo:
-                  message: 1
+                  message: "1"
               - echo:
-                  message: 2
+                  message: "2"
         - echo:
-            message: 3
+            message: "3"
         - echo:
-            message: 4
+            message: "4"
