@@ -120,9 +120,12 @@ class CatalogToolsTest {
         CatalogTools.ComponentListResult result = tools.citrus_catalog_actions("print", null, null);
 
         assertThat(result).isNotNull();
-        assertThat(result.count()).isEqualTo(1);
-        assertThat(result.components().size()).isEqualTo(1);
-        assertThat(result.components().get(0).properties().size()).isEqualTo(2);
+        assertThat(result.count()).isEqualTo(result.components().size());
+        // filter also matches titles and descriptions, so other actions mentioning "print" may be listed as well
+        assertThat(result.components())
+                .filteredOn(component -> component.name().equals("print"))
+                .singleElement()
+                .satisfies(print -> assertThat(print.properties()).hasSize(2));
     }
 
     @Test
