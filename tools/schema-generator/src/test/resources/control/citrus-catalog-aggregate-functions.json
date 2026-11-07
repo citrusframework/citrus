@@ -1,9 +1,10 @@
 {
   "average": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "average",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Average",
     "description": "Calculates the arithmetic mean of a set of numeric values.",
     "propertiesSchema": {
@@ -28,7 +29,7 @@
   },
   "cdataSection": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "cdataSection",
     "group": "citrus",
     "module": "citrus-validation-xml",
@@ -51,9 +52,10 @@
   },
   "unixTimestamp": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "unixTimestamp",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "UnixTimestamp",
     "description": "Returns the current Unix timestamp in seconds.",
     "propertiesSchema": {
@@ -63,9 +65,10 @@
   },
   "randomString": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "randomString",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "RandomString",
     "description": "Generates a random alphabetic string with configurable length, letter case, and optional digits.",
     "propertiesSchema": {
@@ -100,7 +103,7 @@
   },
   "resolveExternalServiceUrl": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "resolveExternalServiceUrl",
     "group": "citrus",
     "module": "citrus-kubernetes",
@@ -128,9 +131,10 @@
   },
   "urlDecode": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "urlDecode",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "UrlDecode",
     "description": "Decodes a URL-encoded string using a configurable charset.",
     "propertiesSchema": {
@@ -156,9 +160,10 @@
   },
   "localHostAddress": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "localHostAddress",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "LocalHostAddress",
     "description": "Returns the IP address of the local host.",
     "propertiesSchema": {
@@ -168,9 +173,10 @@
   },
   "currentDate": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "currentDate",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "CurrentDate",
     "description": "Returns the current date with optional formatting, time zone, and date offset.",
     "propertiesSchema": {
@@ -197,9 +203,10 @@
   },
   "sum": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "sum",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Sum",
     "description": "Calculates the sum of a set of numeric values.",
     "propertiesSchema": {
@@ -224,9 +231,10 @@
   },
   "urlEncode": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "urlEncode",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "UrlEncode",
     "description": "URL-encodes a character sequence using a configurable charset.",
     "propertiesSchema": {
@@ -252,9 +260,10 @@
   },
   "substring": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "substring",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Substring",
     "description": "Extracts a substring using a begin index and an optional end index.",
     "propertiesSchema": {
@@ -285,9 +294,10 @@
   },
   "translate": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "translate",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Translate",
     "description": "Replaces all regular expression matches in a value with a replacement string.",
     "propertiesSchema": {
@@ -319,9 +329,10 @@
   },
   "escapeJson": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "escapeJson",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "EscapeJson",
     "description": "Escapes JSON special characters so a value can be embedded in a JSON string.",
     "propertiesSchema": {
@@ -341,9 +352,10 @@
   },
   "digestAuthHeader": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "digestAuthHeader",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "DigestAuthHeader",
     "description": "Builds an HTTP Digest Authorization header from credentials and request parameters.",
     "propertiesSchema": {
@@ -405,7 +417,7 @@
   },
   "xpath": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "xpath",
     "group": "citrus",
     "module": "citrus-validation-xml",
@@ -433,7 +445,7 @@
   },
   "resolveServiceUrl": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "resolveServiceUrl",
     "group": "citrus",
     "module": "citrus-kubernetes",
@@ -467,9 +479,10 @@
   },
   "lowerCase": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "lowerCase",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "LowerCase",
     "description": "Converts a string to lowercase letters.",
     "propertiesSchema": {
@@ -489,9 +502,10 @@
   },
   "randomNumber": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "randomNumber",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "RandomNumber",
     "description": "Generates a random number with a configurable digit count and leading-zero handling.",
     "propertiesSchema": {
@@ -516,9 +530,10 @@
   },
   "changeDate": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "changeDate",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "ChangeDate",
     "description": "Adds or subtracts date and time offsets from a formatted date value.",
     "propertiesSchema": {
@@ -548,9 +563,10 @@
   },
   "randomEnumValue": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "randomEnumValue",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "RandomEnumValue",
     "description": "Selects a random value from a predefined or supplied list of strings.",
     "propertiesSchema": {
@@ -575,7 +591,7 @@
   },
   "escapeXml": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "escapeXml",
     "group": "citrus",
     "module": "citrus-validation-xml",
@@ -598,9 +614,10 @@
   },
   "substringAfter": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "substringAfter",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "SubstringAfter",
     "description": "Returns the portion of a string after the first occurrence of a search string.",
     "propertiesSchema": {
@@ -626,9 +643,10 @@
   },
   "randomUUID": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "randomUUID",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "RandomUUID",
     "description": "Generates a random UUID.",
     "propertiesSchema": {
@@ -638,7 +656,7 @@
   },
   "jsonPatch": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "jsonPatch",
     "group": "citrus",
     "module": "citrus-validation-json",
@@ -694,9 +712,10 @@
   },
   "floor": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "floor",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Floor",
     "description": "Returns the largest integer less than or equal to a numeric value.",
     "propertiesSchema": {
@@ -716,9 +735,10 @@
   },
   "stringLength": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "stringLength",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "StringLength",
     "description": "Returns the number of characters in a string.",
     "propertiesSchema": {
@@ -738,9 +758,10 @@
   },
   "encodeBase64": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "encodeBase64",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "EncodeBase64",
     "description": "Encodes a character sequence as Base64 using a configurable charset.",
     "propertiesSchema": {
@@ -766,9 +787,10 @@
   },
   "ceiling": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ceiling",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Ceiling",
     "description": "Returns the smallest integer greater than or equal to a numeric value.",
     "propertiesSchema": {
@@ -788,9 +810,10 @@
   },
   "envVar": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "envVar",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "EnvVar",
     "description": "Resolves an environment variable, with an optional default when the variable is not set.",
     "propertiesSchema": {
@@ -815,9 +838,10 @@
   },
   "randomNumberGenerator": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "randomNumberGenerator",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "RandomNumberGenerator",
     "description": "Generates a random number with configurable range, decimal places, bounds, multiples, and formatting.",
     "propertiesSchema": {
@@ -827,9 +851,10 @@
   },
   "systemProperty": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "systemProperty",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "SystemProperty",
     "description": "Resolves a Java system property, with an optional default when the property is not set.",
     "propertiesSchema": {
@@ -854,7 +879,7 @@
   },
   "jsonPath": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "jsonPath",
     "group": "citrus",
     "module": "citrus-validation-json",
@@ -882,9 +907,10 @@
   },
   "concat": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "concat",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Concat",
     "description": "Concatenates multiple static or dynamic values into a single string.",
     "propertiesSchema": {
@@ -909,9 +935,10 @@
   },
   "message": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "message",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Message",
     "description": "Loads a stored test message payload or header value by message name.",
     "propertiesSchema": {
@@ -931,7 +958,7 @@
   },
   "env": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "env",
     "group": "citrus",
     "module": "citrus-spring",
@@ -959,9 +986,10 @@
   },
   "round": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "round",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Round",
     "description": "Rounds a decimal value to the closest integer.",
     "propertiesSchema": {
@@ -981,9 +1009,10 @@
   },
   "decodeBase64": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "decodeBase64",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "DecodeBase64",
     "description": "Decodes Base64 data into a character sequence using a configurable charset.",
     "propertiesSchema": {
@@ -1009,7 +1038,7 @@
   },
   "serviceClusterIp": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "serviceClusterIp",
     "group": "citrus",
     "module": "citrus-kubernetes",
@@ -1037,9 +1066,10 @@
   },
   "randomPattern": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "randomPattern",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "RandomPattern",
     "description": "Generates a random string that matches a given regular expression.",
     "propertiesSchema": {
@@ -1059,9 +1089,10 @@
   },
   "upperCase": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "upperCase",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "UpperCase",
     "description": "Converts a string to uppercase letters.",
     "propertiesSchema": {
@@ -1081,9 +1112,10 @@
   },
   "absolute": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "absolute",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Absolute",
     "description": "Returns the absolute value of a decimal number.",
     "propertiesSchema": {
@@ -1103,9 +1135,10 @@
   },
   "readFile": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "readFile",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "ReadFile",
     "description": "Reads file content with optional test-variable resolution and Base64 encoding.",
     "propertiesSchema": {
@@ -1136,9 +1169,10 @@
   },
   "maximum": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "maximum",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Maximum",
     "description": "Returns the maximum of a set of numeric values.",
     "propertiesSchema": {
@@ -1163,9 +1197,10 @@
   },
   "substringBefore": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "substringBefore",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "SubstringBefore",
     "description": "Returns the portion of a string before the first occurrence of a search string.",
     "propertiesSchema": {
@@ -1191,9 +1226,10 @@
   },
   "minimum": {
     "kind": "testFunction",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "minimum",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Minimum",
     "description": "Returns the minimum of a set of numeric values.",
     "propertiesSchema": {

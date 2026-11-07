@@ -89,7 +89,7 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         builder.endpoint(value);
     }
 
-    @SchemaProperty(advanced = true, description = "The test actor that executes the send message action.")
+    @SchemaProperty(advanced = true, description = "Name of the test actor that sends this message. The named actor controls whether the simulated send is enabled (citrus.test.actor.<name>.enabled). When unset, the default test actor runs.")
     public void setActor(String value) {
         this.actor = value;
     }

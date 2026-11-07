@@ -389,7 +389,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         builder.endpoint(value);
     }
 
-    @SchemaProperty(advanced = true, description = "The test actor that executes the receive message action.")
+    @SchemaProperty(advanced = true, description = "Name of the test actor that receives this message. The named actor controls whether the simulated receive is enabled (citrus.test.actor.<name>.enabled). When unset, the default test actor runs.")
     public void setActor(String value) {
         this.actor = value;
     }
