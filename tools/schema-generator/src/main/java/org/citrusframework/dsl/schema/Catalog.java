@@ -133,7 +133,7 @@ public class Catalog {
 
             SchemaType schemaType = builder.getValue().getClass().getAnnotation(SchemaType.class);
             String module = Optional.ofNullable(schemaType).map(SchemaType::module).filter(moduleName -> !moduleName.isBlank()).orElse("citrus-base");
-            String description = Optional.ofNullable(schemaType).map(SchemaType::description).orElse(null);
+            String description = Optional.ofNullable(schemaType).map(SchemaType::description).filter(text -> !text.isBlank()).orElse(null);
 
             catalog.put(builder.getKey().replaceAll("\\.", "-"),
                     new CatalogEntry(SchemaProperty.Kind.ENDPOINT.getCatalogKind(),
@@ -163,7 +163,7 @@ public class Catalog {
 
             SchemaType schemaType = function.getValue().getClass().getAnnotation(SchemaType.class);
             String module = Optional.ofNullable(schemaType).map(SchemaType::module).filter(moduleName -> !moduleName.isBlank()).orElse("citrus-base");
-            String description = Optional.ofNullable(schemaType).map(SchemaType::description).orElse(null);
+            String description = Optional.ofNullable(schemaType).map(SchemaType::description).filter(text -> !text.isBlank()).orElse(null);
 
             catalog.put(function.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.FUNCTION.getCatalogKind(),
@@ -193,7 +193,7 @@ public class Catalog {
 
             SchemaType schemaType = matcher.getValue().getClass().getAnnotation(SchemaType.class);
             String module = Optional.ofNullable(schemaType).map(SchemaType::module).filter(moduleName -> !moduleName.isBlank()).orElse("citrus-base");
-            String description = Optional.ofNullable(schemaType).map(SchemaType::description).orElse(null);
+            String description = Optional.ofNullable(schemaType).map(SchemaType::description).filter(text -> !text.isBlank()).orElse(null);
 
             catalog.put(matcher.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.VALIDATION_MATCHER.getCatalogKind(),

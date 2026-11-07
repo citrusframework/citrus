@@ -43,7 +43,27 @@ import tools.jackson.databind.JsonNode;
 public class CitrusSchemaGeneratorTest {
 
     private final JsonTextMessageValidator validator = new JsonTextMessageValidator();
+    private static final String KNOWN_ACTION = "{\"echo\":{\"message\":\"Hello Citrus\"}}";
+    private static final String UNKNOWN_ACTION = "{\"assert-log\":{\"message\":\"Unknown\"}}";
+
+    /** Test cases that nest the action placeholder inside each kind of action container. */
+    private static final List<String> NESTED_ACTION_CONTAINERS = List.of(
+            "{\"name\":\"Parallel\",\"actions\":[{\"parallel\":{\"actions\":[%s]}}]}",
+            "{\"name\":\"Sequential\",\"actions\":[{\"sequential\":{\"actions\":[%s]}}]}",
+            "{\"name\":\"Assert\",\"actions\":[{\"assert\":{\"when\":[%s]}}]}",
+            "{\"name\":\"Catch\",\"actions\":[{\"catch\":{\"when\":[%s]}}]}",
+            "{\"name\":\"Async\",\"actions\":[{\"async\":{\"actions\":[%s]}}]}",
+            "{\"name\":\"Conditional\",\"actions\":[{\"conditional\":{\"when\":\"true\",\"actions\":[%s]}}]}",
+            "{\"name\":\"Iterate\",\"actions\":[{\"iterate\":{\"condition\":\"i lt 2\",\"actions\":[%s]}}]}",
+            "{\"name\":\"Repeat\",\"actions\":[{\"repeat\":{\"until\":\"i gt 2\",\"actions\":[%s]}}]}",
+            "{\"name\":\"RepeatOnError\",\"actions\":[{\"repeatOnError\":{\"until\":\"i gt 2\",\"actions\":[%s]}}]}",
+            "{\"name\":\"Timer\",\"actions\":[{\"timer\":{\"actions\":[%s]}}]}",
+            "{\"name\":\"DoFinally\",\"actions\":[{\"doFinally\":{\"actions\":[%s]}}]}",
+            "{\"name\":\"Finally\",\"actions\":[{\"echo\":{\"message\":\"Hello\"}}],\"finally\":[%s]}"
+    );
+
     private final TestContext context = TestContextFactory.newInstance().getObject();
+    private SimpleJsonSchema testCaseSchema;
 
     @BeforeClass
     public void setup() {
@@ -51,6 +71,9 @@ public class CitrusSchemaGeneratorTest {
         context.setVariable("camel.version", new DefaultCamelCatalog().getCatalogVersion());
 
         CitrusSchemaGenerator.main(new String[]{"target/schema"});
+
+        testCaseSchema = new SimpleJsonSchema(Resources.create("target/schema/citrus/citrus-testcase.json"));
+        testCaseSchema.initialize();
     }
 
     @Test
@@ -116,33 +139,36 @@ public class CitrusSchemaGeneratorTest {
     @Test
     public void verifyUnknownTestActionsRejected() {
         assertInvalidTestCase("""
-                {"name":"UnknownActionTest","actions":[{"log":{"message":"Unknown"}}]}
-                """);
-        assertInvalidTestCase("""
-                {"name":"NestedUnknownActionTest","actions":[{"parallel":{"actions":[{"assert-log":{"message":"Unknown"}}]}}]}
-                """);
-        assertInvalidTestCase("""
-                {"name":"NestedUnknownAssertActionTest","actions":[{"assert":{"when":[{"assert-log":{"message":"Unknown"}}]}}]}
-                """);
+                {"name":"UnknownActionTest","actions":[%s]}
+                """.formatted(UNKNOWN_ACTION));
+
+        for (String container : NESTED_ACTION_CONTAINERS) {
+            assertInvalidTestCase(container.formatted(UNKNOWN_ACTION));
+        }
     }
 
     @Test
     public void verifyKnownTestActionsAccepted() {
         assertValidTestCase("""
-                {"name":"KnownActionTest","actions":[{"echo":{"message":"Hello Citrus"}}]}
-                """);
-        assertValidTestCase("""
-                {"name":"NestedKnownActionTest","actions":[{"parallel":{"actions":[{"echo":{"message":"Hello Citrus"}}]}}]}
-                """);
-        assertValidTestCase("""
-                {"name":"NestedKnownAssertActionTest","actions":[{"assert":{"when":[{"echo":{"message":"Hello Citrus"}}]}}]}
-                """);
+                {"name":"KnownActionTest","actions":[%s]}
+                """.formatted(KNOWN_ACTION));
         assertValidTestCase("""
                 {"name":"CustomActionTest","actions":[{"action":{"ref":"myCustomAction"}}]}
                 """);
         assertValidTestCase("""
                 {"name":"PurgeChannelsTest","actions":[{"purgeChannels":{"channel":"testChannel"}}]}
                 """);
+
+        for (String container : NESTED_ACTION_CONTAINERS) {
+            assertValidTestCase(container.formatted(KNOWN_ACTION));
+        }
+    }
+
+    @Test
+    public void verifyNoGenericTestActionReferences() throws IOException {
+        String schema = FileUtils.readToString(Resources.create("target/schema/citrus/citrus-testcase.json"));
+        Assert.assertFalse(schema.contains("TestActionBuilder_"),
+                "Test case schema must not reference the open generic TestActionBuilder definition");
     }
 
     @Test
@@ -186,6 +212,10 @@ public class CitrusSchemaGeneratorTest {
         Assert.assertTrue(missing.isEmpty(), "Missing descriptions in %s: %s".formatted(fileName, missing));
     }
 
+    /**
+     * Properties declared in a oneOf group (e.g. createEndpoint types or HTTP methods) may only carry their
+     * description inside the oneOf branch, so look there when the top-level property has none.
+     */
     private boolean hasDescription(String propertyName, JsonNode property, JsonNode propertiesSchema) {
         if (!property.path("description").asText().isBlank()) {
             return true;
@@ -213,9 +243,7 @@ public class CitrusSchemaGeneratorTest {
     }
 
     private List<Error> validateTestCase(String testCase) {
-        SimpleJsonSchema schema = new SimpleJsonSchema(Resources.create("target/schema/citrus/citrus-testcase.json"));
-        schema.initialize();
-        return schema.getSchema().validate(testCase, InputFormat.JSON);
+        return testCaseSchema.getSchema().validate(testCase, InputFormat.JSON);
     }
 
 }

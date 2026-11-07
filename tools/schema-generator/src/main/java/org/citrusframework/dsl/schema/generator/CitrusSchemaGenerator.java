@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.classmate.AnnotationConfiguration;
 import com.fasterxml.classmate.AnnotationInclusion;
@@ -43,6 +47,12 @@ import tools.jackson.databind.node.ObjectNode;
  * Generates the full Citrus test case DSL schema based on annotated YAML model classes.
  */
 public class CitrusSchemaGenerator {
+
+    private static final String DEFINITIONS = "definitions";
+    private static final String REF = "$ref";
+    private static final String DEFINITION_REF_PREFIX = "#/definitions/";
+    private static final String TEST_ACTIONS_DEFINITION = "TestActions";
+    private static final String GENERIC_TEST_ACTION_DEFINITION_PREFIX = "TestActionBuilder_";
 
     public static void main(String[] args) {
         try {
@@ -74,7 +84,6 @@ public class CitrusSchemaGenerator {
 
             Catalog catalog = new Catalog();
             JsonNode jsonSchema = generateSchema(Test.class, catalog, new CitrusModule());
-            useStrictTestActions(jsonSchema);
             writeFile(workingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
             writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
 
@@ -141,29 +150,62 @@ public class CitrusSchemaGenerator {
         TypeContext typeContext = new CitrusModule.TypeContextWrapper(annotationConfig, config)
                 .withCatalog(catalog);
         SchemaGenerator generator = new SchemaGenerator(config, typeContext);
-        return generator.generateSchema(type);
-    }
-
-    private static void useStrictTestActions(JsonNode jsonSchema) {
-        replaceGenericTestActionReferences(jsonSchema);
-        if (jsonSchema.path("definitions") instanceof ObjectNode definitions) {
-            definitions.remove("TestActionBuilder_Object_");
-        }
+        JsonNode jsonSchema = generator.generateSchema(type);
+        useStrictTestActions(jsonSchema);
+        return jsonSchema;
     }
 
     /**
      * Nested YAML actions use the runtime TestActions supplier type, which Victools represents as an open generic
-     * TestActionBuilder schema. Use the aggregate TestActions definition instead so nested actions have the same known
-     * action names and additionalProperties=false constraint as top-level actions.
+     * TestActionBuilder schema. When the schema holds the aggregate TestActions definition, point those references to
+     * it instead so nested actions have the same known action names and additionalProperties=false constraint as
+     * top-level actions. Schemas without definitions (e.g. inlined catalog schemas) are left untouched.
      */
-    private static void replaceGenericTestActionReferences(JsonNode node) {
-        if (node instanceof ObjectNode objectNode) {
-            if ("#/definitions/TestActionBuilder_Object_".equals(objectNode.path("$ref").asText())) {
-                objectNode.put("$ref", "#/definitions/TestActions");
+    private static void useStrictTestActions(JsonNode jsonSchema) {
+        if (!(jsonSchema.path(DEFINITIONS) instanceof ObjectNode definitions) || !definitions.has(TEST_ACTIONS_DEFINITION)) {
+            return;
+        }
+
+        List<String> genericDefinitions = new ArrayList<>();
+        definitions.properties().forEach(entry -> {
+            if (entry.getKey().startsWith(GENERIC_TEST_ACTION_DEFINITION_PREFIX)) {
+                genericDefinitions.add(entry.getKey());
             }
-            objectNode.properties().forEach(entry -> replaceGenericTestActionReferences(entry.getValue()));
+        });
+
+        Set<String> genericReferences = new HashSet<>();
+        genericDefinitions.forEach(name -> genericReferences.add(DEFINITION_REF_PREFIX + name));
+
+        replaceGenericTestActionReferences(jsonSchema, genericReferences);
+        definitions.remove(genericDefinitions);
+
+        List<String> remaining = new ArrayList<>();
+        collectGenericTestActionReferences(jsonSchema, remaining);
+        if (!remaining.isEmpty()) {
+            throw new IllegalStateException("Unresolved generic test action references in schema: " + remaining);
+        }
+    }
+
+    private static void replaceGenericTestActionReferences(JsonNode node, Set<String> genericReferences) {
+        if (node instanceof ObjectNode objectNode) {
+            if (genericReferences.contains(objectNode.path(REF).asString(""))) {
+                objectNode.put(REF, DEFINITION_REF_PREFIX + TEST_ACTIONS_DEFINITION);
+            }
+            objectNode.properties().forEach(entry -> replaceGenericTestActionReferences(entry.getValue(), genericReferences));
         } else if (node.isArray()) {
-            node.forEach(CitrusSchemaGenerator::replaceGenericTestActionReferences);
+            node.forEach(item -> replaceGenericTestActionReferences(item, genericReferences));
+        }
+    }
+
+    private static void collectGenericTestActionReferences(JsonNode node, List<String> found) {
+        if (node instanceof ObjectNode objectNode) {
+            String ref = objectNode.path(REF).asString("");
+            if (ref.startsWith(DEFINITION_REF_PREFIX + GENERIC_TEST_ACTION_DEFINITION_PREFIX)) {
+                found.add(ref);
+            }
+            objectNode.properties().forEach(entry -> collectGenericTestActionReferences(entry.getValue(), found));
+        } else if (node.isArray()) {
+            node.forEach(item -> collectGenericTestActionReferences(item, found));
         }
     }
 
