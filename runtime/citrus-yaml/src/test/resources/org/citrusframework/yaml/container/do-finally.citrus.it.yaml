@@ -12,7 +12,7 @@ actions:
         - createVariables:
             variables:
               - name: finallyRun
-                value: true
+                value: "true"
   - createVariables:
       variables:
         - name: user

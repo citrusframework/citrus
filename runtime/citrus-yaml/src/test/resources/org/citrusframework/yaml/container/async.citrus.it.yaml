@@ -6,9 +6,9 @@ actions:
   - async:
       actions:
         - echo:
-            message: 1
+            message: "1"
         - echo:
-            message: 2
+            message: "2"
   - async:
       actions:
         - echo:

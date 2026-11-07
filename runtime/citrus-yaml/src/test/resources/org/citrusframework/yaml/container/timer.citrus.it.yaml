@@ -11,7 +11,7 @@ actions:
       repeatCount: 1
       actions:
         - echo:
-            message: 1
+            message: "1"
   - timer:
       id: timer2
       delay: 500
@@ -19,11 +19,11 @@ actions:
       repeatCount: 2
       actions:
         - echo:
-            message: 1
+            message: "1"
         - echo:
-            message: 2
+            message: "2"
   - timer:
       fork: true
       actions:
         - echo:
-            message: 1
+            message: "1"
