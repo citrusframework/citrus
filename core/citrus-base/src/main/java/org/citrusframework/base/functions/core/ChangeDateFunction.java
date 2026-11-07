@@ -17,6 +17,7 @@
 package org.citrusframework.base.functions.core;
 
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
@@ -41,6 +42,7 @@ import static org.citrusframework.util.StringUtils.hasText;
  *
  * @since 1.3.1
  */
+@SchemaType(description = "Adds or subtracts date and time offsets from a formatted date value.")
 public class ChangeDateFunction implements ParameterizedFunction<ChangeDateFunction.Parameters> {
 
     private static final Logger logger = LoggerFactory.getLogger(ChangeDateFunction.class);

@@ -28,7 +28,7 @@ public class Hover extends AbstractSeleniumAction.Builder<HoverAction, Hover> im
     private final HoverAction.Builder delegate = new HoverAction.Builder();
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Element over which the mouse pointer is moved.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

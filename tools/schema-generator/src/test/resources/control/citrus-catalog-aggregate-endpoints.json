@@ -1,11 +1,12 @@
 {
   "kubernetes-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "kubernetes-client",
     "group": "kubernetes",
     "module": "citrus-kubernetes",
     "title": "KubernetesClient",
+    "description": "Executes Kubernetes resource operations and returns command results.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -79,11 +80,12 @@
   },
   "context-messageStore": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "context-messageStore",
     "group": "context",
     "module": "citrus-base",
     "title": "ContextMessageStore",
+    "description": "Stores and retrieves named messages in the local test context message store.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -108,11 +110,12 @@
   },
   "kafka-synchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "kafka-synchronous",
     "group": "kafka",
     "module": "citrus-kafka",
     "title": "KafkaSynchronous",
+    "description": "Exchanges messages with Apache Kafka topics, supporting asynchronous and synchronous communication.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -237,11 +240,12 @@
   },
   "jmx-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "jmx-server",
     "group": "jmx",
     "module": "citrus-jmx",
     "title": "JmxServer",
+    "description": "Exposes managed beans through a JMX server for testing remote JMX invocations.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -301,7 +305,8 @@
         },
         "marshaller": {
           "type": "string",
-          "title": "Marshaller"
+          "title": "Marshaller",
+          "description": "Sets the JMX message marshaller as a bean reference."
         },
         "mbeans": {
           "type": "string",
@@ -365,11 +370,12 @@
   },
   "scp-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "scp-server",
     "group": "scp",
     "module": "citrus-ftp",
     "title": "ScpServer",
+    "description": "Simulates an SFTP or SCP server for testing secure file transfer operations.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -496,11 +502,12 @@
   },
   "direct-synchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "direct-synchronous",
     "group": "direct",
     "module": "citrus-base",
     "title": "DirectSynchronous",
+    "description": "Exchanges synchronous request-reply messages through an in-memory queue.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -541,11 +548,12 @@
   },
   "docker-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "docker-client",
     "group": "docker",
     "module": "citrus-docker",
     "title": "DockerClient",
+    "description": "Executes Docker commands on a Docker daemon and returns command results.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -611,11 +619,12 @@
   },
   "grpc-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "grpc-server",
     "group": "grpc",
     "module": "citrus-grpc",
     "title": "GrpcServer",
+    "description": "Receives gRPC requests and sends responses through an embedded server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -716,11 +725,12 @@
   },
   "kafka-asynchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "kafka-asynchronous",
     "group": "kafka",
     "module": "citrus-kafka",
     "title": "KafkaAsynchronous",
+    "description": "Exchanges messages with Apache Kafka topics, supporting asynchronous and synchronous communication.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -845,11 +855,12 @@
   },
   "jmx-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "jmx-client",
     "group": "jmx",
     "module": "citrus-jmx",
     "title": "JmxClient",
+    "description": "Sends JMX managed bean requests and receives operation results and notifications.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -914,11 +925,12 @@
   },
   "rmi-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "rmi-client",
     "group": "rmi",
     "module": "citrus-rmi",
     "title": "RmiClient",
+    "description": "Invokes methods on remote Java objects through RMI and receives invocation results.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -978,11 +990,12 @@
   },
   "k8s-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "k8s-client",
     "group": "k8s",
     "module": "citrus-kubernetes",
     "title": "K8sClient",
+    "description": "Executes Kubernetes resource operations and returns command results.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1056,11 +1069,12 @@
   },
   "mail-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "mail-client",
     "group": "mail",
     "module": "citrus-mail",
     "title": "MailClient",
+    "description": "Sends email messages to a mail server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1125,11 +1139,12 @@
   },
   "http-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "http-client",
     "group": "http",
     "module": "citrus-http",
     "title": "HttpClient",
+    "description": "Sends HTTP requests and receives HTTP responses.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1296,11 +1311,12 @@
   },
   "ssh-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "ssh-client",
     "group": "ssh",
     "module": "citrus-ssh",
     "title": "SshClient",
+    "description": "Executes commands on a remote host through SSH and receives command results.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1385,11 +1401,12 @@
   },
   "websocket-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "websocket-client",
     "group": "websocket",
     "module": "citrus-websocket",
     "title": "WebsocketClient",
+    "description": "Exchanges messages with a WebSocket server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1439,11 +1456,12 @@
   },
   "channel-asynchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "channel-asynchronous",
     "group": "channel",
     "module": "citrus-spring-integration",
     "title": "ChannelAsynchronous",
+    "description": "Exchanges asynchronous messages through a Spring Integration message channel.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1499,11 +1517,12 @@
   },
   "graphql-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "graphql-client",
     "group": "graphql",
     "module": "citrus-graphql",
     "title": "GraphqlClient",
+    "description": "Sends GraphQL queries and mutations over HTTP and receives responses.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1690,11 +1709,12 @@
   },
   "soap-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "soap-server",
     "group": "soap",
     "module": "citrus-ws",
     "title": "SoapServer",
+    "description": "Receives SOAP web service requests and sends responses through an embedded server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1863,11 +1883,12 @@
   },
   "channel-synchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "channel-synchronous",
     "group": "channel",
     "module": "citrus-spring-integration",
     "title": "ChannelSynchronous",
+    "description": "Exchanges synchronous request-reply messages through a Spring Integration message channel.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1935,11 +1956,12 @@
   },
   "sftp-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "sftp-server",
     "group": "sftp",
     "module": "citrus-ftp",
     "title": "SftpServer",
+    "description": "Simulates an SFTP or SCP server for testing secure file transfer operations.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2066,11 +2088,12 @@
   },
   "playwright-api-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "playwright-api-client",
     "group": "playwright",
-    "module": "citrus-base",
+    "module": "citrus-playwright",
     "title": "PlaywrightApi-client",
+    "description": "Creates a Playwright-backed HTTP API client endpoint.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2085,11 +2108,12 @@
   },
   "playwright-browser": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "playwright-browser",
     "group": "playwright",
     "module": "citrus-playwright",
     "title": "PlaywrightBrowser",
+    "description": "Controls a Playwright browser endpoint for UI automation actions.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2104,11 +2128,12 @@
   },
   "ftp-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "ftp-server",
     "group": "ftp",
     "module": "citrus-ftp",
     "title": "FtpServer",
+    "description": "Simulates an FTP server for testing client file transfer operations.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2234,11 +2259,12 @@
   },
   "camel-inOut": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "camel-inOut",
     "group": "camel",
     "module": "citrus-camel",
     "title": "CamelInOut",
+    "description": "Exchanges synchronous request-reply messages through an Apache Camel endpoint.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2285,11 +2311,12 @@
   },
   "vertx-asynchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "vertx-asynchronous",
     "group": "vertx",
     "module": "citrus-vertx",
     "title": "VertxAsynchronous",
+    "description": "Exchanges asynchronous messages through the Vert.x event bus.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2347,11 +2374,12 @@
   },
   "ftp-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "ftp-client",
     "group": "ftp",
     "module": "citrus-ftp",
     "title": "FtpClient",
+    "description": "Performs file transfer operations on an FTP server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2420,11 +2448,12 @@
   },
   "camel-asynchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "camel-asynchronous",
     "group": "camel",
     "module": "citrus-camel",
     "title": "CamelAsynchronous",
+    "description": "Exchanges asynchronous one-way messages through an Apache Camel endpoint.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2460,11 +2489,12 @@
   },
   "scp-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "scp-client",
     "group": "scp",
     "module": "citrus-ftp",
     "title": "ScpClient",
+    "description": "Transfers files to and from a remote host through SCP.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2558,11 +2588,12 @@
   },
   "rmi-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "rmi-server",
     "group": "rmi",
     "module": "citrus-rmi",
     "title": "RmiServer",
+    "description": "Exposes remote Java interfaces through RMI and handles incoming method invocations.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2574,7 +2605,8 @@
         },
         "binding": {
           "type": "string",
-          "title": "Binding"
+          "title": "Binding",
+          "description": "Sets the service binding name in the RMI registry."
         },
         "correlator": {
           "type": "string",
@@ -2583,7 +2615,8 @@
         },
         "createRegistry": {
           "type": "boolean",
-          "title": "CreateRegistry"
+          "title": "CreateRegistry",
+          "description": "Controls whether the RMI server creates a local registry when none is provided."
         },
         "debugLogging": {
           "type": "boolean",
@@ -2599,11 +2632,13 @@
         },
         "host": {
           "type": "string",
-          "title": "Host"
+          "title": "Host",
+          "description": "Sets the RMI service registry host."
         },
         "marshaller": {
           "type": "string",
-          "title": "Marshaller"
+          "title": "Marshaller",
+          "description": "Sets the RMI message marshaller as a bean reference."
         },
         "messageConverter": {
           "type": "string",
@@ -2612,7 +2647,8 @@
         },
         "method": {
           "type": "string",
-          "title": "Method"
+          "title": "Method",
+          "description": "Sets the remote method name."
         },
         "name": {
           "type": "string",
@@ -2626,11 +2662,13 @@
         },
         "port": {
           "type": "integer",
-          "title": "Port"
+          "title": "Port",
+          "description": "Sets the RMI service registry port."
         },
         "registry": {
           "type": "string",
-          "title": "Registry"
+          "title": "Registry",
+          "description": "Sets the RMI service registry as a bean reference."
         },
         "remoteInterfaces": {
           "title": "RemoteInterfaces",
@@ -2644,7 +2682,8 @@
         },
         "serverUrl": {
           "type": "string",
-          "title": "ServerUrl"
+          "title": "ServerUrl",
+          "description": "Sets the RMI server URL, including host, port, and service binding."
         },
         "timeout": {
           "type": "integer",
@@ -2657,11 +2696,12 @@
   },
   "vertx-synchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "vertx-synchronous",
     "group": "vertx",
     "module": "citrus-vertx",
     "title": "VertxSynchronous",
+    "description": "Exchanges synchronous request-reply messages through the Vert.x event bus.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2725,11 +2765,12 @@
   },
   "jms-synchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "jms-synchronous",
     "group": "jms",
     "module": "citrus-jms",
     "title": "JmsSynchronous",
+    "description": "Exchanges synchronous request-reply messages through a JMS destination.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2819,11 +2860,12 @@
   },
   "camel-inOnly": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "camel-inOnly",
     "group": "camel",
     "module": "citrus-camel",
     "title": "CamelInOnly",
+    "description": "Exchanges asynchronous one-way messages through an Apache Camel endpoint.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2859,11 +2901,12 @@
   },
   "direct-asynchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "direct-asynchronous",
     "group": "direct",
     "module": "citrus-base",
     "title": "DirectAsynchronous",
+    "description": "Exchanges asynchronous messages through an in-memory queue.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -2893,11 +2936,12 @@
   },
   "graphql-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "graphql-server",
     "group": "graphql",
     "module": "citrus-graphql",
     "title": "GraphqlServer",
+    "description": "Receives GraphQL requests over HTTP and sends responses through an embedded server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -3207,11 +3251,12 @@
   },
   "grpc-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "grpc-client",
     "group": "grpc",
     "module": "citrus-grpc",
     "title": "GrpcClient",
+    "description": "Invokes gRPC service methods and receives responses.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -3287,11 +3332,12 @@
   },
   "camel-synchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "camel-synchronous",
     "group": "camel",
     "module": "citrus-camel",
     "title": "CamelSynchronous",
+    "description": "Exchanges synchronous request-reply messages through an Apache Camel endpoint.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -3338,11 +3384,12 @@
   },
   "soap-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "soap-client",
     "group": "soap",
     "module": "citrus-ws",
     "title": "SoapClient",
+    "description": "Sends SOAP web service requests and receives responses.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -3439,11 +3486,12 @@
   },
   "jms-asynchronous": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "jms-asynchronous",
     "group": "jms",
     "module": "citrus-jms",
     "title": "JmsAsynchronous",
+    "description": "Sends messages to and receives messages from a JMS destination asynchronously.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -3534,11 +3582,12 @@
   },
   "sftp-client": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "sftp-client",
     "group": "sftp",
     "module": "citrus-ftp",
     "title": "SftpClient",
+    "description": "Performs secure file transfer operations on an SFTP server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -3647,11 +3696,12 @@
   },
   "selenium-browser": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "selenium-browser",
     "group": "selenium",
     "module": "citrus-selenium",
     "title": "SeleniumBrowser",
+    "description": "Automates browser interactions through Selenium WebDriver.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -3752,11 +3802,12 @@
   },
   "http-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "http-server",
     "group": "http",
     "module": "citrus-http",
     "title": "HttpServer",
+    "description": "Receives HTTP requests and sends responses through an embedded server.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -4045,11 +4096,12 @@
   },
   "websocket-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "websocket-server",
     "group": "websocket",
     "module": "citrus-websocket",
     "title": "WebsocketServer",
+    "description": "Accepts WebSocket connections and exchanges messages with connected clients.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -4348,11 +4400,12 @@
   },
   "mail-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "mail-server",
     "group": "mail",
     "module": "citrus-mail",
     "title": "MailServer",
+    "description": "Simulates a mail server for receiving and validating email messages.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -4449,11 +4502,12 @@
   },
   "ssh-server": {
     "kind": "testEndpoint",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "ssh-server",
     "group": "ssh",
     "module": "citrus-ssh",
     "title": "SshServer",
+    "description": "Simulates an SSH server for testing client command execution.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",

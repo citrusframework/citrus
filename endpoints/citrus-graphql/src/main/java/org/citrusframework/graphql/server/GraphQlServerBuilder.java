@@ -28,7 +28,7 @@ import org.citrusframework.http.server.AbstractHttpServerBuilder;
  * Builds a {@link GraphQlServer}. Every HTTP server setting applies; the GraphQL settings are the
  * path, the schema resources and strict document checks.
  */
-@SchemaType(module = "citrus-graphql")
+@SchemaType(module = "citrus-graphql", description = "Receives GraphQL requests over HTTP and sends responses through an embedded server.")
 @XmlType(name = "", propOrder = {})
 public class GraphQlServerBuilder extends AbstractHttpServerBuilder<GraphQlServer, GraphQlServerBuilder> {
 

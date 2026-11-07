@@ -29,7 +29,7 @@ public class DeleteBroker extends AbstractKnativeAction.Builder<DeleteBrokerActi
 
     private final DeleteBrokerAction.Builder delegate = new DeleteBrokerAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative broker to delete.")
     public void setName(String name) {
         this.delegate.broker(name);
     }

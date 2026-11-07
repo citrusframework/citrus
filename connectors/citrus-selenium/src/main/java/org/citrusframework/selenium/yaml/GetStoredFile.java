@@ -26,7 +26,7 @@ public class GetStoredFile extends AbstractSeleniumAction.Builder<GetStoredFileA
 
     private final GetStoredFileAction.Builder delegate = new GetStoredFileAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the file to retrieve from temporary browser storage.")
     public void setFileName(String fileName) {
         this.delegate.fileName(fileName);
     }

@@ -29,7 +29,7 @@ public class CreateBroker extends AbstractKnativeAction.Builder<CreateBrokerActi
 
     private final CreateBrokerAction.Builder delegate = new CreateBrokerAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative broker to create.")
     public void setName(String name) {
         this.delegate.broker(name);
     }

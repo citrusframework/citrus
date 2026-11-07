@@ -39,12 +39,12 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
 
     private String agentName = CitrusAgentSettings.getAgentName();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Citrus agent instance.")
     public void setName(String name) {
         this.agentName = name;
     }
 
-    @SchemaProperty(kind = ACTION, group = "agent", module = "citrus-agent-connector")
+    @SchemaProperty(kind = ACTION, group = "agent", module = "citrus-agent-connector", description = "Connects to a Citrus agent and verifies its health.")
     public void setConnect(Connect connect) {
         AgentConnectAction.Builder builder = new AgentConnectAction.Builder();
 
@@ -54,7 +54,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "agent", module = "citrus-agent-connector")
+    @SchemaProperty(kind = ACTION, group = "agent", module = "citrus-agent-connector", description = "Runs test source on a Citrus agent and verifies the result.")
     public void setRun(Run run) {
         AgentRunAction.Builder builder = new AgentRunAction.Builder();
         if (run.getSource() != null) {
@@ -86,7 +86,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
             return url;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Citrus agent service URL used for the connection.")
         public void setUrl(String url) {
             this.url = url;
         }
@@ -95,7 +95,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
             return port;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Citrus agent service port used when no URL is specified.")
         public void setPort(int port) {
             this.port = port;
         }
@@ -110,7 +110,7 @@ public class Agent implements TestActionBuilder<AbstractAgentAction> {
             return source;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Test source to execute on the Citrus agent.")
         public void setSource(Source source) {
             this.source = source;
         }

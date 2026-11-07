@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
@@ -32,6 +33,7 @@ import org.citrusframework.functions.ParameterizedFunction;
  *
  * @since 5.2.0
  */
+@SchemaType(description = "Resolves an environment variable, with an optional default when the variable is not set.")
 public class EnvironmentVariableFunction implements ParameterizedFunction<EnvironmentVariableFunction.Parameters> {
 
     @Override

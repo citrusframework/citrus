@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
@@ -26,6 +27,7 @@ import java.util.UUID;
 /**
  * This validation matcher checks if a valid UUID version 4 is present.
  */
+@SchemaType(description = "Validates that the received value is a version 4 UUID.")
 public class UuidV4ValidationMatcher implements ValidationMatcher {
 
     @Override

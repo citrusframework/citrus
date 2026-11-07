@@ -34,7 +34,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-mail")
+@SchemaType(module = "citrus-mail", description = "Sends email messages to a mail server.")
 @XmlType(name = "", propOrder = {})
 public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
 

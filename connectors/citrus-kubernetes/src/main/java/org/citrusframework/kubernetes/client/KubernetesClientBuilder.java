@@ -29,7 +29,7 @@ import tools.jackson.databind.json.JsonMapper;
 /**
  * @since 2.7
  */
-@SchemaType(module = "citrus-kubernetes")
+@SchemaType(module = "citrus-kubernetes", description = "Executes Kubernetes resource operations and returns command results.")
 @XmlType(name = "", propOrder = {})
 public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesClient> {
 

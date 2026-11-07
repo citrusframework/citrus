@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.NumericFunction;
 import org.citrusframework.functions.parameter.NumericParameters;
@@ -23,6 +24,7 @@ import org.citrusframework.functions.parameter.NumericParameters;
 /**
  * Function returning the average of a set of numeric values.
  */
+@SchemaType(description = "Calculates the arithmetic mean of a set of numeric values.")
 public class AvgFunction implements NumericFunction {
 
     @Override

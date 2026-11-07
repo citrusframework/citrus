@@ -28,7 +28,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-ftp")
+@SchemaType(module = "citrus-ftp", description = "Performs file transfer operations on an FTP server.")
 @XmlType(name = "", propOrder = {})
 public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
 

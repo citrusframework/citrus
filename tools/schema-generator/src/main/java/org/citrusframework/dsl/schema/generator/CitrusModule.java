@@ -113,9 +113,14 @@ public class CitrusModule implements Module {
                         ObjectNode propertyNode = itemNode.withObject(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES));
                         propertyNode.set(oneOfItem, original);
 
-                        // remove all properties from old item node, but keep the property as an empty element.
-                        // This is required to pass the additionalProperties=false check
-                        ((ObjectNode) schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES))).putObject(oneOfItem);
+                        // remove schema details from old item node, but keep human-readable metadata as an empty element.
+                        // This is required to pass the additionalProperties=false check while preserving catalog descriptions.
+                        ObjectNode placeholder = ((ObjectNode) schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES)))
+                                .putObject(oneOfItem);
+                        copyPropertyMetadata(original, placeholder,
+                                schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TITLE),
+                                schemaGenerationContext.getKeyword(SchemaKeyword.TAG_DESCRIPTION),
+                                "$comment");
                     }
 
                     itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);
@@ -135,13 +140,6 @@ public class CitrusModule implements Module {
     private JsonNode resolveAdditionalProperties(TypeScope scope, SchemaGenerationContext schemaGenerationContext) {
         if (scope.getType().toString().startsWith("java.util.Map")) {
             return BooleanNode.TRUE;
-        }
-
-        if (scope instanceof MethodScopeWrapper methodScopeWrapper) {
-            if (methodScopeWrapper.getName().equals("actions") ||
-                    methodScopeWrapper.getName().equals("when")) {
-                return BooleanNode.TRUE;
-            }
         }
 
         if (scope.getType().getErasedType().equals(TestActionBuilder.class)) {
@@ -169,6 +167,15 @@ public class CitrusModule implements Module {
         }
 
         return null;
+    }
+
+    private static void copyPropertyMetadata(JsonNode source, ObjectNode target, String... keys) {
+        for (String key : keys) {
+            JsonNode value = source.get(key);
+            if (value != null && !value.isNull() && !(value.isString() && value.asString().isBlank())) {
+                target.set(key, value);
+            }
+        }
     }
 
     private void applyToConfigPart(SchemaGeneratorConfigPart<?> configPart){

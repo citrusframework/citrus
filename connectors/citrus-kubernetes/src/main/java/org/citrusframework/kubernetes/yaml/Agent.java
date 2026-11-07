@@ -31,7 +31,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
 
     private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Deploys or connects to a Citrus agent and exposes its client.")
     public void setConnect(Connect connect) {
         AgentConnectAction.Builder builder = new AgentConnectAction.Builder();
 
@@ -63,7 +63,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         this.delegate = builder;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Disconnects from a Citrus agent running on Kubernetes.")
     public void setDisconnect(Disconnect disconnect) {
         AgentDisconnectAction.Builder builder = new AgentDisconnectAction.Builder();
         builder.service(disconnect.getName());
@@ -126,7 +126,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
         protected boolean waitForRunningState = CitrusAgentSettings.isWaitForRunningState();
         protected String timeout = "60000";
 
-        @SchemaProperty
+        @SchemaProperty(description = "Name of the Citrus agent to connect to.")
         public void setName(String name) {
             this.name = name;
         }
@@ -139,7 +139,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return image;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Container image used to run the Citrus agent.")
         public void setImage(String image) {
             this.image = image;
         }
@@ -148,7 +148,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return registry;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Container image registry for the Citrus agent image.")
         public void setRegistry(String registry) {
             this.registry = registry;
         }
@@ -157,7 +157,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return testJar;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Path to the test JAR to run with the Citrus agent.")
         public void setTestJar(String testJar) {
             this.testJar = testJar;
         }
@@ -189,7 +189,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return localPort;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Waits for the Citrus agent to reach a running state before continuing.")
         public void setWaitForRunningState(boolean waitForRunningState) {
             this.waitForRunningState = waitForRunningState;
         }
@@ -198,7 +198,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
             return waitForRunningState;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Timeout in milliseconds for connecting to the Citrus agent.")
         public void setTimeout(String timeout) {
             this.timeout = timeout;
         }
@@ -212,7 +212,7 @@ public class Agent extends AbstractKubernetesAction.Builder<AbstractKubernetesAc
 
         protected String name;
 
-        @SchemaProperty
+        @SchemaProperty(description = "Name of the Citrus agent service to disconnect from.")
         public void setName(String name) {
             this.name = name;
         }

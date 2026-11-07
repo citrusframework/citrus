@@ -20,6 +20,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
@@ -29,6 +30,7 @@ import org.citrusframework.functions.Function;
  * Function gets the local host address. Usually some IP address (e.g. 192.168.2.100).
  * This enables us to access the localhost dynamically in tests.
  */
+@SchemaType(description = "Returns the IP address of the local host.")
 public class LocalHostAddressFunction implements Function {
 
     @Override

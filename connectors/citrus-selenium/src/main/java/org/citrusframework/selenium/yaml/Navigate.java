@@ -26,7 +26,7 @@ public class Navigate extends AbstractSeleniumAction.Builder<NavigateAction, Nav
 
     private final NavigateAction.Builder delegate = new NavigateAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target page URL or relative path to navigate to.")
     public void setPage(String page) {
         this.delegate.page(page);
     }

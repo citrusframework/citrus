@@ -33,7 +33,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.7.5
  */
-@SchemaType(module = "citrus-ftp")
+@SchemaType(module = "citrus-ftp", description = "Performs secure file transfer operations on an SFTP server.")
 @XmlType(name = "", propOrder = {})
 public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
 

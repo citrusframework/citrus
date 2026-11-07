@@ -36,22 +36,22 @@ public class JBang implements TestActionBuilder<JBangAction> {
         builder.description(value);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The JBang application name or alias to run.")
     public void setApp(String name) {
         builder.app(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The JBang command or script to execute.")
     public void setCommand(String command) {
         builder.command(command);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The JBang script file to execute.")
     public void setFile(String path) {
         builder.file(path);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Comma-separated expected JBang process exit codes.")
     public void setExitCode(String codes) {
         builder.exitCodes(Arrays.stream(codes.split(","))
                 .map(String::trim)
@@ -59,22 +59,22 @@ public class JBang implements TestActionBuilder<JBangAction> {
                 .mapToInt(Integer::intValue).toArray());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "When enabled, prints the JBang process output.")
     public void setPrintOutput(boolean enabled) {
         builder.printOutput(enabled);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The expected JBang process output.")
     public void setOutput(String expected) {
         builder.verifyOutput(expected);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The test variable that stores the JBang process ID.")
     public void setSavePid(String variable) {
         builder.savePid(variable);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The test variable that stores the JBang process output.")
     public void setSaveOutput(String variable) {
         builder.saveOutput(variable);
     }
@@ -86,7 +86,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
         return this.arguments;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Arguments passed to the JBang command or application.")
     public void setArgs(List<Argument> arguments) {
         this.arguments = arguments;
     }
@@ -98,7 +98,7 @@ public class JBang implements TestActionBuilder<JBangAction> {
         return this.systemProperties;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "System properties passed to the JBang process.")
     public void setSystemProperties(List<SystemProperty> systemProperties) {
         this.systemProperties = systemProperties;
     }

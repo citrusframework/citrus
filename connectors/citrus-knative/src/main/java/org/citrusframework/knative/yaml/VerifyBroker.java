@@ -29,17 +29,17 @@ public class VerifyBroker extends AbstractKnativeAction.Builder<VerifyBrokerActi
 
     private final VerifyBrokerAction.Builder delegate = new VerifyBrokerAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative broker to verify.")
     public void setName(String name) {
         this.delegate.broker(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Broker condition type to verify, such as Ready or Addressable.")
     public void setCondition(String condition) {
         this.delegate.condition(condition);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected status value of the broker condition.")
     public void setStatus(String status) {
         this.delegate.status(status);
     }

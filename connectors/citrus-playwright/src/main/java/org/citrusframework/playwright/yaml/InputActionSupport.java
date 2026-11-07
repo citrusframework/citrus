@@ -36,22 +36,22 @@ abstract class InputActionSupport<B extends InputActionSupport<B>> extends Abstr
         this.delegate = new InputAction.Builder(command);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element locator.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Scroll behavior before interacting with the element.")
     public void setScroll(String scroll) {
         delegate.scroll(scroll);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Value to enter, select, or use for the action.")
     public void setValue(String value) {
         delegate.value(value);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Values to enter, select, or upload.")
     public void setValues(List<String> values) {
         delegate.values(values.toArray(String[]::new));
     }

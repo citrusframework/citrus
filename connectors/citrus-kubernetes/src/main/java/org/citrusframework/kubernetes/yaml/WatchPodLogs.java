@@ -28,23 +28,23 @@ public class WatchPodLogs extends AbstractKubernetesAction.Builder<WatchPodLogsA
 
     private final WatchPodLogsAction.Builder delegate = new WatchPodLogsAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the pod whose logs should be watched.")
     public void setName(String name) {
         this.delegate.podName(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Labels used to select the pod whose logs should be watched.")
     public void setLabels(List<Label> labels) {
         labels.forEach(label -> this.delegate.label(label.getName(), label.getValue()));
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Label expression in name=value form used to select the pod.")
     public void setLabel(String labelExpression) {
         String[] tokens = labelExpression.split("=", 2);
         this.delegate.label(tokens[0].trim(), tokens[1].trim());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Duration in milliseconds to watch and print pod logs.")
     public void setTimeout(String timeout) {
         this.delegate.milliseconds(timeout);
     }

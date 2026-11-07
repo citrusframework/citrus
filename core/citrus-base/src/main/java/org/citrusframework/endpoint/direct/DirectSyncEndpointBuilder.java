@@ -21,7 +21,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
+@SchemaType(module = "citrus-base", description = "Exchanges synchronous request-reply messages through an in-memory queue.")
 @XmlType(name = "", propOrder = {})
 public class DirectSyncEndpointBuilder extends AbstractDirectEndpointBuilder<DirectSyncEndpoint, DirectSyncEndpointBuilder> {
 

@@ -47,7 +47,7 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
         return description;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "The test actor that executes the JMS queue purge action.")
     public void setActor(String actor) {
         this.actor = actor;
     }

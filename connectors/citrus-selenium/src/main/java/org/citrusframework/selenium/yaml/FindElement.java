@@ -31,12 +31,12 @@ public class FindElement extends AbstractSeleniumAction.Builder<FindElementActio
     private final FindElementAction.Builder delegate = new FindElementAction.Builder();
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Element selector used to locate the element on the current page.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected element text, tag name, state, attributes, and styles.")
     public void setValidate(Validate validate) {
         if (validate.getText() != null) {
             delegate.text(validate.text);

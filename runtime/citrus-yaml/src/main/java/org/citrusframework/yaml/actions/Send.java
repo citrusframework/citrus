@@ -89,7 +89,7 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         builder.endpoint(value);
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "The test actor that executes the send message action.")
     public void setActor(String value) {
         this.actor = value;
     }

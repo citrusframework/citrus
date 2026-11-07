@@ -39,7 +39,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-ws")
+@SchemaType(module = "citrus-ws", description = "Sends SOAP web service requests and receives responses.")
 @XmlType(name = "", propOrder = {})
 public class WebServiceClientBuilder extends AbstractEndpointBuilder<WebServiceClient> {
 

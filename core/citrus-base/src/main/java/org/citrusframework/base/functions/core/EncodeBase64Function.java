@@ -25,10 +25,12 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Encodes a character sequence to base64 binary using given charset.
  */
+@SchemaType(description = "Encodes a character sequence as Base64 using a configurable charset.")
 public class EncodeBase64Function implements ParameterizedFunction<EncodeBase64Function.Parameters> {
 
     @Override

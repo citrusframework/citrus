@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.NumberFunction;
 import org.citrusframework.functions.parameter.NumberParameter;
@@ -23,6 +24,7 @@ import org.citrusframework.functions.parameter.NumberParameter;
 /**
  * Function returns the closest integer value to a decimal argument.
  */
+@SchemaType(description = "Rounds a decimal value to the closest integer.")
 public class RoundFunction implements NumberFunction {
 
     @Override

@@ -33,7 +33,7 @@ public class Stop implements TestActionBuilder<StopServerAction>, ReferenceResol
         builder.server(server);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "List of server endpoints to stop.")
     public void setServers(List<ServerRef> servers) {
         servers.forEach(server -> builder.server(server.name));
     }

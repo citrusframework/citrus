@@ -36,22 +36,22 @@ public class Frame extends AbstractPlaywrightAction.Builder<FrameAction, Frame> 
     private LocatorSpec locator;
     private String value;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Frame command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Frame selector.")
     public void setSelector(String selector) {
         delegate.frame(selector);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element inside the frame.")
     public void setElement(Element element) {
         this.locator = element.toLocatorSpec();
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Value used by the frame action.")
     public void setValue(String value) {
         this.value = value;
     }

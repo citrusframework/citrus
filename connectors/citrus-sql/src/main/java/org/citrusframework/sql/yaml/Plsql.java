@@ -38,13 +38,13 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
         builder.description(value);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The JDBC data source used to execute PL/SQL statements.")
     public void setDataSource(String dataSource) {
         builder.dataSource(dataSource);
         builder.name(String.format("plsql:%s", dataSource));
     }
 
-    @SchemaProperty(required = true)
+    @SchemaProperty(required = true, description = "The PL/SQL statements, scripts, or SQL resource files to execute.")
     public void setStatements(List<Statement> statements) {
         for (Statement statement: statements) {
             if (statement.statement != null) {
@@ -61,7 +61,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Transaction settings for the PL/SQL action.")
     public void setTransaction(Transaction transaction) {
         if (transaction.manager != null) {
             transactionManager = transaction.manager;
@@ -76,7 +76,7 @@ public class Plsql implements TestActionBuilder<ExecutePLSQLAction>, ReferenceRe
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "When enabled, PL/SQL statement errors are ignored.")
     public void setIgnoreErrors(boolean value) {
         builder.ignoreErrors(value);
     }

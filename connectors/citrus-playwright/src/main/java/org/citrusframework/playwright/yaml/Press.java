@@ -16,6 +16,7 @@
 
 package org.citrusframework.playwright.yaml;
 
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.playwright.actions.InputAction;
 
 /**
@@ -31,6 +32,7 @@ public class Press extends InputActionSupport<Press> {
      * Alias property name for the pressed key.
      * @param key key or shortcut.
      */
+    @SchemaProperty(description = "Key or shortcut to press.")
     public void setKey(String key) {
         setValue(key);
     }

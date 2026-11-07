@@ -33,7 +33,7 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
 
     private final SendEventAction.Builder delegate = new SendEventAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Knative broker name or HTTP URL that receives the event.")
     public void setBroker(String urlOrName) {
         if (urlOrName.startsWith("http://") || urlOrName.startsWith("https://")) {
             this.delegate.brokerUrl(urlOrName);
@@ -42,17 +42,17 @@ public class SendEvent extends AbstractKnativeAction.Builder<SendEventAction, Se
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sends the HTTP request asynchronously without waiting for completion.")
     public void setFork(Boolean value) {
         this.delegate.fork(value);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Maximum time in milliseconds to wait for the broker response.")
     public void setTimeout(long timeout) {
         this.delegate.timeout(timeout);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "CloudEvent attributes and data to send.")
     public void setEvent(Event event) {
         event.getAttributes().forEach(
                 attr -> this.delegate.attribute(attr.getName(), attr.getValue())

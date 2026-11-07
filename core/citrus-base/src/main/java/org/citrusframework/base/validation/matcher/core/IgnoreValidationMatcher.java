@@ -18,6 +18,7 @@ package org.citrusframework.base.validation.matcher.core;
 
 import java.util.List;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @since 2.7
  */
+@SchemaType(description = "Accepts any received value without performing validation.")
 public class IgnoreValidationMatcher implements ValidationMatcher {
 
     /** Logger */

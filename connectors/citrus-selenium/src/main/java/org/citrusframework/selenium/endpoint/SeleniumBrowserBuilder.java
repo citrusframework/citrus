@@ -34,7 +34,7 @@ import org.openqa.selenium.support.events.WebDriverListener;
 /**
  * @since 2.7
  */
-@SchemaType(module = "citrus-selenium")
+@SchemaType(module = "citrus-selenium", description = "Automates browser interactions through Selenium WebDriver.")
 @XmlType(name = "", propOrder = {})
 public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrowser> {
 

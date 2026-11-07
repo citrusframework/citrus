@@ -30,7 +30,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-jmx")
+@SchemaType(module = "citrus-jmx", description = "Sends JMX managed bean requests and receives operation results and notifications.")
 @XmlType(name = "", propOrder = {})
 public class JmxClientBuilder extends AbstractEndpointBuilder<JmxClient> {
 

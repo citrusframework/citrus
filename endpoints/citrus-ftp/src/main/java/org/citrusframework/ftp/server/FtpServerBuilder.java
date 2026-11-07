@@ -33,7 +33,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-ftp")
+@SchemaType(module = "citrus-ftp", description = "Simulates an FTP server for testing client file transfer operations.")
 @XmlType(name = "", propOrder = {})
 public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServerBuilder> {
 

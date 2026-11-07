@@ -26,12 +26,12 @@ public class OpenWindow extends AbstractSeleniumAction.Builder<OpenWindowAction,
 
     private final OpenWindowAction.Builder delegate = new OpenWindowAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name to assign to the newly opened browser window.")
     public void setName(String name) {
         this.delegate.window(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name to assign to the newly opened browser window.")
     public void setWindow(String windowName) {
         this.delegate.window(windowName);
     }

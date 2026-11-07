@@ -24,12 +24,14 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Function resolves the value of a system property at test runtime.
  * In case the system property is not set an optional default value is used as fallback.
  * When neither the system property nor a default value is given the function fails with an error.
  */
+@SchemaType(description = "Resolves a Java system property, with an optional default when the property is not set.")
 public class SystemPropertyFunction implements ParameterizedFunction<SystemPropertyFunction.Parameters> {
 
     @Override

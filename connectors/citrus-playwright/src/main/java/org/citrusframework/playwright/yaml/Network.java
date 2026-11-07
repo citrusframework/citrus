@@ -46,32 +46,32 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
     private Integer serverPort;
     private String securityProtocol;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Network command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "URL pattern to intercept or match.")
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Text body for a mocked network response.")
     public void setText(String text) {
         this.text = text;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Body for a mocked network response.")
     public void setBody(String body) {
         this.body = body;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Content type for a mocked network response.")
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "HTTP status code for a mocked network response.")
     public void setStatus(Integer status) {
         this.status = status;
     }
@@ -87,69 +87,69 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
         return headers;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "HTTP header name for a network request or response.")
     public void setHeaderName(String headerName) {
         this.headerName = headerName;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "HTTP header value for a network request or response.")
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Request URL to match.")
     public void setUrl(String url) {
         delegate.url(url);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Substring the request URL must contain.")
     public void setUrlContains(String urlContains) {
         delegate.urlContains(urlContains);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Regular expression the request URL must match.")
     public void setUrlMatches(String urlMatches) {
         delegate.urlMatches(urlMatches);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Timeout in milliseconds for the network action.")
     public void setTimeout(Double timeout) {
         delegate.timeout(timeout);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Element that triggers the network request when clicked.")
     public void setElement(Element element) {
         delegate.click(element.toLocatorSpec());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "JavaScript that triggers the network request.")
     public void setTriggerScript(String triggerScript) {
         delegate.triggerScript(triggerScript);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes the response body in captured network data.")
     public void setIncludeBody(Boolean includeBody) {
         if (Boolean.TRUE.equals(includeBody)) {
             delegate.includeBody();
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store captured network data.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected server IP address for a network security check.")
     public void setServerIp(String serverIp) {
         this.serverIp = serverIp;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected server port for a network security check.")
     public void setServerPort(Integer serverPort) {
         this.serverPort = serverPort;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected security protocol for a network security check.")
     public void setSecurityProtocol(String securityProtocol) {
         this.securityProtocol = securityProtocol;
     }
@@ -223,7 +223,7 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
             return name;
         }
 
-        @SchemaProperty(required = true)
+        @SchemaProperty(required = true, description = "HTTP header name.")
         public void setName(String name) {
             this.name = name;
         }
@@ -232,7 +232,7 @@ public class Network extends AbstractPlaywrightAction.Builder<NetworkAction, Net
             return value;
         }
 
-        @SchemaProperty(required = true)
+        @SchemaProperty(required = true, description = "HTTP header value.")
         public void setValue(String value) {
             this.value = value;
         }

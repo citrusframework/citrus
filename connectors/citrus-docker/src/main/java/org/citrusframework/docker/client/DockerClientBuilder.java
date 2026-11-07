@@ -26,7 +26,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-docker")
+@SchemaType(module = "citrus-docker", description = "Executes Docker commands on a Docker daemon and returns command results.")
 @XmlType(name = "", propOrder = {})
 public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
 

@@ -29,7 +29,7 @@ public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
     /**
      * Add alert text validation.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Expected text displayed in the alert dialog.")
     public void setText(String text) {
         this.delegate.text(text);
     }
@@ -37,7 +37,7 @@ public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
     /**
      * Accept alert dialog.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Accepts the alert when true; dismisses it when false.")
     public void setAccept(boolean accept) {
         if (accept) {
             this.delegate.accept();
@@ -49,7 +49,7 @@ public class Alert extends AbstractSeleniumAction.Builder<AlertAction, Alert> {
     /**
      * Dismiss alert dialog.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Dismisses the alert when true; accepts it when false.")
     public void setDismiss(boolean dismiss) {
         if (dismiss) {
             this.delegate.dismiss();

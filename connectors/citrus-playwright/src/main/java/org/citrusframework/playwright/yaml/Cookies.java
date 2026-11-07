@@ -45,57 +45,57 @@ public class Cookies extends AbstractPlaywrightAction.Builder<CookieAction, Cook
     private Boolean secure;
     private String sameSite;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie name.")
     public void setName(String name) {
         this.name = name;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie value.")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "URL associated with the cookie.")
     public void setUrl(String url) {
         this.url = url;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie domain.")
     public void setDomain(String domain) {
         this.domain = domain;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie path.")
     public void setPath(String path) {
         this.path = path;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie expiration time as a Unix timestamp.")
     public void setExpires(Double expires) {
         this.expires = expires;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the HttpOnly cookie flag.")
     public void setHttpOnly(Boolean httpOnly) {
         this.httpOnly = httpOnly;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the Secure cookie flag.")
     public void setSecure(Boolean secure) {
         this.secure = secure;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie SameSite attribute.")
     public void setSameSite(String sameSite) {
         this.sameSite = sameSite;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store cookie data.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }

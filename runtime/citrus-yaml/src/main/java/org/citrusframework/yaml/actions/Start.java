@@ -33,7 +33,7 @@ public class Start implements TestActionBuilder<StartServerAction>, ReferenceRes
         builder.server(server);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "List of server endpoints to start.")
     public void setServers(List<ServerRef> servers) {
         servers.forEach(server -> builder.server(server.name));
     }

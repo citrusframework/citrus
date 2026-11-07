@@ -28,7 +28,7 @@ public class Click extends AbstractSeleniumAction.Builder<ClickAction, Click> im
     private final ClickAction.Builder delegate = new ClickAction.Builder();
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Element to click.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

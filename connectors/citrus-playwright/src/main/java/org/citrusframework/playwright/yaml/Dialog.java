@@ -32,27 +32,27 @@ public class Dialog extends AbstractPlaywrightAction.Builder<DialogAction, Dialo
 
     private String command;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Dialog command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Text to enter in a prompt dialog.")
     public void setPromptText(String promptText) {
         delegate.promptText(promptText);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected dialog message.")
     public void setMessage(String message) {
         delegate.message(message);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected dialog type.")
     public void setType(String type) {
         delegate.type(type);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "JavaScript that triggers the dialog.")
     public void setTriggerScript(String triggerScript) {
         delegate.triggerScript(triggerScript);
     }

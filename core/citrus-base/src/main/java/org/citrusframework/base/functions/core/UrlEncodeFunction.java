@@ -25,10 +25,12 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Encodes a character sequence to URL encoded string using given charset.
  */
+@SchemaType(description = "URL-encodes a character sequence using a configurable charset.")
 public class UrlEncodeFunction implements ParameterizedFunction<UrlEncodeFunction.Parameters> {
 
     @Override

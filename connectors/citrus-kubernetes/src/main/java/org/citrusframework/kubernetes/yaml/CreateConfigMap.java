@@ -30,19 +30,19 @@ public class CreateConfigMap extends AbstractKubernetesAction.Builder<CreateConf
 
     private final CreateConfigMapAction.Builder delegate = new CreateConfigMapAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes ConfigMap to create.")
     public void setName(String name) {
         this.delegate.configMap(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Key-value pairs to store in the ConfigMap.")
     public void setProperties(List<Property> properties) {
         Map<String, String> props = new HashMap<>();
         properties.forEach(property -> props.put(property.getName(), property.getValue()));
         this.delegate.properties(props);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "File to load into the ConfigMap data.")
     public void setFile(String path) {
         delegate.fromFile(path);
     }

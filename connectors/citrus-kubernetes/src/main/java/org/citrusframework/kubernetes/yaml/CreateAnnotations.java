@@ -28,17 +28,17 @@ public class CreateAnnotations extends AbstractKubernetesAction.Builder<CreateAn
 
     private final CreateAnnotationsAction.Builder delegate = new CreateAnnotationsAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes resource to annotate.")
     public void setResource(String name) {
         this.delegate.resource(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Type of the Kubernetes resource to annotate, such as POD or SERVICE.")
     public void setType(String resourceType) {
         this.delegate.type(resourceType);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Annotations to add to the resource metadata.")
     public void setAnnotations(List<Annotation> annotations) {
         annotations.forEach(
                 annotation -> this.delegate.annotation(annotation.getName(), annotation.getValue()));

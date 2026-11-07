@@ -389,7 +389,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         builder.endpoint(value);
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "The test actor that executes the receive message action.")
     public void setActor(String value) {
         this.actor = value;
     }

@@ -29,43 +29,43 @@ public class Start extends AbstractPlaywrightAction.Builder<StartBrowserAction, 
 
     private final StartBrowserAction.Builder delegate = new StartBrowserAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Allows the action when the browser is already started.")
     public void setAllowAlreadyStarted(Boolean allowAlreadyStarted) {
         if (allowAlreadyStarted != null) {
             delegate.allowAlreadyStarted(allowAlreadyStarted);
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Browser type to start, such as chromium, firefox, or webkit.")
     public void setBrowserType(String browserType) {
         delegate.browserType(browserType);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Runs the browser in headless mode.")
     public void setHeadless(Boolean headless) {
         if (headless != null) {
             delegate.headless(headless);
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Base URL for browser navigation.")
     public void setBaseUrl(String baseUrl) {
         delegate.baseUrl(baseUrl);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Initial page URL opened after browser start.")
     public void setStartPageUrl(String startPageUrl) {
         delegate.startPageUrl(startPageUrl);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Default timeout in milliseconds for Playwright actions.")
     public void setDefaultTimeout(Long defaultTimeout) {
         if (defaultTimeout != null) {
             delegate.defaultTimeout(defaultTimeout);
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Default timeout in milliseconds for navigation actions.")
     public void setDefaultNavigationTimeout(Long defaultNavigationTimeout) {
         if (defaultNavigationTimeout != null) {
             delegate.defaultNavigationTimeout(defaultNavigationTimeout);

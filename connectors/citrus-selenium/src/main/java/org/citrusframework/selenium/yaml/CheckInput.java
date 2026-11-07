@@ -27,13 +27,13 @@ public class CheckInput extends AbstractSeleniumAction.Builder<CheckInputAction,
 
     private final CheckInputAction.Builder delegate = new CheckInputAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Checks the checkbox when true; unchecks it when false.")
     public void setChecked(boolean checked) {
         this.delegate.checked(checked);
     }
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Checkbox input element to check or uncheck.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

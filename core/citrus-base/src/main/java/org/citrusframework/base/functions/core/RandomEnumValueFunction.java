@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
@@ -71,6 +72,7 @@ import org.citrusframework.functions.parameter.StringParameters;
  * You should choose which one of the two flavours to use based on the number of times you use this function - if you need it in
  * only one special case you may go with specifying the list as arguments otherwise you should define a custom function and reuse it.
  */
+@SchemaType(description = "Selects a random value from a predefined or supplied list of strings.")
 public class RandomEnumValueFunction implements ParameterizedFunction<StringParameters> {
 
 	private final Random random = new Random(System.currentTimeMillis());

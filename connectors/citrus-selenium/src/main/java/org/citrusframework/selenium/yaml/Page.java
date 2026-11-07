@@ -40,7 +40,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Sets the web page by name.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the registered page object to use.")
     public void setName(String name) {
         this.pageName = name;
     }
@@ -48,7 +48,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Sets the web page type.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Fully qualified class name of the page object to instantiate.")
     public void setType(String pageType) {
         this.delegate.type(pageType);
     }
@@ -56,7 +56,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Sets the web page action.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Action method to invoke on the page object.")
     public void setAction(String action) {
         this.delegate.action(action);
     }
@@ -64,7 +64,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Perform page validation.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Validates the page state using the configured page validator.")
     public void setValidate() {
         this.delegate.action("validate");
     }
@@ -72,7 +72,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page validator.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Reference to a custom page validator used to validate the page.")
     public void setValidator(String pageValidator) {
         this.pageValidator = pageValidator;
     }
@@ -80,7 +80,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page action method to execute.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the page object method to execute.")
     public void setExecute(String method) {
         this.delegate.action(method);
     }
@@ -88,7 +88,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page action argument.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Single argument passed to the page action method.")
     public void setArgument(String arg) {
         this.delegate.argument(arg);
     }
@@ -96,7 +96,7 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
     /**
      * Set page action arguments.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Arguments passed to the page action method, in order.")
     public void setArguments(List<String> args) {
         this.delegate.arguments(args);
     }

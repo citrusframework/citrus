@@ -36,7 +36,7 @@ public class Element {
     private Boolean last;
     private Boolean visible;
 
-    @SchemaProperty
+    @SchemaProperty(description = "CSS selector for the target element.")
     public void setCss(String css) {
         this.css = css;
     }
@@ -45,7 +45,7 @@ public class Element {
         return css;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "XPath selector for the target element.")
     public void setXpath(String xpath) {
         this.xpath = xpath;
     }
@@ -54,7 +54,7 @@ public class Element {
         return xpath;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Text content selector for the target element.")
     public void setText(String text) {
         this.text = text;
     }
@@ -63,7 +63,7 @@ public class Element {
         return text;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "ARIA role selector for the target element.")
     public void setRole(String role) {
         this.role = role;
     }
@@ -81,7 +81,7 @@ public class Element {
         return name;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test ID selector for the target element.")
     public void setTestId(String testId) {
         this.testId = testId;
     }
@@ -90,7 +90,7 @@ public class Element {
         return testId;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Selects the nth matching element (zero-based).")
     public void setNth(Integer nth) {
         this.nth = nth;
     }
@@ -99,7 +99,7 @@ public class Element {
         return nth;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Selects the first matching element.")
     public void setFirst(Boolean first) {
         this.first = first;
     }
@@ -108,7 +108,7 @@ public class Element {
         return first;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Selects the last matching element.")
     public void setLast(Boolean last) {
         this.last = last;
     }
@@ -117,7 +117,7 @@ public class Element {
         return last;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Filters to visible elements only.")
     public void setVisible(Boolean visible) {
         this.visible = visible;
     }

@@ -32,28 +32,28 @@ public class Extract extends AbstractSeleniumAction.Builder<ExtractAction, Extra
     private String attribute;
     private String cssProperty;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Value to extract: url, title, page-source, text, value, attribute, css-value, or count.")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable that receives the extracted value.")
     public void setVariable(String variable) {
         this.variable = variable;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Element attribute to extract when value is attribute.")
     public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "CSS property to extract when value is css-value.")
     public void setCssProperty(String cssProperty) {
         this.cssProperty = cssProperty;
     }
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Element from which the value is extracted.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

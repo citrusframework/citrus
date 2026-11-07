@@ -27,7 +27,7 @@ public class Stop extends AbstractTestcontainersAction.Builder<StopTestcontainer
 
     private final StopTestcontainersAction.Builder delegate = new StopTestcontainersAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the container to stop.")
     public void setName(String name) {
         delegate.containerName(name);
     }

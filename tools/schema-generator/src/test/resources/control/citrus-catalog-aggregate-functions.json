@@ -1,11 +1,11 @@
 {
   "average": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "average",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Average",
+    "description": "Calculates the arithmetic mean of a set of numeric values.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -28,11 +28,12 @@
   },
   "cdataSection": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "cdataSection",
     "group": "citrus",
     "module": "citrus-validation-xml",
     "title": "CdataSection",
+    "description": "Wraps a value in XML CDATA section tags.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -50,11 +51,11 @@
   },
   "unixTimestamp": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "unixTimestamp",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "UnixTimestamp",
+    "description": "Returns the current Unix timestamp in seconds.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -62,11 +63,11 @@
   },
   "randomString": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "randomString",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "RandomString",
+    "description": "Generates a random alphabetic string with configurable length, letter case, and optional digits.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -99,11 +100,12 @@
   },
   "resolveExternalServiceUrl": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "resolveExternalServiceUrl",
     "group": "citrus",
     "module": "citrus-kubernetes",
     "title": "ResolveExternalServiceUrl",
+    "description": "Resolves an external Kubernetes service URL from its exposed host and port.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -126,11 +128,11 @@
   },
   "urlDecode": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "urlDecode",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "UrlDecode",
+    "description": "Decodes a URL-encoded string using a configurable charset.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -154,11 +156,11 @@
   },
   "localHostAddress": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "localHostAddress",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "LocalHostAddress",
+    "description": "Returns the IP address of the local host.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -166,11 +168,11 @@
   },
   "currentDate": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "currentDate",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "CurrentDate",
+    "description": "Returns the current date with optional formatting, time zone, and date offset.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -195,11 +197,11 @@
   },
   "sum": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "sum",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Sum",
+    "description": "Calculates the sum of a set of numeric values.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -222,11 +224,11 @@
   },
   "urlEncode": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "urlEncode",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "UrlEncode",
+    "description": "URL-encodes a character sequence using a configurable charset.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -250,11 +252,11 @@
   },
   "substring": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "substring",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Substring",
+    "description": "Extracts a substring using a begin index and an optional end index.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -283,11 +285,11 @@
   },
   "translate": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "translate",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Translate",
+    "description": "Replaces all regular expression matches in a value with a replacement string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -317,11 +319,11 @@
   },
   "escapeJson": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "escapeJson",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "EscapeJson",
+    "description": "Escapes JSON special characters so a value can be embedded in a JSON string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -339,11 +341,11 @@
   },
   "digestAuthHeader": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "digestAuthHeader",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "DigestAuthHeader",
+    "description": "Builds an HTTP Digest Authorization header from credentials and request parameters.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -403,11 +405,12 @@
   },
   "xpath": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "xpath",
     "group": "citrus",
     "module": "citrus-validation-xml",
     "title": "Xpath",
+    "description": "Evaluates an XPath expression against XML content.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -430,11 +433,12 @@
   },
   "resolveServiceUrl": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "resolveServiceUrl",
     "group": "citrus",
     "module": "citrus-kubernetes",
     "title": "ResolveServiceUrl",
+    "description": "Builds a Kubernetes service URL for local or in-cluster access.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -463,11 +467,11 @@
   },
   "lowerCase": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "lowerCase",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "LowerCase",
+    "description": "Converts a string to lowercase letters.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -485,11 +489,11 @@
   },
   "randomNumber": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "randomNumber",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "RandomNumber",
+    "description": "Generates a random number with a configurable digit count and leading-zero handling.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -512,11 +516,11 @@
   },
   "changeDate": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "changeDate",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "ChangeDate",
+    "description": "Adds or subtracts date and time offsets from a formatted date value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -544,11 +548,11 @@
   },
   "randomEnumValue": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "randomEnumValue",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "RandomEnumValue",
+    "description": "Selects a random value from a predefined or supplied list of strings.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -571,11 +575,12 @@
   },
   "escapeXml": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "escapeXml",
     "group": "citrus",
     "module": "citrus-validation-xml",
     "title": "EscapeXml",
+    "description": "Escapes special XML characters in a value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -593,11 +598,11 @@
   },
   "substringAfter": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "substringAfter",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "SubstringAfter",
+    "description": "Returns the portion of a string after the first occurrence of a search string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -621,11 +626,11 @@
   },
   "randomUUID": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "randomUUID",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "RandomUUID",
+    "description": "Generates a random UUID.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -633,11 +638,12 @@
   },
   "jsonPatch": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "jsonPatch",
     "group": "citrus",
     "module": "citrus-validation-json",
     "title": "JsonPatch",
+    "description": "Applies RFC 6902 JSON Patch operations, with JSONPath paths converted to JSON Pointers.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -688,11 +694,11 @@
   },
   "floor": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "floor",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Floor",
+    "description": "Returns the largest integer less than or equal to a numeric value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -710,11 +716,11 @@
   },
   "stringLength": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "stringLength",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "StringLength",
+    "description": "Returns the number of characters in a string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -732,11 +738,11 @@
   },
   "encodeBase64": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "encodeBase64",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "EncodeBase64",
+    "description": "Encodes a character sequence as Base64 using a configurable charset.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -760,11 +766,11 @@
   },
   "ceiling": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "ceiling",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Ceiling",
+    "description": "Returns the smallest integer greater than or equal to a numeric value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -782,11 +788,11 @@
   },
   "envVar": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "envVar",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "EnvVar",
+    "description": "Resolves an environment variable, with an optional default when the variable is not set.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -809,11 +815,11 @@
   },
   "randomNumberGenerator": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "randomNumberGenerator",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "RandomNumberGenerator",
+    "description": "Generates a random number with configurable range, decimal places, bounds, multiples, and formatting.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -821,11 +827,11 @@
   },
   "systemProperty": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "systemProperty",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "SystemProperty",
+    "description": "Resolves a Java system property, with an optional default when the property is not set.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -848,11 +854,12 @@
   },
   "jsonPath": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "jsonPath",
     "group": "citrus",
     "module": "citrus-validation-json",
     "title": "JsonPath",
+    "description": "Evaluates a JSONPath expression against JSON content.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -875,11 +882,11 @@
   },
   "concat": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "concat",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Concat",
+    "description": "Concatenates multiple static or dynamic values into a single string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -902,11 +909,11 @@
   },
   "message": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "message",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Message",
+    "description": "Loads a stored test message payload or header value by message name.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -924,11 +931,12 @@
   },
   "env": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "env",
     "group": "citrus",
     "module": "citrus-spring",
     "title": "Env",
+    "description": "Resolves a property from the Spring environment or system environment, with an optional default.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -951,11 +959,11 @@
   },
   "round": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "round",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Round",
+    "description": "Rounds a decimal value to the closest integer.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -973,11 +981,11 @@
   },
   "decodeBase64": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "decodeBase64",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "DecodeBase64",
+    "description": "Decodes Base64 data into a character sequence using a configurable charset.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1001,11 +1009,12 @@
   },
   "serviceClusterIp": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "serviceClusterIp",
     "group": "citrus",
     "module": "citrus-kubernetes",
     "title": "ServiceClusterIp",
+    "description": "Resolves a Kubernetes service IP, supporting local mode and external-IP fallback.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1028,11 +1037,11 @@
   },
   "randomPattern": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "randomPattern",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "RandomPattern",
+    "description": "Generates a random string that matches a given regular expression.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1050,11 +1059,11 @@
   },
   "upperCase": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "upperCase",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "UpperCase",
+    "description": "Converts a string to uppercase letters.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1072,11 +1081,11 @@
   },
   "absolute": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "absolute",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Absolute",
+    "description": "Returns the absolute value of a decimal number.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1094,11 +1103,11 @@
   },
   "readFile": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "readFile",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "ReadFile",
+    "description": "Reads file content with optional test-variable resolution and Base64 encoding.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1127,11 +1136,11 @@
   },
   "maximum": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "maximum",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Maximum",
+    "description": "Returns the maximum of a set of numeric values.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1154,11 +1163,11 @@
   },
   "substringBefore": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "substringBefore",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "SubstringBefore",
+    "description": "Returns the portion of a string before the first occurrence of a search string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -1182,11 +1191,11 @@
   },
   "minimum": {
     "kind": "testFunction",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "minimum",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Minimum",
+    "description": "Returns the minimum of a set of numeric values.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",

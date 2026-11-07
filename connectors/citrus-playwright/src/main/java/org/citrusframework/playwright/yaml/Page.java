@@ -40,32 +40,32 @@ public class Page extends AbstractPlaywrightAction.Builder<PageAction, Page> {
     private String title;
     private String urlContains;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Page command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Alias for the browser page.")
     public void setAlias(String alias) {
         this.alias = alias;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Browser context alias that owns the page.")
     public void setContext(String contextAlias) {
         delegate.inContext(contextAlias);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Page index to select.")
     public void setIndex(Integer index) {
         this.index = index;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Page title to match.")
     public void setTitle(String title) {
         this.title = title;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Substring the page URL must contain.")
     public void setUrlContains(String urlContains) {
         this.urlContains = urlContains;
     }

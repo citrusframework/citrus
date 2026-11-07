@@ -16,6 +16,7 @@
 
 package org.citrusframework.playwright.yaml;
 
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.playwright.actions.InputAction;
 
 /**
@@ -31,6 +32,7 @@ public class Upload extends InputActionSupport<Upload> {
      * Alias property name for the uploaded file path.
      * @param file file path.
      */
+    @SchemaProperty(description = "File path to upload.")
     public void setFile(String file) {
         setValue(file);
     }

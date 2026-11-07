@@ -30,19 +30,19 @@ public class CreateSecret extends AbstractKubernetesAction.Builder<CreateSecretA
 
     private final CreateSecretAction.Builder delegate = new CreateSecretAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes Secret to create.")
     public void setName(String name) {
         this.delegate.secret(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Key-value pairs to store in the Secret.")
     public void setProperties(List<Property> properties) {
         Map<String, String> props = new HashMap<>();
         properties.forEach(property -> props.put(property.getName(), property.getValue()));
         this.delegate.properties(props);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "File to load into the Secret data.")
     public void setFile(String path) {
         delegate.fromFile(path);
     }

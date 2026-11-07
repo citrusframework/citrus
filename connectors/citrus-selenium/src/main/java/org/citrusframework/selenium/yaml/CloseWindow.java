@@ -26,12 +26,12 @@ public class CloseWindow extends AbstractSeleniumAction.Builder<CloseWindowActio
 
     private final CloseWindowAction.Builder delegate = new CloseWindowAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the browser window to close.")
     public void setName(String name) {
         this.delegate.window(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the browser window to close.")
     public void setWindow(String name) {
         this.delegate.window(name);
     }

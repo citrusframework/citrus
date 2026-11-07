@@ -34,57 +34,57 @@ public class Tracing extends AbstractPlaywrightAction.Builder<TracingAction, Tra
     private String command;
     private String path;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Tracing command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "File path for trace output.")
     public void setPath(String path) {
         this.path = path;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes screenshots in the trace.")
     public void setScreenshots(Boolean screenshots) {
         delegate.screenshots(screenshots);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes DOM snapshots in the trace.")
     public void setSnapshots(Boolean snapshots) {
         delegate.snapshots(snapshots);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes source files in the trace.")
     public void setSources(Boolean sources) {
         delegate.sources(sources);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes ARIA snapshots in the trace.")
     public void setAriaSnapshots(Boolean ariaSnapshots) {
         delegate.ariaSnapshots(ariaSnapshots);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes screen snapshots in the trace.")
     public void setScreenSnapshots(Boolean screenSnapshots) {
         delegate.screenSnapshots(screenSnapshots);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "HAR content mode for tracing.")
     public void setHarContent(String harContent) {
         delegate.harContent(harContent);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "HAR recording mode for tracing.")
     public void setHarMode(String harMode) {
         delegate.harMode(harMode);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "URL filter for HAR recording.")
     public void setHarUrlFilter(String harUrlFilter) {
         delegate.harUrlFilter(harUrlFilter);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store tracing output.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }

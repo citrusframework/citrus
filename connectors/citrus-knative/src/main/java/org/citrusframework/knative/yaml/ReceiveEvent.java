@@ -33,22 +33,22 @@ public class ReceiveEvent extends AbstractKnativeAction.Builder<ReceiveEventActi
 
     private final ReceiveEventAction.Builder delegate = new ReceiveEventAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the HTTP server that receives CloudEvents.")
     public void setService(String name) {
         this.delegate.serviceName(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Port of the HTTP server that receives CloudEvents.")
     public void setPort(int port) {
         this.delegate.servicePort(port);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Maximum time in milliseconds to wait for a CloudEvent.")
     public void setTimeout(long timeout) {
         this.delegate.timeout(timeout);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected CloudEvent attributes and data.")
     public void setEvent(Event event) {
         event.getAttributes().forEach(
                 attr -> this.delegate.attribute(attr.getName(), attr.getValue())

@@ -29,27 +29,27 @@ public class Screenshot extends AbstractPlaywrightAction.Builder<ScreenshotActio
 
     private final ScreenshotAction.Builder delegate = new ScreenshotAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "File path where the screenshot is saved.")
     public void setPath(String path) {
         delegate.path(path);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store the screenshot output.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Image type for the screenshot.")
     public void setType(String type) {
         delegate.type(type);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Image quality for JPEG screenshots.")
     public void setQuality(Integer quality) {
         delegate.quality(quality);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Captures the full scrollable page.")
     public void setFullPage(Boolean fullPage) {
         delegate.fullPage(fullPage);
     }

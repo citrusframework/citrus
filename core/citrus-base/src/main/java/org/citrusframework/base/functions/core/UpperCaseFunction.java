@@ -16,12 +16,14 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.StringFunction;
 
 /**
  * Returns given string argument in upper case letters.
  */
+@SchemaType(description = "Converts a string to uppercase letters.")
 public class UpperCaseFunction implements StringFunction {
 
     @Override

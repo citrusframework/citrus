@@ -27,13 +27,13 @@ public class SetInput extends AbstractSeleniumAction.Builder<SetInputAction, Set
 
     private final SetInputAction.Builder delegate = new SetInputAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Value to set in the input element.")
     public void setValue(String value) {
         this.delegate.value(value);
     }
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Target input element, identified by selector or property.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

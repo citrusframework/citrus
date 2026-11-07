@@ -48,7 +48,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "The test actor that executes the Camel action.")
     public void setActor(String actor) {
         this.actor = actor;
     }

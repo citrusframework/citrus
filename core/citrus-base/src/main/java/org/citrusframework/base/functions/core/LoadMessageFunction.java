@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.StringFunction;
@@ -28,6 +29,7 @@ import org.citrusframework.util.StringUtils;
  *
  * @since 2.6.2
  */
+@SchemaType(description = "Loads a stored test message payload or header value by message name.")
 public class LoadMessageFunction implements StringFunction {
 
     @Override

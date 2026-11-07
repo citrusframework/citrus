@@ -26,7 +26,7 @@ public class StoreFile extends AbstractSeleniumAction.Builder<StoreFileAction, S
 
     private final StoreFileAction.Builder delegate = new StoreFileAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Path to the file to store in the browser's temporary download directory.")
     public void setFilePath(String filePath) {
         this.delegate.filePath(filePath);
     }

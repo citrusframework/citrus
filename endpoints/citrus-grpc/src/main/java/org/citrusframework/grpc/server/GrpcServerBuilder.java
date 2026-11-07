@@ -29,7 +29,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 /**
  * Builds a {@link GrpcServer} endpoint.
  */
-@SchemaType(module = "citrus-grpc")
+@SchemaType(module = "citrus-grpc", description = "Receives gRPC requests and sends responses through an embedded server.")
 @XmlType(name = "", propOrder = {})
 public class GrpcServerBuilder extends AbstractEndpointBuilder<GrpcServer> {
 

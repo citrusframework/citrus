@@ -34,7 +34,7 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
         delegate.content(content);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Custom resource Java class or resource type used to identify the CRD.")
     public void setType(String resourceType) {
         try {
             delegate.resourceType(Class.forName(resourceType, true, ClassLoaderHelper.getClassLoader()));
@@ -43,22 +43,22 @@ public class CreateCustomResource extends AbstractKubernetesAction.Builder<Creat
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Kind of the custom resource.")
     public void setKind(String kind) {
         delegate.kind(kind);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "API group of the custom resource.")
     public void setGroup(String group) {
         delegate.group(group);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "API version of the custom resource.")
     public void setVersion(String version) {
         delegate.version(version);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "API group and version of the custom resource, for example citrus.dev/v1.")
     public void setApiVersion(String apiVersion) {
         delegate.apiVersion(apiVersion);
     }

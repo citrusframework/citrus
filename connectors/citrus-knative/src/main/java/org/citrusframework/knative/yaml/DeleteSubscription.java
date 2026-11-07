@@ -29,7 +29,7 @@ public class DeleteSubscription extends AbstractKnativeAction.Builder<DeleteKnat
 
     private final DeleteKnativeResourceAction.Builder delegate = new DeleteKnativeResourceAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative subscription to delete.")
     public void setName(String name) {
         this.delegate.resource(name);
     }

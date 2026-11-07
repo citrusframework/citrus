@@ -36,7 +36,7 @@ public class Storage extends AbstractPlaywrightAction.Builder<StorageAction, Sto
     private String value;
     private String path;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Storage scope, such as local or session.")
     public void setScope(String scope) {
         switch (DslCommands.normalize(scope)) {
             case "local" -> delegate.local();
@@ -45,42 +45,42 @@ public class Storage extends AbstractPlaywrightAction.Builder<StorageAction, Sto
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Storage command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Storage key.")
     public void setKey(String key) {
         this.key = key;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Storage value.")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "File path for storage import or export.")
     public void setPath(String path) {
         this.path = path;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes Origin Private File System data.")
     public void setOpfs(Boolean opfs) {
         delegate.opfs(opfs);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes IndexedDB data.")
     public void setIndexedDB(Boolean indexedDB) {
         delegate.indexedDB(indexedDB);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes credential data in storage operations.")
     public void setCredentials(Boolean credentials) {
         delegate.credentials(credentials);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store storage data.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }

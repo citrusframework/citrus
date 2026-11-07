@@ -29,7 +29,7 @@ import org.springframework.web.socket.WebSocketHttpHeaders;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-websocket")
+@SchemaType(module = "citrus-websocket", description = "Exchanges messages with a WebSocket server.")
 @XmlType(name = "", propOrder = {})
 public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketClient> {
 

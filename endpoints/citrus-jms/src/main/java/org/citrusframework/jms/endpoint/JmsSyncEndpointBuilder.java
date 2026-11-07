@@ -27,7 +27,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-jms")
+@SchemaType(module = "citrus-jms", description = "Exchanges synchronous request-reply messages through a JMS destination.")
 @XmlType(name = "", propOrder = {})
 public class JmsSyncEndpointBuilder extends AbstractJmsEndpointBuilder<JmsSyncEndpoint, JmsSyncEndpointBuilder> {
 

@@ -29,35 +29,35 @@ public class DropDownSelect extends AbstractSeleniumAction.Builder<DropDownSelec
 
     private final DropDownSelectAction.Builder delegate = new DropDownSelectAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Single dropdown option to select.")
     public void setOption(String option) {
         this.delegate.option(option);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Dropdown options to select.")
     public void setOptions(List<String> options) {
         this.delegate.options(options);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Option selection mode: value, text, or zero-based index.")
     public void setBy(String selectionMode) {
         this.delegate.by(selectionMode);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Deselects all currently selected options when true.")
     public void setDeselectAll(Boolean deselectAll) {
         if (Boolean.TRUE.equals(deselectAll)) {
             this.delegate.deselectAll();
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Dropdown options to deselect.")
     public void setDeselectOptions(List<String> options) {
         this.delegate.deselect(options.toArray(new String[0]));
     }
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Dropdown element whose options are changed.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

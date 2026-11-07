@@ -37,7 +37,7 @@ import org.springframework.ws.server.EndpointInterceptor;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-ws")
+@SchemaType(module = "citrus-ws", description = "Receives SOAP web service requests and sends responses through an embedded server.")
 @XmlType(name = "", propOrder = {})
 public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceServer, WebServiceServerBuilder> {
 

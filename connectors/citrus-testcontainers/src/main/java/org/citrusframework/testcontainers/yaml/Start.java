@@ -49,14 +49,14 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     private StartTestcontainersAction.AbstractBuilder<?, ?, ?> delegate;
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a generic Testcontainers container.")
     public void setContainer(Container container) {
         StartTestcontainersAction.Builder<?> builder = new StartTestcontainersAction.Builder<>();
         configureStartActionBuilder(builder, container);
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a LocalStack Testcontainers container.")
     public void setLocalstack(LocalStack container) {
         StartLocalStackAction.Builder builder = new StartLocalStackAction.Builder();
         if (container.getVersion() != null) {
@@ -94,7 +94,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Floci Testcontainers container.")
     public void setFloci(Floci container) {
         StartFlociAction.Builder builder = new StartFlociAction.Builder();
         if (container.getVersion() != null) {
@@ -128,7 +128,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a MongoDB Testcontainers container.")
     public void setMongodb(MongoDB container) {
         StartMongoDBAction.Builder builder = new StartMongoDBAction.Builder();
         if (container.getVersion() != null) {
@@ -140,7 +140,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Kafka Testcontainers container.")
     public void setKafka(Kafka container) {
         StartKafkaAction.Builder builder = new StartKafkaAction.Builder();
         if (container.getVersion() != null) {
@@ -164,7 +164,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Redpanda Testcontainers container.")
     public void setRedpanda(Redpanda container) {
         StartRedpandaAction.Builder builder = new StartRedpandaAction.Builder();
         if (container.getVersion() != null) {
@@ -184,7 +184,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a PostgreSQL Testcontainers container.")
     public void setPostgresql(PostgreSQL container) {
         StartPostgreSQLAction.Builder builder = new StartPostgreSQLAction.Builder();
         if (container.getVersion() != null) {
@@ -316,7 +316,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return name;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Container name.")
         public void setName(String name) {
             this.name = name;
         }
@@ -325,7 +325,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return serviceName;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Service name exposed to the test context.")
         public void setServiceName(String serviceName) {
             this.serviceName = serviceName;
         }
@@ -334,7 +334,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return image;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Container image to start.")
         public void setImage(String image) {
             this.image = image;
         }
@@ -343,7 +343,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return command;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Command passed to the container.")
         public void setCommand(String command) {
             this.command = command;
         }
@@ -352,7 +352,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return autoRemove;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Automatically remove the container after it stops.")
         public void setAutoRemove(boolean autoRemove) {
             this.autoRemove = autoRemove;
         }
@@ -361,12 +361,12 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return startUpTimeout;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Startup timeout in milliseconds.")
         public void setStartUpTimeout(int startUpTimeout) {
             this.startUpTimeout = startUpTimeout;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Environment variables for the container.")
         public void setEnv(List<Variable> variables) {
             this.env = variables;
         }
@@ -385,12 +385,12 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return labels;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Container labels.")
         public void setLabels(List<Label> labels) {
             this.labels = labels;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Wait strategy used before continuing.")
         public void setWaitFor(WaitFor waitFor) {
             this.waitFor = waitFor;
         }
@@ -406,7 +406,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return exposedPorts;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Container ports to expose.")
         public void setExposedPorts(List<Integer> exposedPorts) {
             this.exposedPorts = exposedPorts;
         }
@@ -418,7 +418,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return portBindings;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Host-to-container port bindings.")
         public void setPortBindings(List<String> portBindings) {
             this.portBindings = portBindings;
         }
@@ -430,7 +430,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return volumeMounts;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Volume mounts for the container.")
         public void setVolumeMounts(List<VolumeMount> volumeMounts) {
             this.volumeMounts = volumeMounts;
         }
@@ -455,7 +455,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return autoCreateClients;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Automatically create AWS clients for enabled services.")
         public void setAutoCreateClients(boolean autoCreateClients) {
             this.autoCreateClients = autoCreateClients;
         }
@@ -464,7 +464,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return options;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Additional LocalStack container options.")
         public void setOptions(Map<String, String> options) {
             this.options = options;
         }
@@ -473,7 +473,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "LocalStack container image version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -532,7 +532,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return services;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "LocalStack AWS services to enable.")
         public void setServices(List<String> services) {
             this.services = services;
         }
@@ -557,7 +557,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return autoCreateClients;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Automatically create AWS clients for enabled services.")
         public void setAutoCreateClients(boolean autoCreateClients) {
             this.autoCreateClients = autoCreateClients;
         }
@@ -566,7 +566,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return options;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Additional Floci container options.")
         public void setOptions(Map<String, String> options) {
             this.options = options;
         }
@@ -575,7 +575,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Floci container image version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -623,7 +623,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return services;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Floci AWS services to enable.")
         public void setServices(List<String> services) {
             this.services = services;
         }
@@ -638,7 +638,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "MongoDB container image version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -655,7 +655,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Kafka container image version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -664,7 +664,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return implementation;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Kafka container implementation to use.")
         public void setImplementation(String implementation) {
             this.implementation = implementation;
         }
@@ -673,7 +673,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return port;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Kafka listener port.")
         public void setPort(int port) {
             this.port = port;
         }
@@ -682,7 +682,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return topics;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Topics to create on startup.")
         public void setTopics(List<String> topics) {
             this.topics = topics;
         }
@@ -700,7 +700,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Redpanda container image version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -760,7 +760,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return version;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "PostgreSQL container image version.")
         public void setVersion(String version) {
             this.version = version;
         }
@@ -769,7 +769,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return dataSourceName;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Name of the test data source to register.")
         public void setDataSourceName(String dataSourceName) {
             this.dataSourceName = dataSourceName;
         }
@@ -778,7 +778,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return database;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Database name to create.")
         public void setDatabase(String database) {
             this.database = database;
         }
@@ -787,7 +787,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return username;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Database username.")
         public void setUsername(String username) {
             this.username = username;
         }
@@ -796,7 +796,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return password;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Database password.")
         public void setPassword(String password) {
             this.password = password;
         }
@@ -805,7 +805,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return initScript;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Initialization script configuration.")
         public void setInitScript(InitScript initScript) {
             this.initScript = initScript;
         }
@@ -819,7 +819,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 return file;
             }
 
-            @SchemaProperty
+            @SchemaProperty(description = "Path to an initialization script file.")
             public void setFile(String file) {
                 this.file = file;
             }
@@ -828,7 +828,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 return value;
             }
 
-            @SchemaProperty
+            @SchemaProperty(description = "Inline initialization script content.")
             public void setValue(String value) {
                 this.value = value;
             }
@@ -848,7 +848,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return logMessage;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Wait until this log message appears.")
         public void setLogMessage(String logMessage) {
             this.logMessage = logMessage;
         }
@@ -857,7 +857,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return url;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Wait until this URL becomes available.")
         public void setUrl(String url) {
             this.url = url;
         }
@@ -866,7 +866,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return disabled;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Disable the wait strategy.")
         public void setDisabled(boolean disabled) {
             this.disabled = disabled;
         }
@@ -881,7 +881,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return file;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Host file or directory to mount.")
         public void setFile(String file) {
             this.file = file;
         }
@@ -890,7 +890,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return mountPath;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Target path inside the container.")
         public void setMountPath(String mountPath) {
             this.mountPath = mountPath;
         }
@@ -905,7 +905,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return name;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Environment variable name.")
         public void setName(String value) {
             this.name = value;
         }
@@ -914,7 +914,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return value;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Environment variable value.")
         public void setValue(String value) {
             this.value = value;
         }
@@ -930,7 +930,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return name;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Label name.")
         public void setName(String value) {
             this.name = value;
         }
@@ -939,7 +939,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
             return value;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Label value.")
         public void setValue(String value) {
             this.value = value;
         }

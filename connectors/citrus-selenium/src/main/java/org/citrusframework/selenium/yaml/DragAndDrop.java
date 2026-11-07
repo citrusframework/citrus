@@ -28,12 +28,12 @@ public class DragAndDrop extends AbstractSeleniumAction.Builder<DragAndDropActio
     private final DragAndDropAction.Builder delegate = new DragAndDropAction.Builder();
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Source element to drag.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element onto which the source element is dropped.")
     public void setTarget(Element target) {
         ElementAware.setElement(target, delegate::target);
     }

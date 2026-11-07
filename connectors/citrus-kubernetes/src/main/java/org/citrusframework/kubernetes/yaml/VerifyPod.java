@@ -28,43 +28,43 @@ public class VerifyPod extends AbstractKubernetesAction.Builder<VerifyPodAction,
 
     private final VerifyPodAction.Builder delegate = new VerifyPodAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the pod to verify.")
     public void setName(String name) {
         this.delegate.podName(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Labels used to select the pod to verify.")
     public void setLabels(List<Label> labels) {
         labels.forEach(label -> this.delegate.label(label.getName(), label.getValue()));
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Label expression in name=value form used to select the pod.")
     public void setLabel(String labelExpression) {
         String[] tokens = labelExpression.split("=", 2);
         this.delegate.label(tokens[0].trim(), tokens[1].trim());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected pod phase, such as Running or Stopped.")
     public void setPhase(String phase) {
         this.delegate.phase(phase);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Log message to wait for after the pod reaches the expected phase.")
     public void setLogMessage(String message) {
         this.delegate.waitForLogMessage(message);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Prints pod logs while waiting for the expected log message.")
     public void setPrintLogs(boolean printLogs) {
         this.delegate.printLogs(printLogs);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Maximum number of status or log verification attempts.")
     public void setMaxAttempts(int maxAttempts) {
         this.delegate.maxAttempts(maxAttempts);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Delay in milliseconds between verification attempts.")
     public void setDelayBetweenAttempts(long delayBetweenAttempts) {
         this.delegate.delayBetweenAttempts(delayBetweenAttempts);
     }

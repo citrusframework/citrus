@@ -43,7 +43,7 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
         this.value = value;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store the extracted value.")
     public void setVariable(String variable) {
         this.variable = variable;
     }
@@ -68,7 +68,7 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
         this.frameSelector = frameSelector;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element to extract data from.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
     }

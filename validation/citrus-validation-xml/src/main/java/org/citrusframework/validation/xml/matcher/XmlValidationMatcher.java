@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * Validation matcher receives XML data and validates it against expected XML with full
  * XML validation support (e.g. ignoring elements, namespace support, ...).
  */
-@SchemaType(module = "citrus-validation-xml")
+@SchemaType(module = "citrus-validation-xml", description = "Compares received XML with expected XML using Citrus XML validation features.")
 public class XmlValidationMatcher implements StringValidationMatcher {
 
     /** CDATA section starting and ending in XML */

@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.NumericFunction;
 import org.citrusframework.functions.parameter.NumericParameters;
@@ -23,6 +24,7 @@ import org.citrusframework.functions.parameter.NumericParameters;
 /**
  * Function returns the maximum numeric value in a set of numeric arguments.
  */
+@SchemaType(description = "Returns the maximum of a set of numeric values.")
 public class MaxFunction implements NumericFunction {
 
     @Override

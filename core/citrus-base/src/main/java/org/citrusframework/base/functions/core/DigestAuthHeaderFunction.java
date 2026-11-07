@@ -25,6 +25,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Function creates digest authentication HTTP header with given security parameters:
@@ -37,6 +38,7 @@ import org.citrusframework.api.yaml.SchemaProperty;
  * opaque
  * algorithm
  */
+@SchemaType(description = "Builds an HTTP Digest Authorization header from credentials and request parameters.")
 public class DigestAuthHeaderFunction implements ParameterizedFunction<DigestAuthHeaderFunction.Parameters> {
 
     /** Nonce is valid for 60 seconds */

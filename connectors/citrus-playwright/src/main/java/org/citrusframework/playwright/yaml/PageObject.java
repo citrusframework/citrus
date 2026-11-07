@@ -35,22 +35,22 @@ public class PageObject extends AbstractPlaywrightAction.Builder<PageObjectActio
 
     private final PageObjectAction.Builder delegate = new PageObjectAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Fully qualified page object class name.")
     public void setType(String type) {
         delegate.type(DslCommands.loadClass(type, Object.class));
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Page object method to execute.")
     public void setMethod(String method) {
         delegate.execute(method);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Arguments passed to the page object method.")
     public void setArguments(List<String> arguments) {
         delegate.arguments(arguments.toArray(String[]::new));
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Fully qualified page object validator class name.")
     @SuppressWarnings("unchecked")
     public void setValidator(String validator) {
         delegate.validate((Class<? extends PlaywrightPageValidator<?>>) DslCommands.loadClass(validator, PlaywrightPageValidator.class));

@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.regex.PatternSyntaxException;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.StringValidationMatcher;
@@ -28,6 +29,7 @@ import org.citrusframework.validation.matcher.StringValidationMatcher;
  * ValidationMatcher checking for valid date format.
  *
  */
+@SchemaType(description = "Validates that the received value is a date in the expected format.")
 public class DatePatternValidationMatcher implements StringValidationMatcher {
 
     public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {

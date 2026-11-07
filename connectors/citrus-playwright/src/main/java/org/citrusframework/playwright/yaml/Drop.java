@@ -37,37 +37,37 @@ public class Drop extends AbstractPlaywrightAction.Builder<DropAction, Drop> {
     private Double positionX;
     private Double positionY;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element to receive dropped files.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "File name used for the dropped file.")
     public void setFile(String fileName) {
         this.fileName = fileName;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "MIME type of the dropped file content.")
     public void setContentType(String contentType) {
         this.fileMimeType = contentType;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Content of the dropped file.")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Timeout in milliseconds for the drop action.")
     public void setTimeout(Double timeout) {
         this.timeout = timeout;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Horizontal drop position in pixels.")
     public void setPositionX(Double positionX) {
         this.positionX = positionX;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Vertical drop position in pixels.")
     public void setPositionY(Double positionY) {
         this.positionY = positionY;
     }

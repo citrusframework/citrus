@@ -35,12 +35,12 @@ public class Permissions extends AbstractPlaywrightAction.Builder<PermissionActi
     private String command;
     private List<String> permissions;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Permissions command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Browser permissions to grant.")
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
     }

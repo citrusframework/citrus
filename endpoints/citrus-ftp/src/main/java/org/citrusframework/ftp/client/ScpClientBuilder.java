@@ -28,7 +28,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.7.6
  */
-@SchemaType(module = "citrus-ftp")
+@SchemaType(module = "citrus-ftp", description = "Transfers files to and from a remote host through SCP.")
 @XmlType(name = "", propOrder = {})
 public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
 

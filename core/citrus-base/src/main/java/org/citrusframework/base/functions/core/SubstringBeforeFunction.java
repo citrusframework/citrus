@@ -23,10 +23,12 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Function implements substring before functionality.
  */
+@SchemaType(description = "Returns the portion of a string before the first occurrence of a search string.")
 public class SubstringBeforeFunction implements ParameterizedFunction<SubstringBeforeFunction.Parameters> {
 
     @Override

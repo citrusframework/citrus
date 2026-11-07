@@ -26,7 +26,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-camel")
+@SchemaType(module = "citrus-camel", description = "Exchanges synchronous request-reply messages through an Apache Camel endpoint.")
 @XmlType(name = "", propOrder = {})
 public class CamelSyncEndpointBuilder extends AbstractCamelEndpointBuilder<CamelSyncEndpoint, CamelSyncEndpointBuilder> {
 

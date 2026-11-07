@@ -67,7 +67,7 @@ public class Grpc implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "The test actor that executes the gRPC action.")
     public void setActor(String actor) {
         this.actor = actor;
     }

@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.NumberFunction;
 import org.citrusframework.functions.parameter.NumberParameter;
@@ -26,6 +27,7 @@ import static java.lang.Math.ceil;
  * Returns the smallest (closest to negative infinity) double value
  * according to the numeric argument.
  */
+@SchemaType(description = "Returns the smallest integer greater than or equal to a numeric value.")
 public class CeilingFunction implements NumberFunction {
 
     @Override

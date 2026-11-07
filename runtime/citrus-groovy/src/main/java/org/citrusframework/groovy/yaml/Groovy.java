@@ -43,7 +43,7 @@ public class Groovy implements TestActionBuilder<TestAction>, ReferenceResolverA
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "The test actor that executes the Groovy action.")
     public void setActor(String actor) {
         this.actor = actor;
     }

@@ -27,28 +27,28 @@ public class Frame extends AbstractSeleniumAction.Builder<FrameAction, Frame> im
 
     private final FrameAction.Builder delegate = new FrameAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Zero-based index of the frame to switch to.")
     public void setIndex(Integer index) {
         if (index != null) {
             this.delegate.index(index);
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name or ID of the frame to switch to.")
     public void setName(String name) {
         if (name != null) {
             this.delegate.nameOrId(name);
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Switches focus to the parent frame when true.")
     public void setParent(boolean parent) {
         if (parent) {
             this.delegate.parent();
         }
     }
 
-    @SchemaProperty(name = "default")
+    @SchemaProperty(name = "default", description = "Switches focus to the top-level page content when true.")
     public void setDefault(boolean defaultContent) {
         if (defaultContent) {
             this.delegate.defaultContent();
@@ -56,7 +56,7 @@ public class Frame extends AbstractSeleniumAction.Builder<FrameAction, Frame> im
     }
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Frame element to switch to.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

@@ -32,28 +32,28 @@ public class Verify extends AbstractSeleniumAction.Builder<VerifyAction, Verify>
     private String attribute;
     private String cssProperty;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Value or condition to verify, such as displayed, enabled, selected, or the expected text.")
     public void setCheck(String check) {
         this.check = check;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected value used for the verification check.")
     public void setExpected(String expected) {
         this.expected = expected;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the element attribute to verify.")
     public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the CSS property to verify.")
     public void setCssProperty(String cssProperty) {
         this.cssProperty = cssProperty;
     }
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Target element to verify, identified by selector or property.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

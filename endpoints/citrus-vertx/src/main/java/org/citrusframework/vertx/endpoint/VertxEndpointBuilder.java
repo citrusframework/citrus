@@ -19,7 +19,7 @@ package org.citrusframework.vertx.endpoint;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.api.yaml.SchemaType;
 
-@SchemaType(module = "citrus-vertx")
+@SchemaType(module = "citrus-vertx", description = "Exchanges asynchronous messages through the Vert.x event bus.")
 @XmlType(name = "", propOrder = {})
 public class VertxEndpointBuilder extends AbstractVertxEndpointBuilder<VertxEndpoint, VertxEndpointBuilder> {
 

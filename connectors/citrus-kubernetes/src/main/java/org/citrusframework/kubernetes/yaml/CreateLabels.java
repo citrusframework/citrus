@@ -28,17 +28,17 @@ public class CreateLabels extends AbstractKubernetesAction.Builder<CreateLabelsA
 
     private final CreateLabelsAction.Builder delegate = new CreateLabelsAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes resource to label.")
     public void setResource(String name) {
         this.delegate.resource(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Type of the Kubernetes resource to label, such as POD or SERVICE.")
     public void setType(String resourceType) {
         this.delegate.type(resourceType);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Labels to add to the resource metadata.")
     public void setLabels(List<Label> labels) {
         labels.forEach(label -> this.delegate.label(label.getName(), label.getValue()));
     }

@@ -17,6 +17,7 @@
 package org.citrusframework.base.functions.core;
 
 import com.mifmif.common.regex.Generex;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.StringFunction;
 import org.citrusframework.functions.parameter.StringParameter;
@@ -29,6 +30,7 @@ import org.citrusframework.functions.parameter.StringParameter;
  * from a given regular expression. It may not support certain complex regex features or produce all
  * possible variations.
  */
+@SchemaType(description = "Generates a random string that matches a given regular expression.")
 public class RandomPatternFunction implements StringFunction {
 
     public String execute(String pattern, TestContext context) {
