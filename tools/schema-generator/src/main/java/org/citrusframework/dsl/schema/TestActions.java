@@ -30,6 +30,7 @@ import org.citrusframework.openapi.yaml.OpenApi;
 import org.citrusframework.playwright.yaml.Playwright;
 import org.citrusframework.selenium.yaml.Selenium;
 import org.citrusframework.sql.yaml.Plsql;
+import org.citrusframework.springintegration.yaml.PurgeChannels;
 import org.citrusframework.sql.yaml.Sql;
 import org.citrusframework.testcontainers.yaml.Testcontainers;
 import org.citrusframework.ws.yaml.Soap;
@@ -252,6 +253,10 @@ public class TestActions {
 
     @SchemaProperty(kind = ACTION, description = "Purge JMS queue test action.", module = "citrus-jms")
     public void setPurgeQueues(PurgeQueues builder) {
+    }
+
+    @SchemaProperty(kind = ACTION, description = "Purge message channel test action.", module = "citrus-spring-integration")
+    public void setPurgeChannels(PurgeChannels builder) {
     }
 
     public static class CreateEndpointWrapper extends CreateEndpoint implements Endpoints {

@@ -34,6 +34,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonTextMessageValidator;
+import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -139,6 +140,23 @@ public class CitrusSchemaGeneratorTest {
         assertValidTestCase("""
                 {"name":"CustomActionTest","actions":[{"action":{"ref":"myCustomAction"}}]}
                 """);
+        assertValidTestCase("""
+                {"name":"PurgeChannelsTest","actions":[{"purgeChannels":{"channel":"testChannel"}}]}
+                """);
+    }
+
+    @Test
+    public void verifyRuntimeYamlActionsInSchema() throws IOException {
+        JsonNode schema = JsonSupport.json().readTree(FileUtils.readToString(
+                Resources.create("target/schema/citrus/citrus-testcase.json")));
+        JsonNode schemaActions = schema.path("definitions").path("TestActions").path("properties");
+
+        List<String> missing = YamlTestActionBuilder.lookup().keySet().stream()
+                .filter(name -> !schemaActions.has(name))
+                .sorted()
+                .toList();
+
+        Assert.assertTrue(missing.isEmpty(), "Runtime YAML test actions missing from citrus-testcase.json: " + missing);
     }
 
     private void verifyGeneratedFile(String fileName, TestContext context) throws IOException {
