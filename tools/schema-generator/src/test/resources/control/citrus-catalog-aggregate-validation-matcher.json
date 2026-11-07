@@ -1,9 +1,10 @@
 {
   "isUUIDv4": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "isUUIDv4",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "IsUUIDv4",
     "description": "Validates that the received value is a version 4 UUID.",
     "propertiesSchema": {
@@ -13,9 +14,10 @@
   },
   "dateRange": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "dateRange",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "DateRange",
     "description": "Validates that a date lies between expected start and end dates.",
     "propertiesSchema": {
@@ -47,9 +49,10 @@
   },
   "lowerThan": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "lowerThan",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "LowerThan",
     "description": "Validates that a numeric value is lower than the expected value.",
     "propertiesSchema": {
@@ -69,9 +72,10 @@
   },
   "matchesDatePattern": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "matchesDatePattern",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "MatchesDatePattern",
     "description": "Validates that the received value is a date in the expected format.",
     "propertiesSchema": {
@@ -91,9 +95,10 @@
   },
   "isWeekday": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "isWeekday",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "IsWeekday",
     "description": "Validates that a formatted date falls on the expected weekday.",
     "propertiesSchema": {
@@ -128,9 +133,10 @@
   },
   "empty": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "empty",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Empty",
     "description": "Validates that the received value is an empty string.",
     "propertiesSchema": {
@@ -140,9 +146,10 @@
   },
   "allOf": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "allOf",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "AllOf",
     "description": "Validates that all nested validation matcher expressions pass and reports every failure.",
     "propertiesSchema": {
@@ -152,9 +159,10 @@
   },
   "not": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "not",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Not",
     "description": "Negates exactly one nested validation matcher expression.",
     "propertiesSchema": {
@@ -164,9 +172,10 @@
   },
   "lowerThanOrEqualTo": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "lowerThanOrEqualTo",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "LowerThanOrEqualTo",
     "description": "Validates that a numeric value is lower than or equal to the expected value.",
     "propertiesSchema": {
@@ -186,9 +195,10 @@
   },
   "trim": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "trim",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Trim",
     "description": "Validates string equality after trimming surrounding whitespace and ignoring letter case.",
     "propertiesSchema": {
@@ -208,9 +218,10 @@
   },
   "ignoreNewLine": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ignoreNewLine",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "IgnoreNewLine",
     "description": "Validates string equality after removing newline characters and ignoring letter case.",
     "propertiesSchema": {
@@ -230,9 +241,10 @@
   },
   "isNumber": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "isNumber",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "IsNumber",
     "description": "Validates that the received value can be parsed as a finite number.",
     "propertiesSchema": {
@@ -242,9 +254,10 @@
   },
   "ignore": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "ignore",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Ignore",
     "description": "Accepts any received value without performing validation.",
     "propertiesSchema": {
@@ -254,7 +267,7 @@
   },
   "assertj": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "assertj",
     "group": "citrus",
     "module": "citrus-validation-assertj",
@@ -282,9 +295,10 @@
   },
   "equalsIgnoreCase": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "equalsIgnoreCase",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "EqualsIgnoreCase",
     "description": "Validates string equality without regard to letter case.",
     "propertiesSchema": {
@@ -304,9 +318,10 @@
   },
   "hasLength": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "hasLength",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "HasLength",
     "description": "Validates that the received string has the expected length.",
     "propertiesSchema": {
@@ -326,9 +341,10 @@
   },
   "greaterThan": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "greaterThan",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "GreaterThan",
     "description": "Validates that a numeric value is greater than the expected value.",
     "propertiesSchema": {
@@ -348,9 +364,10 @@
   },
   "notNull": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "notNull",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "NotNull",
     "description": "Validates that the received value is not null.",
     "propertiesSchema": {
@@ -360,7 +377,7 @@
   },
   "matchesXml": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "matchesXml",
     "group": "citrus",
     "module": "citrus-validation-xml",
@@ -383,9 +400,10 @@
   },
   "greaterThanOrEqualTo": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "greaterThanOrEqualTo",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "GreaterThanOrEqualTo",
     "description": "Validates that a numeric value is greater than or equal to the expected value.",
     "propertiesSchema": {
@@ -405,9 +423,10 @@
   },
   "anyOf": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "anyOf",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "AnyOf",
     "description": "Validates that at least one nested validation matcher expression passes.",
     "propertiesSchema": {
@@ -417,9 +436,10 @@
   },
   "containsIgnoreCase": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "containsIgnoreCase",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "ContainsIgnoreCase",
     "description": "Validates that the received string contains the expected substring, ignoring letter case.",
     "propertiesSchema": {
@@ -439,9 +459,10 @@
   },
   "trimAllWhitespaces": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "trimAllWhitespaces",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "TrimAllWhitespaces",
     "description": "Validates string equality after removing all whitespace and ignoring letter case.",
     "propertiesSchema": {
@@ -461,7 +482,7 @@
   },
   "assertThat": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "assertThat",
     "group": "citrus",
     "module": "citrus-validation-hamcrest",
@@ -489,9 +510,10 @@
   },
   "matches": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "matches",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Matches",
     "description": "Validates that the received string matches a regular expression.",
     "propertiesSchema": {
@@ -511,9 +533,10 @@
   },
   "contains": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "contains",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Contains",
     "description": "Validates that the received string contains the expected substring.",
     "propertiesSchema": {
@@ -533,9 +556,10 @@
   },
   "null": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "null",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Null",
     "description": "Validates that the received value is null.",
     "propertiesSchema": {
@@ -545,9 +569,10 @@
   },
   "endsWith": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "endsWith",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "EndsWith",
     "description": "Validates that the received string ends with the expected suffix.",
     "propertiesSchema": {
@@ -567,9 +592,10 @@
   },
   "variable": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "variable",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "Variable",
     "description": "Stores the received value in a test variable named after the field or a supplied name.",
     "propertiesSchema": {
@@ -589,9 +615,10 @@
   },
   "notEmpty": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "notEmpty",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "NotEmpty",
     "description": "Validates that the received value is neither null nor an empty string.",
     "propertiesSchema": {
@@ -601,9 +628,10 @@
   },
   "startsWith": {
     "kind": "testValidationMatcher",
-    "version": "5.2.0-SNAPSHOT",
+    "version": "${citrus.version}",
     "name": "startsWith",
     "group": "citrus",
+    "module": "citrus-base",
     "title": "StartsWith",
     "description": "Validates that the received string starts with the expected prefix.",
     "propertiesSchema": {

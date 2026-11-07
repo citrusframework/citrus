@@ -120,6 +120,9 @@ public class CitrusSchemaGeneratorTest {
         assertInvalidTestCase("""
                 {"name":"NestedUnknownActionTest","actions":[{"parallel":{"actions":[{"assert-log":{"message":"Unknown"}}]}}]}
                 """);
+        assertInvalidTestCase("""
+                {"name":"NestedUnknownAssertActionTest","actions":[{"assert":{"when":[{"assert-log":{"message":"Unknown"}}]}}]}
+                """);
     }
 
     @Test
@@ -129,6 +132,9 @@ public class CitrusSchemaGeneratorTest {
                 """);
         assertValidTestCase("""
                 {"name":"NestedKnownActionTest","actions":[{"parallel":{"actions":[{"echo":{"message":"Hello Citrus"}}]}}]}
+                """);
+        assertValidTestCase("""
+                {"name":"NestedKnownAssertActionTest","actions":[{"assert":{"when":[{"echo":{"message":"Hello Citrus"}}]}}]}
                 """);
         assertValidTestCase("""
                 {"name":"CustomActionTest","actions":[{"action":{"ref":"myCustomAction"}}]}
