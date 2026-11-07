@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -35,6 +36,7 @@ import java.util.List;
  *
  * <p>Usage: {@code @anyOf(equalsIgnoreCase('ok'), equalsIgnoreCase('success'))@}</p>
  */
+@SchemaType(description = "Validates that at least one nested validation matcher expression passes.")
 public class AnyOfValidationMatcher implements ValidationMatcher, ControlExpressionParser {
 
     @Override

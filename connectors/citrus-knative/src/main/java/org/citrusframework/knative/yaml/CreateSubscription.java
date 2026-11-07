@@ -29,17 +29,17 @@ public class CreateSubscription extends AbstractKnativeAction.Builder<CreateSubs
 
     private final CreateSubscriptionAction.Builder delegate = new CreateSubscriptionAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative subscription to create.")
     public void setName(String name) {
         this.delegate.subscription(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the channel that supplies events to the subscription.")
     public void setChannel(String name) {
         this.delegate.channel(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes service that receives subscribed events.")
     public void setService(String name) {
         this.delegate.service(name);
     }

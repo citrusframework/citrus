@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.NumericFunction;
 import org.citrusframework.functions.parameter.NumericParameters;
@@ -23,6 +24,7 @@ import org.citrusframework.functions.parameter.NumericParameters;
 /**
  * Function to sum up all numeric arguments.
  */
+@SchemaType(description = "Calculates the sum of a set of numeric values.")
 public class SumFunction implements NumericFunction {
 
     public String execute(NumericParameters params, TestContext context) {

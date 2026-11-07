@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.functions.parameter.StringParameters;
@@ -24,6 +25,7 @@ import org.citrusframework.functions.parameter.StringParameters;
  * Function concatenating multiple tokens to a single string. Tokens can be either
  * static string values or dynamic variables or functions.
  */
+@SchemaType(description = "Concatenates multiple static or dynamic values into a single string.")
 public class ConcatFunction implements ParameterizedFunction<StringParameters> {
 
     @Override

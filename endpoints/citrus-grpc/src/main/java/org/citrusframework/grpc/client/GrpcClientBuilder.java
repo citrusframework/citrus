@@ -30,7 +30,7 @@ import org.citrusframework.message.MessageCorrelator;
 /**
  * Builds a {@link GrpcClient} endpoint.
  */
-@SchemaType(module = "citrus-grpc")
+@SchemaType(module = "citrus-grpc", description = "Invokes gRPC service methods and receives responses.")
 @XmlType(name = "", propOrder = {})
 public class GrpcClientBuilder extends AbstractEndpointBuilder<GrpcClient> {
 

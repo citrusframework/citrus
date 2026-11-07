@@ -37,7 +37,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.8
  */
-@SchemaType(module = "citrus-kafka")
+@SchemaType(module = "citrus-kafka", description = "Exchanges messages with Apache Kafka topics, supporting asynchronous and synchronous communication.")
 @XmlType(name = "", propOrder = {})
 public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint> {
 

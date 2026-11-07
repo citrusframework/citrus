@@ -35,37 +35,37 @@ public class Credentials extends AbstractPlaywrightAction.Builder<CredentialsAct
     private String origin;
     private String variable;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Origin for WebAuthn credentials.")
     public void setOrigin(String origin) {
         this.origin = origin;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable for stored credentials.")
     public void setVariable(String variable) {
         this.variable = variable;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Credentials command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Credential identifier.")
     public void setId(String id) {
         delegate.id(id);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "WebAuthn credential user handle.")
     public void setUserHandle(String userHandle) {
         delegate.userHandle(userHandle);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "WebAuthn credential private key.")
     public void setPrivateKey(String privateKey) {
         delegate.privateKey(privateKey);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "WebAuthn credential public key.")
     public void setPublicKey(String publicKey) {
         delegate.publicKey(publicKey);
     }

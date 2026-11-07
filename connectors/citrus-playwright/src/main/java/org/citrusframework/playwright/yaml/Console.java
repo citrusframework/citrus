@@ -33,22 +33,22 @@ public class Console extends AbstractPlaywrightAction.Builder<ConsoleAction, Con
     private String command;
     private String text;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Console command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected console message text.")
     public void setText(String text) {
         this.text = text;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store console output.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Filter applied to console messages.")
     public void setFilter(String filter) {
         delegate.filter(filter);
     }

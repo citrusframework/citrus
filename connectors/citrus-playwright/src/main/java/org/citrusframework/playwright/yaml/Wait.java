@@ -47,12 +47,12 @@ public class Wait extends AbstractPlaywrightAction.Builder<WaitForAction, Wait> 
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element to wait for.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "JavaScript expression to wait for.")
     public void setFunction(String expression) {
         delegate.function(expression);
     }

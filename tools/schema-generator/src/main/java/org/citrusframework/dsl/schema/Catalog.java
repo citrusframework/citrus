@@ -133,6 +133,7 @@ public class Catalog {
 
             SchemaType schemaType = builder.getValue().getClass().getAnnotation(SchemaType.class);
             String module = Optional.ofNullable(schemaType).map(SchemaType::module).orElse("citrus-base");
+            String description = Optional.ofNullable(schemaType).map(SchemaType::description).orElse(null);
 
             catalog.put(builder.getKey().replaceAll("\\.", "-"),
                     new CatalogEntry(SchemaProperty.Kind.ENDPOINT.getCatalogKind(),
@@ -141,7 +142,7 @@ public class Catalog {
                             group,
                             module,
                             "%s%s".formatted(StringUtils.convertFirstCharToUpperCase(group), StringUtils.convertFirstCharToUpperCase(name)),
-                            null,
+                            description,
                             jsonSchema));
         }
 
@@ -162,6 +163,7 @@ public class Catalog {
 
             SchemaType schemaType = function.getValue().getClass().getAnnotation(SchemaType.class);
             String module = Optional.ofNullable(schemaType).map(SchemaType::module).orElse("citrus-base");
+            String description = Optional.ofNullable(schemaType).map(SchemaType::description).orElse(null);
 
             catalog.put(function.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.FUNCTION.getCatalogKind(),
@@ -170,7 +172,7 @@ public class Catalog {
                             "citrus",
                             module,
                             StringUtils.convertFirstCharToUpperCase(function.getKey()),
-                            null,
+                            description,
                             jsonSchema));
         }
 
@@ -191,6 +193,7 @@ public class Catalog {
 
             SchemaType schemaType = matcher.getValue().getClass().getAnnotation(SchemaType.class);
             String module = Optional.ofNullable(schemaType).map(SchemaType::module).orElse("citrus-base");
+            String description = Optional.ofNullable(schemaType).map(SchemaType::description).orElse(null);
 
             catalog.put(matcher.getKey(),
                     new CatalogEntry(SchemaProperty.Kind.VALIDATION_MATCHER.getCatalogKind(),
@@ -199,7 +202,7 @@ public class Catalog {
                             "citrus",
                             module,
                             StringUtils.convertFirstCharToUpperCase(matcher.getKey()),
-                            null,
+                            description,
                             jsonSchema));
         }
 

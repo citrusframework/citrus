@@ -37,6 +37,7 @@ import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Generates the full Citrus test case DSL schema based on annotated YAML model classes.
@@ -73,6 +74,7 @@ public class CitrusSchemaGenerator {
 
             Catalog catalog = new Catalog();
             JsonNode jsonSchema = generateSchema(Test.class, catalog, new CitrusModule());
+            useStrictTestActions(jsonSchema);
             writeFile(workingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
             writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
 
@@ -140,6 +142,29 @@ public class CitrusSchemaGenerator {
                 .withCatalog(catalog);
         SchemaGenerator generator = new SchemaGenerator(config, typeContext);
         return generator.generateSchema(type);
+    }
+
+    private static void useStrictTestActions(JsonNode jsonSchema) {
+        replaceGenericTestActionReferences(jsonSchema);
+        if (jsonSchema.path("definitions") instanceof ObjectNode definitions) {
+            definitions.remove("TestActionBuilder_Object_");
+        }
+    }
+
+    /**
+     * Nested YAML actions use the runtime TestActions supplier type, which Victools represents as an open generic
+     * TestActionBuilder schema. Use the aggregate TestActions definition instead so nested actions have the same known
+     * action names and additionalProperties=false constraint as top-level actions.
+     */
+    private static void replaceGenericTestActionReferences(JsonNode node) {
+        if (node instanceof ObjectNode objectNode) {
+            if ("#/definitions/TestActionBuilder_Object_".equals(objectNode.path("$ref").asText())) {
+                objectNode.put("$ref", "#/definitions/TestActions");
+            }
+            objectNode.properties().forEach(entry -> replaceGenericTestActionReferences(entry.getValue()));
+        } else if (node.isArray()) {
+            node.forEach(CitrusSchemaGenerator::replaceGenericTestActionReferences);
+        }
     }
 
     private static void writeFile(Path dir, String name, String content) throws IOException {

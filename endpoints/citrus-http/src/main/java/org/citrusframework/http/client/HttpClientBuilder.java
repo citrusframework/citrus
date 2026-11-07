@@ -43,7 +43,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-http")
+@SchemaType(module = "citrus-http", description = "Sends HTTP requests and receives HTTP responses.")
 @XmlType(name = "", propOrder = {})
 public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
 

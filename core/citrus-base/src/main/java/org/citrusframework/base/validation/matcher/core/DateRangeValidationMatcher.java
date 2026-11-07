@@ -26,6 +26,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 2.5
  */
+@SchemaType(description = "Validates that a date lies between expected start and end dates.")
 public class DateRangeValidationMatcher implements ParameterizedValidationMatcher<DateRangeValidationMatcher.Parameters> {
 
     /**

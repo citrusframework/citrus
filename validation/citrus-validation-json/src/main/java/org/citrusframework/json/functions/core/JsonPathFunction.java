@@ -28,7 +28,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.6.2
  */
-@SchemaType(module = "citrus-validation-json")
+@SchemaType(module = "citrus-validation-json", description = "Evaluates a JSONPath expression against JSON content.")
 public class JsonPathFunction implements ParameterizedFunction<JsonPathFunction.Parameters> {
 
     @Override

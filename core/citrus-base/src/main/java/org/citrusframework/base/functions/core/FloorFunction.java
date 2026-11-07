@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.NumberFunction;
 import org.citrusframework.functions.parameter.NumberParameter;
@@ -26,6 +27,7 @@ import static java.lang.Math.floor;
  * Returns the largest (closest to positive infinity) double value according to the numeric argument
  * value.
  */
+@SchemaType(description = "Returns the largest integer less than or equal to a numeric value.")
 public class FloorFunction implements NumberFunction {
 
     @Override

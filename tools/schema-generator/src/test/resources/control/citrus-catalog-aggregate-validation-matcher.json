@@ -1,11 +1,11 @@
 {
   "isUUIDv4": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "isUUIDv4",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "IsUUIDv4",
+    "description": "Validates that the received value is a version 4 UUID.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -13,11 +13,11 @@
   },
   "dateRange": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "dateRange",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "DateRange",
+    "description": "Validates that a date lies between expected start and end dates.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -47,11 +47,11 @@
   },
   "lowerThan": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "lowerThan",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "LowerThan",
+    "description": "Validates that a numeric value is lower than the expected value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -69,11 +69,11 @@
   },
   "matchesDatePattern": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "matchesDatePattern",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "MatchesDatePattern",
+    "description": "Validates that the received value is a date in the expected format.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -91,11 +91,11 @@
   },
   "isWeekday": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "isWeekday",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "IsWeekday",
+    "description": "Validates that a formatted date falls on the expected weekday.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -128,11 +128,11 @@
   },
   "empty": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "empty",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Empty",
+    "description": "Validates that the received value is an empty string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -140,11 +140,11 @@
   },
   "allOf": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "allOf",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "AllOf",
+    "description": "Validates that all nested validation matcher expressions pass and reports every failure.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -152,11 +152,11 @@
   },
   "not": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "not",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Not",
+    "description": "Negates exactly one nested validation matcher expression.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -164,11 +164,11 @@
   },
   "lowerThanOrEqualTo": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "lowerThanOrEqualTo",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "LowerThanOrEqualTo",
+    "description": "Validates that a numeric value is lower than or equal to the expected value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -186,11 +186,11 @@
   },
   "trim": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "trim",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Trim",
+    "description": "Validates string equality after trimming surrounding whitespace and ignoring letter case.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -208,11 +208,11 @@
   },
   "ignoreNewLine": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "ignoreNewLine",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "IgnoreNewLine",
+    "description": "Validates string equality after removing newline characters and ignoring letter case.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -230,11 +230,11 @@
   },
   "isNumber": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "isNumber",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "IsNumber",
+    "description": "Validates that the received value can be parsed as a finite number.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -242,11 +242,11 @@
   },
   "ignore": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "ignore",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Ignore",
+    "description": "Accepts any received value without performing validation.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -254,11 +254,12 @@
   },
   "assertj": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "assertj",
     "group": "citrus",
     "module": "citrus-validation-assertj",
     "title": "Assertj",
+    "description": "Applies a configurable AssertJ assertion chain to the received or supplied value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -281,11 +282,11 @@
   },
   "equalsIgnoreCase": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "equalsIgnoreCase",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "EqualsIgnoreCase",
+    "description": "Validates string equality without regard to letter case.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -303,11 +304,11 @@
   },
   "hasLength": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "hasLength",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "HasLength",
+    "description": "Validates that the received string has the expected length.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -325,11 +326,11 @@
   },
   "greaterThan": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "greaterThan",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "GreaterThan",
+    "description": "Validates that a numeric value is greater than the expected value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -347,11 +348,11 @@
   },
   "notNull": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "notNull",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "NotNull",
+    "description": "Validates that the received value is not null.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -359,11 +360,12 @@
   },
   "matchesXml": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "matchesXml",
     "group": "citrus",
     "module": "citrus-validation-xml",
     "title": "MatchesXml",
+    "description": "Compares received XML with expected XML using Citrus XML validation features.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -381,11 +383,11 @@
   },
   "greaterThanOrEqualTo": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "greaterThanOrEqualTo",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "GreaterThanOrEqualTo",
+    "description": "Validates that a numeric value is greater than or equal to the expected value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -403,11 +405,11 @@
   },
   "anyOf": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "anyOf",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "AnyOf",
+    "description": "Validates that at least one nested validation matcher expression passes.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -415,11 +417,11 @@
   },
   "containsIgnoreCase": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "containsIgnoreCase",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "ContainsIgnoreCase",
+    "description": "Validates that the received string contains the expected substring, ignoring letter case.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -437,11 +439,11 @@
   },
   "trimAllWhitespaces": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "trimAllWhitespaces",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "TrimAllWhitespaces",
+    "description": "Validates string equality after removing all whitespace and ignoring letter case.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -459,11 +461,12 @@
   },
   "assertThat": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "assertThat",
     "group": "citrus",
     "module": "citrus-validation-hamcrest",
     "title": "AssertThat",
+    "description": "Applies a Hamcrest matcher expression to the received or supplied value.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -486,11 +489,11 @@
   },
   "matches": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "matches",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Matches",
+    "description": "Validates that the received string matches a regular expression.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -508,11 +511,11 @@
   },
   "contains": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "contains",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Contains",
+    "description": "Validates that the received string contains the expected substring.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -530,11 +533,11 @@
   },
   "null": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "null",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Null",
+    "description": "Validates that the received value is null.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -542,11 +545,11 @@
   },
   "endsWith": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "endsWith",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "EndsWith",
+    "description": "Validates that the received string ends with the expected suffix.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -564,11 +567,11 @@
   },
   "variable": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "variable",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "Variable",
+    "description": "Stores the received value in a test variable named after the field or a supplied name.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -586,11 +589,11 @@
   },
   "notEmpty": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "notEmpty",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "NotEmpty",
+    "description": "Validates that the received value is neither null nor an empty string.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -598,11 +601,11 @@
   },
   "startsWith": {
     "kind": "testValidationMatcher",
-    "version": "${citrus.version}",
+    "version": "5.2.0-SNAPSHOT",
     "name": "startsWith",
     "group": "citrus",
-    "module": "citrus-base",
     "title": "StartsWith",
+    "description": "Validates that the received string starts with the expected prefix.",
     "propertiesSchema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",

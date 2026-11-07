@@ -30,7 +30,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.6.2
  */
-@SchemaType(module = "citrus-validation-xml")
+@SchemaType(module = "citrus-validation-xml", description = "Evaluates an XPath expression against XML content.")
 public class XpathFunction implements ParameterizedFunction<XpathFunction.Parameters> {
 
     @Override

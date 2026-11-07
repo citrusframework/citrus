@@ -31,7 +31,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-websocket")
+@SchemaType(module = "citrus-websocket", description = "Accepts WebSocket connections and exchanges messages with connected clients.")
 @XmlType(name = "", propOrder = {})
 public class WebSocketServerBuilder extends AbstractHttpServerBuilder<WebSocketServer, WebSocketServerBuilder> {
 

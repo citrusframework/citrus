@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -34,6 +35,7 @@ import java.util.List;
  *
  * <p>Usage: {@code @allOf(startsWith('hello'), endsWith('world'))@}</p>
  */
+@SchemaType(description = "Validates that all nested validation matcher expressions pass and reports every failure.")
 public class AllOfValidationMatcher implements ValidationMatcher, ControlExpressionParser {
 
     @Override

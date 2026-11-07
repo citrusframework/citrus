@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
@@ -27,6 +28,7 @@ import static java.lang.Double.parseDouble;
 /**
  * ValidationMatcher based on Double > Double.
  */
+@SchemaType(description = "Validates that the received value can be parsed as a finite number.")
 public class IsNumberValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {

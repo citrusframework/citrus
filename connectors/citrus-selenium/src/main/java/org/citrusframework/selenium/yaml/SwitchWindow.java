@@ -26,12 +26,12 @@ public class SwitchWindow extends AbstractSeleniumAction.Builder<SwitchWindowAct
 
     private final SwitchWindowAction.Builder delegate = new SwitchWindowAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the browser window to switch or focus to.")
     public void setName(String name) {
         this.delegate.window(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the browser window to switch or focus to.")
     public void setWindow(String name) {
         this.delegate.window(name);
     }

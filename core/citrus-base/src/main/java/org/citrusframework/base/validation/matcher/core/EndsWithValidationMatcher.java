@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.StringValidationMatcher;
@@ -23,6 +24,7 @@ import org.citrusframework.validation.matcher.StringValidationMatcher;
 /**
  * ValidationMatcher based on String.endsWith()
  */
+@SchemaType(description = "Validates that the received string ends with the expected suffix.")
 public class EndsWithValidationMatcher implements StringValidationMatcher {
 
     public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {

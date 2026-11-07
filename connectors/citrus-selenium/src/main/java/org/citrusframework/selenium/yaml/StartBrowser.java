@@ -38,7 +38,7 @@ public class StartBrowser extends AbstractSeleniumAction.Builder<StartBrowserAct
         this.seleniumBrowser = browser;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "When true, does not fail if the browser is already started.")
     public void setAllowAlreadyStarted(boolean allow) {
         this.delegate.allowAlreadyStarted(allow);
     }

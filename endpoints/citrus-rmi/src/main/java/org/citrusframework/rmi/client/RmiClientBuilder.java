@@ -28,7 +28,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-rmi")
+@SchemaType(module = "citrus-rmi", description = "Invokes methods on remote Java objects through RMI and receives invocation results.")
 @XmlType(name = "", propOrder = {})
 public class RmiClientBuilder extends AbstractEndpointBuilder<RmiClient> {
 

@@ -26,7 +26,7 @@ public class MakeScreenshot extends AbstractSeleniumAction.Builder<MakeScreensho
 
     private final MakeScreenshotAction.Builder delegate = new MakeScreenshotAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Directory where the screenshot file is stored.")
     public void setOutputDir(String outputDir) {
         this.delegate.outputDir(outputDir);
     }

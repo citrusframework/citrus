@@ -31,7 +31,7 @@ public class Disconnect extends AbstractKubernetesAction.Builder<AbstractKuberne
 
     private AbstractKubernetesAction.Builder<? extends AbstractKubernetesAction, ?> delegate = new KubernetesDisconnectAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Kubernetes service whose port forward should be closed.")
     public void setService(Service service) {
         ServiceDisconnectAction.Builder builder = new ServiceDisconnectAction.Builder();
         builder.service(service.getName());

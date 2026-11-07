@@ -29,12 +29,12 @@ public class JavaScript extends AbstractPlaywrightAction.Builder<JavaScriptActio
 
     private final JavaScriptAction.Builder delegate = new JavaScriptAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "JavaScript code to execute.")
     public void setScript(String script) {
         delegate.script(script);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store the script result.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }

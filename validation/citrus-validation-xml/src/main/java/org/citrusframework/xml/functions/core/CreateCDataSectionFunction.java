@@ -27,7 +27,7 @@ import org.citrusframework.api.yaml.SchemaType;
  * nested CDATA sections are not allowed. This function adds the CDATA section tags
  * at runtime.
  */
-@SchemaType(module = "citrus-validation-xml")
+@SchemaType(module = "citrus-validation-xml", description = "Wraps a value in XML CDATA section tags.")
 public class CreateCDataSectionFunction implements ParameterizedFunction<StringParameter> {
 
     /** CDATA section tags */

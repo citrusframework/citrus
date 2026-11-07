@@ -40,7 +40,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-jmx")
+@SchemaType(module = "citrus-jmx", description = "Exposes managed beans through a JMX server for testing remote JMX invocations.")
 @XmlType(name = "", propOrder = {})
 public class JmxServerBuilder extends AbstractServerBuilder<JmxServer, JmxServerBuilder> {
 
@@ -230,7 +230,7 @@ public class JmxServerBuilder extends AbstractServerBuilder<JmxServer, JmxServer
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the JMX message marshaller as a bean reference.")
     @XmlAttribute
     public void setMarshaller(String marshaller) {
         this.marshaller = marshaller;

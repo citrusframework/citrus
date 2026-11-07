@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.NumberFunction;
 import org.citrusframework.functions.parameter.NumberParameter;
@@ -27,6 +28,7 @@ import static java.lang.Math.abs;
 /**
  * Function returning the absolute value of a decimal number.
  */
+@SchemaType(description = "Returns the absolute value of a decimal number.")
 public class AbsoluteFunction implements NumberFunction {
 
     @Override

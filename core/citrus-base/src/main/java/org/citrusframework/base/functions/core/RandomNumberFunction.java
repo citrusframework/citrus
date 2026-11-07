@@ -23,6 +23,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -31,6 +32,7 @@ import static java.lang.Integer.parseInt;
  * Function returning a random numeric value. Argument specifies the number of digits and
  * padding boolean flag.
  */
+@SchemaType(description = "Generates a random number with a configurable digit count and leading-zero handling.")
 public class RandomNumberFunction implements ParameterizedFunction<RandomNumberFunction.Parameters> {
 
     /** Basic seed generating random number */

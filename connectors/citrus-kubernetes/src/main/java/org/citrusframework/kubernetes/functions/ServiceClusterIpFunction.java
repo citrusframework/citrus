@@ -30,7 +30,7 @@ import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
 
-@SchemaType(module = "citrus-kubernetes")
+@SchemaType(module = "citrus-kubernetes", description = "Resolves a Kubernetes service IP, supporting local mode and external-IP fallback.")
 public class ServiceClusterIpFunction implements ParameterizedFunction<ServiceClusterIpFunction.Parameters> {
 
     @Override

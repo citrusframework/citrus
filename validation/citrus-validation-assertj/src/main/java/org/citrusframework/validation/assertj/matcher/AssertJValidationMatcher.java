@@ -31,7 +31,7 @@ import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
  * e.g. {@code @assertj(asInt().isBetween(1, 10))@}. The form {@code @assertj('value', 'chain')@} asserts on
  * the given value instead.
  */
-@SchemaType(module = "citrus-validation-assertj")
+@SchemaType(module = "citrus-validation-assertj", description = "Applies a configurable AssertJ assertion chain to the received or supplied value.")
 public class AssertJValidationMatcher implements ParameterizedValidationMatcher<AssertJValidationMatcher.Parameters>, ControlExpressionParser {
 
     @Override

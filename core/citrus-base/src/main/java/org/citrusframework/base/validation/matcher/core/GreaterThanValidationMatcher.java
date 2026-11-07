@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
@@ -24,6 +25,7 @@ import org.citrusframework.validation.matcher.parameter.NumberParameter;
 /**
  * ValidationMatcher based on {@code double < double}.
  */
+@SchemaType(description = "Validates that a numeric value is greater than the expected value.")
 public class GreaterThanValidationMatcher implements ParameterizedValidationMatcher<NumberParameter> {
 
     public void validate(String fieldName, String value, NumberParameter controlParameter, TestContext context) throws ValidationException {

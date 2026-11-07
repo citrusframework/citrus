@@ -26,7 +26,7 @@ public class DeleteConfigMap extends AbstractKubernetesAction.Builder<DeleteConf
 
     private final DeleteConfigMapAction.Builder delegate = new DeleteConfigMapAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes ConfigMap to delete.")
     public void setName(String name) {
         this.delegate.configMap(name);
     }

@@ -17,7 +17,9 @@
 package org.citrusframework.endpoint.direct;
 
 import jakarta.xml.bind.annotation.XmlType;
+import org.citrusframework.api.yaml.SchemaType;
 
+@SchemaType(module = "citrus-base", description = "Exchanges asynchronous messages through an in-memory queue.")
 @XmlType(name = "", propOrder = {})
 public class DirectEndpointBuilder extends AbstractDirectEndpointBuilder<DirectEndpoint, DirectEndpointBuilder> {
 

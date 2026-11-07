@@ -27,13 +27,13 @@ public class Press extends AbstractSeleniumAction.Builder<PressKeysAction, Press
 
     private final PressKeysAction.Builder delegate = new PressKeysAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Key or key combination to press, for example ENTER or CTRL+S.")
     public void setKeys(String keys) {
         this.delegate.keys(keys);
     }
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Optional target element that receives the key press. Defaults to the focused element.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

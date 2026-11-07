@@ -52,122 +52,122 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "Test actor that performs the Kubernetes operations.")
     public void setActor(String actor) {
         this.actor = actor;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Kubernetes namespace for resource operations.")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Automatically removes created Kubernetes resources and closes connections after the test.")
     public void setAutoRemove(boolean autoRemoveResources) {
         this.autoRemoveResources = autoRemoveResources;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes client bean to use.")
     public void setClient(String client) {
         this.kubernetesClient = client;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Connects to or disconnects from a Citrus agent on Kubernetes.")
     public void setAgent(Agent builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Connects to Kubernetes or a service through port forwarding.")
     public void setConnect(Connect builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Disconnects from Kubernetes or closes a service port forward.")
     public void setDisconnect(Disconnect builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Connects to a Kubernetes service through local port forwarding.")
     public void setConnectService(ConnectService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Closes the local port forward to a Kubernetes service.")
     public void setDisconnectService(DisconnectService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Creates a Kubernetes Service and binds it to an HTTP server.")
     public void setCreateService(CreateService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Creates a Kubernetes Secret from properties or a file.")
     public void setCreateSecret(CreateSecret builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Creates a Kubernetes ConfigMap from properties or a file.")
     public void setCreateConfigMap(CreateConfigMap builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Creates a Kubernetes resource from inline data or a file.")
     public void setCreateResource(CreateResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Creates a Kubernetes custom resource from inline data or a file.")
     public void setCreateCustomResource(CreateCustomResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Adds labels to an existing Kubernetes resource.")
     public void setCreateLabels(CreateLabels builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Adds annotations to an existing Kubernetes resource.")
     public void setCreateAnnotations(CreateAnnotations builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Deletes a Kubernetes Service.")
     public void setDeleteService(DeleteService builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Deletes a Kubernetes Secret.")
     public void setDeleteSecret(DeleteSecret builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Deletes a Kubernetes ConfigMap.")
     public void setDeleteConfigMap(DeleteConfigMap builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Deletes a Kubernetes resource identified by inline data or a file.")
     public void setDeleteResource(DeleteResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Deletes a Kubernetes custom resource.")
     public void setDeleteCustomResource(DeleteCustomResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Verifies a pod phase and optionally waits for a log message.")
     public void setVerifyPod(VerifyPod builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Verifies that a custom resource reaches an expected condition.")
     public void setVerifyCustomResource(VerifyCustomResource builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE)
+    @SchemaProperty(kind = ACTION, group = KUBERNETES_GROUP, module=KUBERNETES_MODULE, description = "Watches and prints pod logs for a specified duration.")
     public void setWatchPodLogs(WatchPodLogs builder) {
         this.builder = builder;
     }

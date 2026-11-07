@@ -16,11 +16,13 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import java.util.List;
 
+@SchemaType(description = "Validates that the received value is null.")
 public class NullValidationMatcher implements ValidationMatcher {
 
     @Override

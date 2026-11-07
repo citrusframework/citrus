@@ -26,6 +26,7 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 import static java.lang.Boolean.parseBoolean;
 
@@ -45,6 +46,7 @@ import static java.lang.Boolean.parseBoolean;
  *
  * @since 2.4
  */
+@SchemaType(description = "Reads file content with optional test-variable resolution and Base64 encoding.")
 public class ReadFileResourceFunction implements ParameterizedFunction<ReadFileResourceFunction.Parameters> {
 
     @Override

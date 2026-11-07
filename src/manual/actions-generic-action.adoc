@@ -53,6 +53,8 @@ The generic <action> element references Spring beans that implement the Java int
 
 In the example above the called actions are special database cleanup implementations. The actions are defined as Spring beans in the Citrus configuration and get referenced by their bean name or id.
 
+The published YAML test schema rejects unknown action names. Use `action.ref` for custom Java actions as shown above. Third-party `YamlTestActionBuilder` extensions can add action names at runtime, but the static Citrus schema cannot discover those names. Documents using extension-specific action names require a schema that includes the extension.
+
 .Spring Bean
 [source,java,indent=0,role="primary"]
 ----

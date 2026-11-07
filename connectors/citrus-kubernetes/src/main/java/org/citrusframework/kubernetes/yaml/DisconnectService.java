@@ -29,12 +29,12 @@ public class DisconnectService extends AbstractKubernetesAction.Builder<ServiceD
 
     private final ServiceDisconnectAction.Builder delegate = new ServiceDisconnectAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes Service to disconnect from.")
     public void setName(String name) {
         this.delegate.service(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Client name associated with the service connection.")
     public void setClient(String client) {
         this.delegate.client(client);
     }

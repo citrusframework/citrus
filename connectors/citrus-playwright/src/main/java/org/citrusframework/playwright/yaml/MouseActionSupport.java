@@ -33,12 +33,12 @@ abstract class MouseActionSupport<B extends MouseActionSupport<B>> extends Abstr
         this.delegate = new MouseAction.Builder(command);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element locator.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Scroll behavior before interacting with the element.")
     public void setScroll(String scroll) {
         delegate.scroll(scroll);
     }

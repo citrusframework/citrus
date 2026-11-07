@@ -29,7 +29,7 @@ public class Open extends AbstractPlaywrightAction.Builder<OpenAction, Open> {
 
     private final OpenAction.Builder delegate = new OpenAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "URL to open in the browser.")
     public void setUrl(String url) {
         delegate.url(url);
     }

@@ -42,7 +42,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
 
     private AbstractTestcontainersAction.Builder<? extends AbstractTestcontainersAction, ?> delegate;
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:compose")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:compose", description = "Starts services from a Docker Compose file.")
     public void setUp(Up composeUp) {
         ComposeUpAction.Builder builder = new ComposeUpAction.Builder();
 
@@ -80,7 +80,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:compose")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:compose", description = "Stops services started from a Docker Compose file.")
     public void setDown(Down composeDown) {
         ComposeDownAction.Builder builder = new ComposeDownAction.Builder();
         builder.containerName(composeDown.getName());
@@ -126,7 +126,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return name;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Container name for the Compose stack.")
         public void setName(String name) {
             this.name = name;
         }
@@ -135,7 +135,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return file;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Path to the Docker Compose file.")
         public void setFile(String file) {
             this.file = file;
         }
@@ -144,7 +144,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return autoRemove;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Automatically remove containers after shutdown.")
         public void setAutoRemove(boolean autoRemove) {
             this.autoRemove = autoRemove;
         }
@@ -153,12 +153,12 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return startUpTimeout;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Startup timeout in milliseconds.")
         public void setStartUpTimeout(int startUpTimeout) {
             this.startUpTimeout = startUpTimeout;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Services to expose with optional wait strategies.")
         public void setExposedServices(List<ExposedService> services) {
             this.exposedServices = services;
         }
@@ -183,7 +183,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return name;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Exposed service name.")
         public void setName(String value) {
             this.name = value;
         }
@@ -192,7 +192,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return port;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Exposed service port.")
         public void setPort(int port) {
             this.port = port;
         }
@@ -201,7 +201,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return waitFor;
         }
 
-        @SchemaProperty
+        @SchemaProperty(description = "Wait strategy for the exposed service.")
         public void setWaitFor(WaitFor waitFor) {
             this.waitFor = waitFor;
         }
@@ -218,7 +218,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
                 return logMessage;
             }
 
-            @SchemaProperty
+            @SchemaProperty(description = "Wait until this log message appears.")
             public void setLogMessage(String logMessage) {
                 this.logMessage = logMessage;
             }
@@ -227,7 +227,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
                 return url;
             }
 
-            @SchemaProperty
+            @SchemaProperty(description = "Wait until this URL becomes available.")
             public void setUrl(String url) {
                 this.url = url;
             }
@@ -236,7 +236,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
                 return disabled;
             }
 
-            @SchemaProperty
+            @SchemaProperty(description = "Disable the wait strategy.")
             public void setDisabled(boolean disabled) {
                 this.disabled = disabled;
             }
@@ -251,7 +251,7 @@ public class Compose extends AbstractTestcontainersAction.Builder<AbstractTestco
             return name;
         }
 
-        @SchemaProperty(required = true)
+        @SchemaProperty(required = true, description = "Container name of the Compose stack to stop.")
         public void setName(String name) {
             this.name = name;
         }

@@ -28,7 +28,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-ssh")
+@SchemaType(module = "citrus-ssh", description = "Executes commands on a remote host through SSH and receives command results.")
 @XmlType(name = "", propOrder = {})
 public class SshClientBuilder extends AbstractEndpointBuilder<SshClient> {
 

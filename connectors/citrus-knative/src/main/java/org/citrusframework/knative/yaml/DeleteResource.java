@@ -29,17 +29,17 @@ public class DeleteResource extends AbstractKnativeAction.Builder<DeleteKnativeR
 
     private final DeleteKnativeResourceAction.Builder delegate = new DeleteKnativeResourceAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative resource to delete.")
     public void setName(String name) {
         this.delegate.resource(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Plural resource name of the Knative custom resource definition.")
     public void setKind(String kind) {
         this.delegate.kind(kind);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Knative component API group prefix, such as eventing or messaging.")
     public void setComponent(String component) {
         this.delegate.component(component);
     }

@@ -19,6 +19,7 @@ package org.citrusframework.base.functions.core;
 import java.util.List;
 import java.util.UUID;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.Function;
 
@@ -26,6 +27,7 @@ import org.citrusframework.functions.Function;
  * Creates a random Java UUID.
  *
  */
+@SchemaType(description = "Generates a random UUID.")
 public class RandomUUIDFunction  implements Function {
 
     @Override

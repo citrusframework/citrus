@@ -34,6 +34,11 @@ public @interface SchemaType {
     String module() default "";
 
     /**
+     * Description of the schema type.
+     */
+    String description() default "";
+
+    /**
      * Declare one of association of multiple properties.
      */
     String[] oneOf() default {};

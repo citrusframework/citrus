@@ -25,7 +25,7 @@ import org.citrusframework.api.yaml.SchemaType;
  * Escapes XML fragment with escaped characters for {@code '<'}, {@code '>'}.
  */
 @SuppressWarnings("deprecation")
-@SchemaType(module = "citrus-validation-xml")
+@SchemaType(module = "citrus-validation-xml", description = "Escapes special XML characters in a value.")
 public class EscapeXmlFunction implements ParameterizedFunction<StringParameter> {
 
     @Override

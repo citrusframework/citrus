@@ -29,19 +29,19 @@ public class FillForm extends AbstractSeleniumAction.Builder<FillFormAction, Fil
 
     private final FillFormAction.Builder delegate = new FillFormAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Form field IDs and values to set.")
     public void setFields(List<Field> fields) {
         delegate.fields(fields
                 .stream()
                 .collect(Collectors.toMap(Field::getId, Field::getValue)));
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "JSON object containing form field IDs and values.")
     public void setJson(String json) {
         this.delegate.fromJson(json);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "ID of the button that submits the form after all fields are filled.")
     public void setSubmit(String value) {
         this.delegate.submit(value);
     }

@@ -65,7 +65,7 @@ public class GraphQl implements TestActionBuilder<TestAction>, ReferenceResolver
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "The test actor that executes the GraphQL action.")
     public void setActor(String actor) {
         this.actor = actor;
     }

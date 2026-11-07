@@ -31,7 +31,7 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
 
     private final CreateServiceAction.Builder delegate = new CreateServiceAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes Service to create.")
     public void setName(String name) {
         this.delegate.service(name);
     }
@@ -41,23 +41,23 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
         this.delegate.server(serverName);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Automatically creates and binds a local HTTP server for the Service.")
     public void setAutoCreateServerBinding(boolean enabled) {
         this.delegate.autoCreateServerBinding(enabled);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Port mappings from the Service port to the target pod port.")
     public void setPorts(List<PortMapping> portMappings) {
         portMappings.forEach(
                 mapping -> this.delegate.portMapping(mapping.getPort(), mapping.getTargetPort()));
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Protocol used by the Service ports, such as TCP or UDP.")
     public void setProtocol(String protocol) {
         this.delegate.protocol(protocol);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Labels used to select pods targeted by the Service.")
     public void setSelector(PodSelector selector) {
         selector.getLabels().forEach(
                 label -> this.delegate.label(label.getName(), label.getValue()));

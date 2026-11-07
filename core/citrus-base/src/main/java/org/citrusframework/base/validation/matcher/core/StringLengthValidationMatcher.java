@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.StringValidationMatcher;
@@ -23,6 +24,7 @@ import org.citrusframework.validation.matcher.StringValidationMatcher;
 /**
  * ValidationMatcher checks string length of given field.
  */
+@SchemaType(description = "Validates that the received string has the expected length.")
 public class StringLengthValidationMatcher implements StringValidationMatcher {
 
     public void validate(String fieldName, String value, String controlValue, TestContext context) throws ValidationException {

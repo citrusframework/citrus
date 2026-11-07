@@ -22,6 +22,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 import static java.lang.Integer.parseInt;
 
@@ -33,6 +34,7 @@ import static java.lang.Integer.parseInt;
  * like this: substring(targetString, beginIndex, [endIndex]).
  *
  */
+@SchemaType(description = "Extracts a substring using a begin index and an optional end index.")
 public class SubstringFunction implements ParameterizedFunction<SubstringFunction.Parameters> {
 
     @Override

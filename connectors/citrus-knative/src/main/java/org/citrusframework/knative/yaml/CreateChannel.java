@@ -29,7 +29,7 @@ public class CreateChannel extends AbstractKnativeAction.Builder<CreateChannelAc
 
     private final CreateChannelAction.Builder delegate = new CreateChannelAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative channel to create.")
     public void setName(String name) {
         this.delegate.channel(name);
     }

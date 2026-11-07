@@ -31,7 +31,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add script.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "JavaScript code to execute in the current browser.")
     public void setScript(String script) {
         this.delegate.script(script);
     }
@@ -39,7 +39,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add script argument.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Single argument passed to the JavaScript code.")
     public void setArgument(Object arg) {
         this.delegate.argument(arg);
     }
@@ -47,7 +47,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add script arguments.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Arguments passed to the JavaScript code.")
     public void setArguments(List<Object> args) {
         this.delegate.arguments(args);
     }
@@ -55,7 +55,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add expected error.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Expected JavaScript error message.")
     public void setError(String error) {
         this.delegate.error(error);
     }
@@ -63,7 +63,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Add expected error.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Expected JavaScript error messages.")
     public void setErrors(List<String> errors) {
         this.delegate.errors(errors);
     }
@@ -71,7 +71,7 @@ public class JavaScript extends AbstractSeleniumAction.Builder<JavaScriptAction,
     /**
      * Store the script return value in a variable.
      */
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable that receives the JavaScript return value.")
     public void setVariable(String variable) {
         this.delegate.variable(variable);
     }

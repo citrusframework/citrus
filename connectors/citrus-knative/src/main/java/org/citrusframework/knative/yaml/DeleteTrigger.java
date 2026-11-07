@@ -29,7 +29,7 @@ public class DeleteTrigger extends AbstractKnativeAction.Builder<DeleteTriggerAc
 
     private final DeleteTriggerAction.Builder delegate = new DeleteTriggerAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative trigger to delete.")
     public void setName(String name) {
         this.delegate.trigger(name);
     }

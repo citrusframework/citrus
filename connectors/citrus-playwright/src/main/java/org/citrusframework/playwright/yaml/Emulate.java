@@ -35,52 +35,52 @@ public class Emulate extends AbstractPlaywrightAction.Builder<EmulationAction, E
     private Double latitude;
     private Double longitude;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Viewport width in pixels.")
     public void setWidth(Integer width) {
         this.width = width;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Viewport height in pixels.")
     public void setHeight(Integer height) {
         this.height = height;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Geolocation latitude.")
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Geolocation longitude.")
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Geolocation accuracy in meters.")
     public void setAccuracy(Double accuracy) {
         delegate.accuracy(accuracy);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Preferred color scheme to emulate.")
     public void setColorScheme(String colorScheme) {
         delegate.colorScheme(colorScheme);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Locale to emulate.")
     public void setLocale(String locale) {
         delegate.locale(locale);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Timezone to emulate.")
     public void setTimezone(String timezone) {
         delegate.timezone(timezone);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "User agent string to emulate.")
     public void setUserAgent(String userAgent) {
         delegate.userAgent(userAgent);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Browser context alias to emulate.")
     public void setContext(String contextAlias) {
         delegate.contextAlias(contextAlias);
     }

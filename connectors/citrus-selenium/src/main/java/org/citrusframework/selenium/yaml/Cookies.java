@@ -26,57 +26,57 @@ public class Cookies extends AbstractSeleniumAction.Builder<CookieAction, Cookie
 
     private final CookieAction.Builder delegate = new CookieAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Cookie operation: add, read, verify, verify-absent, delete, or delete-all.")
     public void setCommand(String command) {
         this.delegate.command(command);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the cookie to add, read, verify, or delete.")
     public void setName(String name) {
         this.delegate.name(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Value assigned when adding the cookie.")
     public void setValue(String value) {
         this.delegate.value(value);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable that receives the cookie value when reading.")
     public void setVariable(String variable) {
         this.delegate.variable(variable);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected cookie value used by the verify command.")
     public void setExpected(String expected) {
         this.delegate.expected(expected);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Domain attribute for a new cookie.")
     public void setDomain(String domain) {
         this.delegate.domain(domain);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Path attribute for a new cookie.")
     public void setPath(String path) {
         this.delegate.path(path);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expiration time for a new cookie, in epoch seconds.")
     public void setExpiry(String expiry) {
         this.delegate.expiry(expiry);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Requires HTTPS when sending the new cookie.")
     public void setSecure(boolean secure) {
         this.delegate.secure(secure);
     }
 
-    @SchemaProperty(name = "http-only")
+    @SchemaProperty(name = "http-only", description = "Prevents client-side scripts from accessing the new cookie.")
     public void setHttpOnly(boolean httpOnly) {
         this.delegate.httpOnly(httpOnly);
     }
 
-    @SchemaProperty(name = "same-site")
+    @SchemaProperty(name = "same-site", description = "SameSite policy for the new cookie, such as Lax, Strict, or None.")
     public void setSameSite(String sameSite) {
         this.delegate.sameSite(sameSite);
     }

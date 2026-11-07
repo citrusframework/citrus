@@ -16,12 +16,14 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.StringFunction;
 
 /**
  * Returning the length of a given string argument.
  */
+@SchemaType(description = "Returns the number of characters in a string.")
 public class StringLengthFunction implements StringFunction {
 
     @Override

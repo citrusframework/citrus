@@ -17,6 +17,7 @@
 package org.citrusframework.base.functions.core;
 
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.ParameterizedFunction;
@@ -37,6 +38,7 @@ import static org.citrusframework.util.StringUtils.hasText;
  * User specifies format string as argument.
  * Function also supports additional date offset in order to manipulate result date value.
  */
+@SchemaType(description = "Returns the current date with optional formatting, time zone, and date offset.")
 public class CurrentDateFunction implements ParameterizedFunction<CurrentDateFunction.Parameters> {
 
     private static final Logger logger = LoggerFactory.getLogger(CurrentDateFunction.class);

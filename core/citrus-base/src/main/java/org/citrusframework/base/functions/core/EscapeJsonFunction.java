@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.StringFunction;
 import org.citrusframework.functions.parameter.StringParameter;
@@ -30,6 +31,7 @@ import org.citrusframework.functions.parameter.StringParameter;
  * <p>Example output: <code>"{\\\"mySuperJson\\\": \\\"valium\\\"}"</code></p>
  */
 @SuppressWarnings("deprecation")
+@SchemaType(description = "Escapes JSON special characters so a value can be embedded in a JSON string.")
 public class EscapeJsonFunction implements StringFunction {
 
     @Override

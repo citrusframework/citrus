@@ -43,22 +43,22 @@ public class Testcontainers implements TestActionBuilder<TestcontainersAction>, 
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "Test actor used for this Testcontainers action.")
     public void setActor(String actor) {
         this.actor = actor;
     }
 
-    @SchemaProperty(kind = GROUP, group = "testcontainers", module = "citrus-testcontainers")
+    @SchemaProperty(kind = GROUP, group = "testcontainers", module = "citrus-testcontainers", description = "Docker Compose Testcontainers actions.")
     public void setCompose(Compose builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = GROUP, group = "testcontainers", module = "citrus-testcontainers")
+    @SchemaProperty(kind = GROUP, group = "testcontainers", module = "citrus-testcontainers", description = "Testcontainers start actions.")
     public void setStart(Start builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers", module = "citrus-testcontainers")
+    @SchemaProperty(kind = ACTION, group = "testcontainers", module = "citrus-testcontainers", description = "Stops a running Testcontainers container.")
     public void setStop(Stop builder) {
         this.builder = builder;
     }

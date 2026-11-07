@@ -38,7 +38,7 @@ import tools.jackson.databind.node.ObjectNode;
  *
  * @since 4.x
  */
-@SchemaType(module = "citrus-validation-json")
+@SchemaType(module = "citrus-validation-json", description = "Applies RFC 6902 JSON Patch operations, with JSONPath paths converted to JSON Pointers.")
 public class JsonPatchFunction implements ParameterizedFunction<JsonPatchFunction.Parameters> {
 
     private static final JsonMapper jsonMapper = JsonMapper.shared();

@@ -25,6 +25,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -34,6 +35,7 @@ import static java.lang.System.currentTimeMillis;
  * Function generating a random string containing alphabetic characters. Arguments specify
  * upper and lower case mode.
  */
+@SchemaType(description = "Generates a random alphabetic string with configurable length, letter case, and optional digits.")
 public class RandomStringFunction implements ParameterizedFunction<RandomStringFunction.Parameters> {
 
     private static final Random random = new Random(currentTimeMillis());

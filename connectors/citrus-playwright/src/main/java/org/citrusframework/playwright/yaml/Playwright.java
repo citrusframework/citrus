@@ -52,7 +52,7 @@ public class Playwright implements TestActionBuilder<PlaywrightAction>, Referenc
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "Test actor that executes the action.")
     public void setActor(String actor) {
         this.actor = actor;
     }
@@ -66,202 +66,202 @@ public class Playwright implements TestActionBuilder<PlaywrightAction>, Referenc
         this.browserName = browser;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Starts the Playwright browser.")
     public void setStart(Start builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Stops the Playwright browser.")
     public void setStop(Stop builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Opens a URL in the browser.")
     public void setOpen(Open builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Navigates browser history or reloads the page.")
     public void setNavigate(Navigate builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Clicks an element on the page.")
     public void setClick(Click builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Double-clicks an element on the page.")
     public void setDoubleClick(DoubleClick builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Right-clicks an element on the page.")
     public void setRightClick(RightClick builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Hovers over an element on the page.")
     public void setHover(Hover builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Focuses an element on the page.")
     public void setFocus(Focus builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Taps an element on the page.")
     public void setTap(Tap builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Fills an input element with a value.")
     public void setFill(Fill builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Clears an input element.")
     public void setClear(Clear builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Presses a key or shortcut on an element.")
     public void setPress(Press builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Checks a checkbox or radio element.")
     public void setCheck(Check builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Unchecks a checkbox element.")
     public void setUncheck(Uncheck builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Selects options in a select element.")
     public void setSelect(Select builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Uploads files to a file input element.")
     public void setUpload(Upload builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Waits for a condition, element state, or page load.")
     public void setWait(Wait builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Screencast action configuration.")
     public void setScreencast(Screencast builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "WebAuthn credentials action configuration.")
     public void setCredentials(Credentials builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "File drop action configuration.")
     public void setDrop(Drop builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Captures a screenshot of the page or element.")
     public void setScreenshot(Screenshot builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Executes JavaScript in the browser context.")
     public void setJavaScript(JavaScript builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Verifies page or element state.")
     public void setVerify(Verify builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Extracts data from the page into a test variable.")
     public void setExtract(Extract builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Interacts with browser console messages.")
     public void setConsole(Console builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Manages browser contexts.")
     public void setContext(Context builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Manages browser cookies.")
     public void setCookies(Cookies builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Handles browser dialogs.")
     public void setDialog(Dialog builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Handles file downloads.")
     public void setDownload(Download builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Emulates device, viewport, or environment settings.")
     public void setEmulate(Emulate builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Fills an input element with a value.")
     public void setEnter(Fill builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Interacts with page frames.")
     public void setFrame(Frame builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Intercepts and inspects network traffic.")
     public void setNetwork(Network builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Manages browser pages or tabs.")
     public void setPage(Page builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Executes a Playwright page object.")
     public void setPageObject(PageObject builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Saves the page as a PDF document.")
     public void setPdf(Pdf builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Grants or clears browser permissions.")
     public void setPermissions(Permissions builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Manages browser storage.")
     public void setStorage(Storage builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE)
+    @SchemaProperty(kind = ACTION, group = PLAYWRIGHT_GROUP, module = PLAYWRIGHT_MODULE, description = "Controls Playwright tracing.")
     public void setTracing(Tracing builder) {
         this.builder = builder;
     }

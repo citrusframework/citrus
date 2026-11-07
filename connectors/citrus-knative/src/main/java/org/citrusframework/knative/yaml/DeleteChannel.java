@@ -29,7 +29,7 @@ public class DeleteChannel extends AbstractKnativeAction.Builder<DeleteKnativeRe
 
     private final DeleteKnativeResourceAction.Builder delegate = new DeleteKnativeResourceAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative channel to delete.")
     public void setName(String name) {
         this.delegate.resource(name);
     }

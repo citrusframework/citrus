@@ -38,7 +38,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-rmi")
+@SchemaType(module = "citrus-rmi", description = "Exposes remote Java interfaces through RMI and handles incoming method invocations.")
 @XmlType(name = "", propOrder = {})
 public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServerBuilder> {
 
@@ -90,7 +90,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the RMI server URL, including host, port, and service binding.")
     @XmlAttribute
     public void setServerUrl(String serverUrl) {
         serverUrl(serverUrl);
@@ -104,7 +104,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the RMI service registry host.")
     @XmlAttribute
     public void setHost(String host) {
         host(host);
@@ -118,7 +118,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the RMI service registry port.")
     @XmlAttribute
     public void setPort(int port) {
         port(port);
@@ -132,7 +132,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the RMI service registry as a bean reference.")
     @XmlAttribute
     public void setRegistry(String registry) {
         this.registry = registry;
@@ -146,7 +146,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the service binding name in the RMI registry.")
     @XmlAttribute
     public void setBinding(String binding) {
         binding(binding);
@@ -160,7 +160,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the remote method name.")
     @XmlAttribute
     public void setMethod(String method) {
         method(method);
@@ -174,7 +174,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Controls whether the RMI server creates a local registry when none is provided.")
     @XmlAttribute
     public void setCreateRegistry(boolean createRegistry) {
         createRegistry(createRegistry);
@@ -229,7 +229,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Sets the RMI message marshaller as a bean reference.")
     @XmlAttribute
     public void setMarshaller(String marshaller) {
         this.marshaller = marshaller;

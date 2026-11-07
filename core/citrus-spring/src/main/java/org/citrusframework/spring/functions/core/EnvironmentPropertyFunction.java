@@ -31,7 +31,7 @@ import org.springframework.core.env.Environment;
 /**
  * Function to get environment variable settings.
  */
-@SchemaType(module = "citrus-spring")
+@SchemaType(module = "citrus-spring", description = "Resolves a property from the Spring environment or system environment, with an optional default.")
 public class EnvironmentPropertyFunction implements EnvironmentAware,
         ParameterizedFunction<EnvironmentPropertyFunction.Parameters> {
 

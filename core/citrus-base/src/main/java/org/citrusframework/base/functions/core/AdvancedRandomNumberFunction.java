@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
@@ -48,6 +49,7 @@ import static java.lang.String.format;
  * </ol>
  * <p>
  */
+@SchemaType(description = "Generates a random number with configurable range, decimal places, bounds, multiples, and formatting.")
 public class AdvancedRandomNumberFunction implements Function {
 
     private static final BigDecimal DEFAULT_MAX_VALUE = new BigDecimal(1000000);

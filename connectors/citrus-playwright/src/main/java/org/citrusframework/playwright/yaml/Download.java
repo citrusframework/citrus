@@ -29,27 +29,27 @@ public class Download extends AbstractPlaywrightAction.Builder<DownloadAction, D
 
     private final DownloadAction.Builder delegate = new DownloadAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Element that triggers the download when clicked.")
     public void setElement(Element element) {
         delegate.click(element.toLocatorSpec());
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "JavaScript that triggers the download.")
     public void setTriggerScript(String triggerScript) {
         delegate.triggerScript(triggerScript);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "File path to save the downloaded file.")
     public void setSaveAs(String saveAs) {
         delegate.saveAs(saveAs);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store the download path.")
     public void setPathVariable(String pathVariable) {
         delegate.pathVariable(pathVariable);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store the download filename.")
     public void setFilenameVariable(String filenameVariable) {
         delegate.filenameVariable(filenameVariable);
     }

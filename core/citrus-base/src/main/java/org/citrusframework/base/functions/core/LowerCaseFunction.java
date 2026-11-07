@@ -16,12 +16,14 @@
 
 package org.citrusframework.base.functions.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.StringFunction;
 
 /**
  * Function returns given string argument in lower case.
  */
+@SchemaType(description = "Converts a string to lowercase letters.")
 public class LowerCaseFunction implements StringFunction {
 
     @Override

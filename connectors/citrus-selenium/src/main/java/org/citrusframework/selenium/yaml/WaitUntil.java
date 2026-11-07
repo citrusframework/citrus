@@ -28,27 +28,27 @@ public class WaitUntil extends AbstractSeleniumAction.Builder<WaitUntilAction, W
     private final WaitUntilAction.Builder delegate = new WaitUntilAction.Builder();
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Target element to wait for, identified by selector or property.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Maximum wait time in milliseconds.")
     public void setTimeout(long timeout) {
         this.delegate.timeout(timeout);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Condition to wait for, such as visible, hidden, or a custom page condition.")
     public void setCondition(String condition) {
         this.delegate.condition(condition);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Condition to wait for; alias for condition.")
     public void setUntil(String condition) {
         this.delegate.condition(condition);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected value required by the wait condition, when applicable.")
     public void setExpected(String expected) {
         this.delegate.expected(expected);
     }

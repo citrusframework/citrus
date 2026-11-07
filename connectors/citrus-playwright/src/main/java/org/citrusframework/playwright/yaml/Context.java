@@ -38,17 +38,17 @@ public class Context extends AbstractPlaywrightAction.Builder<ContextAction, Con
     private String alias;
     private String storageState;
 
-    @SchemaProperty
+    @SchemaProperty(description = "Context command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Alias for the browser context.")
     public void setAlias(String alias) {
         this.alias = alias;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Path to a storage state file.")
     public void setStorageState(String path) {
         this.storageState = path;
     }

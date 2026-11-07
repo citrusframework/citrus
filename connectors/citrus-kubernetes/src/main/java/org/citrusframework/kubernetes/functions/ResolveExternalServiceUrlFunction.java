@@ -37,7 +37,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * Function resolves the URL to a Kubernetes service by inspecting the exposed host ip and port.
  */
-@SchemaType(module = "citrus-kubernetes")
+@SchemaType(module = "citrus-kubernetes", description = "Resolves an external Kubernetes service URL from its exposed host and port.")
 public class ResolveExternalServiceUrlFunction implements ParameterizedFunction<ResolveExternalServiceUrlFunction.Parameters> {
 
     @Override

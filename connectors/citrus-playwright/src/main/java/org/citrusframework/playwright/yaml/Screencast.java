@@ -42,62 +42,62 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
     private Integer sizeWidth;
     private Integer sizeHeight;
 
-    @SchemaProperty
+    @SchemaProperty(description = "File path for screencast output.")
     public void setPath(String path) {
         this.path = path;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Screencast title.")
     public void setTitle(String title) {
         this.title = title;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "HTML content used for screencast rendering.")
     public void setHtml(String html) {
         this.html = html;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Screencast width in pixels.")
     public void setSizeWidth(Integer sizeWidth) {
         this.sizeWidth = sizeWidth;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Screencast height in pixels.")
     public void setSizeHeight(Integer sizeHeight) {
         this.sizeHeight = sizeHeight;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Screencast command to execute.")
     public void setCommand(String command) {
         this.command = command;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Description for a screencast chapter.")
     public void setChapterDescription(String description) {
         delegate.chapterDescription(description);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Overlay position for screencast annotations.")
     public void setPosition(String position) {
         delegate.position(position);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Font size for screencast annotations.")
     public void setFontSize(Integer fontSize) {
         delegate.fontSize(fontSize);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Duration in seconds for a screencast segment.")
     public void setDuration(Double duration) {
         delegate.duration(duration);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Screencast video quality.")
     public void setQuality(Integer quality) {
         delegate.quality(quality);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store screencast output.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }

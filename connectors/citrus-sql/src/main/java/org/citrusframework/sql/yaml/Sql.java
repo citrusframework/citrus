@@ -48,13 +48,13 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         builder.description(value);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "The JDBC data source used to execute SQL statements.")
     public void setDataSource(String dataSource) {
         builder.dataSource(dataSource);
         builder.name(String.format("sql:%s", dataSource));
     }
 
-    @SchemaProperty(required = true)
+    @SchemaProperty(required = true, description = "The SQL statements or SQL resource files to execute.")
     public void setStatements(List<Statement> statements) {
         for (Statement statement : statements) {
             if (statement.statement != null) {
@@ -67,7 +67,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Transaction settings for the SQL action.")
     public void setTransaction(Transaction transaction) {
         if (transaction.manager != null) {
             transactionManager = transaction.manager;
@@ -82,7 +82,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         }
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "When enabled, SQL statement errors are ignored.")
     public void setIgnoreErrors(boolean value) {
         if (builder instanceof ExecuteSQLAction.Builder) {
             ((ExecuteSQLAction.Builder) builder).ignoreErrors(value);
@@ -96,7 +96,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         return this.validate;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected column values used to validate SQL query results.")
     public void setValidate(List<Validate> validate) {
         this.validate = validate;
     }
@@ -108,7 +108,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         return this.extract;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Column values to extract from SQL query results into test variables.")
     public void setExtract(List<Extract> extract) {
         this.extract = extract;
     }

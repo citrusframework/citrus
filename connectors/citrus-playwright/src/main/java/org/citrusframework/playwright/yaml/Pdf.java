@@ -29,17 +29,17 @@ public class Pdf extends AbstractPlaywrightAction.Builder<PdfAction, Pdf> {
 
     private final PdfAction.Builder delegate = new PdfAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "File path where the PDF is saved.")
     public void setPath(String path) {
         delegate.path(path);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Test variable to store the PDF output.")
     public void setVariable(String variable) {
         delegate.variable(variable);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Includes background graphics in the PDF.")
     public void setPrintBackground(Boolean printBackground) {
         delegate.printBackground(printBackground);
     }

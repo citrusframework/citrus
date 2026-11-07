@@ -22,7 +22,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-http")
+@SchemaType(module = "citrus-http", description = "Receives HTTP requests and sends responses through an embedded server.")
 @XmlType(name = "", propOrder = {})
 public class HttpServerBuilder extends AbstractHttpServerBuilder<HttpServer, HttpServerBuilder> {
 

@@ -48,7 +48,7 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
         this.check = check;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Expected value for the verification.")
     public void setExpected(String expected) {
         this.expected = expected;
     }
@@ -103,7 +103,7 @@ public class Verify extends AbstractPlaywrightAction.Builder<VerifyAction, Verif
         this.timeout = timeout;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Target element to verify.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
     }

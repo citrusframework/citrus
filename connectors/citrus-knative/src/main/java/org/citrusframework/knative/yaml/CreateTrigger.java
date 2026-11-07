@@ -32,27 +32,27 @@ public class CreateTrigger extends AbstractKnativeAction.Builder<CreateTriggerAc
 
     private final CreateTriggerAction.Builder delegate = new CreateTriggerAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative trigger to create.")
     public void setName(String name) {
         this.delegate.trigger(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the broker that supplies events to the trigger.")
     public void setBroker(String name) {
         this.delegate.broker(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the channel subscribed to the trigger.")
     public void setChannel(String name) {
         this.delegate.channel(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes service subscribed to the trigger.")
     public void setService(String name) {
         this.delegate.service(name);
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "CloudEvent attribute filters that select events for the trigger.")
     public void setFilter(Filter filter) {
         filter.getAttributes().forEach(attr -> this.delegate.filter(attr.getName(), attr.getValue()));
     }

@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.StringValidationMatcher;
@@ -25,6 +26,7 @@ import org.citrusframework.validation.matcher.StringValidationMatcher;
  *
  * @since 2.7.6
  */
+@SchemaType(description = "Validates string equality after removing newline characters and ignoring letter case.")
 public class IgnoreNewLineValidationMatcher implements StringValidationMatcher {
 
     public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {

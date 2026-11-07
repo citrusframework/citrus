@@ -28,7 +28,7 @@ public class DoubleClick extends AbstractSeleniumAction.Builder<DoubleClickActio
     private final DoubleClickAction.Builder delegate = new DoubleClickAction.Builder();
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Element to double-click.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

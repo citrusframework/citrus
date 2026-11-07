@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.endpoint.EndpointUriBuilder;
 import org.citrusframework.api.yaml.SchemaType;
 
-@SchemaType(module = "citrus-camel")
+@SchemaType(module = "citrus-camel", description = "Exchanges asynchronous one-way messages through an Apache Camel endpoint.")
 @XmlType(name = "", propOrder = {})
 public class CamelEndpointBuilder extends AbstractCamelEndpointBuilder<CamelEndpoint, CamelEndpointBuilder> {
 

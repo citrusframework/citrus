@@ -16,6 +16,7 @@
 
 package org.citrusframework.playwright.http;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
@@ -34,6 +35,7 @@ import org.citrusframework.util.StringUtils;
  * exposed; use {@link PlaywrightClientHttpRequestFactory} with the plain {@code HttpClientBuilder}
  * for full control.</p>
  */
+@SchemaType(module = "citrus-playwright", description = "Creates a Playwright-backed HTTP API client endpoint.")
 public class PlaywrightApiClientBuilder extends AbstractEndpointBuilder<HttpClient> {
 
     private final HttpClient endpoint = new HttpClient();

@@ -20,7 +20,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
+@SchemaType(module = "citrus-base", description = "Stores and retrieves named messages in the local test context message store.")
 @XmlType(name = "", propOrder = {})
 public class MessageStoreEndpointBuilder extends AbstractEndpointBuilder<MessageStoreEndpoint> {
 

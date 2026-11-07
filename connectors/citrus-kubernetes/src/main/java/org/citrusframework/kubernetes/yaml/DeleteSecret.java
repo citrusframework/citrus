@@ -26,7 +26,7 @@ public class DeleteSecret extends AbstractKubernetesAction.Builder<DeleteSecretA
 
     private final DeleteSecretAction.Builder delegate = new DeleteSecretAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes Secret to delete.")
     public void setName(String name) {
         this.delegate.secret(name);
     }

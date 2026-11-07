@@ -28,7 +28,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.5
  */
-@SchemaType(module = "citrus-ssh")
+@SchemaType(module = "citrus-ssh", description = "Simulates an SSH server for testing client command execution.")
 @XmlType(name = "", propOrder = {})
 public class SshServerBuilder extends AbstractServerBuilder<SshServer, SshServerBuilder> {
 

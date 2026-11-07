@@ -26,7 +26,7 @@ public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServic
 
     private final DeleteServiceAction.Builder delegate = new DeleteServiceAction.Builder();
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes Service to delete.")
     public void setName(String name) {
         this.delegate.service(name);
     }

@@ -22,11 +22,13 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.ParameterizedFunction;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 /**
  * Function searches for occurrences of a given character sequence and replaces all
  * findings with given replacement string.
  */
+@SchemaType(description = "Replaces all regular expression matches in a value with a replacement string.")
 public class TranslateFunction implements ParameterizedFunction<TranslateFunction.Parameters> {
 
     @Override

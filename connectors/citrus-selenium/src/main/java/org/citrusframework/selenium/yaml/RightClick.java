@@ -28,7 +28,7 @@ public class RightClick extends AbstractSeleniumAction.Builder<RightClickAction,
     private final RightClickAction.Builder delegate = new RightClickAction.Builder();
 
     @Override
-    @SchemaProperty
+    @SchemaProperty(description = "Target element to right-click, identified by selector or property.")
     public void setElement(Element element) {
         ElementAware.super.setElement(element);
     }

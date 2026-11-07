@@ -56,92 +56,92 @@ public class Knative implements TestActionBuilder<KnativeAction>, ReferenceResol
         this.description = value;
     }
 
-    @SchemaProperty(advanced = true)
+    @SchemaProperty(advanced = true, description = "Test actor that performs the Knative operations.")
     public void setActor(String actor) {
         this.actor = actor;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Kubernetes namespace for the Knative resources.")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Automatically removes created Knative resources after the test.")
     public void setAutoRemove(boolean autoRemoveResources) {
         this.autoRemoveResources = autoRemoveResources;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Kubernetes cluster type used to run the Knative action.")
     public void setClusterType(ClusterType clusterType) {
         this.clusterType = clusterType;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Kubernetes client bean to use.")
     public void setKubernetesClient(String client) {
         this.k8sClient = client;
     }
 
-    @SchemaProperty
+    @SchemaProperty(description = "Name of the Knative client bean to use.")
     public void setClient(String client) {
         this.knativeClient = client;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Creates a Knative Eventing broker.")
     public void setCreateBroker(CreateBroker builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Deletes a Knative Eventing broker.")
     public void setDeleteBroker(DeleteBroker builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Verifies a Knative broker status condition.")
     public void setVerifyBroker(VerifyBroker builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Creates a Knative Eventing trigger.")
     public void setCreateTrigger(CreateTrigger builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Deletes a Knative Eventing trigger.")
     public void setDeleteTrigger(DeleteTrigger builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Creates a Knative Messaging channel.")
     public void setCreateChannel(CreateChannel builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Deletes a Knative Messaging channel.")
     public void setDeleteChannel(DeleteChannel builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Creates a Knative Messaging subscription.")
     public void setCreateSubscription(CreateSubscription builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Deletes a Knative Messaging subscription.")
     public void setDeleteSubscription(DeleteSubscription builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Sends a CloudEvent to a Knative broker.")
     public void setSendEvent(SendEvent builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Receives and validates a CloudEvent from Knative.")
     public void setReceiveEvent(ReceiveEvent builder) {
         this.builder = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE)
+    @SchemaProperty(kind = ACTION, group = KNATIVE_GROUP, module = KNATIVE_MODULE, description = "Deletes a Knative resource.")
     public void setDeleteResource(DeleteResource builder) {
         this.builder = builder;
     }

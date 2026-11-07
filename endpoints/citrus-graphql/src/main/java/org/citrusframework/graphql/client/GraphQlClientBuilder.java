@@ -42,7 +42,7 @@ import org.springframework.web.client.RestTemplate;
  * Builds a {@link GraphQlClient}. Every HTTP client setting of {@link HttpClientBuilder} applies; the
  * GraphQL settings are the path, the schema resources and strict document checks.
  */
-@SchemaType(module = "citrus-graphql")
+@SchemaType(module = "citrus-graphql", description = "Sends GraphQL queries and mutations over HTTP and receives responses.")
 @XmlType(name = "", propOrder = {})
 public class GraphQlClientBuilder extends HttpClientBuilder {
 

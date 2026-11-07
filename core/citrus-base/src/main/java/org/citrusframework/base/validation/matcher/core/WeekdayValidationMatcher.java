@@ -29,6 +29,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ControlExpressionParser;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 1.3.1
  */
+@SchemaType(description = "Validates that a formatted date falls on the expected weekday.")
 public class WeekdayValidationMatcher implements ParameterizedValidationMatcher<WeekdayValidationMatcher.Parameters>, ControlExpressionParser {
 
     /**

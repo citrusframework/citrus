@@ -18,6 +18,7 @@ package org.citrusframework.base.validation.matcher.core;
 
 import java.util.List;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -33,6 +34,7 @@ import org.citrusframework.validation.matcher.ValidationMatcherUtils;
  *
  * <p>Usage: {@code @not(contains('error'))@}</p>
  */
+@SchemaType(description = "Negates exactly one nested validation matcher expression.")
 public class NotValidationMatcher implements ValidationMatcher, ControlExpressionParser {
 
     @Override

@@ -23,7 +23,7 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
 
-@SchemaType(module = "citrus-vertx")
+@SchemaType(module = "citrus-vertx", description = "Exchanges synchronous request-reply messages through the Vert.x event bus.")
 @XmlType(name = "", propOrder = {})
 public class VertxSyncEndpointBuilder extends AbstractVertxEndpointBuilder<VertxSyncEndpoint, VertxSyncEndpointBuilder> {
 

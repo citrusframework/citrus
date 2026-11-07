@@ -26,7 +26,7 @@ import org.citrusframework.api.yaml.SchemaType;
 /**
  * @since 2.7.6
  */
-@SchemaType(module = "citrus-spring-integration")
+@SchemaType(module = "citrus-spring-integration", description = "Exchanges synchronous request-reply messages through a Spring Integration message channel.")
 @XmlType(name = "", propOrder = {})
 public class ChannelSyncEndpointBuilder extends AbstractChannelEndpointBuilder<ChannelSyncEndpoint, ChannelSyncEndpointBuilder> {
 

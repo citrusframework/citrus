@@ -16,6 +16,7 @@
 
 package org.citrusframework.base.validation.matcher.core;
 
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
  * Creates new variables from given field. Either uses field name or control value as variable name.
  * @since 2.0
  */
+@SchemaType(description = "Stores the received value in a test variable named after the field or a supplied name.")
 public class CreateVariableValidationMatcher implements ParameterizedValidationMatcher<OptionalStringParameter> {
 
     /** Logger */
