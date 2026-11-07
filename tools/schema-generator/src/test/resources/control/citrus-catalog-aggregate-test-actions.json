@@ -24042,6 +24042,65 @@
       },
       "additionalProperties": false    }
   },
+  "purgeChannels": {
+    "kind": "testAction",
+    "version": "${citrus.version}",
+    "name": "purgeChannels",
+    "module": "citrus-spring-integration",
+    "title": "PurgeChannels",
+    "description": "Purge message channel test action.",
+    "propertiesSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "actor": {
+          "type": "string",
+          "title": "Actor",
+          "description": "The test actor that executes the message channel purge action.",
+          "$comment": "group:advanced"
+        },
+        "channel": {
+          "type": "string",
+          "title": "Channel",
+          "description": "The message channel to purge."
+        },
+        "channelResolver": {
+          "type": "string",
+          "title": "ChannelResolver",
+          "description": "Reference to the destination resolver bean used to resolve channel names.",
+          "$comment": "group:advanced"
+        },
+        "channels": {
+          "title": "Channels",
+          "description": "List of message channels to purge.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "Channels",
+            "description": "List of message channels to purge."
+          }
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Test action description printed when the action is executed.",
+          "$comment": "group:advanced"
+        },
+        "messageSelector": {
+          "type": "string",
+          "title": "MessageSelector",
+          "description": "Reference to the message selector bean that decides which messages to purge.",
+          "$comment": "group:advanced"
+        },
+        "selector": {
+          "type": "string",
+          "title": "Selector",
+          "description": "Alias for messageSelector. Reference to the message selector bean that decides which messages to purge.",
+          "$comment": "group:advanced"
+        }
+      },
+      "additionalProperties": false    }
+  },
   "purgeQueues": {
     "kind": "testAction",
     "version": "${citrus.version}",

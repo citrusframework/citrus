@@ -21,6 +21,7 @@ import java.util.List;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
+import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.spring.context.SpringBeanReferenceResolver;
 import org.citrusframework.spi.ReferenceResolver;
@@ -40,30 +41,37 @@ public class PurgeChannels implements TestActionBuilder<TestAction>, ReferenceRe
 
     private ReferenceResolver referenceResolver;
 
+    @SchemaProperty(advanced = true, description = "Test action description printed when the action is executed.")
     public void setDescription(String value) {
         this.description = value;
     }
 
+    @SchemaProperty(advanced = true, description = "The test actor that executes the message channel purge action.")
     public void setActor(String actor) {
         this.actor = actor;
     }
 
+    @SchemaProperty(description = "The message channel to purge.")
     public void setChannel(String channel) {
         builder.channel(channel);
     }
 
+    @SchemaProperty(description = "List of message channels to purge.")
     public void setChannels(List<String> channels) {
         builder.channelNames(channels);
     }
 
+    @SchemaProperty(advanced = true, description = "Reference to the destination resolver bean used to resolve channel names.")
     public void setChannelResolver(String channelResolver) {
         this.channelResolver = channelResolver;
     }
 
+    @SchemaProperty(advanced = true, description = "Reference to the message selector bean that decides which messages to purge.")
     public void setMessageSelector(String messageSelector) {
         this.messageSelector = messageSelector;
     }
 
+    @SchemaProperty(advanced = true, description = "Alias for messageSelector. Reference to the message selector bean that decides which messages to purge.")
     public void setSelector(String messageSelector) {
         this.messageSelector = messageSelector;
     }
