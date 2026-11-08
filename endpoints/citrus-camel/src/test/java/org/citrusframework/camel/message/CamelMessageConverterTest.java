@@ -32,12 +32,12 @@ import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.util.StringUtils;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -45,14 +45,14 @@ import static org.mockito.Mockito.when;
 /**
  * @since 1.4.1
  */
-public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
+public class CamelMessageConverterTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private final ExtendedCamelContext extendedCamelContext = Mockito.mock(ExtendedCamelContext.class);
     private final CamelMessageConverter messageConverter = new CamelMessageConverter();
     private final CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
 
-    @BeforeClass
+    @BeforeEach
     void setupMocks() {
         endpointConfiguration.setCamelContext(camelContext);
 
@@ -68,8 +68,8 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         Exchange exchange = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
     }
 
     @Test
@@ -82,9 +82,9 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getPattern(), ExchangePattern.InOnly);
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals(ExchangePattern.InOnly, exchange.getPattern());
     }
 
     @Test
@@ -98,9 +98,9 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getPattern(), ExchangePattern.InOut);
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals(ExchangePattern.InOut, exchange.getPattern());
     }
 
     @Test
@@ -115,10 +115,10 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getException().getClass(), CitrusRuntimeException.class);
-        Assert.assertEquals(exchange.getException().getMessage(), "Something went wrong");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals(CitrusRuntimeException.class, exchange.getException().getClass());
+        Assertions.assertEquals("Something went wrong", exchange.getException().getMessage());
     }
 
     @Test
@@ -133,11 +133,11 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getException().getClass(), CamelExchangeException.class);
-        Assert.assertEquals(((CamelExchangeException) exchange.getException()).getExchange(), exchange);
-        Assert.assertEquals(exchange.getException().getMessage(), "Something went wrong. %s".formatted(exchange));
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals(CamelExchangeException.class, exchange.getException().getClass());
+        Assertions.assertEquals(((CamelExchangeException) exchange.getException()).getExchange(), exchange);
+        Assertions.assertEquals("Something went wrong. %s".formatted(exchange), exchange.getException().getMessage());
     }
 
     @Test
@@ -151,10 +151,10 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getException().getClass(), CitrusRuntimeException.class);
-        Assert.assertEquals(exchange.getException().getMessage(), "Something went wrong");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals(CitrusRuntimeException.class, exchange.getException().getClass());
+        Assertions.assertEquals("Something went wrong", exchange.getException().getMessage());
     }
 
     @Test
@@ -168,10 +168,10 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getException().getClass(), CamelException.class);
-        Assert.assertEquals(exchange.getException().getMessage(), "Something went completely wrong");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals(CamelException.class, exchange.getException().getClass());
+        Assertions.assertEquals("Something went completely wrong", exchange.getException().getMessage());
     }
 
     @Test
@@ -185,9 +185,9 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getProperty("foo_prop"), "bar");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals("bar", exchange.getProperty("foo_prop"));
     }
 
     @Test
@@ -202,10 +202,10 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getVariable("foo_var"), "bar");
-        Assert.assertEquals(exchange.getVariable("bar_var"), "baz");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals("bar", exchange.getVariable("foo_var"));
+        Assertions.assertEquals("baz", exchange.getVariable("bar_var"));
     }
 
     @Test
@@ -222,11 +222,11 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("additional"), "Something to add");
-        Assert.assertEquals(exchange.getProperty("foo_prop"), "bar");
-        Assert.assertEquals(exchange.getVariable("foo_var"), "baz");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals("Something to add", exchange.getIn().getHeaders().get("additional"));
+        Assertions.assertEquals("bar", exchange.getProperty("foo_prop"));
+        Assertions.assertEquals("baz", exchange.getVariable("foo_var"));
     }
 
     @Test
@@ -246,11 +246,11 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(exchange, message, endpointConfiguration, context);
 
-        Assert.assertEquals(exchange.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(exchange.getIn().getHeaders().get("additional"), "Something to add");
-        Assert.assertEquals(exchange.getProperty("foo_prop"), "bar");
-        Assert.assertEquals(exchange.getVariable("foo_var"), "baz");
+        Assertions.assertEquals("Hello from Citrus!", exchange.getIn().getBody());
+        Assertions.assertEquals("sayHello", exchange.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals("Something to add", exchange.getIn().getHeaders().get("additional"));
+        Assertions.assertEquals("bar", exchange.getProperty("foo_prop"));
+        Assertions.assertEquals("baz", exchange.getVariable("foo_var"));
     }
 
     @Test
@@ -266,11 +266,11 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         Exchange converted = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
-        Assert.assertEquals(converted, exchange);
-        Assert.assertEquals(converted.getIn().getBody(), "Hello from Citrus!");
-        Assert.assertEquals(converted.getIn().getHeaders().get("operation"), "sayHello");
-        Assert.assertEquals(converted.getProperty("foo_prop"), "bar");
-        Assert.assertEquals(converted.getVariable("foo_var"), "baz");
+        Assertions.assertEquals(exchange, converted);
+        Assertions.assertEquals("Hello from Citrus!", converted.getIn().getBody());
+        Assertions.assertEquals("sayHello", converted.getIn().getHeaders().get("operation"));
+        Assertions.assertEquals("bar", converted.getProperty("foo_prop"));
+        Assertions.assertEquals("baz", converted.getVariable("foo_var"));
     }
 
     @Test
@@ -282,11 +282,11 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
-        Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), false);
-        Assert.assertEquals(result.getHeader("operation"), "sayHello");
+        Assertions.assertEquals("Hello from Citrus!", result.getPayload());
+        Assertions.assertEquals(exchange.getExchangeId(), result.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assertions.assertEquals(ExchangePattern.InOnly.name(), result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assertions.assertEquals(false, result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
+        Assertions.assertEquals("sayHello", result.getHeader("operation"));
     }
 
     @Test
@@ -301,16 +301,16 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
-        Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_PROPERTIES).toString().contains("\"VerySpecialProperty\": \"bar\""));
-        Assert.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_PROPERTIES).toString().contains("\"SpecialProperty\": \"foo\""));
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_VARIABLES), "{}");
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), false);
-        Assert.assertEquals(result.getHeader("operation"), "sayHello");
-        Assert.assertEquals(result.getHeader("SpecialProperty"), "foo");
-        Assert.assertEquals(result.getHeader("VerySpecialProperty"), "bar");
+        Assertions.assertEquals("Hello from Citrus!", result.getPayload());
+        Assertions.assertEquals(exchange.getExchangeId(), result.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assertions.assertEquals(ExchangePattern.InOnly.name(), result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assertions.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_PROPERTIES).toString().contains("\"VerySpecialProperty\": \"bar\""));
+        Assertions.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_PROPERTIES).toString().contains("\"SpecialProperty\": \"foo\""));
+        Assertions.assertEquals("{}", result.getHeader(CamelMessageHeaders.EXCHANGE_VARIABLES));
+        Assertions.assertEquals(false, result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
+        Assertions.assertEquals("sayHello", result.getHeader("operation"));
+        Assertions.assertEquals("foo", result.getHeader("SpecialProperty"));
+        Assertions.assertEquals("bar", result.getHeader("VerySpecialProperty"));
     }
 
     @Test
@@ -325,16 +325,16 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
-        Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PROPERTIES), "{}");
-        Assert.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_VARIABLES).toString().contains("\"VerySpecialVariable\": \"bar\""));
-        Assert.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_VARIABLES).toString().contains("\"SpecialVariable\": \"foo\""));
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), false);
-        Assert.assertEquals(result.getHeader("operation"), "sayHello");
-        Assert.assertEquals(result.getHeader("SpecialVariable"), "foo");
-        Assert.assertEquals(result.getHeader("VerySpecialVariable"), "bar");
+        Assertions.assertEquals("Hello from Citrus!", result.getPayload());
+        Assertions.assertEquals(exchange.getExchangeId(), result.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assertions.assertEquals(ExchangePattern.InOnly.name(), result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assertions.assertEquals("{}", result.getHeader(CamelMessageHeaders.EXCHANGE_PROPERTIES));
+        Assertions.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_VARIABLES).toString().contains("\"VerySpecialVariable\": \"bar\""));
+        Assertions.assertTrue(result.getHeader(CamelMessageHeaders.EXCHANGE_VARIABLES).toString().contains("\"SpecialVariable\": \"foo\""));
+        Assertions.assertEquals(false, result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
+        Assertions.assertEquals("sayHello", result.getHeader("operation"));
+        Assertions.assertEquals("foo", result.getHeader("SpecialVariable"));
+        Assertions.assertEquals("bar", result.getHeader("VerySpecialVariable"));
     }
 
     @Test
@@ -347,12 +347,12 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
         Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
-        Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), true);
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION), CitrusRuntimeException.class.getName());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE), "Something went wrong");
-        Assert.assertEquals(result.getHeader("operation"), "sayHello");
+        Assertions.assertEquals("Hello from Citrus!", result.getPayload());
+        Assertions.assertEquals(exchange.getExchangeId(), result.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assertions.assertEquals(ExchangePattern.InOnly.name(), result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assertions.assertEquals(true, result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
+        Assertions.assertEquals(CitrusRuntimeException.class.getName(), result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION));
+        Assertions.assertEquals("Something went wrong", result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE));
+        Assertions.assertEquals("sayHello", result.getHeader("operation"));
     }
 }

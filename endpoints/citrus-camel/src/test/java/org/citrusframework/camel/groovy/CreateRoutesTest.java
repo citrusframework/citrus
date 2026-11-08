@@ -23,8 +23,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateRoutesTest extends AbstractGroovyActionDslTest {
 
@@ -41,19 +41,19 @@ public class CreateRoutesTest extends AbstractGroovyActionDslTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelCreateRouteTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateCamelRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:create-routes");
+        Assertions.assertEquals("CamelCreateRouteTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CreateCamelRouteAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:create-routes", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         CreateCamelRouteAction action = (CreateCamelRouteAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals(("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route id=\"route_1\">" +
                         "<from uri=\"direct:test1\"/>" +
                         "<to uri=\"mock:test1\"/>" +
@@ -62,17 +62,17 @@ public class CreateRoutesTest extends AbstractGroovyActionDslTest {
                         "<from uri=\"direct:test2\"/>" +
                         "<to uri=\"mock:test2\"/>" +
                     "</route>" +
-                "</routeContext>").replaceAll("\\s", ""));
-        Assert.assertEquals(action.getRoutes().size(), 0);
+                "</routeContext>").replaceAll("\\s", ""), action.getRouteSpec().replaceAll("\\s", ""));
+        Assertions.assertEquals(0, action.getRoutes().size());
 
         action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("<route>" +
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals(("<route>" +
                         "<from uri=\"direct:test3\"/>" +
                         "<to uri=\"mock:test3\"/>" +
-                    "</route>").replaceAll("\\s", ""));
-        Assert.assertEquals(action.getRoutes().size(), 0);
+                    "</route>").replaceAll("\\s", ""), action.getRouteSpec().replaceAll("\\s", ""));
+        Assertions.assertEquals(0, action.getRoutes().size());
 
     }
 }

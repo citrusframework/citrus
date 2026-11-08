@@ -19,32 +19,32 @@ package org.citrusframework.camel.endpoint;
 import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CamelEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("camel"));
-        Assert.assertTrue(endpointBuilders.containsKey("camel.sync"));
-        Assert.assertTrue(endpointBuilders.containsKey("camel.inOnly"));
-        Assert.assertTrue(endpointBuilders.containsKey("camel.async"));
-        Assert.assertTrue(endpointBuilders.containsKey("camel.inOut"));
+        Assertions.assertTrue(endpointBuilders.containsKey("camel"));
+        Assertions.assertTrue(endpointBuilders.containsKey("camel.sync"));
+        Assertions.assertTrue(endpointBuilders.containsKey("camel.inOnly"));
+        Assertions.assertTrue(endpointBuilders.containsKey("camel.async"));
+        Assertions.assertTrue(endpointBuilders.containsKey("camel.inOut"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("camel").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("camel").get().getClass(), CamelEndpointsBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("camel.sync").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("camel.sync").get().getClass(), CamelSyncEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("camel.inOut").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("camel.inOut").get().getClass(), CamelSyncEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("camel.async").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("camel.async").get().getClass(), CamelEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("camel.inOnly").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("camel.inOnly").get().getClass(), CamelEndpointBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("camel").isPresent());
+        Assertions.assertEquals(CamelEndpointsBuilder.class, EndpointBuilder.lookup("camel").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("camel.sync").isPresent());
+        Assertions.assertEquals(CamelSyncEndpointBuilder.class, EndpointBuilder.lookup("camel.sync").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("camel.inOut").isPresent());
+        Assertions.assertEquals(CamelSyncEndpointBuilder.class, EndpointBuilder.lookup("camel.inOut").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("camel.async").isPresent());
+        Assertions.assertEquals(CamelEndpointBuilder.class, EndpointBuilder.lookup("camel.async").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("camel.inOnly").isPresent());
+        Assertions.assertEquals(CamelEndpointBuilder.class, EndpointBuilder.lookup("camel.inOnly").get().getClass());
     }
 }

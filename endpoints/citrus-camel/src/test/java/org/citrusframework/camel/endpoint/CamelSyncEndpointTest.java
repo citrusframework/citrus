@@ -19,7 +19,6 @@ package org.citrusframework.camel.endpoint;
 import org.citrusframework.camel.message.CamelMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
@@ -31,15 +30,15 @@ import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
 import org.apache.camel.support.SimpleUuidGenerator;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
 /**
  * @since 1.4.1
  */
-public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
+public class CamelSyncEndpointTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private final ExtendedCamelContext extendedCamelContext = Mockito.mock(ExtendedCamelContext.class);
@@ -76,11 +75,11 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         camelEndpoint.createProducer().send(requestMessage, context);
         Message reply = camelEndpoint.createConsumer().receive(context, 5000L);
 
-        Assert.assertEquals(reply.getPayload(), "Hello from Camel!");
-        Assert.assertEquals(reply.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertNotNull(reply.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertNotNull(reply.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
-        Assert.assertEquals(reply.getHeader("operation"), "newsFeed");
+        Assertions.assertEquals("Hello from Camel!", reply.getPayload());
+        Assertions.assertEquals(exchange.getExchangeId(), reply.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assertions.assertNotNull(reply.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assertions.assertNotNull(reply.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
+        Assertions.assertEquals("newsFeed", reply.getHeader("operation"));
 
     }
 
@@ -113,16 +112,16 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         when(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).thenReturn(exchange);
 
         Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
-        Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
-        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_ID));
-        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
+        Assertions.assertEquals("Hello from Camel!", receivedMessage.getPayload());
+        Assertions.assertEquals("newsFeed", receivedMessage.getHeader("operation"));
+        Assertions.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assertions.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assertions.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
 
         camelEndpoint.createProducer().send(replyMessage, context);
 
-        Assert.assertEquals(exchange.getOut().getBody().toString(), replyMessage.getPayload());
-        Assert.assertEquals(exchange.getOut().getHeaders().get("operation"), "hello");
+        Assertions.assertEquals(replyMessage.getPayload(), exchange.getOut().getBody().toString());
+        Assertions.assertEquals("hello", exchange.getOut().getHeaders().get("operation"));
 
         verify(consumerTemplate).doneUoW(exchange);
     }
@@ -156,7 +155,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         when(messageListeners.isEmpty()).thenReturn(false);
         doAnswer(invocation -> {
             Message inboundMessage = (Message) invocation.getArguments()[0];
-            Assert.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
+            Assertions.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
             return null;
         }).when(messageListeners).onInboundMessage(any(Message.class), eq(context));
 

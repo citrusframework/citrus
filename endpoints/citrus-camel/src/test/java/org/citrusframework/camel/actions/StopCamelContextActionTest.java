@@ -23,11 +23,10 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.spi.Registry;
 import org.apache.camel.spi.ShutdownStrategy;
 import org.citrusframework.camel.CamelSettings;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -35,13 +34,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class StopCamelContextActionTest extends AbstractTestNGUnitTest {
+public class StopCamelContextActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final CamelContext camelContext = Mockito.mock(CamelContext.class);
     private final ShutdownStrategy shutdownStrategy = Mockito.mock(ShutdownStrategy.class);
     private final Registry registry = Mockito.mock(Registry.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         Mockito.reset(camelContext, shutdownStrategy, registry);
         when(camelContext.getRegistry()).thenReturn(registry);
@@ -60,7 +59,7 @@ public class StopCamelContextActionTest extends AbstractTestNGUnitTest {
 
         verify(camelContext).stop();
         verify(camelContext, never()).getShutdownStrategy();
-        Assert.assertFalse(action.isImmediate());
+        Assertions.assertFalse(action.isImmediate());
     }
 
     @Test
@@ -79,9 +78,9 @@ public class StopCamelContextActionTest extends AbstractTestNGUnitTest {
         verify(shutdownStrategy).setTimeUnit(TimeUnit.SECONDS);
         verify(camelContext).stop();
 
-        Assert.assertEquals(action.getTimeout(), 60L);
-        Assert.assertEquals(action.getContextName(), "myCamelContext");
-        Assert.assertFalse(action.isImmediate());
+        Assertions.assertEquals(60L, action.getTimeout());
+        Assertions.assertEquals("myCamelContext", action.getContextName());
+        Assertions.assertFalse(action.isImmediate());
     }
 
     @Test
@@ -101,17 +100,22 @@ public class StopCamelContextActionTest extends AbstractTestNGUnitTest {
         verify(shutdownStrategy).setTimeUnit(TimeUnit.SECONDS);
         verify(camelContext).stop();
 
-        Assert.assertTrue(action.isImmediate());
+        Assertions.assertTrue(action.isImmediate());
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test
     public void testStopContextWithException() throws Exception {
-        context.getReferenceResolver().bind(CamelSettings.getContextName(), camelContext);
-        Mockito.doThrow(new RuntimeException("Failed to stop")).when(camelContext).stop();
 
-        StopCamelContextAction action = new StopCamelContextAction.Builder()
-                .context(camelContext)
-                .build();
-        action.execute(context);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class, () -> {
+
+            context.getReferenceResolver().bind(CamelSettings.getContextName(), camelContext);
+            Mockito.doThrow(new RuntimeException("Failed to stop")).when(camelContext).stop();
+
+            StopCamelContextAction action = new StopCamelContextAction.Builder()
+                    .context(camelContext)
+                    .build();
+            action.execute(context);
+    
+        });
     }
 }

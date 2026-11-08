@@ -19,18 +19,18 @@ package org.citrusframework.camel.actions;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelException;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
+public class RemoveCamelRouteActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
 
@@ -70,59 +70,76 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*must be stopped.*")
+    @Test
     public void testRemoveRouteNotStopped() throws Exception {
-        reset(camelContext);
 
-        when(camelContext.getName()).thenReturn("camel_context");
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
-        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
-        when(camelContext.removeRoute("route_1")).thenReturn(true);
-        when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Started);
+            reset(camelContext);
 
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
-                .context(camelContext)
-                .routes("route_1", "route_2", "route_3")
-                .build();
-        action.execute(context);
+            when(camelContext.getName()).thenReturn("camel_context");
 
+            when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+            when(camelContext.removeRoute("route_1")).thenReturn(true);
+            when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Started);
+
+            RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                    .context(camelContext)
+                    .routes("route_1", "route_2", "route_3")
+                    .build();
+            action.execute(context);
+
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*must be stopped.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRemoveRouteWithFalseResult() throws Exception {
-        reset(camelContext);
 
-        when(camelContext.getName()).thenReturn("camel_context");
+        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
-        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
-        when(camelContext.removeRoute("route_1")).thenReturn(true);
-        when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
-        when(camelContext.removeRoute("route_2")).thenReturn(false);
+            reset(camelContext);
 
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
-                .context(camelContext)
-                .routes("route_1", "route_2", "route_3")
-                .build();
-        action.execute(context);
+            when(camelContext.getName()).thenReturn("camel_context");
 
+            when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+            when(camelContext.removeRoute("route_1")).thenReturn(true);
+            when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
+            when(camelContext.removeRoute("route_2")).thenReturn(false);
+
+            RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                    .context(camelContext)
+                    .routes("route_1", "route_2", "route_3")
+                    .build();
+            action.execute(context);
+
+    
+        });
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRemoveRouteWithException() throws Exception {
-        reset(camelContext);
 
-        when(camelContext.getName()).thenReturn("camel_context");
+        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
-        when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
-        when(camelContext.removeRoute("route_1")).thenReturn(true);
-        when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
-        doThrow(new CamelException("Failed to stop route")).when(camelContext).removeRoute("route_2");
+            reset(camelContext);
 
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
-                .context(camelContext)
-                .routes("route_1", "route_2", "route_3")
-                .build();
-        action.execute(context);
+            when(camelContext.getName()).thenReturn("camel_context");
 
+            when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+            when(camelContext.removeRoute("route_1")).thenReturn(true);
+            when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
+            doThrow(new CamelException("Failed to stop route")).when(camelContext).removeRoute("route_2");
+
+            RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                    .context(camelContext)
+                    .routes("route_1", "route_2", "route_3")
+                    .build();
+            action.execute(context);
+
+    
+        });
     }
 }

@@ -19,32 +19,34 @@ package org.citrusframework.camel.message;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.util.TypeConversionUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.ExpressionBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.processor.TransformProcessor;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import static org.citrusframework.camel.message.CamelMessageProcessor.Builder.process;
 
-public class CamelMessageProcessorTest extends AbstractTestNGUnitTest {
+@Isolated("Mutates global TypeConverter state via System properties")
+public class CamelMessageProcessorTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final CamelContext camelContext = new DefaultCamelContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setupTypeConverter() {
         System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, "camel");
         TypeConversionUtils.loadDefaultConverter();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void restoreTypeConverterDefault() {
+    @AfterAll
+    public static void restoreTypeConverterDefault() {
         System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, CitrusSettings.TYPE_CONVERTER_DEFAULT);
         TypeConversionUtils.loadDefaultConverter();
     }
@@ -60,8 +62,8 @@ public class CamelMessageProcessorTest extends AbstractTestNGUnitTest {
                 .setHeader("operation", "sayHello");
         messageProcessor.process(in, context);
 
-        Assert.assertEquals(in.getPayload(String.class), "Hello from Camel!");
-        Assert.assertEquals(in.getHeader("operation"), "sayHello");
+        Assertions.assertEquals("Hello from Camel!", in.getPayload(String.class));
+        Assertions.assertEquals("sayHello", in.getHeader("operation"));
     }
 
     @Test
@@ -75,7 +77,7 @@ public class CamelMessageProcessorTest extends AbstractTestNGUnitTest {
                 .setHeader("operation", "sayHello");
         messageProcessor.process(in, context);
 
-        Assert.assertEquals(in.getPayload(String.class), "sayHello");
-        Assert.assertEquals(in.getHeader("operation"), "sayHello");
+        Assertions.assertEquals("sayHello", in.getPayload(String.class));
+        Assertions.assertEquals("sayHello", in.getHeader("operation"));
     }
 }

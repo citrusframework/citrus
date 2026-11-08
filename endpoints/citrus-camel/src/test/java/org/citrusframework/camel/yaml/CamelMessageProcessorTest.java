@@ -30,8 +30,8 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CamelMessageProcessorTest extends AbstractYamlActionTest {
 
@@ -50,21 +50,21 @@ public class CamelMessageProcessorTest extends AbstractYamlActionTest {
         MessageQueue messageQueue = context.getReferenceResolver().resolve("messages", MessageQueue.class);
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelMessageProcessorTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 5L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals("CamelMessageProcessorTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(5L, result.getActionCount());
+        Assertions.assertEquals(SendMessageAction.class, result.getTestAction(0).getClass());
 
         Message receivedMessage = messageQueue.receive();
-        Assert.assertNotNull(receivedMessage);
-        Assert.assertTrue(receivedMessage.getPayload() instanceof InputStream);
-        Assert.assertEquals(FileUtils.readToString(receivedMessage.getPayload(InputStream.class)).trim(), "SGVsbG8gZnJvbSBDaXRydXMh");
+        Assertions.assertNotNull(receivedMessage);
+        Assertions.assertTrue(receivedMessage.getPayload() instanceof InputStream);
+        Assertions.assertEquals(FileUtils.readToString(receivedMessage.getPayload(InputStream.class)).trim(), "SGVsbG8gZnJvbSBDaXRydXMh");
 
         receivedMessage = messageQueue.receive();
-        Assert.assertNotNull(receivedMessage);
-        Assert.assertTrue(receivedMessage.getPayload() instanceof InputStream);
-        Assert.assertEquals(StringUtils.normalizeWhitespace(
+        Assertions.assertNotNull(receivedMessage);
+        Assertions.assertTrue(receivedMessage.getPayload() instanceof InputStream);
+        Assertions.assertEquals(StringUtils.normalizeWhitespace(
                 FileUtils.readToString(receivedMessage.getPayload(InputStream.class)), false, true), """
                 SGVs
                 bG8g
@@ -75,17 +75,17 @@ public class CamelMessageProcessorTest extends AbstractYamlActionTest {
                 """);
 
         receivedMessage = messageQueue.receive();
-        Assert.assertNotNull(receivedMessage);
-        Assert.assertTrue(receivedMessage.getPayload() instanceof InputStream);
-        Assert.assertEquals(FileUtils.readToString(receivedMessage.getPayload(InputStream.class)), "Hello from Citrus!");
+        Assertions.assertNotNull(receivedMessage);
+        Assertions.assertTrue(receivedMessage.getPayload() instanceof InputStream);
+        Assertions.assertEquals(FileUtils.readToString(receivedMessage.getPayload(InputStream.class)), "Hello from Citrus!");
 
         receivedMessage = messageQueue.receive();
-        Assert.assertNotNull(receivedMessage);
-        Assert.assertTrue(receivedMessage.getPayload() instanceof InputStream);
-        Assert.assertEquals(FileUtils.readToString(receivedMessage.getPayload(InputStream.class)), "Hello from Citrus!");
+        Assertions.assertNotNull(receivedMessage);
+        Assertions.assertTrue(receivedMessage.getPayload() instanceof InputStream);
+        Assertions.assertEquals(FileUtils.readToString(receivedMessage.getPayload(InputStream.class)), "Hello from Citrus!");
 
         receivedMessage = messageQueue.receive();
-        Assert.assertNotNull(receivedMessage);
-        Assert.assertEquals(receivedMessage.getPayload(String.class), "Citrus rocks!");
+        Assertions.assertNotNull(receivedMessage);
+        Assertions.assertEquals("Citrus rocks!", receivedMessage.getPayload(String.class));
     }
 }

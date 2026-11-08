@@ -22,8 +22,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.actions.StopCamelContextAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StopContextTest extends AbstractYamlActionTest {
 
@@ -46,25 +46,25 @@ public class StopContextTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelStopContextTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
+        Assertions.assertEquals("CamelStopContextTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
 
         StopCamelContextAction action = (StopCamelContextAction) result.getTestAction(0);
-        Assert.assertEquals(action.getClass(), StopCamelContextAction.class);
-        Assert.assertEquals(action.getName(), "camel:stop-context");
-        Assert.assertEquals(action.getContextName(), "defaultContext");
-        Assert.assertEquals(action.getTimeout(), -1L);
-        Assert.assertFalse(action.isImmediate());
+        Assertions.assertEquals(StopCamelContextAction.class, action.getClass());
+        Assertions.assertEquals("camel:stop-context", action.getName());
+        Assertions.assertEquals("defaultContext", action.getContextName());
+        Assertions.assertEquals(-1L, action.getTimeout());
+        Assertions.assertFalse(action.isImmediate());
 
         action = (StopCamelContextAction) result.getTestAction(1);
-        Assert.assertEquals(action.getContextName(), "timeoutContext");
-        Assert.assertEquals(action.getTimeout(), 60L);
-        Assert.assertFalse(action.isImmediate());
+        Assertions.assertEquals("timeoutContext", action.getContextName());
+        Assertions.assertEquals(60L, action.getTimeout());
+        Assertions.assertFalse(action.isImmediate());
 
         action = (StopCamelContextAction) result.getTestAction(2);
-        Assert.assertEquals(action.getContextName(), "immediateContext");
-        Assert.assertTrue(action.isImmediate());
+        Assertions.assertEquals("immediateContext", action.getContextName());
+        Assertions.assertTrue(action.isImmediate());
     }
 }

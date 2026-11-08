@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class InfraServiceUtilsTest {
 
@@ -37,8 +37,8 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(kafka);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", null);
-        Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(result.get(), kafka);
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(kafka, result.get());
     }
 
     @Test
@@ -47,8 +47,8 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(kafka);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", null);
-        Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(result.get(), kafka);
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(kafka, result.get());
     }
 
     @Test
@@ -57,8 +57,8 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(redpanda);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", "redpanda");
-        Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(result.get(), redpanda);
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(redpanda, result.get());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(kafka);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "redis", null);
-        Assert.assertFalse(result.isPresent());
+        Assertions.assertFalse(result.isPresent());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(redpanda);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", "strimzi");
-        Assert.assertFalse(result.isPresent());
+        Assertions.assertFalse(result.isPresent());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(kafka);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", "redpanda");
-        Assert.assertFalse(result.isPresent());
+        Assertions.assertFalse(result.isPresent());
     }
 
     @Test
@@ -94,13 +94,13 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(redpanda);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", null);
-        Assert.assertFalse(result.isPresent());
+        Assertions.assertFalse(result.isPresent());
     }
 
     @Test
     public void shouldReturnEmptyForEmptyServiceList() {
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(Collections.emptyList(), "kafka", null);
-        Assert.assertFalse(result.isPresent());
+        Assertions.assertFalse(result.isPresent());
     }
 
     @Test
@@ -110,8 +110,8 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(first, second);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", null);
-        Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(result.get(), first);
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(first, result.get());
     }
 
     @Test
@@ -119,8 +119,8 @@ public class InfraServiceUtilsTest {
         InfraService service = infraService("org.acme.InfraService", "org.acme.InfraServiceImpl", List.of("dynamodb", "dynamo-db"), null);
         List<InfraService> services = List.of(service);
 
-        Assert.assertTrue(InfraServiceUtils.resolveInfraService(services, "dynamodb", null).isPresent());
-        Assert.assertTrue(InfraServiceUtils.resolveInfraService(services, "dynamo-db", null).isPresent());
+        Assertions.assertTrue(InfraServiceUtils.resolveInfraService(services, "dynamodb", null).isPresent());
+        Assertions.assertTrue(InfraServiceUtils.resolveInfraService(services, "dynamo-db", null).isPresent());
     }
 
     @Test
@@ -129,12 +129,12 @@ public class InfraServiceUtilsTest {
         List<InfraService> services = List.of(kafka);
 
         Optional<InfraService> result = InfraServiceUtils.resolveInfraService(services, "kafka", "");
-        Assert.assertFalse(result.isPresent());
+        Assertions.assertFalse(result.isPresent());
     }
 
     @Test
     public void shouldListInfraServices() {
-        Assert.assertEquals(InfraServiceUtils.getInfraServiceNames().stream().sorted().collect(Collectors.joining("\n")), """
+        Assertions.assertEquals(InfraServiceUtils.getInfraServiceNames().stream().sorted().collect(Collectors.joining("\n")), """
              arangodb
              artemis
              artemis.amqp

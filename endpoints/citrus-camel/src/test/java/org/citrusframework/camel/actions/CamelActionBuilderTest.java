@@ -22,21 +22,21 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CamelActionBuilderTest {
 
     private CamelActionBuilder fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
         fixture = new CamelActionBuilder();
     }
@@ -47,7 +47,7 @@ public class CamelActionBuilderTest {
         assertTrue(endpointBuilders.containsKey("camel"));
 
         assertTrue(TestActionBuilder.lookup("camel").isPresent());
-        assertEquals(TestActionBuilder.lookup("camel").get().getClass(), CamelActionBuilder.class);
+        assertEquals(CamelActionBuilder.class, TestActionBuilder.lookup("camel").get().getClass());
     }
 
     @Test

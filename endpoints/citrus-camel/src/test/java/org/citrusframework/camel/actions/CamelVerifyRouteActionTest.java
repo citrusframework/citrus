@@ -21,15 +21,15 @@ import org.apache.camel.ServiceStatus;
 import org.apache.camel.spi.RouteController;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class CamelVerifyRouteActionTest extends AbstractTestNGUnitTest {
+public class CamelVerifyRouteActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private final RouteController routeController = Mockito.mock(RouteController.class);
@@ -49,19 +49,25 @@ public class CamelVerifyRouteActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = ".*does not exist.*")
+    @Test
     public void testVerifyRouteNotExists() {
-        reset(camelContext);
 
-        when(camelContext.getName()).thenReturn("camel_context");
-        when(camelContext.getRoute("unknown_route")).thenReturn(null);
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
-        CamelVerifyRouteAction action = new CamelVerifyRouteAction.Builder()
-                .context(camelContext)
-                .route("unknown_route")
-                .build();
-        action.execute(context);
+            reset(camelContext);
+
+            when(camelContext.getName()).thenReturn("camel_context");
+            when(camelContext.getRoute("unknown_route")).thenReturn(null);
+
+            CamelVerifyRouteAction action = new CamelVerifyRouteAction.Builder()
+                    .context(camelContext)
+                    .route("unknown_route")
+                    .build();
+            action.execute(context);
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*does not exist.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -98,21 +104,26 @@ public class CamelVerifyRouteActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testVerifyRouteStatusMismatch() {
-        reset(camelContext, routeController);
 
-        when(camelContext.getName()).thenReturn("camel_context");
-        when(camelContext.getRoute("route_1")).thenReturn(route);
-        when(camelContext.getRouteController()).thenReturn(routeController);
-        when(routeController.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
 
-        CamelVerifyRouteAction action = new CamelVerifyRouteAction.Builder()
-                .context(camelContext)
-                .route("route_1")
-                .status(ServiceStatus.Started)
-                .build();
-        action.execute(context);
+            reset(camelContext, routeController);
+
+            when(camelContext.getName()).thenReturn("camel_context");
+            when(camelContext.getRoute("route_1")).thenReturn(route);
+            when(camelContext.getRouteController()).thenReturn(routeController);
+            when(routeController.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
+
+            CamelVerifyRouteAction action = new CamelVerifyRouteAction.Builder()
+                    .context(camelContext)
+                    .route("route_1")
+                    .status(ServiceStatus.Started)
+                    .build();
+            action.execute(context);
+    
+        });
     }
 
     @Test

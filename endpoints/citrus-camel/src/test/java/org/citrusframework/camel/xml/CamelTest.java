@@ -17,14 +17,14 @@
 package org.citrusframework.camel.xml;
 
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CamelTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("camel").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("camel").get().getClass(), Camel.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("camel").isPresent());
+        Assertions.assertEquals(Camel.class, XmlTestActionBuilder.lookup("camel").get().getClass());
     }
 }

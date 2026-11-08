@@ -20,10 +20,10 @@ import java.util.Map;
 
 import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.citrusframework.camel.UnitTestSupport;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CamelComponentPropertyResolverTest extends UnitTestSupport {
 
@@ -39,8 +39,8 @@ public class CamelComponentPropertyResolverTest extends UnitTestSupport {
         Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
                 KAFKA_ROUTE, new DefaultCamelCatalog(), context);
 
-        assertEquals(properties.size(), 1);
-        assertEquals(properties.get("camel.component.kafka.brokers"), "localhost:9092");
+        assertEquals(1, properties.size());
+        assertEquals("localhost:9092", properties.get("camel.component.kafka.brokers"));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class CamelComponentPropertyResolverTest extends UnitTestSupport {
         Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
                 "from(\"pulsar:topic\")", new DefaultCamelCatalog(), context);
 
-        assertEquals(properties.get("camel.component.pulsar.serviceUrl"), "pulsar://localhost:6650");
+        assertEquals("pulsar://localhost:6650", properties.get("camel.component.pulsar.serviceUrl"));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class CamelComponentPropertyResolverTest extends UnitTestSupport {
         Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
                 "from(\"nats:topic\")", new DefaultCamelCatalog(), context);
 
-        assertEquals(properties.get("camel.component.nats.servers"), "localhost:4222");
+        assertEquals("localhost:4222", properties.get("camel.component.nats.servers"));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class CamelComponentPropertyResolverTest extends UnitTestSupport {
         Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
                 "from(\"elasticsearch:demo?operation=search\")", new DefaultCamelCatalog(), context);
 
-        assertEquals(properties.get("camel.component.elasticsearch.hostAddresses"), "localhost");
+        assertEquals("localhost", properties.get("camel.component.elasticsearch.hostAddresses"));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class CamelComponentPropertyResolverTest extends UnitTestSupport {
         Map<String, String> properties = CamelComponentPropertyResolver.resolveProperties(
                 KAFKA_ROUTE, new DefaultCamelCatalog(), context);
 
-        assertEquals(properties.get("camel.component.kafka.brokers"), "localhost:9092");
+        assertEquals("localhost:9092", properties.get("camel.component.kafka.brokers"));
     }
 
     @Test

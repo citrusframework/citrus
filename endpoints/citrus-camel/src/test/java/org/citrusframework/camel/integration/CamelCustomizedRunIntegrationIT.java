@@ -16,35 +16,38 @@
 
 package org.citrusframework.camel.integration;
 
-import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.TestNGCitrusSupport;
 import org.citrusframework.util.TestUtils;
-import org.testng.SkipException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-public class CamelCustomizedRunIntegrationIT extends TestNGCitrusSupport implements TestActionSupport {
+@Isolated("Fresh Spring context per run registers duplicate camelContext JMX MBean under parallel classes")
+@CitrusSupport
+public class CamelCustomizedRunIntegrationIT implements TestActionSupport {
 
     @Test
     @CitrusTest
-    public void runCustomIntegrationWithResourceIT() {
+    public void runCustomIntegrationWithResourceIT(@CitrusResource TestCaseRunner runner) {
+        Assumptions.assumeTrue(TestUtils.isNetworkReachable(),
+                "Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
 
-        if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
-        }
-
-        given(doFinally().actions(
+        runner.given(doFinally().actions(
             catchException().actions(camel().cli().stop().integration("route"))
         ));
 
-        when(camel().cli()
+        runner.when(camel().cli()
                 .custom("run", "--name", "route")
                 .processName("route")
                 .addResource(Resources.fromClasspath("route.yaml", CamelCustomizedRunIntegrationIT.class))
                 .withEnv("GREETING", "Hello Camel"));
 
-        then(camel().cli()
+        runner.then(camel().cli()
                 .verify()
                 .integration("route")
                 .waitForLogMessage("HELLO CAMEL #10"));

@@ -23,19 +23,20 @@ import java.util.Map;
 import org.apache.camel.catalog.CamelCatalog;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogModifier;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class CamelRunInfraActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final String infraServices = """
     [
@@ -77,12 +78,11 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
     @Mock
     private CamelCatalog catalog;
 
-    @BeforeClass
+    @BeforeEach
     public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void init() {
         when(catalog.loadResource("test-infra", "metadata.json")).thenReturn(new ByteArrayInputStream(infraServices.getBytes(StandardCharsets.UTF_8)));
     }
@@ -96,24 +96,24 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_SERVER_URL"), "tcp://my-host:18088");
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_HOST"), "my-host");
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PORT", Integer.class), 18088);
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PASSWORD"), "secret");
-        Assert.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_FAULT_TOLERANT", Boolean.class));
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_CONNECTION_PROPERTIES", Map.class), Map.of("foo", "bar", "baz.value", "quux"));
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_FOO"), "bar");
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_BAZ_VALUE"), "quux");
+        Assertions.assertEquals("tcp://my-host:18088", context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_SERVER_URL"));
+        Assertions.assertEquals("my-host", context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_HOST"));
+        Assertions.assertEquals(18088, context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PORT", Integer.class));
+        Assertions.assertEquals("secret", context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PASSWORD"));
+        Assertions.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_FAULT_TOLERANT", Boolean.class));
+        Assertions.assertEquals(Map.of("foo", "bar", "baz.value", "quux"), context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_CONNECTION_PROPERTIES", Map.class));
+        Assertions.assertEquals("bar", context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_FOO"));
+        Assertions.assertEquals("quux", context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_BAZ_VALUE"));
 
         MyServiceImpl myService = context.getVariable("citrus.camel.infra.my-service", MyServiceImpl.class);
-        Assert.assertTrue(myService.initialized.get());
-        Assert.assertFalse(myService.shutdown.get());
+        Assertions.assertTrue(myService.initialized.get());
+        Assertions.assertFalse(myService.shutdown.get());
 
         InfraService meta = context.getVariable("citrus.camel.infra.my-service:meta", InfraService.class);
-        Assert.assertEquals(meta.version(), "1.0");
+        Assertions.assertEquals("1.0", meta.version());
 
-        Assert.assertEquals(context.getFinalActions().size(), 1);
-        Assert.assertEquals(context.getFinalActions().iterator().next().getClass(), CamelStopInfraAction.Builder.class);
+        Assertions.assertEquals(1, context.getFinalActions().size());
+        Assertions.assertEquals(CamelStopInfraAction.Builder.class, context.getFinalActions().iterator().next().getClass());
     }
 
     @Test
@@ -126,22 +126,22 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_SERVER_URL"), "tcp://my-host:18088");
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_HOST"), "my-host");
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PORT", Integer.class), 18088);
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PASSWORD"), "secret");
-        Assert.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_FAULT_TOLERANT", Boolean.class));
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_CONNECTION_PROPERTIES", Map.class), Map.of("foo", "bar", "baz.value", "quux"));
+        Assertions.assertEquals("tcp://my-host:18088", context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_SERVER_URL"));
+        Assertions.assertEquals("my-host", context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_HOST"));
+        Assertions.assertEquals(18088, context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PORT", Integer.class));
+        Assertions.assertEquals("secret", context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PASSWORD"));
+        Assertions.assertFalse(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_FAULT_TOLERANT", Boolean.class));
+        Assertions.assertEquals(Map.of("foo", "bar", "baz.value", "quux"), context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_CONNECTION_PROPERTIES", Map.class));
 
 
         MyServiceImpl myService = context.getVariable("citrus.camel.infra.service.two", MyServiceImpl.class);
-        Assert.assertTrue(myService.initialized.get());
-        Assert.assertFalse(myService.shutdown.get());
+        Assertions.assertTrue(myService.initialized.get());
+        Assertions.assertFalse(myService.shutdown.get());
 
         InfraService meta = context.getVariable("citrus.camel.infra.service.two:meta", InfraService.class);
-        Assert.assertEquals(meta.version(), "1.0");
+        Assertions.assertEquals("1.0", meta.version());
 
-        Assert.assertEquals(context.getFinalActions().size(), 0);
+        Assertions.assertEquals(0, context.getFinalActions().size());
     }
 
     @Test
@@ -159,23 +159,37 @@ public class CamelRunInfraActionTest extends AbstractTestNGUnitTest {
         verify(modifier).mask("CITRUS_CAMEL_INFRA_MY_SERVICE_PASSWORD='secret'");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to resolve Camel infra service for 'unknown'")
+    @Test
     public void testRunInfraNotFound() {
-        CamelRunInfraAction action = new CamelRunInfraAction.Builder()
-                .service("unknown")
-                .catalog(catalog)
-                .build();
 
-        action.execute(context);
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+
+            CamelRunInfraAction action = new CamelRunInfraAction.Builder()
+                    .service("unknown")
+                    .catalog(catalog)
+                    .build();
+
+            action.execute(context);
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'unknown'"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to resolve Camel infra service for 'service.unknown'")
+    @Test
     public void testRunInfraImplementationNotFound() {
-        CamelRunInfraAction action = new CamelRunInfraAction.Builder()
-                .service("service", "unknown")
-                .catalog(catalog)
-                .build();
 
-        action.execute(context);
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+
+            CamelRunInfraAction action = new CamelRunInfraAction.Builder()
+                    .service("service", "unknown")
+                    .catalog(catalog)
+                    .build();
+
+            action.execute(context);
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'service.unknown'"), "Unexpected exception message: " + thrown.getMessage());
     }
 }

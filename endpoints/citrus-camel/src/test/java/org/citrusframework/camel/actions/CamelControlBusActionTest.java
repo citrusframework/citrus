@@ -17,7 +17,6 @@
 package org.citrusframework.camel.actions;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
@@ -28,15 +27,15 @@ import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
 import org.apache.camel.support.SimpleUuidGenerator;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
+public class CamelControlBusActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private final ExtendedCamelContext extendedCamelContext = Mockito.mock(ExtendedCamelContext.class);
@@ -121,30 +120,35 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testControlBusRouteActionWithResultFailed() {
-        String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
-        DefaultMessage message = new DefaultMessage(camelContext);
-        message.setBody("Started");
-        Exchange exchange = new DefaultExchange(camelContext);
-        exchange.setIn(message);
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
 
-        reset(camelContext, producerTemplate);
+            String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
-        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
-        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
-        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
-        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
+            DefaultMessage message = new DefaultMessage(camelContext);
+            message.setBody("Started");
+            Exchange exchange = new DefaultExchange(camelContext);
+            exchange.setIn(message);
 
-        CamelControlBusAction action = new CamelControlBusAction.Builder()
-                .context(camelContext)
-                .route("route_1", "status")
-                .result("Stopped")
-                .build();
-        action.execute(context);
+            reset(camelContext, producerTemplate);
 
+            when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+            when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+            when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+            when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
+            when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
+
+            CamelControlBusAction action = new CamelControlBusAction.Builder()
+                    .context(camelContext)
+                    .route("route_1", "status")
+                    .result("Stopped")
+                    .build();
+            action.execute(context);
+
+    
+        });
     }
 
     @Test
@@ -192,7 +196,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
             Processor processor = (Processor) invocation.getArguments()[1];
             processor.process(exchange);
 
-            Assert.assertEquals(exchange.getIn().getBody().toString(), "${camelContext.getRouteStatus('myRoute')}");
+            Assertions.assertEquals("${camelContext.getRouteStatus('myRoute')}", exchange.getIn().getBody().toString());
             exchange.getIn().setBody("Started");
             return exchange;
         });
@@ -222,7 +226,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
             Processor processor = (Processor) invocation.getArguments()[1];
             processor.process(exchange);
 
-            Assert.assertEquals(exchange.getIn().getBody().toString(), "${camelContext.getRouteStatus('myRoute')}");
+            Assertions.assertEquals("${camelContext.getRouteStatus('myRoute')}", exchange.getIn().getBody().toString());
             exchange.getIn().setBody("Started");
             return exchange;
         });

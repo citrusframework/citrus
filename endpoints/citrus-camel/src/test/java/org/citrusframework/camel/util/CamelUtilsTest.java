@@ -21,23 +21,20 @@ import org.apache.camel.support.SimpleRegistry;
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.context.CamelReferenceResolver;
 import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class CamelUtilsTest extends UnitTestSupport {
 
     @Mock
     private CamelContext camelContext;
-
-    @BeforeClass
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testCamelBeanPropagation() {
@@ -56,7 +53,7 @@ public class CamelUtilsTest extends UnitTestSupport {
         endpointConfiguration.setEndpointUri("direct:test?otherProp=foo&factory=#myBean&anotherProp=bar");
         CamelUtils.resolveEndpointUri(context, endpointConfiguration);
 
-        Assert.assertEquals(registry.lookupByName("myBean"), myBean);
+        assertEquals(myBean, registry.lookupByName("myBean"));
     }
 
     @Test
@@ -73,7 +70,7 @@ public class CamelUtilsTest extends UnitTestSupport {
         endpointConfiguration.setEndpointUri("direct:test?otherProp=foo&factory=#myBean&anotherProp=bar");
         CamelUtils.resolveEndpointUri(context, endpointConfiguration);
 
-        Assert.assertNull(registry.lookupByName("myBean"));
+        assertNull(registry.lookupByName("myBean"));
     }
 
     @Test
@@ -96,6 +93,6 @@ public class CamelUtilsTest extends UnitTestSupport {
         endpointConfiguration.setEndpointUri("direct:test?otherProp=foo&factory=#myBean&anotherProp=bar");
         CamelUtils.resolveEndpointUri(context, endpointConfiguration);
 
-        Assert.assertEquals(registry.lookupByName("myBean"), existingBean);
+        assertEquals(existingBean, registry.lookupByName("myBean"));
     }
 }

@@ -24,14 +24,17 @@ import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.message.Message;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class CamelCmdReceiveActionTest extends UnitTestSupport {
 
     @Mock
@@ -43,10 +46,9 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
     @Mock
     private Process process;
 
-    @BeforeTest
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(pao.getProcess()).thenReturn(process);
+        lenient().when(pao.getProcess()).thenReturn(process);
     }
 
     @Test
@@ -69,13 +71,13 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
            "0",
            "--logging-color=false"
         };
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
         when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
             String[] args = (String[]) invocation.getRawArguments()[0];
-            Assert.assertEquals(args, expectedArgs);
+            Assertions.assertArrayEquals(expectedArgs, args);
             return pao;
         });
 
@@ -127,13 +129,13 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
            "--pretty",
            "--logging-color=false"
         };
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
         when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
             String[] args = (String[]) invocation.getRawArguments()[0];
-            Assert.assertEquals(args, expectedArgs, Arrays.toString(args));
+            Assertions.assertArrayEquals(expectedArgs, args, Arrays.toString(args));
             return pao;
         });
 
@@ -149,14 +151,14 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         action.execute(context);
 
         Message storedMessage = context.getMessageStore().getMessage("my-route.message");
-        Assert.assertNotNull(storedMessage);
-        Assert.assertTrue(storedMessage.getPayload(String.class).contains("Hello"));
-        Assert.assertTrue(storedMessage.getPayload(String.class).startsWith("{"));
+        Assertions.assertNotNull(storedMessage);
+        Assertions.assertTrue(storedMessage.getPayload(String.class).contains("Hello"));
+        Assertions.assertTrue(storedMessage.getPayload(String.class).startsWith("{"));
 
         storedMessage = context.getMessageStore().getMessage("my-route.jms:queue:foo");
-        Assert.assertNotNull(storedMessage);
-        Assert.assertTrue(storedMessage.getPayload(String.class).contains("Hello"));
-        Assert.assertTrue(storedMessage.getPayload(String.class).startsWith("{"));
+        Assertions.assertNotNull(storedMessage);
+        Assertions.assertTrue(storedMessage.getPayload(String.class).contains("Hello"));
+        Assertions.assertTrue(storedMessage.getPayload(String.class).startsWith("{"));
     }
 
     @Test
@@ -215,13 +217,13 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
            "--pretty",
            "--logging-color=false"
         };
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
         when(pao.getOutput()).thenReturn(output);
         when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
             String[] args = (String[]) invocation.getRawArguments()[0];
-            Assert.assertEquals(args, expectedArgs, Arrays.toString(args));
+            Assertions.assertArrayEquals(expectedArgs, args, Arrays.toString(args));
             return pao;
         });
 
@@ -237,62 +239,72 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         action.execute(context);
 
         Message storedMessage = context.getMessageStore().getMessage("my-route.message");
-        Assert.assertNotNull(storedMessage);
-        Assert.assertTrue(storedMessage.getPayload(String.class).contains("Last message"));
-        Assert.assertTrue(storedMessage.getPayload(String.class).startsWith("{"));
+        Assertions.assertNotNull(storedMessage);
+        Assertions.assertTrue(storedMessage.getPayload(String.class).contains("Last message"));
+        Assertions.assertTrue(storedMessage.getPayload(String.class).startsWith("{"));
     }
 
-    @Test(expectedExceptions = ActionTimeoutException.class)
+    @Test
     public void shouldTimeoutWhenNoMessage() {
-        String output = """
-        Starting to receive messages from existing Camel: my-route (pid: 12345)
-        Waiting for messages ...
-        """;
 
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> {
 
-        when(pao.getOutput()).thenReturn(output);
-        when(camelCli.receive(any(String[].class))).thenReturn(pao);
+            String output = """
+            Starting to receive messages from existing Camel: my-route (pid: 12345)
+            Waiting for messages ...
+            """;
 
-        context.getReferenceResolver().bind("camelCli", camelCli);
+            lenient().when(process.isAlive()).thenReturn(true);
+            lenient().when(process.exitValue()).thenReturn(0);
 
-        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
-                .integration("my-route")
-                .endpoint("jms:queue:foo")
-                .maxAttempts(3)
-                .delayBetweenAttempts(1000L)
-                .withReferenceResolver(context.getReferenceResolver())
-                .build();
+            lenient().when(pao.getOutput()).thenReturn(output);
+            when(camelCli.receive(any(String[].class))).thenReturn(pao);
 
-        action.execute(context);
+            context.getReferenceResolver().bind("camelCli", camelCli);
+
+            CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                    .integration("my-route")
+                    .endpoint("jms:queue:foo")
+                    .maxAttempts(3)
+                    .delayBetweenAttempts(1000L)
+                    .withReferenceResolver(context.getReferenceResolver())
+                    .build();
+
+            action.execute(context);
+    
+        });
     }
 
-    @Test(expectedExceptions = ActionTimeoutException.class)
+    @Test
     public void shouldTimeoutWhenNoMessageJsonOutput() {
-        String output = """
-        Starting to receive messages from existing Camel: my-route (pid: 12345)
-        Waiting for messages ...
-        """;
 
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> {
 
-        when(pao.getOutput()).thenReturn(output);
-        when(camelCli.receive(any(String[].class))).thenReturn(pao);
+            String output = """
+            Starting to receive messages from existing Camel: my-route (pid: 12345)
+            Waiting for messages ...
+            """;
 
-        context.getReferenceResolver().bind("camelCli", camelCli);
+            lenient().when(process.isAlive()).thenReturn(true);
+            lenient().when(process.exitValue()).thenReturn(0);
 
-        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
-                .integration("my-route")
-                .endpoint("jms:queue:foo")
-                .maxAttempts(3)
-                .delayBetweenAttempts(1000L)
-                .jsonOutput(true)
-                .withReferenceResolver(context.getReferenceResolver())
-                .build();
+            lenient().when(pao.getOutput()).thenReturn(output);
+            when(camelCli.receive(any(String[].class))).thenReturn(pao);
 
-        action.execute(context);
+            context.getReferenceResolver().bind("camelCli", camelCli);
+
+            CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                    .integration("my-route")
+                    .endpoint("jms:queue:foo")
+                    .maxAttempts(3)
+                    .delayBetweenAttempts(1000L)
+                    .jsonOutput(true)
+                    .withReferenceResolver(context.getReferenceResolver())
+                    .build();
+
+            action.execute(context);
+    
+        });
     }
 
 }

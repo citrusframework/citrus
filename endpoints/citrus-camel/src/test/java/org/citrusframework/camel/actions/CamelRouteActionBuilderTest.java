@@ -1,16 +1,16 @@
 package org.citrusframework.camel.actions;
 
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CamelRouteActionBuilderTest {
 
     private CamelRouteActionBuilder fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethod() {
         fixture = new CamelRouteActionBuilder();
     }

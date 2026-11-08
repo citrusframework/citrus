@@ -23,8 +23,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateRoutesTest extends AbstractXmlActionTest {
 
@@ -41,43 +41,43 @@ public class CreateRoutesTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelCreateRouteTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateCamelRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:create-routes");
+        Assertions.assertEquals("CamelCreateRouteTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
+        Assertions.assertEquals(CreateCamelRouteAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:create-routes", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         CreateCamelRouteAction action = (CreateCamelRouteAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertNull(action.getRouteSpec());
-        Assert.assertNotNull(action.getRoutes());
-        Assert.assertEquals(action.getRoutes().size(), 2L);
-        Assert.assertEquals(action.getRoutes().get(0).getRouteId(), "route_1");
-        Assert.assertEquals(action.getRoutes().get(1).getRouteId(), "route_2");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertNull(action.getRouteSpec());
+        Assertions.assertNotNull(action.getRoutes());
+        Assertions.assertEquals(2L, action.getRoutes().size());
+        Assertions.assertEquals("route_1", action.getRoutes().get(0).getRouteId());
+        Assertions.assertEquals("route_2", action.getRoutes().get(1).getRouteId());
 
         action = (CreateCamelRouteAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertNull(action.getRouteSpec());
-        Assert.assertNotNull(action.getRoutes());
-        Assert.assertEquals(action.getRoutes().size(), 1L);
-        Assert.assertEquals(action.getRoutes().get(0).getEndpointUrl(), "direct:test3");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertNull(action.getRouteSpec());
+        Assertions.assertNotNull(action.getRoutes());
+        Assertions.assertEquals(1L, action.getRoutes().size());
+        Assertions.assertEquals("direct:test3", action.getRoutes().get(0).getEndpointUrl());
 
         action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("""
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals(("""
           - from:
               uri: direct:test4
               steps:
                 - to:
                     uri: mock:test4
-        """).replaceAll("\\s", ""));
-        Assert.assertNotNull(action.getRoutes());
-        Assert.assertEquals(action.getRoutes().size(), 0L);
+        """).replaceAll("\\s", ""), action.getRouteSpec().replaceAll("\\s", ""));
+        Assertions.assertNotNull(action.getRoutes());
+        Assertions.assertEquals(0L, action.getRoutes().size());
     }
 }

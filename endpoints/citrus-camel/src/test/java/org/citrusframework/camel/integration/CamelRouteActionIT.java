@@ -19,18 +19,24 @@ package org.citrusframework.camel.integration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
-import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class CamelRouteActionIT implements TestActionSupport {
 
     @Autowired
     private CamelContext camelContext;
@@ -39,8 +45,8 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements Tes
 
     @Test
     @CitrusTest
-    public void shouldCreateRoutes() {
-        given(camel().camelContext(camelContext)
+    public void shouldCreateRoutes(@CitrusResource TestCaseRunner runner) {
+        runner.given(camel().camelContext(camelContext)
             .route()
             .create(new RouteBuilder() {
                 @Override
@@ -51,17 +57,17 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements Tes
                 }
             }));
 
-        when(send(camel.endpoint(direct("messages")::getRawUri))
+        runner.when(send(camel.endpoint(direct("messages")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
 
-        then(receive(camel.endpoint(seda("words")::getRawUri))
+        runner.then(receive(camel.endpoint(seda("words")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus"));
 
-        then(receive(camel.endpoint(seda("words")::getRawUri))
+        runner.then(receive(camel.endpoint(seda("words")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("rocks!"));
@@ -69,8 +75,8 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements Tes
 
     @Test
     @CitrusTest
-    public void shouldStartStopRoutes() {
-        given(camel().camelContext(camelContext)
+    public void shouldStartStopRoutes(@CitrusResource TestCaseRunner runner) {
+        runner.given(camel().camelContext(camelContext)
                 .route()
                 .create(new RouteBuilder() {
                     @Override
@@ -83,33 +89,33 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport implements Tes
                     }
                 }));
 
-        given(camel().camelContext(camelContext)
+        runner.given(camel().camelContext(camelContext)
                 .controlBus()
                 .route("split-text")
                 .status()
                 .result(ServiceStatus.Stopped));
 
-        when(camel().camelContext(camelContext)
+        runner.when(camel().camelContext(camelContext)
                 .route()
                 .start("split-text"));
 
-        then(camel().camelContext(camelContext)
+        runner.then(camel().camelContext(camelContext)
                 .controlBus()
                 .route("split-text")
                 .status()
                 .result(ServiceStatus.Started));
 
-        when(camel().camelContext(camelContext)
+        runner.when(camel().camelContext(camelContext)
                 .route()
                 .stop("split-text"));
 
-        then(camel().camelContext(camelContext)
+        runner.then(camel().camelContext(camelContext)
                 .controlBus()
                 .route("split-text")
                 .status()
                 .result(ServiceStatus.Stopped));
 
-        when(doFinally().actions(
+        runner.when(doFinally().actions(
                 camel().camelContext(camelContext)
                     .route()
                     .remove("split-text")));

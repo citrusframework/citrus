@@ -19,18 +19,18 @@ package org.citrusframework.camel.actions;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelException;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
+public class StopCamelRouteActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
 
@@ -66,7 +66,7 @@ public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
         verify(camelContext).stopRoute("route_1");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testStopRouteWithException() throws Exception {
         reset(camelContext);
 
@@ -78,8 +78,7 @@ public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
                 .context(camelContext)
                 .routes("route_1", "route_2", "route_3")
                 .build();
-        action.execute(context);
 
-        verify(camelContext).stopRoute("route_1");
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 }

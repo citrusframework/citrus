@@ -17,13 +17,15 @@
 package org.citrusframework.camel.cli;
 
 import org.citrusframework.jbang.ProcessLauncher;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Mutates global camel.cli System properties")
 public class CamelCliSettingsTest {
 
-    @AfterMethod
+    @AfterEach
     public void cleanup() {
         System.clearProperty("citrus.camel.cli.type");
         System.clearProperty("citrus.camel.cli.launcher.jar.path");
@@ -31,24 +33,24 @@ public class CamelCliSettingsTest {
 
     @Test
     public void shouldDefaultToJBangType() {
-        Assert.assertEquals(CamelCliSettings.getCliType(), "jbang");
+        Assertions.assertEquals("jbang", CamelCliSettings.getCliType());
     }
 
     @Test
     public void shouldReadCliTypeFromSystemProperty() {
         System.setProperty("citrus.camel.cli.type", "launcher");
-        Assert.assertEquals(CamelCliSettings.getCliType(), "launcher");
+        Assertions.assertEquals("launcher", CamelCliSettings.getCliType());
     }
 
     @Test
     public void shouldReturnNullLauncherJarPathByDefault() {
-        Assert.assertNull(CamelCliSettings.getLauncherJarPath());
+        Assertions.assertNull(CamelCliSettings.getLauncherJarPath());
     }
 
     @Test
     public void shouldReadLauncherJarPathFromSystemProperty() {
         System.setProperty("citrus.camel.cli.launcher.jar.path", "/opt/camel/camel-cli.jar");
-        Assert.assertEquals(CamelCliSettings.getLauncherJarPath(), "/opt/camel/camel-cli.jar");
+        Assertions.assertEquals("/opt/camel/camel-cli.jar", CamelCliSettings.getLauncherJarPath());
     }
 
     @Test
@@ -58,14 +60,14 @@ public class CamelCliSettingsTest {
 
         ProcessLauncher launcher = CamelCliSettings.createLauncher();
 
-        Assert.assertTrue(launcher instanceof CamelLauncherSupport);
+        Assertions.assertTrue(launcher instanceof CamelLauncherSupport);
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test
     public void shouldFailWhenLauncherTypeWithoutJarPath() {
         System.setProperty("citrus.camel.cli.type", "launcher");
 
-        CamelCliSettings.createLauncher();
+        Assertions.assertThrows(IllegalStateException.class, CamelCliSettings::createLauncher);
     }
 
     @Test
@@ -75,7 +77,7 @@ public class CamelCliSettingsTest {
 
         try {
             ProcessLauncher launcher = CamelCliSettings.createLauncher();
-            Assert.assertTrue(launcher instanceof CamelLauncherSupport);
+            Assertions.assertTrue(launcher instanceof CamelLauncherSupport);
         } finally {
             System.clearProperty("camel.launcher.jar");
         }

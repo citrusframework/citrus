@@ -31,12 +31,16 @@ import org.citrusframework.camel.actions.infra.InfraService;
 import org.citrusframework.camel.xml.AbstractXmlActionTest;
 import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mock;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class CamelRunInfraTest extends AbstractXmlActionTest {
 
     private final String infraServices = """
@@ -67,7 +71,7 @@ public class CamelRunInfraTest extends AbstractXmlActionTest {
     @Mock
     private CamelCatalog catalog;
 
-    @BeforeMethod
+    @BeforeEach
     public void init() {
         when(catalog.loadResource("test-infra", "metadata.json")).thenReturn(new ByteArrayInputStream(infraServices.getBytes(StandardCharsets.UTF_8)))
                 .thenReturn(new ByteArrayInputStream(infraServices.getBytes(StandardCharsets.UTF_8)));
@@ -88,35 +92,35 @@ public class CamelRunInfraTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelRunInfraTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelRunInfraAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:infra:run");
+        Assertions.assertEquals("CamelRunInfraTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CamelRunInfraAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:infra:run", result.getTestAction(0).getName());
 
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_HOST"), "my-host");
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PORT", Integer.class), 18088);
+        Assertions.assertEquals("my-host", context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_HOST"));
+        Assertions.assertEquals(18088, context.getVariable("CITRUS_CAMEL_INFRA_MY_SERVICE_PORT", Integer.class));
 
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_HOST"), "my-host");
-        Assert.assertEquals(context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PORT", Integer.class), 18088);
+        Assertions.assertEquals("my-host", context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_HOST"));
+        Assertions.assertEquals(18088, context.getVariable("CITRUS_CAMEL_INFRA_SERVICE_TWO_PORT", Integer.class));
 
         MyServiceImpl myService = context.getVariable("citrus.camel.infra.my-service", MyServiceImpl.class);
-        Assert.assertTrue(myService.initialized.get());
-        Assert.assertTrue(myService.shutdown.get());
+        Assertions.assertTrue(myService.initialized.get());
+        Assertions.assertTrue(myService.shutdown.get());
 
         InfraService meta = context.getVariable("citrus.camel.infra.my-service:meta", InfraService.class);
-        Assert.assertEquals(meta.version(), "1.0");
+        Assertions.assertEquals("1.0", meta.version());
 
         myService = context.getVariable("citrus.camel.infra.service.two", MyServiceImpl.class);
-        Assert.assertTrue(myService.initialized.get());
-        Assert.assertFalse(myService.shutdown.get());
+        Assertions.assertTrue(myService.initialized.get());
+        Assertions.assertFalse(myService.shutdown.get());
 
         meta = context.getVariable("citrus.camel.infra.service.two:meta", InfraService.class);
-        Assert.assertEquals(meta.version(), "1.0");
+        Assertions.assertEquals("1.0", meta.version());
 
-        Assert.assertEquals(context.getFinalActions().size(), 1);
-        Assert.assertEquals(context.getFinalActions().iterator().next().getClass(), CamelStopInfraAction.Builder.class);
+        Assertions.assertEquals(1, context.getFinalActions().size());
+        Assertions.assertEquals(CamelStopInfraAction.Builder.class, context.getFinalActions().iterator().next().getClass());
 
     }
 }

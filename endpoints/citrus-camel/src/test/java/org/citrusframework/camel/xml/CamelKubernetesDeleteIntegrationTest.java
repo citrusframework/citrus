@@ -30,16 +30,20 @@ import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class CamelKubernetesDeleteIntegrationTest extends AbstractXmlActionTest {
 
     @Mock
@@ -54,12 +58,10 @@ public class CamelKubernetesDeleteIntegrationTest extends AbstractXmlActionTest 
     @Mock
     private Process process;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(camelCli.kubernetes()).thenReturn(k8sPlugin);
-        when(pao.getProcess()).thenReturn(process);
+        lenient().when(camelCli.kubernetes()).thenReturn(k8sPlugin);
+        lenient().when(pao.getProcess()).thenReturn(process);
     }
 
     @Test
@@ -81,12 +83,12 @@ public class CamelKubernetesDeleteIntegrationTest extends AbstractXmlActionTest 
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelCliKubernetesDeleteTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesDeleteIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:cli:kubernetes:delete");
+        Assertions.assertEquals("CamelCliKubernetesDeleteTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(CamelKubernetesDeleteIntegrationAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:cli:kubernetes:delete", result.getTestAction(0).getName());
 
         verify(camelCli).workingDir(Paths.get(Resources.create("classpath:org/citrusframework/camel/integration/route.yaml")
                 .file().getParentFile().toPath().toAbsolutePath().toString()));

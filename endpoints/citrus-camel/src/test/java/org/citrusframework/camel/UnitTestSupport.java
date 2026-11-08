@@ -16,25 +16,7 @@
 
 package org.citrusframework.camel;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.context.TestContextFactory;
-import org.testng.annotations.BeforeMethod;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 
-public abstract class UnitTestSupport {
-
-    protected TestContextFactory testContextFactory;
-    protected TestContext context;
-
-    /**
-     * Setup test execution.
-     */
-    @BeforeMethod
-    public void prepareTest() {
-        testContextFactory = createTestContextFactory();
-        context = testContextFactory.getObject();
-    }
-
-    protected TestContextFactory createTestContextFactory() {
-        return TestContextFactory.newInstance();
-    }
+public abstract class UnitTestSupport extends AbstractUnitTest {
 }

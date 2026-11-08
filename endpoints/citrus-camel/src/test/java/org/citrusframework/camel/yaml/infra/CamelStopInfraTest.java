@@ -27,8 +27,8 @@ import org.citrusframework.camel.actions.infra.CamelStopInfraAction;
 import org.citrusframework.camel.actions.infra.InfraService;
 import org.citrusframework.camel.yaml.AbstractYamlActionTest;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CamelStopInfraTest extends AbstractYamlActionTest {
 
@@ -63,14 +63,14 @@ public class CamelStopInfraTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelStopInfraTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelStopInfraAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:infra:stop");
+        Assertions.assertEquals("CamelStopInfraTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CamelStopInfraAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:infra:stop", result.getTestAction(0).getName());
 
-        Assert.assertTrue(myService.shutdown.get());
-        Assert.assertTrue(serviceImpl.shutdown.get());
+        Assertions.assertTrue(myService.shutdown.get());
+        Assertions.assertTrue(serviceImpl.shutdown.get());
     }
 }

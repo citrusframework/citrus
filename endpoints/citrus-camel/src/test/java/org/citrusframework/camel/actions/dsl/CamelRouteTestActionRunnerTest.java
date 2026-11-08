@@ -27,10 +27,10 @@ import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
 import org.citrusframework.camel.actions.StopCamelRouteAction;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.4
@@ -39,13 +39,13 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
 
     private DefaultCamelContext camelContext;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupCamelContext() {
         camelContext = new DefaultCamelContext();
         camelContext.start();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void clearCamelContext() {
         if (camelContext != null) {
             camelContext.shutdown();
@@ -74,15 +74,15 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
         }));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), CreateCamelRouteAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), CreateCamelRouteAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(CreateCamelRouteAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(CreateCamelRouteAction.class, test.getActiveAction().getClass());
 
         CreateCamelRouteAction action = (CreateCamelRouteAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "camel:create-routes");
-        Assert.assertEquals(action.getRoutes().size(), 2);
+        Assertions.assertEquals("camel:create-routes", action.getName());
+        Assertions.assertEquals(2, action.getRoutes().size());
 
-        Assert.assertEquals(camelContext.getRouteDefinitions().size(), 2);
+        Assertions.assertEquals(2, camelContext.getRouteDefinitions().size());
     }
 
     @Test
@@ -104,8 +104,8 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
             }
         });
 
-        Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
-        Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_1"));
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_2"));
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(camel().camelContext(camelContext).route().start("route_1", "route_2"));
@@ -113,17 +113,17 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
         builder.$(camel().camelContext(camelContext).route().stop("route_1", "route_2"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), StopCamelRouteAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), StopCamelRouteAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(StopCamelRouteAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(StopCamelRouteAction.class, test.getActiveAction().getClass());
 
         StopCamelRouteAction action = (StopCamelRouteAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "camel:stop-routes");
-        Assert.assertEquals(action.getRouteIds().size(), 2);
+        Assertions.assertEquals("camel:stop-routes", action.getName());
+        Assertions.assertEquals(2, action.getRouteIds().size());
 
-        Assert.assertEquals(camelContext.getRouteDefinitions().size(), 2);
-        Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
-        Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
+        Assertions.assertEquals(2, camelContext.getRouteDefinitions().size());
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_1"));
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_2"));
     }
 
     @Test
@@ -145,23 +145,23 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
             }
         });
 
-        Assert.assertEquals(camelContext.getRouteDefinitions().size(), 2);
-        Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
-        Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
+        Assertions.assertEquals(2, camelContext.getRouteDefinitions().size());
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_1"));
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_2"));
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(camel().camelContext(camelContext).route().remove("route_1", "route_2"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), RemoveCamelRouteAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), RemoveCamelRouteAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(RemoveCamelRouteAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(RemoveCamelRouteAction.class, test.getActiveAction().getClass());
 
         RemoveCamelRouteAction action = (RemoveCamelRouteAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "camel:remove-routes");
-        Assert.assertEquals(action.getRouteIds().size(), 2);
+        Assertions.assertEquals("camel:remove-routes", action.getName());
+        Assertions.assertEquals(2, action.getRouteIds().size());
 
-        Assert.assertEquals(camelContext.getRouteDefinitions().size(), 0);
+        Assertions.assertEquals(0, camelContext.getRouteDefinitions().size());
     }
 
     @Test
@@ -185,15 +185,15 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
         }));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), CreateCamelRouteAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), CreateCamelRouteAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(CreateCamelRouteAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(CreateCamelRouteAction.class, test.getActiveAction().getClass());
 
         CreateCamelRouteAction action = (CreateCamelRouteAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "camel:create-routes");
-        Assert.assertEquals(action.getRoutes().size(), 2);
+        Assertions.assertEquals("camel:create-routes", action.getName());
+        Assertions.assertEquals(2, action.getRoutes().size());
 
-        Assert.assertEquals(camelContext.getRoutes().size(), 2);
+        Assertions.assertEquals(2, camelContext.getRoutes().size());
     }
 
     @Test
@@ -215,8 +215,8 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
             }
         });
 
-        Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Stopped);
-        Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_1"));
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_2"));
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(camel().camelContext(camelContext)
@@ -234,30 +234,30 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport implements T
                 .result(ServiceStatus.Started));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 3);
-        Assert.assertEquals(test.getActions().get(0).getClass(), CamelControlBusAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), CamelControlBusAction.class);
+        Assertions.assertEquals(3, test.getActionCount());
+        Assertions.assertEquals(CamelControlBusAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(CamelControlBusAction.class, test.getActiveAction().getClass());
 
         CamelControlBusAction action = (CamelControlBusAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "camel:controlbus");
-        Assert.assertEquals(action.getRouteId(), "route_1");
-        Assert.assertEquals(action.getAction(), "status");
-        Assert.assertEquals(action.getResult(), "Stopped");
+        Assertions.assertEquals("camel:controlbus", action.getName());
+        Assertions.assertEquals("route_1", action.getRouteId());
+        Assertions.assertEquals("status", action.getAction());
+        Assertions.assertEquals("Stopped", action.getResult());
 
         action = (CamelControlBusAction) test.getActions().get(1);
-        Assert.assertEquals(action.getName(), "camel:controlbus");
-        Assert.assertEquals(action.getRouteId(), "route_1");
-        Assert.assertEquals(action.getAction(), "start");
-        Assert.assertNull(action.getResult());
+        Assertions.assertEquals("camel:controlbus", action.getName());
+        Assertions.assertEquals("route_1", action.getRouteId());
+        Assertions.assertEquals("start", action.getAction());
+        Assertions.assertNull(action.getResult());
 
         action = (CamelControlBusAction) test.getActions().get(2);
-        Assert.assertEquals(action.getName(), "camel:controlbus");
-        Assert.assertEquals(action.getLanguageType(), "simple");
-        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteStatus('route_1')}");
-        Assert.assertEquals(action.getResult(), "Started");
+        Assertions.assertEquals("camel:controlbus", action.getName());
+        Assertions.assertEquals("simple", action.getLanguageType());
+        Assertions.assertEquals("${camelContext.getRouteStatus('route_1')}", action.getLanguageExpression());
+        Assertions.assertEquals("Started", action.getResult());
 
-        Assert.assertEquals(camelContext.getRouteDefinitions().size(), 2);
-        Assert.assertEquals(camelContext.getRouteStatus("route_1"), ServiceStatus.Started);
-        Assert.assertEquals(camelContext.getRouteStatus("route_2"), ServiceStatus.Stopped);
+        Assertions.assertEquals(2, camelContext.getRouteDefinitions().size());
+        Assertions.assertEquals(ServiceStatus.Started, camelContext.getRouteStatus("route_1"));
+        Assertions.assertEquals(ServiceStatus.Stopped, camelContext.getRouteStatus("route_2"));
     }
 }

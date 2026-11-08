@@ -27,20 +27,18 @@ import org.citrusframework.camel.actions.CamelStopIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 public class CliTest extends AbstractXmlActionTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
-        if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
-        }
+        Assumptions.assumeTrue(TestUtils.isNetworkReachable(), "Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
     }
 
     @Test
@@ -56,26 +54,26 @@ public class CliTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelCliTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelRunIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:cli:run");
+        Assertions.assertEquals("CamelCliTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CamelRunIntegrationAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:cli:run", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         CamelRunIntegrationAction action = (CamelRunIntegrationAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getIntegrationName(), "hello-xml");
-        Assert.assertEquals(getField(action, "autoSetProperties"), false);
+        Assertions.assertEquals("hello-xml", action.getIntegrationName());
+        Assertions.assertEquals(false, getField(action, "autoSetProperties"));
 
         CamelVerifyIntegrationAction verifyAction = (CamelVerifyIntegrationAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(verifyAction.getIntegrationName(), "hello-xml");
+        Assertions.assertEquals("hello-xml", verifyAction.getIntegrationName());
 
-        Assert.assertTrue(result instanceof DefaultTestCase);
-        Assert.assertEquals(((DefaultTestCase) result).getFinalActions().size(), 1);
+        Assertions.assertTrue(result instanceof DefaultTestCase);
+        Assertions.assertEquals(((DefaultTestCase) result).getFinalActions().size(), 1);
 
         CamelStopIntegrationAction stopAction = (CamelStopIntegrationAction) ((DefaultTestCase) result).getFinalActions().get(0);
-        Assert.assertEquals(stopAction.getIntegrationName(), "hello-xml");
+        Assertions.assertEquals("hello-xml", stopAction.getIntegrationName());
     }
 }

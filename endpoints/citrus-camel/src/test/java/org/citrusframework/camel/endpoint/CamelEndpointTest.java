@@ -30,17 +30,16 @@ import org.citrusframework.camel.message.CamelMessageHeaders;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
 /**
  * @since 1.4.1
  */
-public class CamelEndpointTest extends AbstractTestNGUnitTest {
+public class CamelEndpointTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private final ExtendedCamelContext extendedCamelContext = Mockito.mock(ExtendedCamelContext.class);
@@ -72,7 +71,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         camelEndpoint.createProducer().send(requestMessage, context);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testCamelEndpointProducerWithInternalException() {
         String endpointUri = "direct:news-feed";
         CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
@@ -93,7 +92,8 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         when(producerTemplate.send(eq(endpointUri), any(Exchange.class))).thenReturn(exchange);
         when(exchange.getException()).thenReturn(exchangeException);
 
-        camelEndpoint.createProducer().send(requestMessage, context);
+        Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> camelEndpoint.createProducer().send(requestMessage, context));
     }
 
     @Test
@@ -121,11 +121,11 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         when(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).thenReturn(exchange);
 
         Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
-        Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
-        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_ID));
-        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
+        Assertions.assertEquals("Hello from Camel!", receivedMessage.getPayload());
+        Assertions.assertEquals("newsFeed", receivedMessage.getHeader("operation"));
+        Assertions.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assertions.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assertions.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         when(messageListeners.isEmpty()).thenReturn(false);
         doAnswer(invocation -> {
             Message inboundMessage = (Message) invocation.getArguments()[0];
-            Assert.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
+            Assertions.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
             return null;
         }).when(messageListeners).onInboundMessage(any(Message.class), eq(context));
 

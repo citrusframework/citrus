@@ -19,10 +19,10 @@ package org.citrusframework.camel.actions;
 import java.util.Map;
 
 import org.citrusframework.spi.Resources;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CamelCustomizedRunIntegrationActionTest {
 
@@ -41,9 +41,9 @@ public class CamelCustomizedRunIntegrationActionTest {
 
         Map<String, String> props = (Map<String, String>) getField(action, "systemProperties");
 
-        assertEquals(props.get("server.port"), "9090");
-        assertEquals(props.get("greeting"), "Hello inline");
-        assertEquals(props.get("server.host"), "localhost");
+        assertEquals("9090", props.get("server.port"));
+        assertEquals("Hello inline", props.get("greeting"));
+        assertEquals("localhost", props.get("server.host"));
     }
 
     @Test
@@ -61,8 +61,8 @@ public class CamelCustomizedRunIntegrationActionTest {
 
         Map<String, String> props = (Map<String, String>) getField(action, "systemProperties");
 
-        assertEquals(props.get("server.port"), "9090");
-        assertEquals(props.get("greeting"), "Hello inline");
-        assertEquals(props.get("server.host"), "localhost");
+        assertEquals("9090", props.get("server.port"));
+        assertEquals("Hello inline", props.get("greeting"));
+        assertEquals("localhost", props.get("server.host"));
     }
 }

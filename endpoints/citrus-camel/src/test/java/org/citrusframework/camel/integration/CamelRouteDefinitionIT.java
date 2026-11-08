@@ -16,17 +16,23 @@
 
 package org.citrusframework.camel.integration;
 
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.4
  */
-@Test
-public class CamelRouteDefinitionIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class CamelRouteDefinitionIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "CamelRouteDefinitionIT")
-    public void testCamelRouteDefinition() {}
+    public void testCamelRouteDefinition(@CitrusResource TestCaseRunner runner) {}
 }

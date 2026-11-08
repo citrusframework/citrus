@@ -24,8 +24,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ControlBusTest extends AbstractYamlActionTest {
 
@@ -60,42 +60,42 @@ public class ControlBusTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelControlBusTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelControlBusAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:controlbus");
+        Assertions.assertEquals("CamelControlBusTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
+        Assertions.assertEquals(CamelControlBusAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:controlbus", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         CamelControlBusAction action = (CamelControlBusAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_1");
-        Assert.assertEquals(action.getAction(), "start");
-        Assert.assertNull(action.getResult());
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals("route_1", action.getRouteId());
+        Assertions.assertEquals("start", action.getAction());
+        Assertions.assertNull(action.getResult());
 
         action = (CamelControlBusAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_2");
-        Assert.assertEquals(action.getAction(), "status");
-        Assert.assertEquals(action.getResult(), "Stopped");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals("route_2", action.getRouteId());
+        Assertions.assertEquals("status", action.getAction());
+        Assertions.assertEquals("Stopped", action.getResult());
 
         action = (CamelControlBusAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getLanguageType(), "simple");
-        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteController().getRouteStatus('route_3')}");
-        Assert.assertEquals(action.getResult(), "Started");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals("simple", action.getLanguageType());
+        Assertions.assertEquals("${camelContext.getRouteController().getRouteStatus('route_3')}", action.getLanguageExpression());
+        Assertions.assertEquals("Started", action.getResult());
 
         action = (CamelControlBusAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getLanguageType(), "simple");
-        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.stop()}");
-        Assert.assertNull(action.getResult());
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals("simple", action.getLanguageType());
+        Assertions.assertEquals("${camelContext.stop()}", action.getLanguageExpression());
+        Assertions.assertNull(action.getResult());
 
     }
 }

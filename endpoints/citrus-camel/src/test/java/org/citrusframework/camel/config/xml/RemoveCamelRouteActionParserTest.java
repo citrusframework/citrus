@@ -18,12 +18,11 @@ package org.citrusframework.camel.config.xml;
 
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
-import org.citrusframework.testng.AbstractActionParserTest;
 import org.apache.camel.CamelContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class RemoveCamelRouteActionParserTest extends AbstractActionParserTest<RemoveCamelRouteAction> {
+public class RemoveCamelRouteActionParserTest extends org.citrusframework.junit.jupiter.AbstractActionParserTest<RemoveCamelRouteAction> {
 
     @Test
     public void testRemoveRouteActionParser() {
@@ -31,13 +30,13 @@ public class RemoveCamelRouteActionParserTest extends AbstractActionParserTest<R
         assertActionClassAndName(RemoveCamelRouteAction.class, "camel:remove-routes");
 
         RemoveCamelRouteAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteIds().size(), 1);
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals(1, action.getRouteIds().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteIds().size(), 2);
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals(2, action.getRouteIds().size());
     }
 }

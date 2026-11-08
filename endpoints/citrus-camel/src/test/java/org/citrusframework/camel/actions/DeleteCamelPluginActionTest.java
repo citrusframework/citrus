@@ -19,22 +19,23 @@ package org.citrusframework.camel.actions;
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.cli.CamelCli;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class DeleteCamelPluginActionTest extends UnitTestSupport {
 
     @Mock
     private CamelCli camelCli;
 
-    @BeforeMethod
+    @BeforeEach
     @Override
     public void prepareTest() {
         super.prepareTest();
-        MockitoAnnotations.openMocks(this);
         context.getReferenceResolver().bind("camelCli", camelCli);
     }
 

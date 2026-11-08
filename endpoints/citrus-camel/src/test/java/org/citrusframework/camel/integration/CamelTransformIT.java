@@ -17,17 +17,23 @@
 package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
-import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-public class CamelTransformIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class CamelTransformIT implements TestActionSupport {
 
     @Autowired
     private CamelContext camelContext;
@@ -36,8 +42,8 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport implements TestA
 
     @Test
     @CitrusTest
-    public void shouldTransformMessageSent() {
-        when(send(camel.endpoint(seda("hello")::getRawUri))
+    public void shouldTransformMessageSent(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(camel.endpoint(seda("hello")::getRawUri))
                 .message()
                 .body("{\"message\": \"Citrus rocks!\"}")
                 .transform(
@@ -47,7 +53,7 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport implements TestA
                         .jsonpath("$.message"))
         );
 
-        then(receive(camel.endpoint(seda("hello")::getRawUri))
+        runner.then(receive(camel.endpoint(seda("hello")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
@@ -55,13 +61,13 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport implements TestA
 
     @Test
     @CitrusTest
-    public void shouldTransformMessageReceived() {
-        when(send(camel.endpoint(seda("hello")::getRawUri))
+    public void shouldTransformMessageReceived(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(camel.endpoint(seda("hello")::getRawUri))
                 .message()
                 .body("{\"message\": \"Citrus rocks!\"}")
         );
 
-        then(receive(camel.endpoint(seda("hello")::getRawUri))
+        runner.then(receive(camel.endpoint(seda("hello")::getRawUri))
                 .transform(
                     camel
                         .camelContext(camelContext)

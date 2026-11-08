@@ -27,14 +27,18 @@ import org.citrusframework.camel.cli.KubernetesPlugin;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class CamelKubernetesVerifyIntegrationTest extends AbstractYamlActionTest {
 
     @Mock
@@ -49,12 +53,10 @@ public class CamelKubernetesVerifyIntegrationTest extends AbstractYamlActionTest
     @Mock
     private Process process;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(camelCli.kubernetes()).thenReturn(k8sPlugin);
-        when(pao.getProcess()).thenReturn(process);
+        lenient().when(camelCli.kubernetes()).thenReturn(k8sPlugin);
+        lenient().when(pao.getProcess()).thenReturn(process);
     }
 
     @Test
@@ -69,20 +71,20 @@ public class CamelKubernetesVerifyIntegrationTest extends AbstractYamlActionTest
 
         context.getReferenceResolver().bind("camel-cli", camelCli);
 
-        when(k8sPlugin.logs("--name", "my-route")).thenReturn(pao);
-        when(k8sPlugin.logs("--label", "app=camel")).thenReturn(pao);
-        when(process.exitValue()).thenReturn(0);
-        when(pao.getOutput()).thenReturn("Camel rocks!");
+        lenient().when(k8sPlugin.logs("--name", "my-route")).thenReturn(pao);
+        lenient().when(k8sPlugin.logs("--label", "app=camel")).thenReturn(pao);
+        lenient().when(process.exitValue()).thenReturn(0);
+        lenient().when(pao.getOutput()).thenReturn("Camel rocks!");
 
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelCliKubernetesVerifyTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelKubernetesVerifyIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:cli:kubernetes:verify");
+        Assertions.assertEquals("CamelCliKubernetesVerifyTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CamelKubernetesVerifyIntegrationAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:cli:kubernetes:verify", result.getTestAction(0).getName());
 
         verify(k8sPlugin).logs("--name", "my-route");
         verify(k8sPlugin).logs("--label", "app=camel");
