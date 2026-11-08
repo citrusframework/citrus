@@ -24,8 +24,8 @@ import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.DirectSyncEndpoint;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CreateEndpointTest extends AbstractYamlActionTest {
 
@@ -35,41 +35,41 @@ public class CreateEndpointTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CreateEndpointTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 6L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CreateEndpointAction.class);
-        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(0)).getEndpointUri(), "direct:hello");
-        Assert.assertEquals(((CreateEndpointAction) result.getTestAction(1)).getEndpointUri(), "direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000");
+        Assertions.assertEquals("CreateEndpointTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(6L, result.getActionCount());
+        Assertions.assertEquals(CreateEndpointAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("direct:hello", ((CreateEndpointAction) result.getTestAction(0)).getEndpointUri());
+        Assertions.assertEquals("direct?autoClose=true&autoRemove=true&queueName=hello&timeout=2000", ((CreateEndpointAction) result.getTestAction(1)).getEndpointUri());
 
-        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
+        Assertions.assertNotNull(((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder());
         Endpoint endpoint = ((CreateEndpointAction) result.getTestAction(2)).getEndpointBuilder().build();
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
-        Assert.assertEquals(endpoint.getName(), "sayGoodBye");
-        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getQueueName(), "goodbye");
-        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 4000L);
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("sayGoodBye", endpoint.getName());
+        Assertions.assertEquals("goodbye", ((DirectEndpoint) endpoint).getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(4000L, ((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
-        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder());
+        Assertions.assertNotNull(((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder());
         endpoint = ((CreateEndpointAction) result.getTestAction(3)).getEndpointBuilder().build();
-        Assert.assertEquals(endpoint.getClass(), DirectSyncEndpoint.class);
-        Assert.assertEquals(endpoint.getName(), "howdy");
-        Assert.assertEquals(((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getQueueName(), "howdy");
-        Assert.assertEquals(((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 3000L);
+        Assertions.assertEquals(DirectSyncEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("howdy", endpoint.getName());
+        Assertions.assertEquals("howdy", ((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(3000L, ((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
-        Assert.assertTrue(context.getReferenceResolver().isResolvable("howdy", MessageQueue.class));
+        Assertions.assertTrue(context.getReferenceResolver().isResolvable("howdy", MessageQueue.class));
 
-        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(4)).getEndpointBuilder());
+        Assertions.assertNotNull(((CreateEndpointAction) result.getTestAction(4)).getEndpointBuilder());
         endpoint = ((CreateEndpointAction) result.getTestAction(4)).getEndpointBuilder().build();
-        Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
-        Assert.assertEquals(endpoint.getName(), "simplified");
-        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getQueueName(), "simpleQueue");
-        Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("simplified", endpoint.getName());
+        Assertions.assertEquals("simpleQueue", ((DirectEndpoint) endpoint).getEndpointConfiguration().getQueueName());
+        Assertions.assertEquals(5000L, ((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
-        Assert.assertNotNull(((CreateEndpointAction) result.getTestAction(5)).getEndpointBuilder());
+        Assertions.assertNotNull(((CreateEndpointAction) result.getTestAction(5)).getEndpointBuilder());
         endpoint = ((CreateEndpointAction) result.getTestAction(5)).getEndpointBuilder().build();
-        Assert.assertEquals(endpoint.getClass(), DirectSyncEndpoint.class);
-        Assert.assertEquals(endpoint.getName(), "simplifiedSync");
-        Assert.assertEquals(((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getPollingInterval(), 2000);
+        Assertions.assertEquals(DirectSyncEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("simplifiedSync", endpoint.getName());
+        Assertions.assertEquals(2000, ((DirectSyncEndpoint) endpoint).getEndpointConfiguration().getPollingInterval());
     }
 }

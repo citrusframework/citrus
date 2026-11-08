@@ -21,8 +21,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ActionTest extends AbstractYamlActionTest implements TestActionSupport {
 
@@ -37,14 +37,14 @@ public class ActionTest extends AbstractYamlActionTest implements TestActionSupp
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "ActionTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction) result.getTestAction(0)).getMessage(), "Citrus rocks!");
+        Assertions.assertEquals("ActionTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(EchoAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("Citrus rocks!", ((EchoAction) result.getTestAction(0)).getMessage());
 
-        Assert.assertEquals(result.getTestAction(1).getClass(), EchoAction.class);
-        Assert.assertEquals(result.getTestAction(1), action);
+        Assertions.assertEquals(EchoAction.class, result.getTestAction(1).getClass());
+        Assertions.assertEquals(action, result.getTestAction(1));
     }
 }

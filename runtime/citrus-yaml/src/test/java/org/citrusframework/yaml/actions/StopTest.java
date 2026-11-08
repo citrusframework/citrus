@@ -23,8 +23,8 @@ import org.citrusframework.server.Server;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,22 +53,22 @@ public class StopTest extends AbstractYamlActionTest {
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "StopTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
+        Assertions.assertEquals("StopTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
 
         int actionIndex = 0;
 
         StopServerAction action = (StopServerAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getClass(), StopServerAction.class);
-        Assert.assertEquals(action.getServers().size(), 1L);
-        Assert.assertEquals(action.getServers().get(0), myServer);
+        Assertions.assertEquals(StopServerAction.class, action.getClass());
+        Assertions.assertEquals(1L, action.getServers().size());
+        Assertions.assertEquals(myServer, action.getServers().get(0));
 
         action = (StopServerAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(action.getServers().size(), 2L);
-        Assert.assertEquals(action.getServers().get(0), myFooServer);
-        Assert.assertEquals(action.getServers().get(1), myBarServer);
+        Assertions.assertEquals(2L, action.getServers().size());
+        Assertions.assertEquals(myFooServer, action.getServers().get(0));
+        Assertions.assertEquals(myBarServer, action.getServers().get(1));
 
         verify(myServer).stop();
         verify(myFooServer).stop();
