@@ -24,8 +24,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelVerifyRouteAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class VerifyRouteTest extends AbstractYamlActionTest {
 
@@ -51,25 +51,25 @@ public class VerifyRouteTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelVerifyRouteTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelVerifyRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:verify-route");
+        Assertions.assertEquals("CamelVerifyRouteTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CamelVerifyRouteAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:verify-route", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         CamelVerifyRouteAction action = (CamelVerifyRouteAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_1");
-        Assert.assertNull(action.getStatus());
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals("route_1", action.getRouteId());
+        Assertions.assertNull(action.getStatus());
 
         action = (CamelVerifyRouteAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_1");
-        Assert.assertEquals(action.getStatus(), "Started");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals("route_1", action.getRouteId());
+        Assertions.assertEquals("Started", action.getStatus());
     }
 }

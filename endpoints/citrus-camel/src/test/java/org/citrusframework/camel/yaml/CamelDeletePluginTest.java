@@ -25,21 +25,24 @@ import org.citrusframework.camel.actions.DeleteCamelPluginAction;
 import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 public class CamelDeletePluginTest extends AbstractYamlActionTest {
 
     @Mock
     private CamelCli camelCli;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -57,12 +60,12 @@ public class CamelDeletePluginTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelDeletePluginTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), DeleteCamelPluginAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:cli:plugin-delete");
+        Assertions.assertEquals("CamelDeletePluginTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(DeleteCamelPluginAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:cli:plugin-delete", result.getTestAction(0).getName());
 
         verify(camelCli).deletePlugin("my-plugin");
     }

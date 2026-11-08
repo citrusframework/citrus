@@ -16,27 +16,32 @@
 
 package org.citrusframework.camel.integration;
 
-import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.TestNGCitrusSupport;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 /**
  * @since 2.3
  */
-public class CamelRouteIT extends TestNGCitrusSupport implements TestActionSupport {
+@Isolated("Fresh Spring context per run registers duplicate camelContext JMX MBean under parallel classes")
+@CitrusSupport
+public class CamelRouteIT implements TestActionSupport {
 
     @Test
     @CitrusTest(name = "CamelRoute_01_IT")
-    public void camelRoute01IT() {
-        when(send("inRouteEndpoint")
+    public void camelRoute01IT(@CitrusResource TestCaseRunner runner) {
+        runner.when(send("inRouteEndpoint")
                 .fork(true)
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("<News><Message>Citrus rocks!</Message></News>"));
 
-        then(receive("defaultRouteEndpoint")
+        runner.then(receive("defaultRouteEndpoint")
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("<News><Message>Citrus rocks!</Message></News>"));
@@ -44,16 +49,16 @@ public class CamelRouteIT extends TestNGCitrusSupport implements TestActionSuppo
 
     @Test
     @CitrusTest(name = "CamelRoute_02_IT")
-    public void camelRoute02IT() {
-        when(send("inRouteEndpoint")
+    public void camelRoute02IT(@CitrusResource TestCaseRunner runner) {
+        runner.when(send("inRouteEndpoint")
                 .fork(true)
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("<News><Message>Citrus rocks!</Message></News>"));
 
-        then(receiveTimeout("outRouteEndpoint").timeout(500));
+        runner.then(receiveTimeout("outRouteEndpoint").timeout(500));
 
-        and(receive("defaultRouteEndpoint")
+        runner.and(receive("defaultRouteEndpoint")
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("<News><Message>Citrus rocks!</Message></News>"));

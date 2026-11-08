@@ -24,8 +24,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelResetRouteStatsAction;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ResetRouteStatsTest extends AbstractYamlActionTest {
 
@@ -51,23 +51,23 @@ public class ResetRouteStatsTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelResetRouteStatsTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelResetRouteStatsAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:reset-route-stats");
+        Assertions.assertEquals("CamelResetRouteStatsTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(CamelResetRouteStatsAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:reset-route-stats", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         CamelResetRouteStatsAction action = (CamelResetRouteStatsAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_1");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals("route_1", action.getRouteId());
 
         action = (CamelResetRouteStatsAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_1");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals("route_1", action.getRouteId());
     }
 }

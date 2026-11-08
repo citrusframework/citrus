@@ -24,8 +24,8 @@ import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RemoveRoutesTest extends AbstractGroovyActionDslTest {
 
@@ -62,24 +62,24 @@ public class RemoveRoutesTest extends AbstractGroovyActionDslTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelRemoveRouteTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 2L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), RemoveCamelRouteAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "camel:remove-routes");
+        Assertions.assertEquals("CamelRemoveRouteTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(2L, result.getActionCount());
+        Assertions.assertEquals(RemoveCamelRouteAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("camel:remove-routes", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         RemoveCamelRouteAction action = (RemoveCamelRouteAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteIds().size(), 1);
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals(1, action.getRouteIds().size());
 
         action = (RemoveCamelRouteAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteIds().size(), 2);
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("camelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals(2, action.getRouteIds().size());
 
     }
 }

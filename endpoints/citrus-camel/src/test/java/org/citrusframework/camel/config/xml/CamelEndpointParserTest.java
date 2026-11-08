@@ -21,37 +21,36 @@ import java.util.Map;
 import org.citrusframework.TestActor;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.endpoint.CamelEndpoint;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4.1
  */
-public class CamelEndpointParserTest extends AbstractBeanDefinitionParserTest {
+public class CamelEndpointParserTest extends org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest {
 
     @Test
     public void testCamelEndpointParser() {
         Map<String, CamelEndpoint> endpoints = beanDefinitionContext.getBeansOfType(CamelEndpoint.class);
 
-        Assert.assertEquals(endpoints.size(), 3);
+        Assertions.assertEquals(3, endpoints.size());
 
         // 1st message receiver
         CamelEndpoint camelEndpoint = endpoints.get("camelEndpoint1");
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName()));
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getEndpointUri(), "direct:news-feed1");
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals(camelEndpoint.getEndpointConfiguration().getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName()));
+        Assertions.assertEquals("direct:news-feed1", camelEndpoint.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(5000L, camelEndpoint.getEndpointConfiguration().getTimeout());
 
         // 2nd message receiver
         camelEndpoint = endpoints.get("camelEndpoint2");
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getCamelContext(), beanDefinitionContext.getBean("specialCamelContext"));
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getEndpointUri(), "direct:news-feed2");
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(beanDefinitionContext.getBean("specialCamelContext"), camelEndpoint.getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals("direct:news-feed2", camelEndpoint.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(10000L, camelEndpoint.getEndpointConfiguration().getTimeout());
 
         // 3rd message receiver
         camelEndpoint = endpoints.get("camelEndpoint3");
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
-        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getEndpointUri(), "direct:news-feed3");
-        Assert.assertEquals(camelEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter"), camelEndpoint.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals("direct:news-feed3", camelEndpoint.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), camelEndpoint.getActor());
     }
 }

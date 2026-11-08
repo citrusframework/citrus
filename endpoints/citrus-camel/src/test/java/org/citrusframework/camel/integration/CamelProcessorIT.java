@@ -17,17 +17,23 @@
 package org.citrusframework.camel.integration;
 
 import org.apache.camel.CamelContext;
-import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class CamelProcessorIT implements TestActionSupport {
 
     @Autowired
     private CamelContext camelContext;
@@ -36,8 +42,8 @@ public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestA
 
     @Test
     @CitrusTest
-    public void shouldProcessSentMessage() {
-        when(send(camel.endpoint(seda("test")::getRawUri))
+    public void shouldProcessSentMessage(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(camel.endpoint(seda("test")::getRawUri))
                 .message()
                 .body("Citrus rocks!")
                 .process(camel.camelContext(camelContext)
@@ -46,7 +52,7 @@ public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestA
                             .setBody(exchange.getMessage().getBody(String.class).toUpperCase())))
         );
 
-        then(receive(camel.endpoint(seda("test")::getRawUri))
+        runner.then(receive(camel.endpoint(seda("test")::getRawUri))
                 .message()
                 .type(MessageType.PLAINTEXT)
                 .body("CITRUS ROCKS!"));
@@ -54,12 +60,12 @@ public class CamelProcessorIT extends TestNGCitrusSpringSupport implements TestA
 
     @Test
     @CitrusTest
-    public void shouldProcessReceivedMessage() {
-        when(send(camel.endpoint(seda("test")::getRawUri))
+    public void shouldProcessReceivedMessage(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(camel.endpoint(seda("test")::getRawUri))
                 .message()
                 .body("Citrus rocks!"));
 
-        then(receive(camel.endpoint(seda("test")::getRawUri))
+        runner.then(receive(camel.endpoint(seda("test")::getRawUri))
                 .process(camel.camelContext(camelContext)
                         .process(exchange -> exchange
                                 .getMessage()

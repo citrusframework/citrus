@@ -21,15 +21,15 @@ import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CamelResetRouteStatsActionTest extends AbstractTestNGUnitTest {
+public class CamelResetRouteStatsActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private final ExtendedCamelContext camelContextExtension = Mockito.mock(ExtendedCamelContext.class);
@@ -53,35 +53,47 @@ public class CamelResetRouteStatsActionTest extends AbstractTestNGUnitTest {
         verify(routeMBean).reset(true);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = ".*Failed to get managed route statistics.*")
+    @Test
     public void testResetStatsRouteNotManaged() {
-        reset(camelContext, camelContextExtension, managedCamelContext);
 
-        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
-        when(managedCamelContext.getManagedRoute("unknown_route")).thenReturn(null);
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
-        CamelResetRouteStatsAction action = new CamelResetRouteStatsAction.Builder()
-                .context(camelContext)
-                .route("unknown_route")
-                .build();
-        action.execute(context);
+            reset(camelContext, camelContextExtension, managedCamelContext);
+
+            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+            when(managedCamelContext.getManagedRoute("unknown_route")).thenReturn(null);
+
+            CamelResetRouteStatsAction action = new CamelResetRouteStatsAction.Builder()
+                    .context(camelContext)
+                    .route("unknown_route")
+                    .build();
+            action.execute(context);
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*Failed to get managed route statistics.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = ".*managed Camel context extension.*")
+    @Test
     public void testResetStatsManagedContextMissing() {
-        reset(camelContext, camelContextExtension);
 
-        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(null);
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
-        CamelResetRouteStatsAction action = new CamelResetRouteStatsAction.Builder()
-                .context(camelContext)
-                .route("route_1")
-                .build();
-        action.execute(context);
+            reset(camelContext, camelContextExtension);
+
+            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(null);
+
+            CamelResetRouteStatsAction action = new CamelResetRouteStatsAction.Builder()
+                    .context(camelContext)
+                    .route("route_1")
+                    .build();
+            action.execute(context);
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*managed Camel context extension.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test

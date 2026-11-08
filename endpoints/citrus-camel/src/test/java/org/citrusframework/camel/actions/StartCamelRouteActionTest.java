@@ -19,18 +19,18 @@ package org.citrusframework.camel.actions;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.apache.camel.FailedToStartRouteException;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
+public class StartCamelRouteActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
 
@@ -66,20 +66,25 @@ public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
         verify(camelContext).startRoute("route_1");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testStartRouteWithException() throws Exception {
-        reset(camelContext);
 
-        when(camelContext.getName()).thenReturn("camel_context");
+        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
 
-        doThrow(new FailedToStartRouteException("route_2", "Failed to start route")).when(camelContext).startRoute("route_2");
+            reset(camelContext);
 
-        StartCamelRouteAction action = new StartCamelRouteAction.Builder()
-                .context(camelContext)
-                .routes("route_1", "route_2", "route_3")
-                .build();
-        action.execute(context);
+            when(camelContext.getName()).thenReturn("camel_context");
 
-        verify(camelContext).startRoute("route_1");
+            doThrow(new FailedToStartRouteException("route_2", "Failed to start route")).when(camelContext).startRoute("route_2");
+
+            StartCamelRouteAction action = new StartCamelRouteAction.Builder()
+                    .context(camelContext)
+                    .routes("route_1", "route_2", "route_3")
+                    .build();
+            action.execute(context);
+
+            verify(camelContext).startRoute("route_1");
+    
+        });
     }
 }

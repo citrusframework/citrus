@@ -24,31 +24,33 @@ import org.citrusframework.groovy.util.GroovyTypeConverter;
 import org.citrusframework.spring.util.SpringBeanTypeConverter;
 import org.citrusframework.util.TypeConversionUtils;
 import org.citrusframework.util.TypeConverter;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Mutates global TypeConverter state via System properties")
 public class TypeConverterTest {
 
     @Test
     public void testLookup() {
         try {
-            Assert.assertEquals(TypeConverter.lookupDefault().getClass(), DefaultTypeConverter.class);
+            Assertions.assertEquals(DefaultTypeConverter.class, TypeConverter.lookupDefault().getClass());
 
             System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, TypeConverter.APACHE_CAMEL);
             TypeConversionUtils.loadDefaultConverter();
 
             Map<String, TypeConverter> converters = TypeConverter.lookup();
-            Assert.assertEquals(converters.size(), 3L);
-            Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL).getClass(), CamelTypeConverter.class);
-            Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL), TypeConverter.lookupDefault());
+            Assertions.assertEquals(3L, converters.size());
+            Assertions.assertEquals(CamelTypeConverter.class, converters.get(TypeConverter.APACHE_CAMEL).getClass());
+            Assertions.assertEquals(TypeConverter.lookupDefault(), converters.get(TypeConverter.APACHE_CAMEL));
 
-            Assert.assertEquals(converters.get(TypeConverter.GROOVY).getClass(), GroovyTypeConverter.class);
-            Assert.assertEquals(converters.get(TypeConverter.SPRING).getClass(), SpringBeanTypeConverter.class);
+            Assertions.assertEquals(GroovyTypeConverter.class, converters.get(TypeConverter.GROOVY).getClass());
+            Assertions.assertEquals(SpringBeanTypeConverter.class, converters.get(TypeConverter.SPRING).getClass());
 
-            Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
+            Assertions.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
         } finally {
             System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, CitrusSettings.TYPE_CONVERTER_DEFAULT);
-            Assert.assertEquals(TypeConverter.lookupDefault().getClass(), DefaultTypeConverter.class);
+            Assertions.assertEquals(DefaultTypeConverter.class, TypeConverter.lookupDefault().getClass());
             TypeConversionUtils.loadDefaultConverter();
         }
     }

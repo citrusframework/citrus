@@ -18,12 +18,11 @@ package org.citrusframework.camel.config.xml;
 
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelControlBusAction;
-import org.citrusframework.testng.AbstractActionParserTest;
 import org.apache.camel.CamelContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class CamelControlBusActionParserTest extends AbstractActionParserTest<CamelControlBusAction> {
+public class CamelControlBusActionParserTest extends org.citrusframework.junit.jupiter.AbstractActionParserTest<CamelControlBusAction> {
 
     @Test
     public void testCreateRouteActionParser() {
@@ -31,31 +30,31 @@ public class CamelControlBusActionParserTest extends AbstractActionParserTest<Ca
         assertActionClassAndName(CamelControlBusAction.class, "camel:controlbus");
 
         CamelControlBusAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_1");
-        Assert.assertEquals(action.getAction(), "start");
-        Assert.assertNull(action.getResult());
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals("route_1", action.getRouteId());
+        Assertions.assertEquals("start", action.getAction());
+        Assertions.assertNull(action.getResult());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteId(), "route_2");
-        Assert.assertEquals(action.getAction(), "status");
-        Assert.assertEquals(action.getResult(), "Stopped");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals("route_2", action.getRouteId());
+        Assertions.assertEquals("status", action.getAction());
+        Assertions.assertEquals("Stopped", action.getResult());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getLanguageType(), "simple");
-        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.stop()}");
-        Assert.assertNull(action.getResult());
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals("simple", action.getLanguageType());
+        Assertions.assertEquals("${camelContext.stop()}", action.getLanguageExpression());
+        Assertions.assertNull(action.getResult());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
-        Assert.assertEquals(action.getLanguageType(), "simple");
-        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteController().getRouteStatus('route_3')}");
-        Assert.assertEquals(action.getResult(), "Started");
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals("simple", action.getLanguageType());
+        Assertions.assertEquals("${camelContext.getRouteController().getRouteStatus('route_3')}", action.getLanguageExpression());
+        Assertions.assertEquals("Started", action.getResult());
     }
 }

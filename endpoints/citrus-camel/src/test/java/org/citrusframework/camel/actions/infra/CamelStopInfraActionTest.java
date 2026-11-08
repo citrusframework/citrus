@@ -20,11 +20,10 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class CamelStopInfraActionTest extends AbstractTestNGUnitTest {
+public class CamelStopInfraActionTest extends org.citrusframework.junit.jupiter.AbstractUnitTest {
 
     @Test
     public void testStopInfra() {
@@ -42,7 +41,7 @@ public class CamelStopInfraActionTest extends AbstractTestNGUnitTest {
 
         MyServiceImpl myService = new MyServiceImpl();
         context.setVariable("citrus.camel.infra.my-service", myService);
-        Assert.assertFalse(myService.shutdown.get());
+        Assertions.assertFalse(myService.shutdown.get());
 
         CamelStopInfraAction action = new CamelStopInfraAction.Builder()
                 .service("my-service")
@@ -50,7 +49,7 @@ public class CamelStopInfraActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertTrue(myService.shutdown.get());
+        Assertions.assertTrue(myService.shutdown.get());
     }
 
     @Test
@@ -69,7 +68,7 @@ public class CamelStopInfraActionTest extends AbstractTestNGUnitTest {
 
         MyServiceImpl myService = new MyServiceImpl();
         context.setVariable("citrus.camel.infra.my-service.one", myService);
-        Assert.assertFalse(myService.shutdown.get());
+        Assertions.assertFalse(myService.shutdown.get());
 
         CamelStopInfraAction action = new CamelStopInfraAction.Builder()
                 .service("my-service", "one")
@@ -77,24 +76,38 @@ public class CamelStopInfraActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        Assert.assertTrue(myService.shutdown.get());
+        Assertions.assertTrue(myService.shutdown.get());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No such Camel infra service 'unknown' in current test context")
+    @Test
     public void testStopInfraNotFound() {
-        CamelStopInfraAction action = new CamelStopInfraAction.Builder()
-                .service("unknown")
-                .build();
 
-        action.execute(context);
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+
+            CamelStopInfraAction action = new CamelStopInfraAction.Builder()
+                    .service("unknown")
+                    .build();
+
+            action.execute(context);
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No such Camel infra service 'service.unknown' in current test context")
+    @Test
     public void testStopInfraImplementationNotFound() {
-        CamelStopInfraAction action = new CamelStopInfraAction.Builder()
-                .service("service", "unknown")
-                .build();
 
-        action.execute(context);
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+
+            CamelStopInfraAction action = new CamelStopInfraAction.Builder()
+                    .service("service", "unknown")
+                    .build();
+
+            action.execute(context);
+    
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'service.unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
     }
 }

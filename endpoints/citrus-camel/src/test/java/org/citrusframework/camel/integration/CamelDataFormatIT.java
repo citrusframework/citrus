@@ -19,19 +19,25 @@ package org.citrusframework.camel.integration;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.camel.CamelContext;
-import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.camel.dsl.CamelSupport;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
-public class CamelDataFormatIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class CamelDataFormatIT implements TestActionSupport {
 
     @Autowired
     private CamelContext camelContext;
@@ -40,8 +46,8 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport implements Test
 
     @Test
     @CitrusTest
-    public void shouldApplyDataFormat() {
-        when(send(camel.endpoint(seda("data")::getRawUri))
+    public void shouldApplyDataFormat(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(camel.endpoint(seda("data")::getRawUri))
                 .message()
                 .body("Citrus rocks!")
                 .transform(camel.camelContext(camelContext)
@@ -49,7 +55,7 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport implements Test
                         .base64())
         );
 
-        then(receive("camel:" + camel.endpoints().seda("data").getRawUri())
+        runner.then(receive("camel:" + camel.endpoints().seda("data").getRawUri())
                 .transform(camel.camelContext(camelContext)
                         .unmarshal()
                         .base64())
@@ -62,12 +68,12 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport implements Test
 
     @Test
     @CitrusTest
-    public void shouldApplyDataFormatForFileResources() {
-        when(send(camel.endpoint(seda("data")::getRawUri))
+    public void shouldApplyDataFormatForFileResources(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(camel.endpoint(seda("data")::getRawUri))
                 .message(new DefaultMessage(Resources.create("Citrus rocks your socks off!".getBytes(StandardCharsets.UTF_8))))
         );
 
-        then(receive("camel:" + camel.endpoints().seda("data").getRawUri())
+        runner.then(receive("camel:" + camel.endpoints().seda("data").getRawUri())
                 .transform(camel.camelContext(camelContext)
                         .convertBodyTo(String.class))
                 .message()

@@ -28,18 +28,22 @@ import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
-public class CamelEndpointConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class CamelEndpointConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint
     @CamelEndpointConfig(endpointUri="direct:foo")
@@ -66,18 +70,16 @@ public class CamelEndpointConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.isResolvable(CamelSettings.getContextName())).thenReturn(true);
-        when(referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class)).thenReturn(camelContext);
-        when(referenceResolver.resolve("messageConverter", CamelMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
+        lenient().when(referenceResolver.isResolvable(CamelSettings.getContextName())).thenReturn(true);
+        lenient().when(referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class)).thenReturn(camelContext);
+        lenient().when(referenceResolver.resolve("messageConverter", CamelMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
-    @BeforeMethod
-    public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -86,44 +88,44 @@ public class CamelEndpointConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver
-        Assert.assertNotNull(camelEndpoint1.getEndpointConfiguration().getCamelContext());
-        Assert.assertEquals(camelEndpoint1.getEndpointConfiguration().getCamelContext(), camelContext);
-        Assert.assertEquals(camelEndpoint1.getEndpointConfiguration().getMessageConverter().getClass(), CamelMessageConverter.class);
-        Assert.assertEquals(camelEndpoint1.getEndpointConfiguration().getEndpointUri(), "direct:foo");
-        Assert.assertEquals(camelEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
+        assertNotNull(camelEndpoint1.getEndpointConfiguration().getCamelContext());
+        assertEquals(camelContext, camelEndpoint1.getEndpointConfiguration().getCamelContext());
+        assertEquals(CamelMessageConverter.class, camelEndpoint1.getEndpointConfiguration().getMessageConverter().getClass());
+        assertEquals("direct:foo", camelEndpoint1.getEndpointConfiguration().getEndpointUri());
+        assertEquals(5000L, camelEndpoint1.getEndpointConfiguration().getTimeout());
 
         // 2nd message receiver
-        Assert.assertNotNull(camelEndpoint2.getEndpointConfiguration().getCamelContext());
-        Assert.assertEquals(camelEndpoint2.getEndpointConfiguration().getCamelContext(), camelContext);
-        Assert.assertEquals(camelEndpoint2.getEndpointConfiguration().getEndpointUri(), "direct:bar");
-        Assert.assertEquals(camelEndpoint2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(camelEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
+        assertNotNull(camelEndpoint2.getEndpointConfiguration().getCamelContext());
+        assertEquals(camelContext, camelEndpoint2.getEndpointConfiguration().getCamelContext());
+        assertEquals("direct:bar", camelEndpoint2.getEndpointConfiguration().getEndpointUri());
+        assertEquals(messageConverter, camelEndpoint2.getEndpointConfiguration().getMessageConverter());
+        assertEquals(10000L, camelEndpoint2.getEndpointConfiguration().getTimeout());
 
         // 3rd message receiver
-        Assert.assertNotNull(camelEndpoint3.getActor());
-        Assert.assertEquals(camelEndpoint3.getActor(), testActor);
+        assertNotNull(camelEndpoint3.getActor());
+        assertEquals(testActor, camelEndpoint3.getActor());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 6L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("camel.async"));
-        Assert.assertEquals(validators.get("camel.async").getClass(), CamelEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("camel.sync"));
-        Assert.assertEquals(validators.get("camel.sync").getClass(), CamelSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("camel.inOnly"));
-        Assert.assertEquals(validators.get("camel.inOnly").getClass(), CamelEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("camel.inOut"));
-        Assert.assertEquals(validators.get("camel.inOut").getClass(), CamelSyncEndpointConfigParser.class);
+        assertEquals(6L, validators.size());
+        assertNotNull(validators.get("direct.async"));
+        assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        assertNotNull(validators.get("direct.sync"));
+        assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        assertNotNull(validators.get("camel.async"));
+        assertEquals(CamelEndpointConfigParser.class, validators.get("camel.async").getClass());
+        assertNotNull(validators.get("camel.sync"));
+        assertEquals(CamelSyncEndpointConfigParser.class, validators.get("camel.sync").getClass());
+        assertNotNull(validators.get("camel.inOnly"));
+        assertEquals(CamelEndpointConfigParser.class, validators.get("camel.inOnly").getClass());
+        assertNotNull(validators.get("camel.inOut"));
+        assertEquals(CamelSyncEndpointConfigParser.class, validators.get("camel.inOut").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("camel.async").isPresent());
+        assertTrue(AnnotationConfigParser.lookup("camel.async").isPresent());
     }
 }

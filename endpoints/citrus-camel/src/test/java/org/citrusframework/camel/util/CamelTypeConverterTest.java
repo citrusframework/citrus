@@ -19,8 +19,8 @@ package org.citrusframework.camel.util;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.camel.converter.stream.InputStreamCache;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CamelTypeConverterTest {
 
@@ -29,6 +29,6 @@ public class CamelTypeConverterTest {
     @Test
     public void shouldConvert() {
         InputStreamCache cache = new InputStreamCache("Hello Camel".getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(typeConverter.convertIfNecessary(cache, String.class), "Hello Camel");
+        Assertions.assertEquals("Hello Camel", typeConverter.convertIfNecessary(cache, String.class));
     }
 }

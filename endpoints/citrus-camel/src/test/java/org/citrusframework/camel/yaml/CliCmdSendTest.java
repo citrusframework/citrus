@@ -25,18 +25,16 @@ import org.citrusframework.camel.actions.CamelCmdSendAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.util.TestUtils;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class CliCmdSendTest extends AbstractYamlActionTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
-        if (!TestUtils.isNetworkReachable()) {
-            throw new SkipException("Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
-        }
+        Assumptions.assumeTrue(TestUtils.isNetworkReachable(), "Test skipped because network is not reachable. We are probably running behind a proxy and JBang download is not possible.");
     }
 
     @Test
@@ -52,13 +50,13 @@ public class CliCmdSendTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "CamelCliCmdSendTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 7L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), CamelRunIntegrationAction.class);
-        Assert.assertEquals(result.getTestAction(1).getClass(), CamelCmdSendAction.class);
-        Assert.assertEquals(result.getTestAction(1).getName(), "camel:cli:cmd-send");
+        Assertions.assertEquals("CamelCliCmdSendTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(7L, result.getActionCount());
+        Assertions.assertEquals(CamelRunIntegrationAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals(CamelCmdSendAction.class, result.getTestAction(1).getClass());
+        Assertions.assertEquals("camel:cli:cmd-send", result.getTestAction(1).getName());
     }
 
 }

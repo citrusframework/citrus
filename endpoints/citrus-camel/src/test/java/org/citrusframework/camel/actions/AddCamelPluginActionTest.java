@@ -24,26 +24,27 @@ import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.cli.CamelCli;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class AddCamelPluginActionTest extends UnitTestSupport {
 
     @Mock
     private CamelCli camelCli;
 
-    @BeforeMethod
+    @BeforeEach
     @Override
     public void prepareTest() {
         super.prepareTest();
-        MockitoAnnotations.openMocks(this);
         context.getReferenceResolver().bind("camelCli", camelCli);
     }
 
@@ -142,8 +143,8 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
         verify(camelCli).addPlugin("my-plugin");
 
         List<TestActionBuilder<?>> finalActions = context.getFinalActions();
-        Assert.assertEquals(finalActions.size(), 1);
-        Assert.assertEquals(finalActions.get(0).build().getClass(), DeleteCamelPluginAction.class);
+        Assertions.assertEquals(1, finalActions.size());
+        Assertions.assertEquals(DeleteCamelPluginAction.class, finalActions.get(0).build().getClass());
     }
 
     @Test
@@ -159,6 +160,6 @@ public class AddCamelPluginActionTest extends UnitTestSupport {
         action.execute(context);
 
         verify(camelCli).addPlugin("my-plugin");
-        Assert.assertTrue(context.getFinalActions().isEmpty());
+        Assertions.assertTrue(context.getFinalActions().isEmpty());
     }
 }

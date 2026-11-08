@@ -17,9 +17,9 @@
 package org.citrusframework.camel.actions;
 
 import org.citrusframework.camel.dsl.EndpointBuilderFactorySupport;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CamelExchangeActionBuilderTest {
 
@@ -31,7 +31,7 @@ public class CamelExchangeActionBuilderTest {
 
         builder.endpoint(endpoints.seda("test"));
 
-        assertEquals(builder.getDelegate().getEndpointUri(), "camel:seda://test");
+        assertEquals("camel:seda://test", builder.getDelegate().getEndpointUri());
     }
 
     @Test
@@ -40,7 +40,7 @@ public class CamelExchangeActionBuilderTest {
 
         builder.endpoint(endpoints.seda("test"), true);
 
-        assertEquals(builder.getDelegate().getEndpointUri(), "camel:sync:seda://test");
+        assertEquals("camel:sync:seda://test", builder.getDelegate().getEndpointUri());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class CamelExchangeActionBuilderTest {
 
         builder.endpoint(endpoints.seda("test"), false);
 
-        assertEquals(builder.getDelegate().getEndpointUri(), "camel:seda://test");
+        assertEquals("camel:seda://test", builder.getDelegate().getEndpointUri());
     }
 
     @Test
@@ -60,8 +60,7 @@ public class CamelExchangeActionBuilderTest {
                 endpoints.seda("test").size(100),
                 true);
 
-        assertEquals(builder.getDelegate().getEndpointUri(),
-                "camel:sync:seda://test?size=100");
+        assertEquals("camel:sync:seda://test?size=100", builder.getDelegate().getEndpointUri());
     }
 
     @Test
@@ -70,6 +69,6 @@ public class CamelExchangeActionBuilderTest {
 
         builder.endpoint(endpoints.seda("incoming"), true);
 
-        assertEquals(builder.getDelegate().getEndpointUri(), "camel:sync:seda://incoming");
+        assertEquals("camel:sync:seda://incoming", builder.getDelegate().getEndpointUri());
     }
 }

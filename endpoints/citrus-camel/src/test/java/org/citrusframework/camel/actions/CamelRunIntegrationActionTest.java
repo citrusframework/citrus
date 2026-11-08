@@ -28,19 +28,19 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.spi.Resources;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CamelRunIntegrationActionTest {
 
     private final List<Path> tempDirectories = new ArrayList<>();
 
-    @AfterMethod
+    @AfterEach
     public void cleanup() throws IOException {
         for (Path tempDirectory : tempDirectories) {
             if (Files.exists(tempDirectory)) {
@@ -76,9 +76,9 @@ public class CamelRunIntegrationActionTest {
 
         Map<String, String> props = (Map<String, String>) getField(action, "systemProperties");
 
-        assertEquals(props.get("server.port"), "9090");
-        assertEquals(props.get("greeting"), "Hello inline");
-        assertEquals(props.get("server.host"), "localhost");
+        assertEquals("9090", props.get("server.port"));
+        assertEquals("Hello inline", props.get("greeting"));
+        assertEquals("localhost", props.get("server.host"));
     }
 
     @Test
@@ -94,9 +94,9 @@ public class CamelRunIntegrationActionTest {
 
         Map<String, String> props = (Map<String, String>) getField(action, "systemProperties");
 
-        assertEquals(props.get("server.port"), "9090");
-        assertEquals(props.get("greeting"), "Hello inline");
-        assertEquals(props.get("server.host"), "localhost");
+        assertEquals("9090", props.get("server.port"));
+        assertEquals("Hello inline", props.get("greeting"));
+        assertEquals("localhost", props.get("server.host"));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class CamelRunIntegrationActionTest {
                 .integration("test", "from('timer:tick').log('hello')")
                 .build();
 
-        assertEquals(getField(action, "autoSetProperties"), true);
+        assertEquals(true, getField(action, "autoSetProperties"));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class CamelRunIntegrationActionTest {
                 .autoSetProperties(false)
                 .build();
 
-        assertEquals(getField(action, "autoSetProperties"), false);
+        assertEquals(false, getField(action, "autoSetProperties"));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class CamelRunIntegrationActionTest {
                 Map.of(),
                 Map.of("camel.component.kafka.brokers", "auto-set:9092"));
 
-        assertEquals(systemProperties.get("camel.component.kafka.brokers"), "user-defined:9092");
+        assertEquals("user-defined:9092", systemProperties.get("camel.component.kafka.brokers"));
     }
 
     @Test
@@ -152,7 +152,7 @@ public class CamelRunIntegrationActionTest {
                 Map.of(),
                 Map.of("camel.component.kafka.brokers", "auto-set:9092"));
 
-        assertEquals(systemProperties.get("camel.component.kafka.brokers"), "auto-set:9092");
+        assertEquals("auto-set:9092", systemProperties.get("camel.component.kafka.brokers"));
     }
 
     @Test
@@ -163,8 +163,8 @@ public class CamelRunIntegrationActionTest {
 
         Map<String, String> userDefinedProperties = CamelRunIntegrationAction.loadApplicationProperties(workingDir);
 
-        assertEquals(userDefinedProperties.get("camel.component.kafka.brokers"), "application.properties:9092");
-        assertEquals(userDefinedProperties.get("camel.main.name"), "test");
+        assertEquals("application.properties:9092", userDefinedProperties.get("camel.component.kafka.brokers"));
+        assertEquals("test", userDefinedProperties.get("camel.main.name"));
     }
 
     @Test
@@ -186,6 +186,6 @@ public class CamelRunIntegrationActionTest {
         Map<String, String> systemProperties = new HashMap<>();
         action.autoSetComponentProperties(context, systemProperties, createTempDirectory("citrus-camel-run"));
 
-        assertEquals(systemProperties.get("camel.component.kafka.brokers"), "localhost:9092");
+        assertEquals("localhost:9092", systemProperties.get("camel.component.kafka.brokers"));
     }
 }

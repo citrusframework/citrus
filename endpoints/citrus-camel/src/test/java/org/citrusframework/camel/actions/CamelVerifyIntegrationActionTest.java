@@ -16,18 +16,24 @@
 
 package org.citrusframework.camel.actions;
 
+import java.util.stream.Stream;
+
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.jbang.ProcessAndOutput;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
 
     @Mock
@@ -36,51 +42,42 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
     @Mock
     private Process process;
 
-    @BeforeTest
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(pao.getProcess()).thenReturn(process);
+        lenient().when(pao.getProcess()).thenReturn(process);
     }
 
-    @DataProvider(name = "commandOutputProvider")
-    public Object[][] commandOutputProvider() {
-        return new Object[][] {
-            {
+    static Stream<String> commandOutputProvider() {
+        return Stream.of(
             """
              PID   NAME      READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
             12345  my-route   1/1   Running  10s      0     0         0
-            """
-            },
-            {
+            """,
             """
             some unexpected log output
              PID   NAME      READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
             12345  my-route   1/1   Running  10s      0     0         0
-            """
-            },
-            {
+            """,
             """
              PID   NAME         READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
             11111  other-route   1/1   Running  10s      0     0         0
             12345  my-route      1/1   Running  10s      0     0         0
-            """
-            },
-            {
+            """,
             """
              PID   NAME         READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
             11111  other-route   1/1   Running  10s      0     0         0
             99999  my-route      1/1   Running  10s      0     0         0
             """
-            }
-        };
+        );
     }
 
-    @Test(dataProvider = "commandOutputProvider")
+    @ParameterizedTest
+    @MethodSource("commandOutputProvider")
     public void shouldParseOutputAndVerifyRunningStatus(String output) {
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
-        when(pao.getOutput()).thenReturn(output);
+        lenient().when(pao.getOutput()).thenReturn(output);
 
         context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
@@ -111,39 +108,31 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
         action.execute(context);
     }
 
-    @DataProvider(name = "commandJsonOutputProvider")
-    public Object[][] commandJsonOutputProvider() {
-        return new Object[][] {
-            {
+    static Stream<String> commandJsonOutputProvider() {
+        return Stream.of(
             """
             [{"pid":12345,"name":"my-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0}]
-            """
-            },
-            {
+            """,
             """
             some unexpected log output
             [{"pid":12345,"name":"my-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0}]
-            """
-            },
-            {
+            """,
             """
             [{"pid":11111,"name":"other-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0},{"pid":12345,"name":"my-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0}]
-            """
-            },
-            {
+            """,
             """
             [{"pid":11111,"name":"other-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0},{"pid":99999,"name":"my-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0}]
             """
-            }
-        };
+        );
     }
 
-    @Test(dataProvider = "commandJsonOutputProvider")
+    @ParameterizedTest
+    @MethodSource("commandJsonOutputProvider")
     public void shouldVerifyRunningStatus(String output) {
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
-        when(pao.getOutput()).thenReturn(output);
+        lenient().when(pao.getOutput()).thenReturn(output);
 
         context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
@@ -172,37 +161,31 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
         action.execute(context);
     }
 
-    @DataProvider(name = "failedOutputProvider")
-    public Object[][] failedOutputProvider() {
-        return new Object[][] {
-            {""},
-            {"Something completely different"},
-            {
+    static Stream<String> failedOutputProvider() {
+        return Stream.of(
+            "",
+            "Something completely different",
             """
              PID   NAME   READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
-            """
-            },
-            {
+            """,
             """
              PID   NAME         READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
             11111  other-route   1/1   Running  10s      0     0         0
-            """
-            },
-            {
+            """,
             """
              PID   NAME      READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
             12345  my-route   0/1   Pending  10s      0     0         0
             """
-            },
-        };
+        );
     }
 
-    @Test(dataProvider = "failedOutputProvider", expectedExceptions = ActionTimeoutException.class)
+    @ParameterizedTest
+    @MethodSource("failedOutputProvider")
     public void shouldParseOutputAndFailVerification(String output) {
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
-        when(pao.getOutput()).thenReturn(output);
+        lenient().when(pao.getOutput()).thenReturn(output);
 
         context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
@@ -230,38 +213,32 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
                 .withReferenceResolver(context.getReferenceResolver())
                 .build();
 
-        action.execute(context);
+        assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
-    @DataProvider(name = "failedJsonOutputProvider")
-    public Object[][] failedJsonOutputProvider() {
-        return new Object[][] {
-            {""},
-            {"Something completely different"},
-            {
+    static Stream<String> failedJsonOutputProvider() {
+        return Stream.of(
+            "",
+            "Something completely different",
             """
             []
-            """
-            },
-            {
+            """,
             """
             [{"pid":11111,"name":"other-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0}]
-            """
-            },
-            {
+            """,
             """
             [{"pid":12345,"name":"my-route","ready":"0/1","status":"Pending","age":"25s","total":0,"fail":0,"inflight":0}]
             """
-            }
-        };
+        );
     }
 
-    @Test(dataProvider = "failedOutputProvider", expectedExceptions = ActionTimeoutException.class)
+    @ParameterizedTest
+    @MethodSource("failedOutputProvider")
     public void shouldFailVerification(String output) {
-        when(process.isAlive()).thenReturn(true);
-        when(process.exitValue()).thenReturn(0);
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
-        when(pao.getOutput()).thenReturn(output);
+        lenient().when(pao.getOutput()).thenReturn(output);
 
         context.getReferenceResolver().bind("camelCli", new CamelCli() {
             @Override
@@ -287,7 +264,7 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
                 .withReferenceResolver(context.getReferenceResolver())
                 .build();
 
-        action.execute(context);
+        assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
 }

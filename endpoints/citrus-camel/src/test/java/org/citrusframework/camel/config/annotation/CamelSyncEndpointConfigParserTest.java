@@ -24,20 +24,24 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
 import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
-public class CamelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class CamelSyncEndpointConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint
     @CamelSyncEndpointConfig(endpointUri="direct:foo")
@@ -68,19 +72,17 @@ public class CamelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.isResolvable(CamelSettings.getContextName())).thenReturn(true);
-        when(referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class)).thenReturn(camelContext);
-        when(referenceResolver.resolve("messageConverter", CamelMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("messageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
+        lenient().when(referenceResolver.isResolvable(CamelSettings.getContextName())).thenReturn(true);
+        lenient().when(referenceResolver.resolve(CamelSettings.getContextName(), CamelContext.class)).thenReturn(camelContext);
+        lenient().when(referenceResolver.resolve("messageConverter", CamelMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("messageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
-    @BeforeMethod
-    public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -89,35 +91,35 @@ public class CamelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver
-        Assert.assertNotNull(camelSyncEndpoint1.getEndpointConfiguration().getCamelContext());
-        Assert.assertEquals(camelSyncEndpoint1.getEndpointConfiguration().getCamelContext(), camelContext);
-        Assert.assertEquals(camelSyncEndpoint1.getEndpointConfiguration().getEndpointUri(), "direct:foo");
-        Assert.assertEquals(camelSyncEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(camelSyncEndpoint1.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertEquals(camelSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        assertNotNull(camelSyncEndpoint1.getEndpointConfiguration().getCamelContext());
+        assertEquals(camelContext, camelSyncEndpoint1.getEndpointConfiguration().getCamelContext());
+        assertEquals("direct:foo", camelSyncEndpoint1.getEndpointConfiguration().getEndpointUri());
+        assertEquals(5000L, camelSyncEndpoint1.getEndpointConfiguration().getTimeout());
+        assertEquals(500L, camelSyncEndpoint1.getEndpointConfiguration().getPollingInterval());
+        assertEquals(DefaultMessageCorrelator.class, camelSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass());
 
         // 2nd message receiver
-        Assert.assertNotNull(camelSyncEndpoint2.getEndpointConfiguration().getCamelContext());
-        Assert.assertEquals(camelSyncEndpoint2.getEndpointConfiguration().getCamelContext(), camelContext);
-        Assert.assertEquals(camelSyncEndpoint2.getEndpointConfiguration().getEndpointUri(), "direct:bar");
-        Assert.assertEquals(camelSyncEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(camelSyncEndpoint2.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertEquals(camelSyncEndpoint2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(camelSyncEndpoint2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        assertNotNull(camelSyncEndpoint2.getEndpointConfiguration().getCamelContext());
+        assertEquals(camelContext, camelSyncEndpoint2.getEndpointConfiguration().getCamelContext());
+        assertEquals("direct:bar", camelSyncEndpoint2.getEndpointConfiguration().getEndpointUri());
+        assertEquals(10000L, camelSyncEndpoint2.getEndpointConfiguration().getTimeout());
+        assertEquals(500L, camelSyncEndpoint2.getEndpointConfiguration().getPollingInterval());
+        assertEquals(messageConverter, camelSyncEndpoint2.getEndpointConfiguration().getMessageConverter());
+        assertEquals(DefaultMessageCorrelator.class, camelSyncEndpoint2.getEndpointConfiguration().getCorrelator().getClass());
 
         // 3rd message receiver
-        Assert.assertNotNull(camelSyncEndpoint3.getEndpointConfiguration().getCamelContext());
-        Assert.assertEquals(camelSyncEndpoint3.getEndpointConfiguration().getCamelContext(), camelContext);
-        Assert.assertEquals(camelSyncEndpoint3.getEndpointConfiguration().getEndpointUri(), "direct:foo");
-        Assert.assertEquals(camelSyncEndpoint3.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(camelSyncEndpoint3.getEndpointConfiguration().getPollingInterval(), 250L);
-        Assert.assertEquals(camelSyncEndpoint3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
-        Assert.assertNotNull(camelSyncEndpoint3.getActor());
-        Assert.assertEquals(camelSyncEndpoint3.getActor(), testActor);
+        assertNotNull(camelSyncEndpoint3.getEndpointConfiguration().getCamelContext());
+        assertEquals(camelContext, camelSyncEndpoint3.getEndpointConfiguration().getCamelContext());
+        assertEquals("direct:foo", camelSyncEndpoint3.getEndpointConfiguration().getEndpointUri());
+        assertEquals(5000L, camelSyncEndpoint3.getEndpointConfiguration().getTimeout());
+        assertEquals(250L, camelSyncEndpoint3.getEndpointConfiguration().getPollingInterval());
+        assertEquals(messageCorrelator, camelSyncEndpoint3.getEndpointConfiguration().getCorrelator());
+        assertNotNull(camelSyncEndpoint3.getActor());
+        assertEquals(testActor, camelSyncEndpoint3.getActor());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("camel.sync").isPresent());
+        assertTrue(AnnotationConfigParser.lookup("camel.sync").isPresent());
     }
 }

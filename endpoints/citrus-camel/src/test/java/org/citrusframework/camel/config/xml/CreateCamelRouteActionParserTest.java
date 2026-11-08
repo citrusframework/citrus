@@ -19,11 +19,10 @@ package org.citrusframework.camel.config.xml;
 import org.apache.camel.CamelContext;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
-import org.citrusframework.testng.AbstractActionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<CreateCamelRouteAction> {
+public class CreateCamelRouteActionParserTest extends org.citrusframework.junit.jupiter.AbstractActionParserTest<CreateCamelRouteAction> {
 
     @Test
     public void testCreateRouteActionParser() {
@@ -31,9 +30,9 @@ public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<C
         assertActionClassAndName(CreateCamelRouteAction.class, "camel:create-routes");
 
         CreateCamelRouteAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
-        Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
+        Assertions.assertEquals(("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
                 "<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route id=\"route_1\">" +
                         "<from uri=\"direct:test1\"/>" +
@@ -43,19 +42,19 @@ public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<C
                         "<from uri=\"direct:test2\"/>" +
                         "<to uri=\"mock:test2\"/>" +
                     "</route>" +
-                "</routeContext>").replaceAll("\\s", ""));
-        Assert.assertEquals(action.getRoutes().size(), 0);
+                "</routeContext>").replaceAll("\\s", ""), action.getRouteSpec().replaceAll("\\s", ""));
+        Assertions.assertEquals(0, action.getRoutes().size());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
-        Assert.assertEquals(action.getRouteSpec().replaceAll("\\s", ""), ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+        Assertions.assertNotNull(action.getCamelContext());
+        Assertions.assertEquals(beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class), action.getCamelContext());
+        Assertions.assertEquals(("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
                 "<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route>" +
                         "<from uri=\"direct:test3\"/>" +
                         "<to uri=\"mock:test3\"/>" +
                     "</route>" +
-                "</routeContext>").replaceAll("\\s", ""));
-        Assert.assertEquals(action.getRoutes().size(), 0);
+                "</routeContext>").replaceAll("\\s", ""), action.getRouteSpec().replaceAll("\\s", ""));
+        Assertions.assertEquals(0, action.getRoutes().size());
     }
 }

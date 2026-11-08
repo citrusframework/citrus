@@ -17,14 +17,14 @@
 package org.citrusframework.camel.message;
 
 import org.citrusframework.message.MessageProcessor;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CamelMessageProcessorSupportTest {
 
     @Test
     public void testLookup() {
-        Assert.assertTrue(MessageProcessor.lookup("camel").isPresent());
-        Assert.assertEquals(MessageProcessor.lookup("camel").get().getClass(), CamelMessageProcessorSupport.class);
+        Assertions.assertTrue(MessageProcessor.lookup("camel").isPresent());
+        Assertions.assertEquals(CamelMessageProcessorSupport.class, MessageProcessor.lookup("camel").get().getClass());
     }
 }
