@@ -155,7 +155,7 @@ public class CitrusStandaloneIT implements TestActionSupport {
                 @Override
                 public void validateMessage(Message receivedMessage, Message controlMessage,
                                             TestContext context, ValidationContext validationContext) {
-                    Assertions.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload(String.class), "Validation failed - " +
+                    Assertions.assertEquals(controlMessage.getPayload(String.class), receivedMessage.getPayload(String.class), "Validation failed - " +
                             "expected message contents not equal!");
                 }
 
