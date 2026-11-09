@@ -112,6 +112,11 @@ public class CitrusSchemaGeneratorTest {
     }
 
     @Test
+    public void verifyInfraServiceDescriptions() throws IOException {
+        verifyCatalogDescriptions("citrus-catalog-aggregate-infra-services.json");
+    }
+
+    @Test
     public void verifyAggregateTestActionsJson() throws IOException {
         verifyGeneratedFile("citrus-catalog-aggregate-test-actions.json", context);
     }
@@ -124,6 +129,11 @@ public class CitrusSchemaGeneratorTest {
     @Test
     public void verifyAggregateTestContainersJson() throws IOException {
         verifyGeneratedFile("citrus-catalog-aggregate-test-containers.json", context);
+    }
+
+    @Test
+    public void verifyTestContainerDescriptions() throws IOException {
+        verifyCatalogDescriptions("citrus-catalog-aggregate-test-containers.json");
     }
 
     @Test
@@ -197,7 +207,7 @@ public class CitrusSchemaGeneratorTest {
         List<String> missing = new ArrayList<>();
 
         for (Map.Entry<String, JsonNode> entry : catalog.properties()) {
-            if (entry.getValue().path("description").asText().isBlank()) {
+            if (entry.getValue().path("description").asString().isBlank()) {
                 missing.add(entry.getKey());
             }
 
@@ -217,14 +227,14 @@ public class CitrusSchemaGeneratorTest {
      * description inside the oneOf branch, so look there when the top-level property has none.
      */
     private boolean hasDescription(String propertyName, JsonNode property, JsonNode propertiesSchema) {
-        if (!property.path("description").asText().isBlank()) {
+        if (!property.path("description").asString().isBlank()) {
             return true;
         }
 
         for (JsonNode anyOf : propertiesSchema.path("anyOf")) {
             for (JsonNode branch : anyOf.path("oneOf")) {
                 JsonNode branchProperty = branch.path("properties").path(propertyName);
-                if (!branchProperty.isMissingNode() && !branchProperty.path("description").asText().isBlank()) {
+                if (!branchProperty.isMissingNode() && !branchProperty.path("description").asString().isBlank()) {
                     return true;
                 }
             }
