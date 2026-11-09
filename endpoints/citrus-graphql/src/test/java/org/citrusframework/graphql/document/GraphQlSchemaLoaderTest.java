@@ -28,7 +28,7 @@ import graphql.parser.Parser;
 import graphql.schema.GraphQLSchema;
 import graphql.validation.ValidationError;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

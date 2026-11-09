@@ -15,23 +15,32 @@
  */
 package org.citrusframework.graphql.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * Schema validation of documents on both sides; the schema is split across several SDL files.
  */
-@Test
-public class GraphQlSchemaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlSchemaIT implements TestActionSupport {
 
     private static final String[] SCHEMA = {
             "classpath:org/citrusframework/graphql/schema/query.graphqls",
@@ -56,46 +65,49 @@ public class GraphQlSchemaIT extends TestNGCitrusSpringSupport implements TestAc
             .schema(SCHEMA)
             .build();
 
+    @Test
     @CitrusTest
-    public void validDocumentPassesOnBothSides() {
-        when(graphql().client(schemaClient).send()
+    public void validDocumentPassesOnBothSides(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(schemaClient).send()
                 .query("{ booksSince(date: \"2026-01-01\") { title published } }")
                 .fork(true));
 
-        then(graphql().server(schemaServer).receive());
+        runner.then(graphql().server(schemaServer).receive());
 
-        then(graphql().server(schemaServer).send()
+        runner.then(graphql().server(schemaServer).send()
                 .data("{\"booksSince\":[]}"));
 
-        then(graphql().client(schemaClient).receive()
+        runner.then(graphql().client(schemaClient).receive()
                 .data("$.booksSince.length()", 0));
     }
 
+    @Test
     @CitrusTest
-    public void clientRejectsInvalidDocumentBeforeSending() {
-        then(assertException()
+    public void clientRejectsInvalidDocumentBeforeSending(@CitrusResource GherkinTestActionRunner runner) {
+        runner.then(assertException()
                 .exception(ValidationException.class)
                 .message("@contains('isbn')@")
                 .when(graphql().client(schemaClient).send()
                         .query("{ book(id: 1) { isbn } }")));
     }
 
+    @Test
     @CitrusTest
-    public void simulatorRejectsInvalidIncomingDocument() {
-        when(graphql().client(schemaClient).send()
+    public void simulatorRejectsInvalidIncomingDocument(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(schemaClient).send()
                 .strict(false)
                 .query("{ book(id: 1) { isbn } }")
                 .fork(true));
 
-        then(assertException()
+        runner.then(assertException()
                 .exception(ValidationException.class)
                 .message("@startsWith('GraphQL document does not match the schema')@")
                 .when(graphql().server(schemaServer).receive()));
 
-        then(graphql().server(schemaServer).send()
+        runner.then(graphql().server(schemaServer).send()
                 .error(org.citrusframework.api.graphql.GraphQlError.error().message("Field 'isbn' is undefined")));
 
-        then(graphql().client(schemaClient).receive()
+        runner.then(graphql().client(schemaClient).receive()
                 .expectErrors());
     }
 }

@@ -21,19 +21,19 @@ import java.util.List;
 
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.mock.http.client.MockClientHttpRequest;
 import org.springframework.mock.http.client.MockClientHttpResponse;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GraphQlClientTest extends AbstractTestNGUnitTest {
+public class GraphQlClientTest extends AbstractUnitTest {
 
     @Test
     public void shouldUseGraphQlDefaults() {

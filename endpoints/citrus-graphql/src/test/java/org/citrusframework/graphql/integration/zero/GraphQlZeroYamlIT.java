@@ -19,16 +19,22 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * YAML DSL against the {@link GraphQlZeroSimulator}: every query and mutation of the GraphQLZero
  * API, one test per resource. The simulator server lives in the registry; each test declares its
  * GraphQL client.
  */
-public class GraphQlZeroYamlIT extends TestNGCitrusSpringSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GraphQlZeroYamlIT {
 
     @BindToRegistry
     private final GraphQlServer zeroServer = GraphQlEndpoints.graphql().server()

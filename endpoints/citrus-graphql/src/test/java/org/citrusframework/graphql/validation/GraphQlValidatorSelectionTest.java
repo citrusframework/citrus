@@ -20,15 +20,15 @@ import java.util.List;
 import org.citrusframework.graphql.message.GraphQlMessageHeaders;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GraphQlValidatorSelectionTest extends AbstractTestNGUnitTest {
+public class GraphQlValidatorSelectionTest extends AbstractUnitTest {
 
     @Test
     public void shouldSupportOnlyMessagesReceivedThroughGraphQlActions() {

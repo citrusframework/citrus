@@ -18,7 +18,7 @@ package org.citrusframework.graphql.server;
 import java.util.List;
 
 import org.citrusframework.http.server.HttpServer;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

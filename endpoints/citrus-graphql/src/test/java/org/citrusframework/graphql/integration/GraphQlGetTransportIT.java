@@ -21,6 +21,8 @@ import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.http.client.HttpClient;
@@ -28,15 +30,19 @@ import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Guards the transport assumption GraphQL GET requests rely on: a form-encoded query string placed
@@ -44,8 +50,11 @@ import static org.testng.Assert.assertEquals;
  * Query parameters set via {@code HttpMessage#queryParam} would not, because they are appended
  * undecoded and comma-delimited before {@code URI.create}.
  */
-@Test
-public class GraphQlGetTransportIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlGetTransportIT implements TestActionSupport {
 
     private static final String QUERY = """
             query Book($id: ID!, $q: String) {
@@ -67,36 +76,37 @@ public class GraphQlGetTransportIT extends TestNGCitrusSpringSupport implements 
             .requestUrl("http://localhost:%d".formatted(port))
             .build();
 
+    @Test
     @CitrusTest
-    public void formEncodedQueryStringInRequestPathArrivesUnchanged() {
+    public void formEncodedQueryStringInRequestPathArrivesUnchanged(@CitrusResource GherkinTestActionRunner runner) {
         String path = "/graphql?query=" + URLEncoder.encode(QUERY, UTF_8)
                 + "&operationName=Book"
                 + "&variables=" + URLEncoder.encode(VARIABLES, UTF_8);
 
-        when(http().client(getClient)
+        runner.when(http().client(getClient)
                 .send()
                 .get(path)
                 .fork(true));
 
-        then(http().server(getServer)
+        runner.then(http().server(getServer)
                 .receive()
                 .get("/graphql")
                 .message()
                 .extract(fromHeaders().header(HttpMessageHeaders.HTTP_QUERY_PARAMS, "rawQueryParams")));
 
-        then(http().server(getServer)
+        runner.then(http().server(getServer)
                 .send()
                 .response(HttpStatus.OK));
 
-        then(http().client(getClient)
+        runner.then(http().client(getClient)
                 .receive()
                 .response(HttpStatus.OK));
 
-        then(context -> {
+        runner.then(context -> {
             Map<String, String> params = decode(context.getVariable("rawQueryParams"));
-            assertEquals(params.get("query"), QUERY);
-            assertEquals(params.get("operationName"), "Book");
-            assertEquals(params.get("variables"), VARIABLES);
+            assertEquals(QUERY, params.get("query"));
+            assertEquals("Book", params.get("operationName"));
+            assertEquals(VARIABLES, params.get("variables"));
         });
     }
 

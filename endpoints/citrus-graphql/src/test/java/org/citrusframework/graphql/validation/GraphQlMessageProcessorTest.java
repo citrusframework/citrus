@@ -18,13 +18,13 @@ package org.citrusframework.graphql.validation;
 import org.citrusframework.graphql.message.GraphQlMessageHeaders;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.springframework.http.HttpMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GraphQlMessageProcessorTest extends AbstractTestNGUnitTest {
+public class GraphQlMessageProcessorTest extends AbstractUnitTest {
 
     @Test
     public void shouldMarkResponses() {

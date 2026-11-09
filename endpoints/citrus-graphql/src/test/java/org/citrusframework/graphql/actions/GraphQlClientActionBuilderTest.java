@@ -35,12 +35,12 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.messaging.Producer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,14 +55,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GraphQlClientActionBuilderTest extends AbstractTestNGUnitTest {
+public class GraphQlClientActionBuilderTest extends AbstractUnitTest {
 
     private GraphQlClient client;
     private GraphQlEndpointConfiguration configuration;
     private Producer producer;
     private SelectiveConsumer consumer;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupClient() {
         configuration = new GraphQlEndpointConfiguration();
         configuration.setRequestUrl("http://localhost:8080");

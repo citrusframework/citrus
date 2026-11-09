@@ -16,14 +16,20 @@
 
 package org.citrusframework.graphql.integration.zero;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
@@ -33,8 +39,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
  * loaded from a {@code *.graphql} resource via {@code queryResource(...)} instead of an inline
  * {@code query(...)} string.
  */
-@Test
-public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlZeroResourceIT implements TestActionSupport {
 
     private final int port = findAvailableTcpPort(20000, 32767);
 
@@ -53,16 +62,17 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
             .timeout(5000L)
             .build();
 
+    @Test
     @CitrusTest
-    public void posts() {
+    public void posts(@CitrusResource GherkinTestActionRunner runner) {
         // query GetPost
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/get-post.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.post.id", "1")
                 .data("$.post.title", "sunt aut facere repellat provident occaecati excepturi optio reprehenderit")
@@ -71,13 +81,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // query ListPosts
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/list-posts.graphql")
                 .variables("""
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.posts.meta.totalCount", 100)
                 .data("$.posts.data.length()", 2)
@@ -87,13 +97,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation CreatePost
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/create-post.graphql")
                 .variables("""
                     {"input": {"title": "Citrus", "body": "GraphQL rocks"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.createPost.id", "101")
                 .data("$.createPost.title", "Citrus")
@@ -102,13 +112,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation UpdatePost
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/update-post.graphql")
                 .variables("""
                     {"id": "1", "input": {"body": "Updated by Citrus"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.updatePost.id", "1")
                 .data("$.updatePost.body", "Updated by Citrus")
@@ -116,29 +126,30 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation DeletePost
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/delete-post.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.deletePost", true)
                 .message()
                 .status(200));
     }
 
+    @Test
     @CitrusTest
-    public void users() {
+    public void users(@CitrusResource GherkinTestActionRunner runner) {
         // query GetUser
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/get-user.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.user.name", "Leanne Graham")
                 .data("$.user.username", "Bret")
@@ -148,13 +159,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // query ListUsers
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/list-users.graphql")
                 .variables("""
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.users.meta.totalCount", 10)
                 .data("$.users.data.length()", 2)
@@ -164,13 +175,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation CreateUser
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/create-user.graphql")
                 .variables("""
                     {"input": {"name": "Citrus Tester", "username": "citrus", "email": "citrus@example.org"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.createUser.id", "11")
                 .data("$.createUser.username", "citrus")
@@ -179,13 +190,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation UpdateUser
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/update-user.graphql")
                 .variables("""
                     {"id": "1", "input": {"name": "Leanne Citrus"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.updateUser.id", "1")
                 .data("$.updateUser.name", "Leanne Citrus")
@@ -193,29 +204,30 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation DeleteUser
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/delete-user.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.deleteUser", true)
                 .message()
                 .status(200));
     }
 
+    @Test
     @CitrusTest
-    public void comments() {
+    public void comments(@CitrusResource GherkinTestActionRunner runner) {
         // query GetComment
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/get-comment.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.comment.name", "id labore ex et quam laborum")
                 .data("$.comment.email", "Eliseo@gardner.biz")
@@ -224,13 +236,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // query ListComments
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/list-comments.graphql")
                 .variables("""
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.comments.meta.totalCount", 500)
                 .data("$.comments.data.length()", 2)
@@ -239,13 +251,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation CreateComment
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/create-comment.graphql")
                 .variables("""
                     {"input": {"name": "Citrus", "email": "citrus@example.org", "body": "Nice post"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.createComment.id", "501")
                 .data("$.createComment.body", "Nice post")
@@ -253,13 +265,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation UpdateComment
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/update-comment.graphql")
                 .variables("""
                     {"id": "1", "input": {"body": "Edited by Citrus"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.updateComment.id", "1")
                 .data("$.updateComment.body", "Edited by Citrus")
@@ -267,29 +279,30 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation DeleteComment
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/delete-comment.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.deleteComment", true)
                 .message()
                 .status(200));
     }
 
+    @Test
     @CitrusTest
-    public void todos() {
+    public void todos(@CitrusResource GherkinTestActionRunner runner) {
         // query GetTodo
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/get-todo.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.todo.title", "delectus aut autem")
                 .data("$.todo.completed", false)
@@ -298,13 +311,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // query ListTodos
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/list-todos.graphql")
                 .variables("""
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.todos.meta.totalCount", 200)
                 .data("$.todos.data.length()", 2)
@@ -313,13 +326,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation CreateTodo
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/create-todo.graphql")
                 .variables("""
                     {"input": {"title": "Write GraphQL tests", "completed": false}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.createTodo.id", "201")
                 .data("$.createTodo.title", "Write GraphQL tests")
@@ -328,13 +341,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation UpdateTodo
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/update-todo.graphql")
                 .variables("""
                     {"id": "1", "input": {"completed": true}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.updateTodo.id", "1")
                 .data("$.updateTodo.completed", true)
@@ -342,29 +355,30 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation DeleteTodo
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/delete-todo.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.deleteTodo", true)
                 .message()
                 .status(200));
     }
 
+    @Test
     @CitrusTest
-    public void albums() {
+    public void albums(@CitrusResource GherkinTestActionRunner runner) {
         // query GetAlbum
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/get-album.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.album.title", "quidem molestiae enim")
                 .data("$.album.user.id", "1")
@@ -372,13 +386,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // query ListAlbums
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/list-albums.graphql")
                 .variables("""
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.albums.meta.totalCount", 100)
                 .data("$.albums.data.length()", 2)
@@ -387,13 +401,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation CreateAlbum
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/create-album.graphql")
                 .variables("""
                     {"input": {"title": "Citrus album", "userId": "1"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.createAlbum.id", "101")
                 .data("$.createAlbum.title", "Citrus album")
@@ -401,13 +415,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation UpdateAlbum
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/update-album.graphql")
                 .variables("""
                     {"id": "1", "input": {"title": "Renamed by Citrus"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.updateAlbum.id", "1")
                 .data("$.updateAlbum.title", "Renamed by Citrus")
@@ -415,29 +429,30 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation DeleteAlbum
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/delete-album.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.deleteAlbum", true)
                 .message()
                 .status(200));
     }
 
+    @Test
     @CitrusTest
-    public void photos() {
+    public void photos(@CitrusResource GherkinTestActionRunner runner) {
         // query GetPhoto
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/get-photo.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.photo.title", "accusamus beatae ad facilis cum similique qui sunt")
                 .data("$.photo.url", "https://picsum.photos/seed/1/600")
@@ -446,13 +461,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // query ListPhotos
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/list-photos.graphql")
                 .variables("""
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.photos.meta.totalCount", 5000)
                 .data("$.photos.data.length()", 2)
@@ -461,13 +476,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation CreatePhoto
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/create-photo.graphql")
                 .variables("""
                     {"input": {"title": "Citrus", "url": "https://example.org/citrus.png", "thumbnailUrl": "https://example.org/citrus-t.png"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.createPhoto.id", "5001")
                 .data("$.createPhoto.url", "https://example.org/citrus.png")
@@ -475,13 +490,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation UpdatePhoto
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/update-photo.graphql")
                 .variables("""
                     {"id": "1", "input": {"title": "Retitled by Citrus"}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.updatePhoto.id", "1")
                 .data("$.updatePhoto.title", "Retitled by Citrus")
@@ -489,13 +504,13 @@ public class GraphQlZeroResourceIT extends TestNGCitrusSpringSupport implements 
                 .status(200));
 
         // mutation DeletePhoto
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/delete-photo.graphql")
                 .variables("""
                     {"id": "1"}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.deletePhoto", true)
                 .message()

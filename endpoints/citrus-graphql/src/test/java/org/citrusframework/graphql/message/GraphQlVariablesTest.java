@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class GraphQlVariablesTest extends AbstractTestNGUnitTest {
+public class GraphQlVariablesTest extends AbstractUnitTest {
 
     @Test
     public void shouldKeepJsonTypesOfSingleVariables() {

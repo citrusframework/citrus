@@ -26,7 +26,7 @@ import org.springframework.graphql.GraphQlResponse;
 import org.springframework.graphql.ResponseError;
 import org.springframework.graphql.support.DefaultGraphQlRequest;
 import org.springframework.http.HttpMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

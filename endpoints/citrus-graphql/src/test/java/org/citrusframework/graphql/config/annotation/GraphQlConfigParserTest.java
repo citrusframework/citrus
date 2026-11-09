@@ -20,16 +20,16 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.client.GraphQlEndpointConfiguration;
 import org.citrusframework.graphql.server.GraphQlServer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GraphQlConfigParserTest extends AbstractTestNGUnitTest {
+public class GraphQlConfigParserTest extends AbstractUnitTest {
 
     private final ClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 
@@ -55,7 +55,7 @@ public class GraphQlConfigParserTest extends AbstractTestNGUnitTest {
             timeout = 2500L)
     private GraphQlServer server;
 
-    @BeforeMethod
+    @BeforeEach
     public void bindReferences() {
         context.getReferenceResolver().bind("myRequestFactory", requestFactory);
     }

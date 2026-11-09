@@ -21,7 +21,7 @@ import graphql.language.Document;
 import graphql.language.OperationDefinition.Operation;
 import graphql.schema.GraphQLSchema;
 import org.citrusframework.exceptions.ValidationException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

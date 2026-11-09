@@ -22,16 +22,16 @@ import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.message.GraphQlMessageHeaders;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.ValidationStatus;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.api.graphql.GraphQlError.error;
 
-public class GraphQlResponseValidationTest extends AbstractTestNGUnitTest {
+public class GraphQlResponseValidationTest extends AbstractUnitTest {
 
     private final GraphQlMessageValidator validator = new GraphQlMessageValidator();
 

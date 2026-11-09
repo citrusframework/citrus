@@ -26,8 +26,8 @@ import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.springframework.http.HttpMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +35,7 @@ public class GraphQlEndpointAdapterTest {
 
     private final List<Message> handled = new ArrayList<>();
 
-    @BeforeMethod
+    @BeforeEach
     public void clearHandled() {
         handled.clear();
     }

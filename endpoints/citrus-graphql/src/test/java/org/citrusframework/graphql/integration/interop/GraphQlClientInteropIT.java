@@ -15,16 +15,22 @@
  */
 package org.citrusframework.graphql.integration.interop;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.api.graphql.GraphQlError.error;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
@@ -32,12 +38,15 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 /**
  * The GraphQL client against a real Spring GraphQL server.
  */
-@Test
-public class GraphQlClientInteropIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlClientInteropIT implements TestActionSupport {
 
-    private final int port = findAvailableTcpPort(20000, 32767);
+    private static final int port = findAvailableTcpPort(20000, 32767);
 
-    private SpringGraphQlServer springServer;
+    private static SpringGraphQlServer springServer;
 
     @BindToRegistry
     private final GraphQlClient springGraphQl = GraphQlEndpoints.graphql().client()
@@ -45,74 +54,79 @@ public class GraphQlClientInteropIT extends TestNGCitrusSpringSupport implements
             .timeout(5000L)
             .build();
 
-    @BeforeClass(alwaysRun = true)
-    public void startSpringGraphQl() throws Exception {
+    @BeforeAll
+    static void startSpringGraphQl() throws Exception {
         springServer = SpringGraphQlServer.start(port);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stopSpringGraphQl() throws Exception {
+    @AfterAll
+    static void stopSpringGraphQl() throws Exception {
         if (springServer != null) {
             springServer.close();
         }
     }
 
+    @Test
     @CitrusTest
-    public void readsData() {
-        when(graphql().client(springGraphQl).send()
+    public void readsData(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(springGraphQl).send()
                 .query("query Book($id: ID!) { book(id: $id) { id title } }")
                 .variable("id", "1"));
 
-        then(graphql().client(springGraphQl).receive()
+        runner.then(graphql().client(springGraphQl).receive()
                 .data("{\"book\":{\"id\":\"1\",\"title\":\"Dune\"}}")
                 .message()
                 .status(200)
                 .header("Content-Type", "@startsWith('application/graphql-response+json')@"));
     }
 
+    @Test
     @CitrusTest
-    public void readsFieldErrors() {
-        when(graphql().client(springGraphQl).send()
+    public void readsFieldErrors(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(springGraphQl).send()
                 .query("{ book(id: \"7\") { title } }"));
 
-        then(graphql().client(springGraphQl).receive()
+        runner.then(graphql().client(springGraphQl).receive()
                 .expectError(error().message("Book 7 not found").path("book").code("NOT_FOUND"))
                 .message()
                 .status(200));
     }
 
+    @Test
     @CitrusTest
-    public void failsOnUnexpectedFieldErrors() {
-        when(graphql().client(springGraphQl).send()
+    public void failsOnUnexpectedFieldErrors(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(springGraphQl).send()
                 .query("{ book(id: \"7\") { title } }"));
 
-        then(assertException()
+        runner.then(assertException()
                 .exception(ValidationException.class)
                 .message("@startsWith('GraphQL response contains 1 unexpected error: [NOT_FOUND] Book 7 not found at book')@")
                 .when(graphql().client(springGraphQl).receive()));
     }
 
+    @Test
     @CitrusTest
-    public void serverRejectsInvalidDocumentWithClientError() {
-        when(graphql().client(springGraphQl).send()
+    public void serverRejectsInvalidDocumentWithClientError(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(springGraphQl).send()
                 .strict(false)
                 .query("{ book(id: \"1\") { isbn } }"));
 
-        then(graphql().client(springGraphQl).receive()
+        runner.then(graphql().client(springGraphQl).receive()
                 .expectError(error().message("@contains('isbn')@"))
                 .message()
                 .status(400));
     }
 
+    @Test
     @CitrusTest
-    public void serverAnswersLegacyJsonWithOk() {
+    public void serverAnswersLegacyJsonWithOk(@CitrusResource GherkinTestActionRunner runner) {
         var request = graphql().client(springGraphQl).send()
                 .strict(false)
                 .query("{ book(id: \"1\") { isbn } }");
         request.message().accept("application/json");
-        when(request);
+        runner.when(request);
 
-        then(graphql().client(springGraphQl).receive()
+        runner.then(graphql().client(springGraphQl).receive()
                 .expectErrors()
                 .message()
                 .status(200)
