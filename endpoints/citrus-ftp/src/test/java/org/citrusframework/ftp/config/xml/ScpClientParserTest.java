@@ -22,9 +22,9 @@ import org.citrusframework.TestActor;
 import org.citrusframework.ftp.client.ScpClient;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.ErrorHandlingStrategy;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7.6
@@ -35,46 +35,46 @@ public class ScpClientParserTest extends AbstractBeanDefinitionParserTest {
     public void testScpClientParser() {
         Map<String, ScpClient> clients = beanDefinitionContext.getBeansOfType(ScpClient.class);
 
-        Assert.assertEquals(clients.size(), 4);
+        Assertions.assertEquals(4, clients.size());
 
         // 1st scp client
         ScpClient scpClient = clients.get("scpClient1");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPortOption(), "-P");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertTrue(scpClient.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertNull(scpClient.getEndpointConfiguration().getPrivateKeyPath());
-        Assert.assertNull(scpClient.getEndpointConfiguration().getPrivateKeyPassword());
-        Assert.assertFalse(scpClient.getEndpointConfiguration().isStrictHostChecking());
-        Assert.assertNull(scpClient.getEndpointConfiguration().getKnownHosts());
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
+        Assertions.assertEquals("localhost", scpClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals("-P", scpClient.getEndpointConfiguration().getPortOption());
+        Assertions.assertEquals(22222, scpClient.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, scpClient.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertTrue(scpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assertions.assertNull(scpClient.getEndpointConfiguration().getPrivateKeyPath());
+        Assertions.assertNull(scpClient.getEndpointConfiguration().getPrivateKeyPassword());
+        Assertions.assertFalse(scpClient.getEndpointConfiguration().isStrictHostChecking());
+        Assertions.assertNull(scpClient.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals(5000L, scpClient.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(ErrorHandlingStrategy.PROPAGATE, scpClient.getEndpointConfiguration().getErrorHandlingStrategy());
 
         // 2nd scp client
         scpClient = clients.get("scpClient2");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPortOption(), "-p");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getUser(), "user");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPassword(), "consol");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPrivateKeyPath(), "classpath:org/citrusframework/scp/citrus.priv");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        Assertions.assertEquals("localhost", scpClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals("-p", scpClient.getEndpointConfiguration().getPortOption());
+        Assertions.assertEquals(22222, scpClient.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, scpClient.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals("user", scpClient.getEndpointConfiguration().getUser());
+        Assertions.assertEquals("consol", scpClient.getEndpointConfiguration().getPassword());
+        Assertions.assertEquals("classpath:org/citrusframework/scp/citrus.priv", scpClient.getEndpointConfiguration().getPrivateKeyPath());
+        Assertions.assertEquals("consol", scpClient.getEndpointConfiguration().getPrivateKeyPassword());
+        Assertions.assertEquals(10000L, scpClient.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(ErrorHandlingStrategy.THROWS_EXCEPTION, scpClient.getEndpointConfiguration().getErrorHandlingStrategy());
 
         // 3rd scp client
         scpClient = clients.get("scpClient3");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(scpClient.getEndpointConfiguration().getCorrelator());
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
+        Assertions.assertEquals("localhost", scpClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22222, scpClient.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(scpClient.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(beanDefinitionContext.getBean("replyMessageCorrelator"), scpClient.getEndpointConfiguration().getCorrelator());
 
         // 4th scp client
         scpClient = clients.get("scpClient4");
-        Assert.assertNotNull(scpClient.getActor());
-        Assert.assertEquals(scpClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assertions.assertNotNull(scpClient.getActor());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), scpClient.getActor());
+        Assertions.assertEquals(250L, scpClient.getEndpointConfiguration().getPollingInterval());
     }
 }

@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.ftp.client.FtpClientBuilder;
 import org.citrusframework.ftp.server.FtpServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FtpEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("ftp"));
-        Assert.assertTrue(endpointBuilders.containsKey("ftp.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("ftp.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("ftp"));
+        Assertions.assertTrue(endpointBuilders.containsKey("ftp.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("ftp.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("ftp").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("ftp").get().getClass(), FtpEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("ftp.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("ftp.client").get().getClass(), FtpClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("ftp.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("ftp.server").get().getClass(), FtpServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("ftp").isPresent());
+        Assertions.assertEquals(FtpEndpointBuilder.class, EndpointBuilder.lookup("ftp").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("ftp.client").isPresent());
+        Assertions.assertEquals(FtpClientBuilder.class, EndpointBuilder.lookup("ftp.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("ftp.server").isPresent());
+        Assertions.assertEquals(FtpServerBuilder.class, EndpointBuilder.lookup("ftp.server").get().getClass());
     }
 }

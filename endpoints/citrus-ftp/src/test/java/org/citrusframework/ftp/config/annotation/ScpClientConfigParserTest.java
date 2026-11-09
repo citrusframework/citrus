@@ -25,17 +25,18 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class ScpClientConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "scpClient1")
     @ScpClientConfig(port = 22221)
@@ -73,16 +74,12 @@ public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
-
-    @BeforeMethod
-    public void setMocks() {
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
+        lenient().when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -91,45 +88,45 @@ public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st scp client
-        Assert.assertEquals(scpClient1.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient1.getEndpointConfiguration().getPortOption(), "-P");
-        Assert.assertEquals(scpClient1.getEndpointConfiguration().getPort(), 22221);
-        Assert.assertEquals(scpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(scpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
-        Assert.assertEquals(scpClient1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertTrue(scpClient1.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertNull(scpClient1.getEndpointConfiguration().getPrivateKeyPath());
-        Assert.assertNull(scpClient1.getEndpointConfiguration().getPrivateKeyPassword());
-        Assert.assertFalse(scpClient1.getEndpointConfiguration().isStrictHostChecking());
-        Assert.assertNull(scpClient1.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals("localhost", scpClient1.getEndpointConfiguration().getHost());
+        Assertions.assertEquals("-P", scpClient1.getEndpointConfiguration().getPortOption());
+        Assertions.assertEquals(22221, scpClient1.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, scpClient1.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals(ErrorHandlingStrategy.PROPAGATE, scpClient1.getEndpointConfiguration().getErrorHandlingStrategy());
+        Assertions.assertEquals(5000L, scpClient1.getEndpointConfiguration().getTimeout());
+        Assertions.assertTrue(scpClient1.getEndpointConfiguration().isAutoReadFiles());
+        Assertions.assertNull(scpClient1.getEndpointConfiguration().getPrivateKeyPath());
+        Assertions.assertNull(scpClient1.getEndpointConfiguration().getPrivateKeyPassword());
+        Assertions.assertFalse(scpClient1.getEndpointConfiguration().isStrictHostChecking());
+        Assertions.assertNull(scpClient1.getEndpointConfiguration().getKnownHosts());
 
         // 2nd scp client
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getPortOption(), "-p");
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getUser(), "user");
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getPassword(), "consol");
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getPrivateKeyPath(), "classpath:org/citrusframework/scp/citrus.priv");
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("localhost", scpClient2.getEndpointConfiguration().getHost());
+        Assertions.assertEquals("-p", scpClient2.getEndpointConfiguration().getPortOption());
+        Assertions.assertEquals(22222, scpClient2.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, scpClient2.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals("user", scpClient2.getEndpointConfiguration().getUser());
+        Assertions.assertEquals("consol", scpClient2.getEndpointConfiguration().getPassword());
+        Assertions.assertEquals("classpath:org/citrusframework/scp/citrus.priv", scpClient2.getEndpointConfiguration().getPrivateKeyPath());
+        Assertions.assertEquals("consol", scpClient2.getEndpointConfiguration().getPrivateKeyPassword());
+        Assertions.assertEquals(10000L, scpClient2.getEndpointConfiguration().getTimeout());
 
         // 3rd scp client
-        Assert.assertEquals(scpClient3.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient3.getEndpointConfiguration().getPort(), 22223);
-        Assert.assertNotNull(scpClient3.getEndpointConfiguration().getCorrelator());
-        Assert.assertEquals(scpClient3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
-        Assert.assertEquals(scpClient3.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        Assertions.assertEquals("localhost", scpClient3.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22223, scpClient3.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(scpClient3.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(messageCorrelator, scpClient3.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(ErrorHandlingStrategy.THROWS_EXCEPTION, scpClient3.getEndpointConfiguration().getErrorHandlingStrategy());
 
         // 4th scp client
-        Assert.assertNotNull(scpClient4.getActor());
-        Assert.assertEquals(scpClient4.getActor(), testActor);
-        Assert.assertEquals(scpClient4.getEndpointConfiguration().getPort(), 22224);
-        Assert.assertEquals(scpClient4.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assertions.assertNotNull(scpClient4.getActor());
+        Assertions.assertEquals(testActor, scpClient4.getActor());
+        Assertions.assertEquals(22224, scpClient4.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(250L, scpClient4.getEndpointConfiguration().getPollingInterval());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("scp.client").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("scp.client").isPresent());
     }
 }

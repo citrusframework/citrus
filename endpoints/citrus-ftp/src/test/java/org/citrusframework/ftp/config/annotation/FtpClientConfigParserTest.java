@@ -35,17 +35,18 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.ssh.config.annotation.SshClientConfigParser;
 import org.citrusframework.ssh.config.annotation.SshServerConfigParser;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class FtpClientConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "ftpClient1")
     @FtpClientConfig(port = 22221)
@@ -82,15 +83,12 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private ReferenceResolver referenceResolver;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
-
-    @BeforeMethod
-    public void setMocks() {
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
+        lenient().when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -99,72 +97,72 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st ftp client
-        Assert.assertEquals(ftpClient1.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient1.getEndpointConfiguration().getPort(), 22221);
-        Assert.assertEquals(ftpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(ftpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
-        Assert.assertEquals(ftpClient1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertTrue(ftpClient1.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertTrue(ftpClient1.getEndpointConfiguration().isLocalPassiveMode());
+        Assertions.assertEquals("localhost", ftpClient1.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22221, ftpClient1.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, ftpClient1.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals(ErrorHandlingStrategy.PROPAGATE, ftpClient1.getEndpointConfiguration().getErrorHandlingStrategy());
+        Assertions.assertEquals(5000L, ftpClient1.getEndpointConfiguration().getTimeout());
+        Assertions.assertTrue(ftpClient1.getEndpointConfiguration().isAutoReadFiles());
+        Assertions.assertTrue(ftpClient1.getEndpointConfiguration().isLocalPassiveMode());
 
         // 2nd ftp client
-        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getUser(), "user");
-        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getPassword(), "consol");
-        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertFalse(ftpClient2.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertFalse(ftpClient2.getEndpointConfiguration().isLocalPassiveMode());
+        Assertions.assertEquals("localhost", ftpClient2.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22222, ftpClient2.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, ftpClient2.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals("user", ftpClient2.getEndpointConfiguration().getUser());
+        Assertions.assertEquals("consol", ftpClient2.getEndpointConfiguration().getPassword());
+        Assertions.assertEquals(10000L, ftpClient2.getEndpointConfiguration().getTimeout());
+        Assertions.assertFalse(ftpClient2.getEndpointConfiguration().isAutoReadFiles());
+        Assertions.assertFalse(ftpClient2.getEndpointConfiguration().isLocalPassiveMode());
 
         // 3rd ftp client
-        Assert.assertEquals(ftpClient3.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient3.getEndpointConfiguration().getPort(), 22223);
-        Assert.assertNotNull(ftpClient3.getEndpointConfiguration().getCorrelator());
-        Assert.assertEquals(ftpClient3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
-        Assert.assertEquals(ftpClient3.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        Assertions.assertEquals("localhost", ftpClient3.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22223, ftpClient3.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(ftpClient3.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(messageCorrelator, ftpClient3.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(ErrorHandlingStrategy.THROWS_EXCEPTION, ftpClient3.getEndpointConfiguration().getErrorHandlingStrategy());
 
         // 4th ftp client
-        Assert.assertNotNull(ftpClient4.getActor());
-        Assert.assertEquals(ftpClient4.getActor(), testActor);
-        Assert.assertEquals(ftpClient4.getEndpointConfiguration().getPort(), 22224);
-        Assert.assertEquals(ftpClient4.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assertions.assertNotNull(ftpClient4.getActor());
+        Assertions.assertEquals(testActor, ftpClient4.getActor());
+        Assertions.assertEquals(22224, ftpClient4.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(250L, ftpClient4.getEndpointConfiguration().getPollingInterval());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 13L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("jms.async"));
-        Assert.assertEquals(validators.get("jms.async").getClass(), JmsEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("jms.sync"));
-        Assert.assertEquals(validators.get("jms.sync").getClass(), JmsSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("channel.async"));
-        Assert.assertEquals(validators.get("channel.async").getClass(), ChannelEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("channel.sync"));
-        Assert.assertEquals(validators.get("channel.sync").getClass(), ChannelSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("ssh.client"));
-        Assert.assertEquals(validators.get("ssh.client").getClass(), SshClientConfigParser.class);
-        Assert.assertNotNull(validators.get("ssh.server"));
-        Assert.assertEquals(validators.get("ssh.server").getClass(), SshServerConfigParser.class);
-        Assert.assertNotNull(validators.get("ftp.client"));
-        Assert.assertEquals(validators.get("ftp.client").getClass(), FtpClientConfigParser.class);
-        Assert.assertNotNull(validators.get("ftp.server"));
-        Assert.assertEquals(validators.get("ftp.server").getClass(), FtpServerConfigParser.class);
-        Assert.assertNotNull(validators.get("sftp.client"));
-        Assert.assertEquals(validators.get("sftp.client").getClass(), SftpClientConfigParser.class);
-        Assert.assertNotNull(validators.get("sftp.server"));
-        Assert.assertEquals(validators.get("sftp.server").getClass(), SftpServerConfigParser.class);
-        Assert.assertNotNull(validators.get("scp.client"));
-        Assert.assertEquals(validators.get("scp.client").getClass(), ScpClientConfigParser.class);
+        Assertions.assertEquals(13L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        Assertions.assertNotNull(validators.get("jms.async"));
+        Assertions.assertEquals(JmsEndpointConfigParser.class, validators.get("jms.async").getClass());
+        Assertions.assertNotNull(validators.get("jms.sync"));
+        Assertions.assertEquals(JmsSyncEndpointConfigParser.class, validators.get("jms.sync").getClass());
+        Assertions.assertNotNull(validators.get("channel.async"));
+        Assertions.assertEquals(ChannelEndpointConfigParser.class, validators.get("channel.async").getClass());
+        Assertions.assertNotNull(validators.get("channel.sync"));
+        Assertions.assertEquals(ChannelSyncEndpointConfigParser.class, validators.get("channel.sync").getClass());
+        Assertions.assertNotNull(validators.get("ssh.client"));
+        Assertions.assertEquals(SshClientConfigParser.class, validators.get("ssh.client").getClass());
+        Assertions.assertNotNull(validators.get("ssh.server"));
+        Assertions.assertEquals(SshServerConfigParser.class, validators.get("ssh.server").getClass());
+        Assertions.assertNotNull(validators.get("ftp.client"));
+        Assertions.assertEquals(FtpClientConfigParser.class, validators.get("ftp.client").getClass());
+        Assertions.assertNotNull(validators.get("ftp.server"));
+        Assertions.assertEquals(FtpServerConfigParser.class, validators.get("ftp.server").getClass());
+        Assertions.assertNotNull(validators.get("sftp.client"));
+        Assertions.assertEquals(SftpClientConfigParser.class, validators.get("sftp.client").getClass());
+        Assertions.assertNotNull(validators.get("sftp.server"));
+        Assertions.assertEquals(SftpServerConfigParser.class, validators.get("sftp.server").getClass());
+        Assertions.assertNotNull(validators.get("scp.client"));
+        Assertions.assertEquals(ScpClientConfigParser.class, validators.get("scp.client").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("ftp.client").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("ftp.client").isPresent());
     }
 }

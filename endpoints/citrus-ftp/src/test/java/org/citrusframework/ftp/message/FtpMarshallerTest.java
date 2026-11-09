@@ -17,8 +17,8 @@
 package org.citrusframework.ftp.message;
 
 import org.citrusframework.message.MessageType;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FtpMarshallerTest {
 
@@ -28,21 +28,20 @@ public class FtpMarshallerTest {
     public void shouldMarshalXml() {
         marshaller.setType(MessageType.XML.name());
 
-        Assert.assertEquals(FtpMessage.put("some/local/path/file.txt").getPayload(String.class, marshaller),
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
                         "<put-command xmlns=\"http://www.citrusframework.org/schema/ftp/message\">" +
                             "<signal>STOR</signal>" +
                             "<file path=\"some/local/path/file.txt\" type=\"ASCII\"/>" +
                             "<target path=\"file.txt\"/>" +
-                        "</put-command>");
+                        "</put-command>",
+                FtpMessage.put("some/local/path/file.txt").getPayload(String.class, marshaller));
     }
 
     @Test
     public void shouldMarshalJson() {
         marshaller.setType(MessageType.JSON.name());
 
-        Assert.assertEquals(FtpMessage.put("some/local/path/file.txt").getPayload(String.class, marshaller),
-                "{" +
+        Assertions.assertEquals("{" +
                             "\"file\":{" +
                                 "\"path\":\"some/local/path/file.txt\"," +
                                 "\"type\":\"ASCII\"" +
@@ -51,6 +50,7 @@ public class FtpMarshallerTest {
                             "\"target\":{" +
                                 "\"path\":\"file.txt\"" +
                             "}" +
-                        "}");
+                        "}",
+                FtpMessage.put("some/local/path/file.txt").getPayload(String.class, marshaller));
     }
 }

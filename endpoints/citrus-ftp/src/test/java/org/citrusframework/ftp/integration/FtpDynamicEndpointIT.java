@@ -18,15 +18,21 @@ package org.citrusframework.ftp.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.0
  */
-@Test
-public class FtpDynamicEndpointIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class FtpDynamicEndpointIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "FtpDynamicEndpointIT")
     public void testDynamicEndpoint() {}
 }

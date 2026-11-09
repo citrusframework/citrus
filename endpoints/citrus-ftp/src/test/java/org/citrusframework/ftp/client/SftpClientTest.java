@@ -39,35 +39,35 @@ import org.citrusframework.ftp.model.GetCommandResult;
 import org.citrusframework.ftp.model.ListCommandResult;
 import org.citrusframework.ftp.model.PutCommandResult;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.TestNGUtils;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.apache.commons.net.ftp.FTPReply.CLOSING_DATA_CONNECTION;
 import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
 import static org.apache.commons.net.ftp.FTPReply.FILE_STATUS_OK;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @since 2.7.5
  */
+@DisabledOnOs(value = OS.WINDOWS, disabledReason = "Cannot handle win specific file paths.")
 public class SftpClientTest extends AbstractFtpClientTest {
 
-    private SftpClient sftpClient;
-    private SshServer sshServer;
+    private static SftpClient sftpClient;
+    private static SshServer sshServer;
 
-    private String targetPath;
-    private String remoteFilePath;
-    private String localFilePath;
-    private String inputFileAsString;
+    private static String targetPath;
+    private static String remoteFilePath;
+    private static String localFilePath;
+    private static String inputFileAsString;
 
-    @BeforeClass
-    public void setUp() throws Exception {
-
-        TestNGUtils.skipForOs("win", "Cannot handle win specific file paths.");
+    @BeforeAll
+    public static void setUp() throws Exception {
 
         targetPath = System.getProperty("project.build.directory");
         localFilePath = "classpath:ftp/input/hello.xml";
@@ -77,8 +77,8 @@ public class SftpClientTest extends AbstractFtpClientTest {
         sftpClient = createSftpClient();
     }
 
-    @AfterClass
-    public void tearDown() throws Exception {
+    @AfterAll
+    public static void tearDown() throws Exception {
         sftpClient.destroy();
         sshServer.close();
     }
@@ -109,7 +109,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
 
         FtpMessage response = sftpClient.retrieveFile(getCommand(remoteFilePath), context);
         verifyMessage(response, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
-        Assert.assertEquals(response.getPayload(GetCommandResult.class).getFile().getData(), inputFileAsString);
+        Assertions.assertEquals(inputFileAsString, response.getPayload(GetCommandResult.class).getFile().getData());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
 
         ftpMessage = sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
         verifyMessage(ftpMessage, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
-        Assert.assertEquals(inputFileAsString,
+        Assertions.assertEquals(inputFileAsString,
                 new String(Files.readAllBytes(localDownloadFilePath), StandardCharsets.UTF_8));
     }
 
@@ -136,7 +136,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
 
         ftpMessage = sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
         verifyMessage(ftpMessage, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
-        Assert.assertEquals(inputFileAsString,
+        Assertions.assertEquals(inputFileAsString,
                 new String(Files.readAllBytes(localDownloadFilePath), StandardCharsets.UTF_8));
     }
 
@@ -147,7 +147,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         assertTrue(Paths.get(remoteFilePath).toFile().exists());
         ftpMessage = sftpClient.deleteFile(deleteCommand(remoteFilePath), context);
         verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
-        Assert.assertFalse(Paths.get(remoteFilePath).toFile().exists());
+        Assertions.assertFalse(Paths.get(remoteFilePath).toFile().exists());
     }
 
     @Test
@@ -161,8 +161,8 @@ public class SftpClientTest extends AbstractFtpClientTest {
         assertTrue(Paths.get(remoteFilePathCopy).toFile().exists());
         ftpMessage = sftpClient.deleteFile(deleteCommand(targetPath + "/hello*.xml"), context);
         verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
-        Assert.assertFalse(Paths.get(remoteFilePath).toFile().exists());
-        Assert.assertFalse(Paths.get(remoteFilePathCopy).toFile().exists());
+        Assertions.assertFalse(Paths.get(remoteFilePath).toFile().exists());
+        Assertions.assertFalse(Paths.get(remoteFilePathCopy).toFile().exists());
     }
 
     @Test
@@ -181,7 +181,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         deleteCommand.setIncludeCurrent(true);
         FtpMessage ftpMessage = sftpClient.deleteFile(deleteCommand, context);
         verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
-        Assert.assertFalse(Files.exists(tmpDir));
+        Assertions.assertFalse(Files.exists(tmpDir));
     }
 
     @Test
@@ -209,7 +209,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
     }
 
-    private SshServer startSftpMockServer() throws IOException {
+    private static SshServer startSftpMockServer() throws IOException {
         // SFTP mock server without authentication
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setPort(2223);
@@ -235,7 +235,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         return sshd;
     }
 
-    private SftpClient createSftpClient() {
+    private static SftpClient createSftpClient() {
         SftpEndpointConfiguration endpointConfiguration = new SftpEndpointConfiguration();
         endpointConfiguration.setHost("localhost");
         endpointConfiguration.setPort(2223);
@@ -248,7 +248,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         return sftpClient;
     }
 
-    private void writeToFile(String fileContent, Path dir) throws IOException {
+    private static void writeToFile(String fileContent, Path dir) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(dir, StandardCharsets.UTF_8)) {
             writer.write(fileContent, 0, fileContent.length());
         }

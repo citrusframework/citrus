@@ -22,9 +22,9 @@ import org.citrusframework.TestActor;
 import org.citrusframework.ftp.client.FtpClient;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.ErrorHandlingStrategy;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.0
@@ -35,41 +35,41 @@ public class FtpClientParserTest extends AbstractBeanDefinitionParserTest {
     public void testFtpClientParser() {
         Map<String, FtpClient> clients = beanDefinitionContext.getBeansOfType(FtpClient.class);
 
-        Assert.assertEquals(clients.size(), 4);
+        Assertions.assertEquals(4, clients.size());
 
         // 1st ftp client
         FtpClient ftpClient = clients.get("ftpClient1");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertTrue(ftpClient.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertTrue(ftpClient.getEndpointConfiguration().isLocalPassiveMode());
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
+        Assertions.assertEquals("localhost", ftpClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22222, ftpClient.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, ftpClient.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertTrue(ftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assertions.assertTrue(ftpClient.getEndpointConfiguration().isLocalPassiveMode());
+        Assertions.assertEquals(5000L, ftpClient.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(ErrorHandlingStrategy.PROPAGATE, ftpClient.getEndpointConfiguration().getErrorHandlingStrategy());
 
         // 2nd ftp client
         ftpClient = clients.get("ftpClient2");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getUser(), "user");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPassword(), "consol");
-        Assert.assertFalse(ftpClient.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertFalse(ftpClient.getEndpointConfiguration().isLocalPassiveMode());
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        Assertions.assertEquals("localhost", ftpClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22222, ftpClient.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, ftpClient.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals("user", ftpClient.getEndpointConfiguration().getUser());
+        Assertions.assertEquals("consol", ftpClient.getEndpointConfiguration().getPassword());
+        Assertions.assertFalse(ftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assertions.assertFalse(ftpClient.getEndpointConfiguration().isLocalPassiveMode());
+        Assertions.assertEquals(10000L, ftpClient.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(ErrorHandlingStrategy.THROWS_EXCEPTION, ftpClient.getEndpointConfiguration().getErrorHandlingStrategy());
 
         // 3rd ftp client
         ftpClient = clients.get("ftpClient3");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(ftpClient.getEndpointConfiguration().getCorrelator());
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
+        Assertions.assertEquals("localhost", ftpClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22222, ftpClient.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(ftpClient.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(beanDefinitionContext.getBean("replyMessageCorrelator"), ftpClient.getEndpointConfiguration().getCorrelator());
 
         // 4th ftp client
         ftpClient = clients.get("ftpClient4");
-        Assert.assertNotNull(ftpClient.getActor());
-        Assert.assertEquals(ftpClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assertions.assertNotNull(ftpClient.getActor());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), ftpClient.getActor());
+        Assertions.assertEquals(250L, ftpClient.getEndpointConfiguration().getPollingInterval());
     }
 }

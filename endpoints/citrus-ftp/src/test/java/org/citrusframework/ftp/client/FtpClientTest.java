@@ -42,10 +42,10 @@ import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.commons.net.ftp.FTPReply.CLOSING_DATA_CONNECTION;
 import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
@@ -53,8 +53,8 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @since 2.7.5
@@ -62,9 +62,9 @@ import static org.testng.Assert.assertTrue;
 public class FtpClientTest extends AbstractFtpClientTest {
 
     private FTPClient apacheFtpClient = Mockito.mock(FTPClient.class);
-    private FtpClient ftpClient;
+    private static FtpClient ftpClient;
 
-    private final FakeFtpServer fakeFtpServer = new FakeFtpServer();
+    private static final FakeFtpServer fakeFtpServer = new FakeFtpServer();
     private static final String UPLOAD_FILE = "upload_file";
     private static final String DOWNLOAD_FILE = "/download_file";
     private static final String SINGLE_FILE = "/single_file";
@@ -73,16 +73,16 @@ public class FtpClientTest extends AbstractFtpClientTest {
     private static final String FOLDER = "/folder";
     private static final String COMPLETELY_DELETE_FOLDER = "/completely_delete";
 
-    private String targetPath;
+    private static String targetPath;
 
-    @BeforeClass
-    public void setUp() throws Exception {
+    @BeforeAll
+    public static void setUp() throws Exception {
         targetPath = System.getProperty("project.build.directory");
         initMockFtpServer();
         initFtpClient();
     }
 
-    private void initFtpClient() throws IOException {
+    private static void initFtpClient() throws IOException {
         FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
         endpointConfiguration.setHost("localhost");
         endpointConfiguration.setPort(2221);
@@ -94,7 +94,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
         ftpClient.connectAndLogin();
     }
 
-    private void initMockFtpServer() throws InterruptedException {
+    private static void initMockFtpServer() throws InterruptedException {
         fakeFtpServer.setServerControlPort(2221);
         fakeFtpServer.addUserAccount(new UserAccount("ftp_user", "ftp_password", "/"));
 
@@ -126,8 +126,8 @@ public class FtpClientTest extends AbstractFtpClientTest {
         fakeFtpServer.start();
     }
 
-    @AfterClass
-    public void tearDown() {
+    @AfterAll
+    public static void tearDown() {
         ftpClient.destroy();
         fakeFtpServer.stop();
     }
@@ -217,11 +217,13 @@ public class FtpClientTest extends AbstractFtpClientTest {
         assertFalse(fakeFtpServer.getFileSystem().exists(SINGLE_FILE));
     }
 
-    @Test(expectedExceptions = {CitrusRuntimeException.class}, expectedExceptionsMessageRegExp = ".*/path/not/valid.*")
+    @Test
     public void testDeleteInvalidPath() {
         String invalidPath = "/path/not/valid";
         assertFalse(fakeFtpServer.getFileSystem().exists(invalidPath));
-        ftpClient.deleteFile(deleteCommand(invalidPath), context);
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> ftpClient.deleteFile(deleteCommand(invalidPath), context));
+        assertTrue(thrown.getMessage().matches(".*/path/not/valid.*"));
     }
 
     @Test
@@ -267,14 +269,14 @@ public class FtpClientTest extends AbstractFtpClientTest {
 
         Message reply = ftpClient.receive(context);
 
-        Assert.assertTrue(reply instanceof FtpMessage);
+        Assertions.assertTrue(reply instanceof FtpMessage);
 
         FtpMessage ftpReply = (FtpMessage) reply;
 
-        Assert.assertNull(ftpReply.getSignal());
-        Assert.assertNull(ftpReply.getArguments());
-        Assert.assertEquals(ftpReply.getReplyCode(), Integer.valueOf(200));
-        Assert.assertEquals(ftpReply.getReplyString(), "OK");
+        Assertions.assertNull(ftpReply.getSignal());
+        Assertions.assertNull(ftpReply.getArguments());
+        Assertions.assertEquals(Integer.valueOf(200), ftpReply.getReplyCode());
+        Assertions.assertEquals("OK", ftpReply.getReplyString());
 
         verify(apacheFtpClient).connect("localhost", 22222);
     }
@@ -304,32 +306,32 @@ public class FtpClientTest extends AbstractFtpClientTest {
 
         Message reply = ftpClient.receive(context);
 
-        Assert.assertTrue(reply instanceof FtpMessage);
+        Assertions.assertTrue(reply instanceof FtpMessage);
 
         FtpMessage ftpReply = (FtpMessage) reply;
 
-        Assert.assertNull(ftpReply.getSignal());
-        Assert.assertNull(ftpReply.getArguments());
-        Assert.assertEquals(ftpReply.getReplyCode(), Integer.valueOf(200));
-        Assert.assertEquals(ftpReply.getReplyString(), "OK");
+        Assertions.assertNull(ftpReply.getSignal());
+        Assertions.assertNull(ftpReply.getArguments());
+        Assertions.assertEquals(Integer.valueOf(200), ftpReply.getReplyCode());
+        Assertions.assertEquals("OK", ftpReply.getReplyString());
 
         ftpClient.send(FtpMessage.command(FTPCmd.MKD).arguments("testDir"), context);
 
         reply = ftpClient.receive(context);
 
-        Assert.assertTrue(reply instanceof FtpMessage);
+        Assertions.assertTrue(reply instanceof FtpMessage);
 
         ftpReply = (FtpMessage) reply;
 
-        Assert.assertNull(ftpReply.getSignal());
-        Assert.assertNull(ftpReply.getArguments());
-        Assert.assertEquals(ftpReply.getReplyCode(), Integer.valueOf(201));
-        Assert.assertEquals(ftpReply.getReplyString(), "OK");
+        Assertions.assertNull(ftpReply.getSignal());
+        Assertions.assertNull(ftpReply.getArguments());
+        Assertions.assertEquals(Integer.valueOf(201), ftpReply.getReplyCode());
+        Assertions.assertEquals("OK", ftpReply.getReplyString());
 
         verify(apacheFtpClient).connect("localhost", 22222);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testCommandWithUserLoginFailed() throws Exception {
         FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
         FtpClient ftpClient = new FtpClient(endpointConfiguration);
@@ -346,12 +348,12 @@ public class FtpClientTest extends AbstractFtpClientTest {
 
         when(apacheFtpClient.login("admin", "consol")).thenReturn(false);
 
-        ftpClient.send(FtpMessage.command(FTPCmd.PWD), context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> ftpClient.send(FtpMessage.command(FTPCmd.PWD), context));
 
         verify(apacheFtpClient).connect("localhost", 22222);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testCommandNegativeReply() throws Exception {
         FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
         endpointConfiguration.setErrorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION);
@@ -367,7 +369,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
 
         when(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).thenReturn(500);
 
-        ftpClient.send(FtpMessage.command(FTPCmd.PWD), context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> ftpClient.send(FtpMessage.command(FTPCmd.PWD), context));
 
         verify(apacheFtpClient).connect("localhost", 22222);
     }
