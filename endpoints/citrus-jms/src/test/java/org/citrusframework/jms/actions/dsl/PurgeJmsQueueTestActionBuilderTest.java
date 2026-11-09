@@ -29,8 +29,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.jms.UnitTestSupport;
 import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
@@ -73,17 +73,17 @@ public class PurgeJmsQueueTestActionBuilderTest extends UnitTestSupport implemen
             .sleep(150L));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "purge-queue");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(PurgeJmsQueuesAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("purge-queue", test.getActions().get(0).getName());
 
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
-        Assert.assertEquals(action.getReceiveTimeout(), 200L);
-        Assert.assertEquals(action.getSleepTime(), 150L);
-        Assert.assertEquals(action.getConnectionFactory(), connectionFactory);
-        Assert.assertEquals(action.getQueueNames().size(), 4);
-        Assert.assertEquals(action.getQueueNames().toString(), "[q1, q2, q3, q4]");
-        Assert.assertEquals(action.getQueues().size(), 0);
+        Assertions.assertEquals(200L, action.getReceiveTimeout());
+        Assertions.assertEquals(150L, action.getSleepTime());
+        Assertions.assertEquals(connectionFactory, action.getConnectionFactory());
+        Assertions.assertEquals(4, action.getQueueNames().size());
+        Assertions.assertEquals("[q1, q2, q3, q4]", action.getQueueNames().toString());
+        Assertions.assertEquals(0, action.getQueues().size());
 
         verify(connection).start();
     }
@@ -109,16 +109,16 @@ public class PurgeJmsQueueTestActionBuilderTest extends UnitTestSupport implemen
             .sleep(150L));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(PurgeJmsQueuesAction.class, test.getActions().get(0).getClass());
 
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
-        Assert.assertEquals(action.getReceiveTimeout(), 200L);
-        Assert.assertEquals(action.getSleepTime(), 150L);
-        Assert.assertEquals(action.getConnectionFactory(), connectionFactory);
-        Assert.assertEquals(action.getQueueNames().size(), 0);
-        Assert.assertEquals(action.getQueues().size(), 3);
-        Assert.assertEquals(action.getQueues().toString(), "[" + queue1.toString() + ", " + queue2.toString() + ", " + queue3.toString() + "]");
+        Assertions.assertEquals(200L, action.getReceiveTimeout());
+        Assertions.assertEquals(150L, action.getSleepTime());
+        Assertions.assertEquals(connectionFactory, action.getConnectionFactory());
+        Assertions.assertEquals(0, action.getQueueNames().size());
+        Assertions.assertEquals(3, action.getQueues().size());
+        Assertions.assertEquals("[" + queue1.toString() + ", " + queue2.toString() + ", " + queue3.toString() + "]", action.getQueues().toString());
 
         verify(connection).start();
     }

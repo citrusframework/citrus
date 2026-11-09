@@ -39,19 +39,20 @@ import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.jms.endpoint.JmsEndpoint;
 import org.citrusframework.jms.message.JmsMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class JmsEndpointConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint
     @JmsEndpointConfig(destinationName="JMS.Queue.Test")
@@ -118,31 +119,30 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() throws JMSException {
-        MockitoAnnotations.openMocks(this);
 
-        when(referenceResolver.resolve("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
+        lenient().when(referenceResolver.resolve("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
 
-        when(jmsTemplate.getConnectionFactory()).thenReturn(topicConnectionFactory);
-        when(topicConnectionFactory.createTopicConnection()).thenReturn(topicConnection);
-        when(topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(topicSession);
-        when(jmsTemplate.getDefaultDestinationName()).thenReturn("JMS.Topic.Test");
-        when(topicSession.createTopic("JMS.Topic.Test")).thenReturn(topic);
-        when(topicSession.createSubscriber(topic)).thenReturn(topicSubscriber);
-        when(topicSession.createDurableSubscriber(topic, "durableSubscriber")).thenReturn(topicSubscriber);
+        lenient().when(jmsTemplate.getConnectionFactory()).thenReturn(topicConnectionFactory);
+        lenient().when(topicConnectionFactory.createTopicConnection()).thenReturn(topicConnection);
+        lenient().when(topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(topicSession);
+        lenient().when(jmsTemplate.getDefaultDestinationName()).thenReturn("JMS.Topic.Test");
+        lenient().when(topicSession.createTopic("JMS.Topic.Test")).thenReturn(topic);
+        lenient().when(topicSession.createSubscriber(topic)).thenReturn(topicSubscriber);
+        lenient().when(topicSession.createDurableSubscriber(topic, "durableSubscriber")).thenReturn(topicSubscriber);
 
-        when(referenceResolver.resolve("jmsQueue", Destination.class)).thenReturn(jmsQueue);
-        when(referenceResolver.resolve("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
-        when(referenceResolver.resolve("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
-        when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
-        when(referenceResolver.resolve("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
-        when(referenceResolver.resolve("jmsTopicConnectionFactory", ConnectionFactory.class)).thenReturn(topicConnectionFactory);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        lenient().when(referenceResolver.resolve("jmsQueue", Destination.class)).thenReturn(jmsQueue);
+        lenient().when(referenceResolver.resolve("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
+        lenient().when(referenceResolver.resolve("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
+        lenient().when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
+        lenient().when(referenceResolver.resolve("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
+        lenient().when(referenceResolver.resolve("jmsTopicConnectionFactory", ConnectionFactory.class)).thenReturn(topicConnectionFactory);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -152,73 +152,73 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver
-        Assert.assertNotNull(jmsEndpoint1.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().getConnectionFactory(), connectionFactory);
-        Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().getMessageConverter().getClass(), JmsMessageConverter.class);
-        Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
-        Assert.assertNull(jmsEndpoint1.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertFalse(jmsEndpoint1.getEndpointConfiguration().isPubSubDomain());
-        Assert.assertFalse(jmsEndpoint1.getEndpointConfiguration().isAutoStart());
-        Assert.assertFalse(jmsEndpoint1.getEndpointConfiguration().isDurableSubscription());
-        Assert.assertFalse(jmsEndpoint1.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertTrue(jmsEndpoint1.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNotNull(jmsEndpoint1.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(connectionFactory, jmsEndpoint1.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(JmsMessageConverter.class, jmsEndpoint1.getEndpointConfiguration().getMessageConverter().getClass());
+        Assertions.assertEquals("JMS.Queue.Test", jmsEndpoint1.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsEndpoint1.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(5000L, jmsEndpoint1.getEndpointConfiguration().getTimeout());
+        Assertions.assertFalse(jmsEndpoint1.getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertFalse(jmsEndpoint1.getEndpointConfiguration().isAutoStart());
+        Assertions.assertFalse(jmsEndpoint1.getEndpointConfiguration().isDurableSubscription());
+        Assertions.assertFalse(jmsEndpoint1.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertTrue(jmsEndpoint1.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
-        Assert.assertNotNull(jmsEndpoint2.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsEndpoint2.getEndpointConfiguration().getConnectionFactory(), jmsConnectionFactory);
-        Assert.assertEquals(jmsEndpoint2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(jmsEndpoint2.getEndpointConfiguration().getDestinationResolver(), destinationResolver);
-        Assert.assertEquals(jmsEndpoint2.getEndpointConfiguration().getDestinationNameResolver(), destinationNameResolver);
-        Assert.assertNull(jmsEndpoint2.getEndpointConfiguration().getDestinationName());
-        Assert.assertNotNull(jmsEndpoint2.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertNotNull(jmsEndpoint2.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(jmsConnectionFactory, jmsEndpoint2.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(messageConverter, jmsEndpoint2.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(destinationResolver, jmsEndpoint2.getEndpointConfiguration().getDestinationResolver());
+        Assertions.assertEquals(destinationNameResolver, jmsEndpoint2.getEndpointConfiguration().getDestinationNameResolver());
+        Assertions.assertNull(jmsEndpoint2.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNotNull(jmsEndpoint2.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(10000L, jmsEndpoint2.getEndpointConfiguration().getTimeout());
 
         // 3rd message receiver
-        Assert.assertEquals(jmsEndpoint3.getEndpointConfiguration().getJmsTemplate(), jmsTemplate);
-        Assert.assertNull(jmsEndpoint3.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertNull(jmsEndpoint3.getEndpointConfiguration().getDestinationName());
-        Assert.assertNull(jmsEndpoint3.getEndpointConfiguration().getDestination());
-        Assert.assertTrue(jmsEndpoint3.getEndpointConfiguration().isPubSubDomain());
-        Assert.assertTrue(jmsEndpoint3.getEndpointConfiguration().isAutoStart());
-        Assert.assertTrue(jmsEndpoint3.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(jmsEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals(jmsTemplate, jmsEndpoint3.getEndpointConfiguration().getJmsTemplate());
+        Assertions.assertNull(jmsEndpoint3.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(jmsEndpoint3.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsEndpoint3.getEndpointConfiguration().getDestination());
+        Assertions.assertTrue(jmsEndpoint3.getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertTrue(jmsEndpoint3.getEndpointConfiguration().isAutoStart());
+        Assertions.assertTrue(jmsEndpoint3.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(jmsEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
-        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().getConnectionFactory(), topicConnectionFactory);
-        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().getDestinationName(), "JMS.Topic.Test");
-        Assert.assertNull(jmsEndpoint4.getEndpointConfiguration().getDestination());
-        Assert.assertTrue(jmsEndpoint4.getEndpointConfiguration().isPubSubDomain());
-        Assert.assertTrue(jmsEndpoint4.getEndpointConfiguration().isAutoStart());
-        Assert.assertTrue(jmsEndpoint4.getEndpointConfiguration().isDurableSubscription());
-        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().getDurableSubscriberName(), "durableSubscriber");
-        Assert.assertTrue(jmsEndpoint4.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertEquals(topicConnectionFactory, jmsEndpoint4.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals("JMS.Topic.Test", jmsEndpoint4.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsEndpoint4.getEndpointConfiguration().getDestination());
+        Assertions.assertTrue(jmsEndpoint4.getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertTrue(jmsEndpoint4.getEndpointConfiguration().isAutoStart());
+        Assertions.assertTrue(jmsEndpoint4.getEndpointConfiguration().isDurableSubscription());
+        Assertions.assertEquals("durableSubscriber", jmsEndpoint4.getEndpointConfiguration().getDurableSubscriberName());
+        Assertions.assertTrue(jmsEndpoint4.getEndpointConfiguration().isUseObjectMessages());
 
         // 5th message receiver
-        Assert.assertNotNull(jmsEndpoint5.getActor());
-        Assert.assertEquals(jmsEndpoint5.getActor(), testActor);
+        Assertions.assertNotNull(jmsEndpoint5.getActor());
+        Assertions.assertEquals(testActor, jmsEndpoint5.getActor());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 6L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("jms.async"));
-        Assert.assertEquals(validators.get("jms.async").getClass(), JmsEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("jms.sync"));
-        Assert.assertEquals(validators.get("jms.sync").getClass(), JmsSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("channel.async"));
-        Assert.assertEquals(validators.get("channel.async").getClass(), ChannelEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("channel.sync"));
-        Assert.assertEquals(validators.get("channel.sync").getClass(), ChannelSyncEndpointConfigParser.class);
+        Assertions.assertEquals(6L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        Assertions.assertNotNull(validators.get("jms.async"));
+        Assertions.assertEquals(JmsEndpointConfigParser.class, validators.get("jms.async").getClass());
+        Assertions.assertNotNull(validators.get("jms.sync"));
+        Assertions.assertEquals(JmsSyncEndpointConfigParser.class, validators.get("jms.sync").getClass());
+        Assertions.assertNotNull(validators.get("channel.async"));
+        Assertions.assertEquals(ChannelEndpointConfigParser.class, validators.get("channel.async").getClass());
+        Assertions.assertNotNull(validators.get("channel.sync"));
+        Assertions.assertEquals(ChannelSyncEndpointConfigParser.class, validators.get("channel.sync").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("jms.async").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("jms.async").isPresent());
     }
 }

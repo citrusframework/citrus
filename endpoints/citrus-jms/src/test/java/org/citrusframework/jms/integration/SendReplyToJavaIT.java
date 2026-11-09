@@ -19,18 +19,26 @@ package org.citrusframework.jms.integration;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageHeaders;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class SendReplyToJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
+public class SendReplyToJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void jmsSyncQueues() {
-        variable("operation", "GetDate");
-        variable("conversationId", "123456789");
+    public void jmsSyncQueues(@CitrusResource TestCaseRunner runner) {
+        runner.variable("operation", "GetDate");
+        runner.variable("conversationId", "123456789");
 
-        run(parallel().actions(
+        runner.run(parallel().actions(
             send("syncGetDateRequestSender")
                 .message()
                 .body("<GetDateRequestMessage>" +

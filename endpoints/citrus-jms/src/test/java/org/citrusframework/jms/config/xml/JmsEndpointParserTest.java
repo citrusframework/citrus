@@ -21,9 +21,9 @@ import java.util.Map;
 import org.citrusframework.TestActor;
 import org.citrusframework.jms.endpoint.JmsEndpoint;
 import org.citrusframework.jms.message.JmsMessageConverter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -31,48 +31,48 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
     public void testJmsEndpointParser() {
         Map<String, JmsEndpoint> endpoints = beanDefinitionContext.getBeansOfType(JmsEndpoint.class);
 
-        Assert.assertEquals(endpoints.size(), 4);
+        Assertions.assertEquals(4, endpoints.size());
 
         // 1st message receiver
         JmsEndpoint jmsEndpoint = endpoints.get("jmsEndpoint1");
-        Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getConnectionFactory(), beanDefinitionContext.getBean("connectionFactory"));
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getMessageConverter().getClass(), JmsMessageConverter.class);
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
-        Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isPubSubDomain());
-        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isAutoStart());
-        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isDurableSubscription());
-        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNotNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(beanDefinitionContext.getBean("connectionFactory"), jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(JmsMessageConverter.class, jmsEndpoint.getEndpointConfiguration().getMessageConverter().getClass());
+        Assertions.assertEquals("JMS.Queue.Test", jmsEndpoint.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(5000L, jmsEndpoint.getEndpointConfiguration().getTimeout());
+        Assertions.assertFalse(jmsEndpoint.getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertFalse(jmsEndpoint.getEndpointConfiguration().isAutoStart());
+        Assertions.assertFalse(jmsEndpoint.getEndpointConfiguration().isDurableSubscription());
+        Assertions.assertFalse(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertTrue(jmsEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         jmsEndpoint = endpoints.get("jmsEndpoint2");
-        Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getConnectionFactory(), beanDefinitionContext.getBean("jmsConnectionFactory"));
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationResolver(), beanDefinitionContext.getBean("destinationResolver"));
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationNameResolver(), beanDefinitionContext.getBean("destinationNameResolver"));
-        Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
-        Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertNotNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(beanDefinitionContext.getBean("jmsConnectionFactory"), jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter"), jmsEndpoint.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(beanDefinitionContext.getBean("destinationResolver"), jmsEndpoint.getEndpointConfiguration().getDestinationResolver());
+        Assertions.assertEquals(beanDefinitionContext.getBean("destinationNameResolver"), jmsEndpoint.getEndpointConfiguration().getDestinationNameResolver());
+        Assertions.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNotNull(jmsEndpoint.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(10000L, jmsEndpoint.getEndpointConfiguration().getTimeout());
 
         // 3rd message receiver
         jmsEndpoint = endpoints.get("jmsEndpoint3");
-        Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
-        Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
-        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isPubSubDomain());
-        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isAutoStart());
-        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isDurableSubscription());
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDurableSubscriberName(), "durableSubscriber");
-        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
+        Assertions.assertTrue(jmsEndpoint.getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertTrue(jmsEndpoint.getEndpointConfiguration().isAutoStart());
+        Assertions.assertTrue(jmsEndpoint.getEndpointConfiguration().isDurableSubscription());
+        Assertions.assertEquals("durableSubscriber", jmsEndpoint.getEndpointConfiguration().getDurableSubscriberName());
+        Assertions.assertTrue(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(jmsEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
         jmsEndpoint = endpoints.get("jmsEndpoint4");
-        Assert.assertNotNull(jmsEndpoint.getActor());
-        Assert.assertEquals(jmsEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertNotNull(jmsEndpoint.getActor());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), jmsEndpoint.getActor());
     }
 }

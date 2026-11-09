@@ -20,23 +20,31 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 import org.citrusframework.util.FileUtils;
-import org.testng.annotations.Test;
 
-@Test
-public class JmsByteMessageJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
+public class JmsByteMessageJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void jmsByteMessage() {
-        when(send("jms:queue:jms.binary.queue")
+    public void jmsByteMessage(@CitrusResource TestCaseRunner runner) {
+        runner.when(send("jms:queue:jms.binary.queue")
                 .message(new DefaultMessage(
                         FileUtils.copyToByteArray(
                                 FileUtils.getFileResource("org/citrusframework/jms/integration/button.png")
                                  .getInputStream())))
                 .process(processor().toBinary()));
 
-        then(receive("jms:queue:jms.binary.queue")
+        runner.then(receive("jms:queue:jms.binary.queue")
                 .message()
                 .type(MessageType.BINARY_BASE64)
                 .body("citrus:readFile('classpath:org/citrusframework/jms/integration/button.png', true)"));

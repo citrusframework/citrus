@@ -36,14 +36,15 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.correlation.ObjectStore;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
+public class JmsEndpointSyncProducerTest extends AbstractUnitTest {
 
     private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private final Connection connection = Mockito.mock(Connection.class);
@@ -228,13 +229,15 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         verify(messageProducer).send((TextMessage)any());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
+    @Test
     public void testSendEmptyMessage() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        endpoint.createProducer().send(null, context);
+        assertThatThrownBy(() -> endpoint.createProducer().send(null, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Message is empty - unable to send empty message");
     }
 
     @Test
@@ -249,7 +252,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                 jmsSyncProducer.toString(), context);
         jmsSyncProducer.getCorrelationManager().store(jmsSyncProducer.toString(), message);
 
-        Assert.assertEquals(jmsSyncProducer.receive(context), message);
+        Assertions.assertEquals(message, jmsSyncProducer.receive(context));
     }
 
     @Test
@@ -261,7 +264,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
         jmsSyncProducer.getCorrelationManager().store(new DefaultMessageCorrelator().getCorrelationKey(message), message);
 
-        Assert.assertEquals(jmsSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
+        Assertions.assertEquals(message, jmsSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context));
     }
 
     @Test
@@ -293,9 +296,9 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 
-        Assert.assertEquals(retryCount, 0);
-        Assert.assertEquals(jmsSyncProducer.receive(context, 2500), message);
-        Assert.assertEquals(retryCount, 5);
+        Assertions.assertEquals(0, retryCount);
+        Assertions.assertEquals(message, jmsSyncProducer.receive(context, 2500));
+        Assertions.assertEquals(5, retryCount);
     }
 
     @Test
@@ -322,12 +325,12 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 
-        Assert.assertEquals(retryCount, 0);
+        Assertions.assertEquals(0, retryCount);
         try {
             jmsSyncProducer.receive(context, 800);
-            Assert.fail("Missing action timeout exception");
+            Assertions.fail("Missing action timeout exception");
         } catch (ActionTimeoutException e) {
-            Assert.assertEquals(retryCount, 4);
+            Assertions.assertEquals(4, retryCount);
         }
     }
 
@@ -355,12 +358,12 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 
-        Assert.assertEquals(retryCount, 0);
+        Assertions.assertEquals(0, retryCount);
         try {
             jmsSyncProducer.receive(context, 250);
-            Assert.fail("Missing action timeout exception");
+            Assertions.fail("Missing action timeout exception");
         } catch (ActionTimeoutException e) {
-            Assert.assertEquals(retryCount, 2);
+            Assertions.assertEquals(2, retryCount);
         }
     }
 
@@ -388,12 +391,12 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 
-        Assert.assertEquals(retryCount, 0);
+        Assertions.assertEquals(0, retryCount);
         try {
             jmsSyncProducer.receive(context, 0);
-            Assert.fail("Missing action timeout exception");
+            Assertions.fail("Missing action timeout exception");
         } catch (ActionTimeoutException e) {
-            Assert.assertEquals(retryCount, 1);
+            Assertions.assertEquals(1, retryCount);
         }
     }
 }

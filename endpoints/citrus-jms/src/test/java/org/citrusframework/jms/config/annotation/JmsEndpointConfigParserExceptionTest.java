@@ -17,50 +17,48 @@
 package org.citrusframework.jms.config.annotation;
 
 import java.lang.reflect.Field;
+import java.util.stream.Stream;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jms.endpoint.JmsEndpoint;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.util.ReflectionHelper;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class JmsEndpointConfigParserExceptionTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class JmsEndpointConfigParserExceptionTest extends AbstractUnitTest {
 
     @Mock
     private ReferenceResolver referenceResolver;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
-    @DataProvider(name = "config-exceptions")
-    public Object[][] configExceptionsData() {
-        return new Object[][]{
-            {"missingAttributes", "Either a jms-template reference or one of destination or destination-name must be provided"},
-            {"jmsTemplateWithConnectionFactory", "When providing a jms-template, none of connection-factory, destination, or destination-name should be provided"},
-            {"jmsTemplateWithDestination", "When providing a jms-template, none of connection-factory, destination, or destination-name should be provided"},
-            {"jmsTemplateWithDestinationName", "When providing a jms-template, none of connection-factory, destination, or destination-name should be provided"},
-            {"autoStartWithoutPubSubDomain", "When providing auto start enabled, pubSubDomain should also be enabled"},
-            {"durableSubscriptionWithoutPubSubDomain", "When providing durable subscription enabled, pubSubDomain should also be enabled"},
-        };
+    static Stream<Arguments> configExceptions() {
+        return Stream.of(
+            Arguments.of("missingAttributes", "Either a jms-template reference or one of destination or destination-name must be provided"),
+            Arguments.of("jmsTemplateWithConnectionFactory", "When providing a jms-template, none of connection-factory, destination, or destination-name should be provided"),
+            Arguments.of("jmsTemplateWithDestination", "When providing a jms-template, none of connection-factory, destination, or destination-name should be provided"),
+            Arguments.of("jmsTemplateWithDestinationName", "When providing a jms-template, none of connection-factory, destination, or destination-name should be provided"),
+            Arguments.of("autoStartWithoutPubSubDomain", "When providing auto start enabled, pubSubDomain should also be enabled"),
+            Arguments.of("durableSubscriptionWithoutPubSubDomain", "When providing durable subscription enabled, pubSubDomain should also be enabled")
+        );
     }
 
-    @Test(dataProvider = "config-exceptions")
+    @ParameterizedTest
+    @MethodSource("configExceptions")
     public void testJmsEndpointParser(String fieldName, String exceptionMessage) {
         JmsEndpointConfig annotation = getJmsEndpointConfigAnnotationFromField(fieldName);
 
@@ -81,7 +79,7 @@ public class JmsEndpointConfigParserExceptionTest extends AbstractTestNGUnitTest
             runnable.run();
             fail("Expected exception not thrown!");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains(exceptionMessage));
+            Assertions.assertTrue(e.getMessage().contains(exceptionMessage));
         }
     }
 

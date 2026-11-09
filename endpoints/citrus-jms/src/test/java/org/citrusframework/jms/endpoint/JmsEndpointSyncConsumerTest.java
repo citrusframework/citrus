@@ -33,16 +33,17 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageCorrelator;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
+public class JmsEndpointSyncConsumerTest extends AbstractUnitTest {
 
     private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private final Connection connection = Mockito.mock(Connection.class);
@@ -82,10 +83,10 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = jmsSyncConsumer.receive(context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
-        Assert.assertEquals(jmsSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
-                endpoint.getEndpointConfiguration().getTimeout()), replyDestination);
+        Assertions.assertEquals(replyDestination, jmsSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
+                endpoint.getEndpointConfiguration().getTimeout()));
 
         verify(connection).start();
     }
@@ -121,12 +122,12 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = jmsSyncConsumer.receive(context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
-        Assert.assertNull(jmsSyncConsumer.getCorrelationManager().find(
+        Assertions.assertNull(jmsSyncConsumer.getCorrelationManager().find(
                 correlator.getCorrelationKey("wrongIdKey"), endpoint.getEndpointConfiguration().getTimeout()));
-        Assert.assertEquals(jmsSyncConsumer.getCorrelationManager().find(
-                correlator.getCorrelationKey(receivedMessage), endpoint.getEndpointConfiguration().getTimeout()), replyDestination);
+        Assertions.assertEquals(replyDestination, jmsSyncConsumer.getCorrelationManager().find(
+                correlator.getCorrelationKey(receivedMessage), endpoint.getEndpointConfiguration().getTimeout()));
 
         verify(connection).start();
     }
@@ -234,15 +235,14 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
             jmsSyncConsumer.saveReplyDestination(requestMessage, context);
             jmsSyncConsumer.send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to get correlation key"));
+            Assertions.assertTrue(e.getMessage().startsWith("Failed to get correlation key"));
             return;
         }
 
-        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
+        Assertions.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to find JMS reply destination for message correlation key: '123456789'")
+    @Test
     public void testSendMessageWithMissingReplyTo() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
@@ -260,11 +260,12 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
         jmsSyncConsumer.saveReplyDestination(requestMessage, context);
-        jmsSyncConsumer.send(message, context);
+        assertThatThrownBy(() -> jmsSyncConsumer.send(message, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Failed to find JMS reply destination for message correlation key: '123456789'");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to find JMS reply destination for message correlation key: '123456789'")
+    @Test
     public void testNoReplyDestinationFound() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
@@ -280,16 +281,19 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.send(message, context);
+        assertThatThrownBy(() -> jmsSyncConsumer.send(message, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Failed to find JMS reply destination for message correlation key: '123456789'");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
+    @Test
     public void testSendEmptyMessage() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.send(null, context);
+        assertThatThrownBy(() -> jmsSyncConsumer.send(null, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Message is empty - unable to send empty message");
     }
 }

@@ -31,8 +31,8 @@ import org.citrusframework.jms.endpoint.TextMessageImpl;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.mockito.Mock;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -74,44 +74,44 @@ public class PurgeQueuesTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "PurgeQueuesTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), PurgeJmsQueuesAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "purge-queue");
+        Assertions.assertEquals("PurgeQueuesTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
+        Assertions.assertEquals(PurgeJmsQueuesAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("purge-queue", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getConnectionFactory());
-        Assert.assertEquals(action.getReceiveTimeout(), 100L);
-        Assert.assertEquals(action.getSleepTime(), 350L);
-        Assert.assertEquals(action.getQueues().size(), 0);
-        Assert.assertEquals(action.getQueueNames().size(), 1);
-        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
+        Assertions.assertNotNull(action.getConnectionFactory());
+        Assertions.assertEquals(100L, action.getReceiveTimeout());
+        Assertions.assertEquals(350L, action.getSleepTime());
+        Assertions.assertEquals(0, action.getQueues().size());
+        Assertions.assertEquals(1, action.getQueueNames().size());
+        Assertions.assertEquals("JMS.Queue.1", action.getQueueNames().get(0));
 
         action = (PurgeJmsQueuesAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getReceiveTimeout(), 125L);
-        Assert.assertEquals(action.getSleepTime(), 250L);
-        Assert.assertNotNull(action.getConnectionFactory());
-        Assert.assertEquals(action.getQueues().size(), 0);
-        Assert.assertEquals(action.getQueueNames().size(), 2);
-        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.2");
-        Assert.assertEquals(action.getQueueNames().get(1), "JMS.Queue.3");
+        Assertions.assertEquals(125L, action.getReceiveTimeout());
+        Assertions.assertEquals(250L, action.getSleepTime());
+        Assertions.assertNotNull(action.getConnectionFactory());
+        Assertions.assertEquals(0, action.getQueues().size());
+        Assertions.assertEquals(2, action.getQueueNames().size());
+        Assertions.assertEquals("JMS.Queue.2", action.getQueueNames().get(0));
+        Assertions.assertEquals("JMS.Queue.3", action.getQueueNames().get(1));
 
         action = (PurgeJmsQueuesAction) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getConnectionFactory());
-        Assert.assertEquals(action.getQueues().size(), 1);
-        Assert.assertEquals(action.getQueues().get(0), queue);
-        Assert.assertEquals(action.getQueueNames().size(), 0);
+        Assertions.assertNotNull(action.getConnectionFactory());
+        Assertions.assertEquals(1, action.getQueues().size());
+        Assertions.assertEquals(queue, action.getQueues().get(0));
+        Assertions.assertEquals(0, action.getQueueNames().size());
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("purge-jms-queues").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("purge-jms-queues").get().getClass(), PurgeQueues.class);
-        Assert.assertTrue(XmlTestActionBuilder.lookup("purgeQueues").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("purgeQueues").get().getClass(), PurgeQueues.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("purge-jms-queues").isPresent());
+        Assertions.assertEquals(PurgeQueues.class, XmlTestActionBuilder.lookup("purge-jms-queues").get().getClass());
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("purgeQueues").isPresent());
+        Assertions.assertEquals(PurgeQueues.class, XmlTestActionBuilder.lookup("purgeQueues").get().getClass());
     }
 }
