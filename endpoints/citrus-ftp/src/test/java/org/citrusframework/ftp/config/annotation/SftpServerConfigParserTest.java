@@ -25,17 +25,18 @@ import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.ftp.client.SftpEndpointConfiguration;
 import org.citrusframework.ftp.server.SftpServer;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class SftpServerConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "sftpServer1")
     @SftpServerConfig(autoStart = false,
@@ -69,16 +70,12 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
-
-    @BeforeMethod
-    public void setMocks() {
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
+        lenient().when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -87,48 +84,48 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st server
-        Assert.assertEquals(sftpServer1.getName(), "sftpServer1");
-        Assert.assertEquals(sftpServer1.getPort(), 22);
-        Assert.assertFalse(sftpServer1.isAutoStart());
-        Assert.assertTrue(((SftpEndpointConfiguration) sftpServer1.getEndpointConfiguration()).isAutoLogin());
-        Assert.assertTrue(((SftpEndpointConfiguration) sftpServer1.getEndpointConfiguration()).isAutoConnect());
-        Assert.assertNull(sftpServer1.getAllowedKeyPath());
-        Assert.assertNull(sftpServer1.getHostKeyPath());
-        Assert.assertNull(sftpServer1.getUserHomePath());
-        Assert.assertNull(sftpServer1.getUser());
-        Assert.assertNull(sftpServer1.getPassword());
-        Assert.assertTrue(sftpServer1.getEndpointAdapter() instanceof DirectEndpointAdapter);
-        Assert.assertNotNull(sftpServer1.getMessageConverter());
-        Assert.assertNull(sftpServer1.getActor());
+        Assertions.assertEquals("sftpServer1", sftpServer1.getName());
+        Assertions.assertEquals(22, sftpServer1.getPort());
+        Assertions.assertFalse(sftpServer1.isAutoStart());
+        Assertions.assertTrue(((SftpEndpointConfiguration) sftpServer1.getEndpointConfiguration()).isAutoLogin());
+        Assertions.assertTrue(((SftpEndpointConfiguration) sftpServer1.getEndpointConfiguration()).isAutoConnect());
+        Assertions.assertNull(sftpServer1.getAllowedKeyPath());
+        Assertions.assertNull(sftpServer1.getHostKeyPath());
+        Assertions.assertNull(sftpServer1.getUserHomePath());
+        Assertions.assertNull(sftpServer1.getUser());
+        Assertions.assertNull(sftpServer1.getPassword());
+        Assertions.assertTrue(sftpServer1.getEndpointAdapter() instanceof DirectEndpointAdapter);
+        Assertions.assertNotNull(sftpServer1.getMessageConverter());
+        Assertions.assertNull(sftpServer1.getActor());
 
         // 2nd server
-        Assert.assertEquals(sftpServer2.getName(), "sftpServer2");
-        Assert.assertEquals(sftpServer2.getPort(), 10022);
-        Assert.assertFalse(sftpServer2.isAutoStart());
-        Assert.assertFalse(((SftpEndpointConfiguration) sftpServer2.getEndpointConfiguration()).isAutoLogin());
-        Assert.assertFalse(((SftpEndpointConfiguration) sftpServer2.getEndpointConfiguration()).isAutoConnect());
-        Assert.assertEquals(sftpServer2.getAllowedKeyPath(), "classpath:org/citrusframework/sftp/citrus_pub.pem");
-        Assert.assertEquals(sftpServer2.getHostKeyPath(), "classpath:org/citrusframework/sftp/citrus.pem");
-        Assert.assertEquals(sftpServer2.getUserHomePath(), "/home/user");
-        Assert.assertEquals(sftpServer2.getUser(), "foo");
-        Assert.assertEquals(sftpServer2.getPassword(), "bar");
-        Assert.assertTrue(sftpServer2.getEndpointAdapter() instanceof DirectEndpointAdapter);
-        Assert.assertNull(sftpServer2.getActor());
+        Assertions.assertEquals("sftpServer2", sftpServer2.getName());
+        Assertions.assertEquals(10022, sftpServer2.getPort());
+        Assertions.assertFalse(sftpServer2.isAutoStart());
+        Assertions.assertFalse(((SftpEndpointConfiguration) sftpServer2.getEndpointConfiguration()).isAutoLogin());
+        Assertions.assertFalse(((SftpEndpointConfiguration) sftpServer2.getEndpointConfiguration()).isAutoConnect());
+        Assertions.assertEquals("classpath:org/citrusframework/sftp/citrus_pub.pem", sftpServer2.getAllowedKeyPath());
+        Assertions.assertEquals("classpath:org/citrusframework/sftp/citrus.pem", sftpServer2.getHostKeyPath());
+        Assertions.assertEquals("/home/user", sftpServer2.getUserHomePath());
+        Assertions.assertEquals("foo", sftpServer2.getUser());
+        Assertions.assertEquals("bar", sftpServer2.getPassword());
+        Assertions.assertTrue(sftpServer2.getEndpointAdapter() instanceof DirectEndpointAdapter);
+        Assertions.assertNull(sftpServer2.getActor());
 
         // 3rd server
-        Assert.assertEquals(sftpServer3.getName(), "sftpServer3");
-        Assert.assertEquals(sftpServer3.getPort(), 22);
-        Assert.assertFalse(sftpServer3.isAutoStart());
-        Assert.assertNull(sftpServer3.getAllowedKeyPath());
-        Assert.assertNull(sftpServer3.getHostKeyPath());
-        Assert.assertNull(sftpServer3.getUser());
-        Assert.assertNull(sftpServer3.getPassword());
-        Assert.assertEquals(sftpServer3.getEndpointAdapter(), endpointAdapter);
-        Assert.assertEquals(sftpServer3.getActor(), testActor);
+        Assertions.assertEquals("sftpServer3", sftpServer3.getName());
+        Assertions.assertEquals(22, sftpServer3.getPort());
+        Assertions.assertFalse(sftpServer3.isAutoStart());
+        Assertions.assertNull(sftpServer3.getAllowedKeyPath());
+        Assertions.assertNull(sftpServer3.getHostKeyPath());
+        Assertions.assertNull(sftpServer3.getUser());
+        Assertions.assertNull(sftpServer3.getPassword());
+        Assertions.assertEquals(endpointAdapter, sftpServer3.getEndpointAdapter());
+        Assertions.assertEquals(testActor, sftpServer3.getActor());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("sftp.server").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("sftp.server").isPresent());
     }
 }

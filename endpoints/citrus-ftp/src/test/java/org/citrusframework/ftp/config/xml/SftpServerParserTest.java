@@ -21,9 +21,9 @@ import java.util.Map;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.ftp.client.SftpEndpointConfiguration;
 import org.citrusframework.ftp.server.SftpServer;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SftpServerParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -31,49 +31,49 @@ public class SftpServerParserTest extends AbstractBeanDefinitionParserTest {
     public void testSftpServerParser() {
         Map<String, SftpServer> servers = beanDefinitionContext.getBeansOfType(SftpServer.class);
 
-        Assert.assertEquals(servers.size(), 3);
+        Assertions.assertEquals(3, servers.size());
 
         // 1st server
         SftpServer server = servers.get("sftpServer1");
-        Assert.assertEquals(server.getName(), "sftpServer1");
-        Assert.assertEquals(server.getPort(), 22);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertTrue(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoLogin());
-        Assert.assertTrue(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoConnect());
-        Assert.assertNull(server.getAllowedKeyPath());
-        Assert.assertNull(server.getHostKeyPath());
-        Assert.assertNull(server.getUserHomePath());
-        Assert.assertNull(server.getUser());
-        Assert.assertNull(server.getPassword());
-        Assert.assertTrue(server.getEndpointAdapter() instanceof DirectEndpointAdapter);
-        Assert.assertNotNull(server.getMessageConverter());
-        Assert.assertNull(server.getActor());
+        Assertions.assertEquals("sftpServer1", server.getName());
+        Assertions.assertEquals(22, server.getPort());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertTrue(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoLogin());
+        Assertions.assertTrue(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoConnect());
+        Assertions.assertNull(server.getAllowedKeyPath());
+        Assertions.assertNull(server.getHostKeyPath());
+        Assertions.assertNull(server.getUserHomePath());
+        Assertions.assertNull(server.getUser());
+        Assertions.assertNull(server.getPassword());
+        Assertions.assertTrue(server.getEndpointAdapter() instanceof DirectEndpointAdapter);
+        Assertions.assertNotNull(server.getMessageConverter());
+        Assertions.assertNull(server.getActor());
 
         // 2nd server
         server = servers.get("sftpServer2");
-        Assert.assertEquals(server.getName(), "sftpServer2");
-        Assert.assertEquals(server.getPort(), 10022);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertFalse(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoLogin());
-        Assert.assertFalse(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoConnect());
-        Assert.assertEquals(server.getAllowedKeyPath(), "classpath:org/citrusframework/sftp/citrus_pub.pem");
-        Assert.assertEquals(server.getHostKeyPath(), "classpath:org/citrusframework/sftp/citrus.pem");
-        Assert.assertEquals(server.getUserHomePath(), "/home/user");
-        Assert.assertEquals(server.getUser(), "foo");
-        Assert.assertEquals(server.getPassword(), "bar");
-        Assert.assertTrue(server.getEndpointAdapter() instanceof DirectEndpointAdapter);
-        Assert.assertNull(server.getActor());
+        Assertions.assertEquals("sftpServer2", server.getName());
+        Assertions.assertEquals(10022, server.getPort());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertFalse(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoLogin());
+        Assertions.assertFalse(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoConnect());
+        Assertions.assertEquals("classpath:org/citrusframework/sftp/citrus_pub.pem", server.getAllowedKeyPath());
+        Assertions.assertEquals("classpath:org/citrusframework/sftp/citrus.pem", server.getHostKeyPath());
+        Assertions.assertEquals("/home/user", server.getUserHomePath());
+        Assertions.assertEquals("foo", server.getUser());
+        Assertions.assertEquals("bar", server.getPassword());
+        Assertions.assertTrue(server.getEndpointAdapter() instanceof DirectEndpointAdapter);
+        Assertions.assertNull(server.getActor());
 
         // 3rd server
         server = servers.get("sftpServer3");
-        Assert.assertEquals(server.getName(), "sftpServer3");
-        Assert.assertEquals(server.getPort(), 22);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertNull(server.getAllowedKeyPath());
-        Assert.assertNull(server.getHostKeyPath());
-        Assert.assertNull(server.getUser());
-        Assert.assertNull(server.getPassword());
-        Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("sftpServerAdapter"));
-        Assert.assertNull(server.getActor());
+        Assertions.assertEquals("sftpServer3", server.getName());
+        Assertions.assertEquals(22, server.getPort());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertNull(server.getAllowedKeyPath());
+        Assertions.assertNull(server.getHostKeyPath());
+        Assertions.assertNull(server.getUser());
+        Assertions.assertNull(server.getPassword());
+        Assertions.assertEquals(beanDefinitionContext.getBean("sftpServerAdapter"), server.getEndpointAdapter());
+        Assertions.assertNull(server.getActor());
     }
 }

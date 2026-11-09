@@ -17,13 +17,13 @@
 package org.citrusframework.ftp.server;
 
 import org.citrusframework.ftp.client.FtpEndpointConfiguration;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.0
  */
-public class FtpServerTest extends AbstractTestNGUnitTest {
+public class FtpServerTest extends AbstractUnitTest {
 
     @Test
     public void startupAndShutdownTest() {

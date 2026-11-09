@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.ftp.client.SftpClientBuilder;
 import org.citrusframework.ftp.server.SftpServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SftpEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("sftp"));
-        Assert.assertTrue(endpointBuilders.containsKey("sftp.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("sftp.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("sftp"));
+        Assertions.assertTrue(endpointBuilders.containsKey("sftp.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("sftp.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("sftp").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("sftp").get().getClass(), SftpEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("sftp.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("sftp.client").get().getClass(), SftpClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("sftp.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("sftp.server").get().getClass(), SftpServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("sftp").isPresent());
+        Assertions.assertEquals(SftpEndpointBuilder.class, EndpointBuilder.lookup("sftp").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("sftp.client").isPresent());
+        Assertions.assertEquals(SftpClientBuilder.class, EndpointBuilder.lookup("sftp.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("sftp.server").isPresent());
+        Assertions.assertEquals(SftpServerBuilder.class, EndpointBuilder.lookup("sftp.server").get().getClass());
     }
 }

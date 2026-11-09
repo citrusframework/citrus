@@ -27,11 +27,11 @@ import org.citrusframework.base.endpoint.adapter.TimeoutProducingEndpointAdapter
 import org.citrusframework.ftp.server.FtpServer;
 import org.citrusframework.jms.endpoint.JmsEndpointAdapter;
 import org.citrusframework.jms.endpoint.JmsEndpointConfiguration;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import jakarta.jms.ConnectionFactory;
 import org.springframework.context.ApplicationContext;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.0
@@ -42,43 +42,43 @@ public class FtpServerParserTest extends AbstractBeanDefinitionParserTest {
     public void testFtpServerParser() {
         Map<String, FtpServer> servers = beanDefinitionContext.getBeansOfType(FtpServer.class);
 
-        Assert.assertEquals(servers.size(), 4);
+        Assertions.assertEquals(4, servers.size());
 
         // 1st message sender
         FtpServer server = servers.get("ftpServer1");
-        Assert.assertEquals(server.getName(), "ftpServer1");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertTrue(server.getEndpointConfiguration().isAutoConnect());
-        Assert.assertTrue(server.getEndpointConfiguration().isAutoLogin());
-        Assert.assertEquals(server.getEndpointConfiguration().getAutoHandleCommands(), "PORT,TYPE");
+        Assertions.assertEquals("ftpServer1", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertTrue(server.getEndpointConfiguration().isAutoConnect());
+        Assertions.assertTrue(server.getEndpointConfiguration().isAutoLogin());
+        Assertions.assertEquals("PORT,TYPE", server.getEndpointConfiguration().getAutoHandleCommands());
 
         // 2nd message sender
         server = servers.get("ftpServer2");
-        Assert.assertEquals(server.getName(), "ftpServer2");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(server.getFtpServer(), beanDefinitionContext.getBean("apacheFtpServer"));
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertFalse(server.getEndpointConfiguration().isAutoConnect());
-        Assert.assertFalse(server.getEndpointConfiguration().isAutoLogin());
-        Assert.assertEquals(server.getEndpointConfiguration().getAutoHandleCommands(), "PORT,TYPE,PWD");
+        Assertions.assertEquals("ftpServer2", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(beanDefinitionContext.getBean("apacheFtpServer"), server.getFtpServer());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertFalse(server.getEndpointConfiguration().isAutoConnect());
+        Assertions.assertFalse(server.getEndpointConfiguration().isAutoLogin());
+        Assertions.assertEquals("PORT,TYPE,PWD", server.getEndpointConfiguration().getAutoHandleCommands());
 
         // 3rd message sender
         server = servers.get("ftpServer3");
-        Assert.assertEquals(server.getName(), "ftpServer3");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertEquals(server.getUserManager(), beanDefinitionContext.getBean("userManager"));
-        Assert.assertFalse(server.isAutoStart());
+        Assertions.assertEquals("ftpServer3", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertEquals(beanDefinitionContext.getBean("userManager"), server.getUserManager());
+        Assertions.assertFalse(server.isAutoStart());
 
         // 4th message sender
         server = servers.get("ftpServer4");
-        Assert.assertEquals(server.getName(), "ftpServer4");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
+        Assertions.assertEquals("ftpServer4", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
 
-        Assert.assertNotNull(server.getUserManagerProperties().file());
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertNotNull(server.getInterceptors());
-        Assert.assertEquals(server.getInterceptors().size(), 0L);
+        Assertions.assertNotNull(server.getUserManagerProperties().file());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertNotNull(server.getInterceptors());
+        Assertions.assertEquals(0L, server.getInterceptors().size());
     }
 
     @Test
@@ -87,57 +87,57 @@ public class FtpServerParserTest extends AbstractBeanDefinitionParserTest {
 
         Map<String, FtpServer> servers = beanDefinitionContext.getBeansOfType(FtpServer.class);
 
-        Assert.assertEquals(servers.size(), 6);
+        Assertions.assertEquals(6, servers.size());
 
         // 1st message sender
         FtpServer server = servers.get("ftpServer1");
-        Assert.assertEquals(server.getName(), "ftpServer1");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(server.getEndpointAdapter());
-        Assert.assertEquals(server.getEndpointAdapter().getClass(), ChannelEndpointAdapter.class);
-        Assert.assertNotNull(server.getEndpointAdapter().getEndpoint());
-        Assert.assertEquals(server.getEndpointAdapter().getEndpoint().getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(((ChannelEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getChannelName(), "serverChannel");
+        Assertions.assertEquals("ftpServer1", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(server.getEndpointAdapter());
+        Assertions.assertEquals(ChannelEndpointAdapter.class, server.getEndpointAdapter().getClass());
+        Assertions.assertNotNull(server.getEndpointAdapter().getEndpoint());
+        Assertions.assertEquals(10000L, server.getEndpointAdapter().getEndpoint().getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals("serverChannel", ((ChannelEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getChannelName());
 
         // 2nd message sender
         server = servers.get("ftpServer2");
-        Assert.assertEquals(server.getName(), "ftpServer2");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(server.getEndpointAdapter());
-        Assert.assertEquals(server.getEndpointAdapter().getClass(), JmsEndpointAdapter.class);
-        Assert.assertNotNull(server.getEndpointAdapter().getEndpoint());
-        Assert.assertEquals(server.getEndpointAdapter().getEndpoint().getEndpointConfiguration().getTimeout(), 2500);
-        Assert.assertEquals(((JmsEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getDestinationName(), "serverQueue");
-        Assert.assertEquals(((JmsEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getConnectionFactory(), beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class));
+        Assertions.assertEquals("ftpServer2", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(server.getEndpointAdapter());
+        Assertions.assertEquals(JmsEndpointAdapter.class, server.getEndpointAdapter().getClass());
+        Assertions.assertNotNull(server.getEndpointAdapter().getEndpoint());
+        Assertions.assertEquals(2500, server.getEndpointAdapter().getEndpoint().getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals("serverQueue", ((JmsEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getDestinationName());
+        Assertions.assertEquals(beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class), ((JmsEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getConnectionFactory());
 
         // 3rd message sender
         server = servers.get("ftpServer3");
-        Assert.assertEquals(server.getName(), "ftpServer3");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(server.getEndpointAdapter());
-        Assert.assertEquals(server.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
+        Assertions.assertEquals("ftpServer3", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(server.getEndpointAdapter());
+        Assertions.assertEquals(EmptyResponseEndpointAdapter.class, server.getEndpointAdapter().getClass());
 
         // 4th message sender
         server = servers.get("ftpServer4");
-        Assert.assertEquals(server.getName(), "ftpServer4");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(server.getEndpointAdapter());
-        Assert.assertEquals(server.getEndpointAdapter().getClass(), StaticResponseEndpointAdapter.class);
-        Assert.assertEquals((((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessagePayload()).replaceAll("\\s", ""), "<TestMessage><Text>Hello!</Text></TestMessage>");
-        Assert.assertEquals(((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessageHeader().get("Operation"), "sayHello");
+        Assertions.assertEquals("ftpServer4", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(server.getEndpointAdapter());
+        Assertions.assertEquals(StaticResponseEndpointAdapter.class, server.getEndpointAdapter().getClass());
+        Assertions.assertEquals("<TestMessage><Text>Hello!</Text></TestMessage>", (((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessagePayload()).replaceAll("\\s", ""));
+        Assertions.assertEquals("sayHello", ((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessageHeader().get("Operation"));
 
         // 5th message sender
         server = servers.get("ftpServer5");
-        Assert.assertEquals(server.getName(), "ftpServer5");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(server.getEndpointAdapter());
-        Assert.assertEquals(server.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
+        Assertions.assertEquals("ftpServer5", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(server.getEndpointAdapter());
+        Assertions.assertEquals(TimeoutProducingEndpointAdapter.class, server.getEndpointAdapter().getClass());
 
         // 6th message sender
         server = servers.get("ftpServer6");
-        Assert.assertEquals(server.getName(), "ftpServer6");
-        Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNotNull(server.getEndpointAdapter());
-        Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("ftpServerAdapter6", EndpointAdapter.class));
+        Assertions.assertEquals("ftpServer6", server.getName());
+        Assertions.assertEquals(22222, server.getEndpointConfiguration().getPort());
+        Assertions.assertNotNull(server.getEndpointAdapter());
+        Assertions.assertEquals(beanDefinitionContext.getBean("ftpServerAdapter6", EndpointAdapter.class), server.getEndpointAdapter());
     }
 }

@@ -26,8 +26,8 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.jms.endpoint.JmsEndpointComponent;
 import org.citrusframework.ssh.client.SshEndpointComponent;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SftpEndpointComponentTest {
 
@@ -39,23 +39,23 @@ public class SftpEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("sftp://localhost:2221", context);
 
-        Assert.assertEquals(endpoint.getClass(), SftpClient.class);
+        Assertions.assertEquals(SftpClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), 2221);
-        Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getUser());
-        Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getPassword());
-        Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((SftpClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2221, ((SftpClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getUser());
+        Assertions.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getPassword());
+        Assertions.assertEquals(5000L, ((SftpClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("sftp:ftp.foo.bar", context);
 
-        Assert.assertEquals(endpoint.getClass(), SftpClient.class);
+        Assertions.assertEquals(SftpClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getHost(), "ftp.foo.bar");
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), 22222);
-        Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getUser());
-        Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getPassword());
-        Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("ftp.foo.bar", ((SftpClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22222, ((SftpClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getUser());
+        Assertions.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getPassword());
+        Assertions.assertEquals(5000L, ((SftpClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -64,38 +64,38 @@ public class SftpEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("sftp:localhost:22220?user=admin&password=consol&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), SftpClient.class);
+        Assertions.assertEquals(SftpClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), 22220);
-        Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getUser(), "admin");
-        Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getPassword(), "consol");
-        Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("localhost", ((SftpClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22220, ((SftpClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("admin", ((SftpClient) endpoint).getEndpointConfiguration().getUser());
+        Assertions.assertEquals("consol", ((SftpClient) endpoint).getEndpointConfiguration().getPassword());
+        Assertions.assertEquals(10000L, ((SftpClient) endpoint).getEndpointConfiguration().getTimeout());
 
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 7L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("jms"));
-        Assert.assertEquals(validators.get("jms").getClass(), JmsEndpointComponent.class);
-        Assert.assertNotNull(validators.get("channel"));
-        Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
-        Assert.assertNotNull(validators.get("ssh"));
-        Assert.assertEquals(validators.get("ssh").getClass(), SshEndpointComponent.class);
-        Assert.assertNotNull(validators.get("ftp"));
-        Assert.assertEquals(validators.get("ftp").getClass(), FtpEndpointComponent.class);
-        Assert.assertNotNull(validators.get("sftp"));
-        Assert.assertEquals(validators.get("sftp").getClass(), SftpEndpointComponent.class);
+        Assertions.assertEquals(7L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("jms"));
+        Assertions.assertEquals(JmsEndpointComponent.class, validators.get("jms").getClass());
+        Assertions.assertNotNull(validators.get("channel"));
+        Assertions.assertEquals(ChannelEndpointComponent.class, validators.get("channel").getClass());
+        Assertions.assertNotNull(validators.get("ssh"));
+        Assertions.assertEquals(SshEndpointComponent.class, validators.get("ssh").getClass());
+        Assertions.assertNotNull(validators.get("ftp"));
+        Assertions.assertEquals(FtpEndpointComponent.class, validators.get("ftp").getClass());
+        Assertions.assertNotNull(validators.get("sftp"));
+        Assertions.assertEquals(SftpEndpointComponent.class, validators.get("sftp").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("sftp").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("sftp").isPresent());
     }
 }

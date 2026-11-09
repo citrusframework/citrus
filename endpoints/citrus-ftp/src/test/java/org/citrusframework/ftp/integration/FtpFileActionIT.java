@@ -18,22 +18,24 @@ package org.citrusframework.ftp.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.TestNGUtils;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.7.5
  */
-@Test
-public class FtpFileActionIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DisabledOnOs(value = OS.WINDOWS, disabledReason = "Flaky on win.")
+@Isolated
+public class FtpFileActionIT {
 
-    @BeforeClass
-    public static void setup() {
-        TestNGUtils.skipForOs("win", "Flaky on win.");
-    }
-
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "FtpFileActionIT")
     public void testFileAction() {}
 }

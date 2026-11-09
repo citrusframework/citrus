@@ -24,8 +24,8 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.apache.ftpserver.ftplet.*;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
@@ -50,19 +50,19 @@ public class FtpServerFtpLetTest {
         doAnswer((Answer<FtpMessage>) invocation -> {
             FtpMessage ftpMessage = (FtpMessage) invocation.getArguments()[0];
 
-            Assert.assertEquals(ftpMessage.getPayload(String.class), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><command xmlns=\"http://www.citrusframework.org/schema/ftp/message\"><signal>MKD</signal><arguments>testDir</arguments></command>");
+            Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><command xmlns=\"http://www.citrusframework.org/schema/ftp/message\"><signal>MKD</signal><arguments>testDir</arguments></command>", ftpMessage.getPayload(String.class));
 
-            Assert.assertEquals(ftpMessage.getSignal(), FTPCmd.MKD.getCommand());
-            Assert.assertEquals(ftpMessage.getArguments(), "testDir");
-            Assert.assertNull(ftpMessage.getReplyCode());
-            Assert.assertNull(ftpMessage.getReplyString());
+            Assertions.assertEquals(FTPCmd.MKD.getCommand(), ftpMessage.getSignal());
+            Assertions.assertEquals("testDir", ftpMessage.getArguments());
+            Assertions.assertNull(ftpMessage.getReplyCode());
+            Assertions.assertNull(ftpMessage.getReplyString());
 
             return FtpMessage.success(FTPReply.COMMAND_OK, "OK");
         }).when(endpointAdapter).handleMessage(any(FtpMessage.class));
 
         FtpletResult result = ftpLet.beforeCommand(ftpSession, ftpRequest);
 
-        Assert.assertEquals(result, FtpletResult.SKIP);
+        Assertions.assertEquals(FtpletResult.SKIP, result);
     }
 
     @Test
@@ -73,9 +73,9 @@ public class FtpServerFtpLetTest {
         when(ftpRequest.getArgument()).thenReturn("foo").thenReturn("secret");
 
         FtpletResult result = ftpLet.beforeCommand(ftpSession, ftpRequest);
-        Assert.assertEquals(result, FtpletResult.DEFAULT);
+        Assertions.assertEquals(FtpletResult.DEFAULT, result);
 
         result = ftpLet.beforeCommand(ftpSession, ftpRequest);
-        Assert.assertEquals(result, FtpletResult.DEFAULT);
+        Assertions.assertEquals(FtpletResult.DEFAULT, result);
     }
 }

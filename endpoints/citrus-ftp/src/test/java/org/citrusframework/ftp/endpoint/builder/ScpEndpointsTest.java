@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.ftp.client.ScpClientBuilder;
 import org.citrusframework.ftp.server.SftpServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ScpEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("scp"));
-        Assert.assertTrue(endpointBuilders.containsKey("scp.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("scp.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("scp"));
+        Assertions.assertTrue(endpointBuilders.containsKey("scp.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("scp.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("scp").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("scp").get().getClass(), ScpEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("scp.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("scp.client").get().getClass(), ScpClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("scp.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("scp.server").get().getClass(), SftpServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("scp").isPresent());
+        Assertions.assertEquals(ScpEndpointBuilder.class, EndpointBuilder.lookup("scp").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("scp.client").isPresent());
+        Assertions.assertEquals(ScpClientBuilder.class, EndpointBuilder.lookup("scp.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("scp.server").isPresent());
+        Assertions.assertEquals(SftpServerBuilder.class, EndpointBuilder.lookup("scp.server").get().getClass());
     }
 }

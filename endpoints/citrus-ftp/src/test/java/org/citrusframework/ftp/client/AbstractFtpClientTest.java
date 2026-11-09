@@ -19,18 +19,18 @@ package org.citrusframework.ftp.client;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.ftp.message.FtpMessage;
 import org.citrusframework.ftp.model.*;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @since 2.7.5
  */
-public abstract class AbstractFtpClientTest extends AbstractTestNGUnitTest {
+public abstract class AbstractFtpClientTest extends AbstractUnitTest {
 
     protected GetCommand getCommand(String remoteFilePath) {
         return getCommand(remoteFilePath, remoteFilePath);
@@ -84,7 +84,7 @@ public abstract class AbstractFtpClientTest extends AbstractTestNGUnitTest {
 
     @SuppressWarnings("unchecked")
     protected void verifyMessage(FtpMessage message, Class expectedCommandResultType, Integer expectedReplyCode, String expectedReplyMessage) {
-        assertEquals(message.getReplyCode(), expectedReplyCode);
+        assertEquals(expectedReplyCode, message.getReplyCode());
         String actualReplyMessage = message.getReplyString();
         assertTrue(actualReplyMessage.contains(expectedReplyMessage),
                 String.format("Expected reply message '%s' is not part of the actual reply message '%s'!",
@@ -102,7 +102,7 @@ public abstract class AbstractFtpClientTest extends AbstractTestNGUnitTest {
         List<ListCommandResult.Files.File> files = listCommandResult.getFiles().getFiles();
         fileNames.stream()
                 .forEach(fileName -> verifyFile(files, fileName));
-        assertEquals(files.size(), fileNames.size());
+        assertEquals(fileNames.size(), files.size());
     }
 
     private void verifyFile(List<ListCommandResult.Files.File> files, String fileName) {
