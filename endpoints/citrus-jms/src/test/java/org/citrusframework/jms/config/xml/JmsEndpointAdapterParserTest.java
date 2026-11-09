@@ -21,9 +21,9 @@ import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.jms.endpoint.JmsEndpointAdapter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -34,25 +34,25 @@ public class JmsEndpointAdapterParserTest extends AbstractBeanDefinitionParserTe
     public void testParseBeanDefinition() {
         Map<String, JmsEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(JmsEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 2);
+        Assertions.assertEquals(2, adapters.size());
 
         // 1st endpoint adapter
         JmsEndpointAdapter adapter = adapters.get("endpointAdapter1");
-        Assert.assertEquals(adapter.getName(), "endpointAdapter1");
-        Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals((adapter.getEndpointConfiguration()).getDestinationName(), "serverQueue");
-        Assert.assertFalse(adapter.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
-        Assert.assertEquals((adapter.getEndpointConfiguration()).getConnectionFactory(), beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class));
-        Assert.assertNull(adapter.getFallbackEndpointAdapter());
+        Assertions.assertEquals("endpointAdapter1", adapter.getName());
+        Assertions.assertEquals(5000L, adapter.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals("serverQueue", (adapter.getEndpointConfiguration()).getDestinationName());
+        Assertions.assertFalse(adapter.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals(beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class), (adapter.getEndpointConfiguration()).getConnectionFactory());
+        Assertions.assertNull(adapter.getFallbackEndpointAdapter());
 
         adapter = adapters.get("endpointAdapter2");
-        Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 2500L);
-        Assert.assertEquals((adapter.getEndpointConfiguration()).getReplyDestinationName(), "replyQueue");
-        Assert.assertEquals((adapter.getEndpointConfiguration()).getDestinationName(), "fooQueue");
-        Assert.assertTrue(adapter.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
-        Assert.assertEquals((adapter.getEndpointConfiguration()).getConnectionFactory(), beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class));
-        Assert.assertEquals(adapter.getFallbackEndpointAdapter(), beanDefinitionContext.getBean("mockEndpointAdapter", EndpointAdapter.class));
+        Assertions.assertEquals(2500L, adapter.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals("replyQueue", (adapter.getEndpointConfiguration()).getReplyDestinationName());
+        Assertions.assertEquals("fooQueue", (adapter.getEndpointConfiguration()).getDestinationName());
+        Assertions.assertTrue(adapter.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals(beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class), (adapter.getEndpointConfiguration()).getConnectionFactory());
+        Assertions.assertEquals(beanDefinitionContext.getBean("mockEndpointAdapter", EndpointAdapter.class), adapter.getFallbackEndpointAdapter());
     }
 }

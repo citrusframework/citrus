@@ -29,15 +29,17 @@ import jakarta.jms.TextMessage;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
+public class JmsEndpointProducerTest extends AbstractUnitTest {
 
     private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private final Connection connection = Mockito.mock(Connection.class);
@@ -118,12 +120,14 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
         verify(messageProducer).send((TextMessage)any());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
+    @Test
     public void testSendEmptyMessage() {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        endpoint.createProducer().send(null, context);
+        assertThatThrownBy(() -> endpoint.createProducer().send(null, context))
+                .isInstanceOf(CitrusRuntimeException.class)
+                .hasMessageContaining("Message is empty - unable to send empty message");
     }
 }

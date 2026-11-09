@@ -31,9 +31,9 @@ import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -45,7 +45,7 @@ public class JmsEndpointComponentTest {
     private Destination replyDestination = Mockito.mock(Destination.class);
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -59,13 +59,13 @@ public class JmsEndpointComponentTest {
         when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         Endpoint endpoint = component.createEndpoint("jms:queuename", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
+        Assertions.assertEquals(JmsEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
-        Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
-        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("queuename", ((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName());
+        Assertions.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(connectionFactory, ((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(5000L, ((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class JmsEndpointComponentTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("jms:Sample.Queue.Name", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "Sample.Queue.Name");
+        Assertions.assertEquals(JmsEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("Sample.Queue.Name", ((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName());
     }
 
     @Test
@@ -92,13 +92,13 @@ public class JmsEndpointComponentTest {
         when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         Endpoint endpoint = component.createEndpoint("jms:topic:topicname", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
+        Assertions.assertEquals(JmsEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "topicname");
-        Assert.assertTrue(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
-        Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
-        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("topicname", ((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName());
+        Assertions.assertTrue(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(connectionFactory, ((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(5000L, ((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -109,12 +109,12 @@ public class JmsEndpointComponentTest {
         when(referenceResolver.isResolvable("connectionFactory")).thenReturn(false);
         Endpoint endpoint = component.createEndpoint("jms:sync:queuename", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmsSyncEndpoint.class);
+        Assertions.assertEquals(JmsSyncEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmsSyncEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertFalse(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
-        Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
+        Assertions.assertEquals("queuename", ((JmsSyncEndpoint)endpoint).getEndpointConfiguration().getDestinationName());
+        Assertions.assertFalse(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
     }
 
     @Test
@@ -127,13 +127,13 @@ public class JmsEndpointComponentTest {
         when(referenceResolver.resolve("specialConnectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         Endpoint endpoint = component.createEndpoint("jms:queuename?connectionFactory=specialConnectionFactory&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
+        Assertions.assertEquals(JmsEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
-        Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
-        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("queuename", ((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName());
+        Assertions.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(connectionFactory, ((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(10000L, ((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -143,11 +143,11 @@ public class JmsEndpointComponentTest {
         reset(referenceResolver);
         Endpoint endpoint = component.createEndpoint("jms:queuename?destination", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
+        Assertions.assertEquals(JmsEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
+        Assertions.assertEquals("queuename", ((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName());
+        Assertions.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
     }
 
     @Test
@@ -162,14 +162,14 @@ public class JmsEndpointComponentTest {
         when(referenceResolver.resolve("myReplyDestination", Destination.class)).thenReturn(replyDestination);
         Endpoint endpoint = component.createEndpoint("jms:sync:queuename?connectionFactory=specialConnectionFactory&pollingInterval=100&replyDestination=myReplyDestination", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmsSyncEndpoint.class);
+        Assertions.assertEquals(JmsSyncEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmsSyncEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertFalse(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
-        Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
-        Assert.assertEquals(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getReplyDestination(), replyDestination);
-        Assert.assertEquals(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getPollingInterval(), 100L);
+        Assertions.assertEquals("queuename", ((JmsSyncEndpoint)endpoint).getEndpointConfiguration().getDestinationName());
+        Assertions.assertFalse(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(connectionFactory, ((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(replyDestination, ((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getReplyDestination());
+        Assertions.assertEquals(100L, ((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getPollingInterval());
     }
 
     @Test
@@ -178,28 +178,28 @@ public class JmsEndpointComponentTest {
         try {
             reset(referenceResolver);
             component.createEndpoint("jms:queuename?param1=&param2=value2", context);
-            Assert.fail("Missing exception due to invalid endpoint uri");
+            Assertions.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
+            Assertions.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
         }
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 4L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("channel"));
-        Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
-        Assert.assertNotNull(validators.get("jms"));
-        Assert.assertEquals(validators.get("jms").getClass(), JmsEndpointComponent.class);
+        Assertions.assertEquals(4L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("channel"));
+        Assertions.assertEquals(ChannelEndpointComponent.class, validators.get("channel").getClass());
+        Assertions.assertNotNull(validators.get("jms"));
+        Assertions.assertEquals(JmsEndpointComponent.class, validators.get("jms").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("jms").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("jms").isPresent());
     }
 }

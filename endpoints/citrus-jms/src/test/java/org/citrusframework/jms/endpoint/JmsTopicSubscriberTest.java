@@ -18,15 +18,15 @@ package org.citrusframework.jms.endpoint;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.jms.message.JmsMessageConverter;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.core.JmsTemplate;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
@@ -40,9 +40,10 @@ import jakarta.jms.TopicSubscriber;
 import java.util.Collections;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class JmsTopicSubscriberTest extends AbstractUnitTest {
 
     @Mock
     private JmsTemplate jmsTemplate;
@@ -69,32 +70,31 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
     @Mock
     private ApplicationContext applicationContext;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() throws JMSException {
-        MockitoAnnotations.openMocks(this);
 
-        when(applicationContext.getBean("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
+        lenient().when(applicationContext.getBean("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
 
-        when(jmsTemplate.getConnectionFactory()).thenReturn(topicConnectionFactory);
-        when(topicConnectionFactory.createTopicConnection()).thenReturn(topicConnection);
-        when(topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(topicSession);
-        when(jmsTemplate.getDefaultDestinationName()).thenReturn("JMS.Topic.Test");
-        when(topicSession.createTopic("JMS.Topic.Test")).thenReturn(topic);
+        lenient().when(jmsTemplate.getConnectionFactory()).thenReturn(topicConnectionFactory);
+        lenient().when(topicConnectionFactory.createTopicConnection()).thenReturn(topicConnection);
+        lenient().when(topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(topicSession);
+        lenient().when(jmsTemplate.getDefaultDestinationName()).thenReturn("JMS.Topic.Test");
+        lenient().when(topicSession.createTopic("JMS.Topic.Test")).thenReturn(topic);
 
-        when(applicationContext.getBean("jmsQueue", Destination.class)).thenReturn(queue);
-        when(applicationContext.getBean("jmsTopic", Destination.class)).thenReturn(topic);
-        when(applicationContext.getBean("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
-        when(applicationContext.getBean("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
-        when(applicationContext.getBean("jmsTopicConnectionFactory", ConnectionFactory.class)).thenReturn(topicConnectionFactory);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+        lenient().when(applicationContext.getBean("jmsQueue", Destination.class)).thenReturn(queue);
+        lenient().when(applicationContext.getBean("jmsTopic", Destination.class)).thenReturn(topic);
+        lenient().when(applicationContext.getBean("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
+        lenient().when(applicationContext.getBean("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
+        lenient().when(applicationContext.getBean("jmsTopicConnectionFactory", ConnectionFactory.class)).thenReturn(topicConnectionFactory);
+        lenient().when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void clearSubscriberMocking() throws JMSException{
         topicSubscriber = mock(TopicSubscriber.class);
-        when(topicSession.createSubscriber(topic)).thenReturn(topicSubscriber);
-        when(topicSession.createDurableSubscriber(topic, "jmsTopicEndpoint:subscriber")).thenReturn(topicSubscriber);
+        lenient().when(topicSession.createSubscriber(topic)).thenReturn(topicSubscriber);
+        lenient().when(topicSession.createDurableSubscriber(topic, "jmsTopicEndpoint:subscriber")).thenReturn(topicSubscriber);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setConnectionFactory(topicConnectionFactory);
         endpointConfiguration.setDestinationName("JMS.Topic.Test");
 
-        when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
+        lenient().when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
                                        .thenReturn(new TextMessageImpl("Foo2", Collections.emptyMap()))
                                        .thenReturn(new TextMessageImpl("Foo3", Collections.emptyMap()))
                                        .thenReturn(null);
@@ -113,14 +113,14 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         JmsEndpoint jmsEndpoint = new JmsEndpoint(endpointConfiguration);
 
         JmsConsumer consumer = (JmsConsumer) jmsEndpoint.createConsumer();
-        Assert.assertTrue(consumer instanceof JmsTopicSubscriber);
+        Assertions.assertTrue(consumer instanceof JmsTopicSubscriber);
 
         JmsTopicSubscriber jmsTopicSubscriber = (JmsTopicSubscriber) consumer;
-        Assert.assertTrue(jmsTopicSubscriber.isRunning());
+        Assertions.assertTrue(jmsTopicSubscriber.isRunning());
 
-        Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo1");
-        Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo2");
-        Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo3");
+        Assertions.assertEquals("Foo1", consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
+        Assertions.assertEquals("Foo2", consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
+        Assertions.assertEquals("Foo3", consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
     }
 
     @Test
@@ -131,14 +131,14 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setConnectionFactory(topicConnectionFactory);
         endpointConfiguration.setDestination(topic);
 
-        when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
+        lenient().when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
                                        .thenReturn(null);
 
         JmsEndpoint jmsEndpoint = new JmsEndpoint(endpointConfiguration);
 
         JmsTopicSubscriber jmsTopicSubscriber = (JmsTopicSubscriber) jmsEndpoint.createConsumer();
 
-        Assert.assertEquals(jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo1");
+        Assertions.assertEquals("Foo1", jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
     }
 
     @Test
@@ -148,14 +148,14 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setAutoStart(true);
         endpointConfiguration.setJmsTemplate(jmsTemplate);
 
-        when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
+        lenient().when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
                                        .thenReturn(null);
 
         JmsEndpoint jmsEndpoint = new JmsEndpoint(endpointConfiguration);
 
         JmsTopicSubscriber jmsTopicSubscriber = (JmsTopicSubscriber) jmsEndpoint.createConsumer();
 
-        Assert.assertEquals(jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo1");
+        Assertions.assertEquals("Foo1", jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setConnectionFactory(topicConnectionFactory);
         endpointConfiguration.setDestinationName("JMS.Topic.Test");
 
-        when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
+        lenient().when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
                 .thenReturn(new TextMessageImpl("Foo2", Collections.emptyMap()))
                 .thenReturn(new TextMessageImpl("Foo3", Collections.emptyMap()))
                 .thenReturn(null);
@@ -175,14 +175,14 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
 
         JmsTopicSubscriber jmsTopicSubscriber = (JmsTopicSubscriber) jmsEndpoint.createConsumer();
 
-        Assert.assertEquals(jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo1");
+        Assertions.assertEquals("Foo1", jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
 
         Thread.sleep(1000L);
 
         jmsTopicSubscriber.stop();
 
-        Assert.assertEquals(jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo2");
-        Assert.assertEquals(jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo3");
+        Assertions.assertEquals("Foo2", jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
+        Assertions.assertEquals("Foo3", jmsTopicSubscriber.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
     }
 
     @Test
@@ -194,7 +194,7 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setConnectionFactory(topicConnectionFactory);
         endpointConfiguration.setDestinationName("JMS.Topic.Test");
 
-        when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
+        lenient().when(topicSubscriber.receive()).thenReturn(new TextMessageImpl("Foo1", Collections.emptyMap()))
                 .thenReturn(new TextMessageImpl("Foo2", Collections.emptyMap()))
                 .thenReturn(new TextMessageImpl("Foo3", Collections.emptyMap()))
                 .thenReturn(null);
@@ -203,13 +203,13 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         jmsEndpoint.setName("jmsTopicEndpoint");
 
         JmsConsumer consumer = (JmsConsumer) jmsEndpoint.createConsumer();
-        Assert.assertTrue(consumer instanceof JmsTopicSubscriber);
+        Assertions.assertTrue(consumer instanceof JmsTopicSubscriber);
 
         JmsTopicSubscriber jmsTopicSubscriber = (JmsTopicSubscriber) consumer;
-        Assert.assertTrue(jmsTopicSubscriber.isRunning());
+        Assertions.assertTrue(jmsTopicSubscriber.isRunning());
 
-        Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo1");
-        Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo2");
-        Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo3");
+        Assertions.assertEquals("Foo1", consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
+        Assertions.assertEquals("Foo2", consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
+        Assertions.assertEquals("Foo3", consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class));
     }
 }

@@ -19,26 +19,26 @@ package org.citrusframework.jms.endpoint;
 import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JmsEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("jms"));
-        Assert.assertTrue(endpointBuilders.containsKey("jms.sync"));
-        Assert.assertTrue(endpointBuilders.containsKey("jms.async"));
+        Assertions.assertTrue(endpointBuilders.containsKey("jms"));
+        Assertions.assertTrue(endpointBuilders.containsKey("jms.sync"));
+        Assertions.assertTrue(endpointBuilders.containsKey("jms.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("jms").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("jms").get().getClass(), JmsEndpointsBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("jms.sync").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("jms.sync").get().getClass(), JmsSyncEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("jms.async").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("jms.async").get().getClass(), JmsEndpointBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("jms").isPresent());
+        Assertions.assertEquals(JmsEndpointsBuilder.class, EndpointBuilder.lookup("jms").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("jms.sync").isPresent());
+        Assertions.assertEquals(JmsSyncEndpointBuilder.class, EndpointBuilder.lookup("jms.sync").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("jms.async").isPresent());
+        Assertions.assertEquals(JmsEndpointBuilder.class, EndpointBuilder.lookup("jms.async").get().getClass());
     }
 }

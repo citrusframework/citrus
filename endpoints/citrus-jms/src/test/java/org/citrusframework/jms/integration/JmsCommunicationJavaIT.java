@@ -19,21 +19,29 @@ package org.citrusframework.jms.integration;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class JmsCommunicationJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
+public class JmsCommunicationJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void jmsQueues() {
+    public void jmsQueues(@CitrusResource TestCaseRunner runner) {
         String operation = "sayHello";
 
-        variable("correlationId", "citrus:randomNumber(10)");
-        variable("messageId", "citrus:randomNumber(10)");
-        variable("user", "Christoph");
+        runner.variable("correlationId", "citrus:randomNumber(10)");
+        runner.variable("messageId", "citrus:randomNumber(10)");
+        runner.variable("user", "Christoph");
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
             .description("Send asynchronous hello request: TestFramework -> HelloService")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -45,7 +53,7 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSpringSupport implements
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}"));
 
-        then(receive("helloServiceResponseJmsEndpoint")
+        runner.then(receive("helloServiceResponseJmsEndpoint")
             .description("Receive asynchronous hello response: HelloService -> TestFramework")
             .message()
             .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -57,28 +65,29 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSpringSupport implements
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}"));
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
             .message()
             .body(Resources.fromClasspath("org/citrusframework/jms/integration/helloRequest.xml"))
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}"));
 
-        then(receive("helloServiceResponseJmsEndpoint")
+        runner.then(receive("helloServiceResponseJmsEndpoint")
             .message()
             .body(Resources.fromClasspath("org/citrusframework/jms/integration/helloResponse.xml"))
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}"));
     }
 
+    @Test
     @CitrusTest
-    public void JmsCommunicationEmptyReceiveIT() {
+    public void JmsCommunicationEmptyReceiveIT(@CitrusResource TestCaseRunner runner) {
         String operation = "sayHello";
 
-        variable("correlationId", "citrus:randomNumber(10)");
-        variable("messageId", "citrus:randomNumber(10)");
-        variable("user", "Christoph");
+        runner.variable("correlationId", "citrus:randomNumber(10)");
+        runner.variable("messageId", "citrus:randomNumber(10)");
+        runner.variable("user", "Christoph");
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
                 .description("Send asynchronous hello request: TestFramework -> HelloService")
                 .message()
                 .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -90,15 +99,15 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSpringSupport implements
                 .header("Operation", operation)
                 .header("CorrelationId", "${correlationId}"));
 
-        then(receive("helloServiceResponseJmsEndpoint")
+        runner.then(receive("helloServiceResponseJmsEndpoint")
                 .description("Receive asynchronous hello response: HelloService -> TestFramework"));
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
                 .message()
                 .body(Resources.fromClasspath("org/citrusframework/jms/integration/helloRequest.xml"))
                 .header("Operation", operation)
                 .header("CorrelationId", "${correlationId}"));
 
-        then(receive("helloServiceResponseJmsEndpoint"));
+        runner.then(receive("helloServiceResponseJmsEndpoint"));
     }
 }

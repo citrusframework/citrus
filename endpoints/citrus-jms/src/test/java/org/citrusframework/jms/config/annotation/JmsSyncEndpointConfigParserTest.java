@@ -29,19 +29,20 @@ import org.citrusframework.jms.message.JmsMessageConverter;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class JmsSyncEndpointConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint
     @JmsSyncEndpointConfig(destinationName="JMS.Queue.Test")
@@ -118,23 +119,22 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
 
-        when(referenceResolver.resolve("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
-        when(referenceResolver.resolve("jmsQueue", Destination.class)).thenReturn(jmsQueue);
-        when(referenceResolver.resolve("replyQueue", Destination.class)).thenReturn(replyQueue);
-        when(referenceResolver.resolve("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
-        when(referenceResolver.resolve("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
-        when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
-        when(referenceResolver.resolve("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        lenient().when(referenceResolver.resolve("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
+        lenient().when(referenceResolver.resolve("jmsQueue", Destination.class)).thenReturn(jmsQueue);
+        lenient().when(referenceResolver.resolve("replyQueue", Destination.class)).thenReturn(replyQueue);
+        lenient().when(referenceResolver.resolve("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
+        lenient().when(referenceResolver.resolve("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
+        lenient().when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        lenient().when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
+        lenient().when(referenceResolver.resolve("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -144,74 +144,74 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver
-        Assert.assertNotNull(jmsSyncEndpoint1.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsSyncEndpoint1.getEndpointConfiguration().getConnectionFactory(), connectionFactory);
-        Assert.assertEquals(jmsSyncEndpoint1.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
-        Assert.assertNull(jmsSyncEndpoint1.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsSyncEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(jmsSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assertions.assertNotNull(jmsSyncEndpoint1.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(connectionFactory, jmsSyncEndpoint1.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals("JMS.Queue.Test", jmsSyncEndpoint1.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsSyncEndpoint1.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(5000L, jmsSyncEndpoint1.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, jmsSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass());
 
         // 2nd message receiver
-        Assert.assertNotNull(jmsSyncEndpoint2.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsSyncEndpoint2.getEndpointConfiguration().getConnectionFactory(), jmsConnectionFactory);
-        Assert.assertNull(jmsSyncEndpoint2.getEndpointConfiguration().getDestinationName());
-        Assert.assertNotNull(jmsSyncEndpoint2.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsSyncEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(jmsSyncEndpoint2.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assertions.assertNotNull(jmsSyncEndpoint2.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(jmsConnectionFactory, jmsSyncEndpoint2.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(jmsSyncEndpoint2.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNotNull(jmsSyncEndpoint2.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(10000L, jmsSyncEndpoint2.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(messageCorrelator, jmsSyncEndpoint2.getEndpointConfiguration().getCorrelator());
 
         // 3rd message receiver
-        Assert.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getDestinationName());
-        Assert.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsSyncEndpoint3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
-        Assert.assertTrue(jmsSyncEndpoint3.getEndpointConfiguration().isPubSubDomain());
-        Assert.assertFalse(jmsSyncEndpoint3.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertTrue(jmsSyncEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(messageCorrelator, jmsSyncEndpoint3.getEndpointConfiguration().getCorrelator());
+        Assertions.assertTrue(jmsSyncEndpoint3.getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertFalse(jmsSyncEndpoint3.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertTrue(jmsSyncEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
-        Assert.assertNotNull(jmsSyncEndpoint4.getActor());
-        Assert.assertEquals(jmsSyncEndpoint4.getActor(), testActor);
+        Assertions.assertNotNull(jmsSyncEndpoint4.getActor());
+        Assertions.assertEquals(testActor, jmsSyncEndpoint4.getActor());
 
         // 5th message receiver
-        Assert.assertNotNull(jmsSyncEndpoint5.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsSyncEndpoint5.getEndpointConfiguration().getConnectionFactory(), connectionFactory);
-        Assert.assertEquals(jmsSyncEndpoint5.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
-        Assert.assertNull(jmsSyncEndpoint5.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsSyncEndpoint5.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(jmsSyncEndpoint5.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertEquals(jmsSyncEndpoint5.getEndpointConfiguration().getReplyDestinationName(), "JMS.Reply.Queue");
-        Assert.assertNull(jmsSyncEndpoint5.getEndpointConfiguration().getReplyDestination());
-        Assert.assertEquals(jmsSyncEndpoint5.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assertions.assertNotNull(jmsSyncEndpoint5.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(connectionFactory, jmsSyncEndpoint5.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals("JMS.Queue.Test", jmsSyncEndpoint5.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsSyncEndpoint5.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(5000L, jmsSyncEndpoint5.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(500L, jmsSyncEndpoint5.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals("JMS.Reply.Queue", jmsSyncEndpoint5.getEndpointConfiguration().getReplyDestinationName());
+        Assertions.assertNull(jmsSyncEndpoint5.getEndpointConfiguration().getReplyDestination());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, jmsSyncEndpoint5.getEndpointConfiguration().getCorrelator().getClass());
 
         // 6th message sender
-        Assert.assertNotNull(jmsSyncEndpoint6.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getConnectionFactory(), jmsConnectionFactory);
-        Assert.assertNull(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationName());
-        Assert.assertNotNull(jmsSyncEndpoint6.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertNull(jmsSyncEndpoint6.getEndpointConfiguration().getReplyDestinationName());
-        Assert.assertNotNull(jmsSyncEndpoint6.getEndpointConfiguration().getReplyDestination());
-        Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getCorrelator(), messageCorrelator);
-        Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationResolver(), destinationResolver);
-        Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationNameResolver(), destinationNameResolver);
-        Assert.assertTrue(jmsSyncEndpoint6.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(jmsSyncEndpoint6.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNotNull(jmsSyncEndpoint6.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertEquals(jmsConnectionFactory, jmsSyncEndpoint6.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNotNull(jmsSyncEndpoint6.getEndpointConfiguration().getDestination());
+        Assertions.assertEquals(10000L, jmsSyncEndpoint6.getEndpointConfiguration().getTimeout());
+        Assertions.assertNull(jmsSyncEndpoint6.getEndpointConfiguration().getReplyDestinationName());
+        Assertions.assertNotNull(jmsSyncEndpoint6.getEndpointConfiguration().getReplyDestination());
+        Assertions.assertEquals(messageCorrelator, jmsSyncEndpoint6.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(destinationResolver, jmsSyncEndpoint6.getEndpointConfiguration().getDestinationResolver());
+        Assertions.assertEquals(destinationNameResolver, jmsSyncEndpoint6.getEndpointConfiguration().getDestinationNameResolver());
+        Assertions.assertTrue(jmsSyncEndpoint6.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(jmsSyncEndpoint6.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 7th message sender
-        Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getConnectionFactory());
-        Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getDestinationName());
-        Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getDestination());
-        Assert.assertTrue(jmsSyncEndpoint7.getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(jmsSyncEndpoint7.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assertions.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getConnectionFactory());
+        Assertions.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getDestinationName());
+        Assertions.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getDestination());
+        Assertions.assertTrue(jmsSyncEndpoint7.getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(messageCorrelator, jmsSyncEndpoint7.getEndpointConfiguration().getCorrelator());
 
         // 8th message sender
-        Assert.assertEquals(jmsSyncEndpoint8.getEndpointConfiguration().getPollingInterval(), 250L);
-        Assert.assertNotNull(jmsSyncEndpoint8.getActor());
-        Assert.assertEquals(jmsSyncEndpoint8.getActor(), testActor);
+        Assertions.assertEquals(250L, jmsSyncEndpoint8.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertNotNull(jmsSyncEndpoint8.getActor());
+        Assertions.assertEquals(testActor, jmsSyncEndpoint8.getActor());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("jms.sync").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("jms.sync").isPresent());
     }
 }

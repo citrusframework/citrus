@@ -18,10 +18,10 @@ package org.citrusframework.jms.config.xml;
 
 import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<PurgeJmsQueuesAction> {
 
@@ -31,46 +31,46 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
         assertActionClassAndName(PurgeJmsQueuesAction.class, "purge-queue");
 
         PurgeJmsQueuesAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getConnectionFactory());
-        Assert.assertEquals(action.getReceiveTimeout(), 100);
-        Assert.assertEquals(action.getSleepTime(), 350L);
-        Assert.assertEquals(action.getQueues().size(), 0);
-        Assert.assertEquals(action.getQueueNames().size(), 3);
-        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
-        Assert.assertEquals(action.getQueueNames().get(1), "JMS.Queue.2");
-        Assert.assertEquals(action.getQueueNames().get(2), "JMS.Queue.3");
+        Assertions.assertNotNull(action.getConnectionFactory());
+        Assertions.assertEquals(100, action.getReceiveTimeout());
+        Assertions.assertEquals(350L, action.getSleepTime());
+        Assertions.assertEquals(0, action.getQueues().size());
+        Assertions.assertEquals(3, action.getQueueNames().size());
+        Assertions.assertEquals("JMS.Queue.1", action.getQueueNames().get(0));
+        Assertions.assertEquals("JMS.Queue.2", action.getQueueNames().get(1));
+        Assertions.assertEquals("JMS.Queue.3", action.getQueueNames().get(2));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getReceiveTimeout(), 125);
-        Assert.assertEquals(action.getSleepTime(), 250L);
-        Assert.assertNotNull(action.getConnectionFactory());
-        Assert.assertEquals(action.getQueues().size(), 0);
-        Assert.assertEquals(action.getQueueNames().size(), 3);
-        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
-        Assert.assertEquals(action.getQueueNames().get(1), "JMS.Queue.2");
-        Assert.assertEquals(action.getQueueNames().get(2), "JMS.Queue.3");
+        Assertions.assertEquals(125, action.getReceiveTimeout());
+        Assertions.assertEquals(250L, action.getSleepTime());
+        Assertions.assertNotNull(action.getConnectionFactory());
+        Assertions.assertEquals(0, action.getQueues().size());
+        Assertions.assertEquals(3, action.getQueueNames().size());
+        Assertions.assertEquals("JMS.Queue.1", action.getQueueNames().get(0));
+        Assertions.assertEquals("JMS.Queue.2", action.getQueueNames().get(1));
+        Assertions.assertEquals("JMS.Queue.3", action.getQueueNames().get(2));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getQueues().size(), 1);
-        Assert.assertEquals(action.getQueueNames().size(), 1);
-        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
+        Assertions.assertEquals(1, action.getQueues().size());
+        Assertions.assertEquals(1, action.getQueueNames().size());
+        Assertions.assertEquals("JMS.Queue.1", action.getQueueNames().get(0));
     }
 
     @Test
     public void testPurgeJmsQueuesActionParserFailed() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to empty connection factory name");
+            Assertions.fail("Missing bean creation exception due to empty connection factory name");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Configuration problem: Attribute 'connection-factory' must not be empty"));
+            Assertions.assertTrue(e.getMessage().startsWith("Configuration problem: Attribute 'connection-factory' must not be empty"));
         }
     }
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("purge-jms-queues"));
-        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
+        Assertions.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("purge-jms-queues"));
+        Assertions.assertEquals(PurgeJmsQueuesActionParser.class, CitrusNamespaceParserRegistry.lookupBeanParser().get("purge-jms-queues").getClass());
 
-        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
+        Assertions.assertEquals(PurgeJmsQueuesActionParser.class, CitrusNamespaceParserRegistry.getBeanParser("purge-jms-queues").getClass());
     }
 }

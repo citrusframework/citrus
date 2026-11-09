@@ -21,25 +21,33 @@ import java.util.Collections;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
+public class JmsSendReceiveJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void JmsSendReceiveJavaIT() {
-        variable("correlationId", "citrus:randomNumber(10)");
-        variable("correlationIdA", "citrus:randomNumber(10)");
-        variable("correlationIdB", "citrus:randomNumber(10)");
-        variable("messageId", "citrus:randomNumber(10)");
-        variable("messageIdA", "citrus:randomNumber(10)");
-        variable("messageIdB", "citrus:randomNumber(10)");
-        variable("user", "Christoph");
+    public void JmsSendReceiveJavaIT(@CitrusResource TestCaseRunner runner) {
+        runner.variable("correlationId", "citrus:randomNumber(10)");
+        runner.variable("correlationIdA", "citrus:randomNumber(10)");
+        runner.variable("correlationIdB", "citrus:randomNumber(10)");
+        runner.variable("messageId", "citrus:randomNumber(10)");
+        runner.variable("messageIdA", "citrus:randomNumber(10)");
+        runner.variable("messageIdB", "citrus:randomNumber(10)");
+        runner.variable("user", "Christoph");
 
-        given(echo("Test 1: Send JMS request and receive async JMS response (inline CDATA payload)"));
+        runner.given(echo("Test 1: Send JMS request and receive async JMS response (inline CDATA payload)"));
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
@@ -50,7 +58,7 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport implements T
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        then(receive("helloServiceResponseJmsEndpoint")
+        runner.then(receive("helloServiceResponseJmsEndpoint")
             .message()
             .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageId}</MessageId>" +
@@ -61,23 +69,23 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport implements T
                         .header("Operation", "sayHello")
                         .header("CorrelationId", "${correlationId}"));
 
-        given(echo("Test 2: Send JMS request and receive async JMS response (file resource payload)"));
+        runner.given(echo("Test 2: Send JMS request and receive async JMS response (file resource payload)"));
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
             .message()
             .body(Resources.fromClasspath("org/citrusframework/jms/integration/helloRequest.xml"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        then(receive("helloServiceResponseJmsEndpoint")
+        runner.then(receive("helloServiceResponseJmsEndpoint")
             .message()
             .body(Resources.fromClasspath("org/citrusframework/jms/integration/helloResponse.xml"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
-        given(echo("Test 3: Send JMS request and receive async JMS response (JMS message selector)"));
+        runner.given(echo("Test 3: Send JMS request and receive async JMS response (JMS message selector)"));
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageIdA}</MessageId>" +
@@ -88,7 +96,7 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport implements T
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationIdA}"));
 
-        when(send("helloServiceJmsEndpoint")
+        runner.when(send("helloServiceJmsEndpoint")
             .message()
             .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageIdB}</MessageId>" +
@@ -99,7 +107,7 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport implements T
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationIdB}"));
 
-        then(receive("helloServiceResponseJmsEndpoint")
+        runner.then(receive("helloServiceResponseJmsEndpoint")
             .selector(Collections.singletonMap("CorrelationId", "${correlationIdB}"))
             .message()
             .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -112,7 +120,7 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport implements T
             .header("CorrelationId", "${correlationIdB}")
             .timeout(500));
 
-        then(receive("helloServiceResponseJmsEndpoint")
+        runner.then(receive("helloServiceResponseJmsEndpoint")
             .selector(Collections.singletonMap("CorrelationId", "${correlationIdA}"))
             .message()
             .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -125,9 +133,9 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport implements T
             .header("CorrelationId", "${correlationIdA}")
             .timeout(500));
 
-        given(echo("Test 4: Receive JMS message timeout response"));
+        runner.given(echo("Test 4: Receive JMS message timeout response"));
 
-        then(assertException()
+        runner.then(assertException()
             .exception(org.citrusframework.exceptions.ActionTimeoutException.class)
             .when(receive("helloServiceResponseJmsEndpoint")
                 .selector(Collections.singletonMap("CorrelationId", "doesNotExist"))

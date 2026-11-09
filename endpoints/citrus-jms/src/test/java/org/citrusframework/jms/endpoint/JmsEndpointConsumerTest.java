@@ -30,11 +30,11 @@ import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.jms.core.JmsTemplate;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyInt;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
+public class JmsEndpointConsumerTest extends AbstractUnitTest {
 
     private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private Connection connection = Mockito.mock(Connection.class);
@@ -67,7 +67,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         when(jmsTemplate.receive(destination)).thenReturn(new TextMessageImpl(controlMessage.getPayload(String.class), controlHeaders));
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
         verify(jmsTemplate).setReceiveTimeout(5000L);
     }
@@ -94,7 +94,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
         verify(connection).start();
     }
@@ -122,7 +122,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
         verify(connection).start();
     }
@@ -147,9 +147,9 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             endpoint.createConsumer().receive(context);
-            Assert.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
+            Assertions.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
+            Assertions.assertTrue(e.getMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
             verify(connection).start();
         }
     }
@@ -174,9 +174,9 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             endpoint.createConsumer().receive(context, 10000L);
-            Assert.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
+            Assertions.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Action timeout after 10000 milliseconds. Failed to receive message on endpoint"),
+            Assertions.assertTrue(e.getMessage().startsWith("Action timeout after 10000 milliseconds. Failed to receive message on endpoint"),
                     "Expected timeout of 10000 milliseconds but got: " + e.getMessage());
             verify(connection).start();
         }
@@ -194,9 +194,9 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             endpoint.createConsumer().receive(context, 10000L);
-            Assert.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
+            Assertions.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Action timeout after 10000 milliseconds. Failed to receive message on endpoint"),
+            Assertions.assertTrue(e.getMessage().startsWith("Action timeout after 10000 milliseconds. Failed to receive message on endpoint"),
                     "Expected timeout of 10000 milliseconds but got: " + e.getMessage());
         }
 
@@ -227,7 +227,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(10000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
         verify(connection).start();
     }
@@ -257,9 +257,9 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
-        Assert.assertNotNull(receivedMessage.getHeader("Operation"));
-        Assert.assertTrue(receivedMessage.getHeader("Operation").equals("sayHello"));
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
+        Assertions.assertNotNull(receivedMessage.getHeader("Operation"));
+        Assertions.assertTrue(receivedMessage.getHeader("Operation").equals("sayHello"));
 
         verify(connection).start();
     }
@@ -286,7 +286,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
         verify(connection).start();
     }
@@ -314,7 +314,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(10000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
-        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        Assertions.assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
 
         verify(connection).start();
     }

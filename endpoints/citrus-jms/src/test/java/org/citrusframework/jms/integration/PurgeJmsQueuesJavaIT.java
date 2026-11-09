@@ -21,13 +21,20 @@ import jakarta.jms.Queue;
 
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
 
-@Test
-public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
+public class PurgeJmsQueuesJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("connectionFactory")
@@ -45,9 +52,10 @@ public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport implements T
     @Qualifier("testQueue3")
     private Queue queue3;
 
+    @Test
     @CitrusTest
-    public void purgeJmsQueuesAction() {
-        run(jms().purgeQueues()
+    public void purgeJmsQueuesAction(@CitrusResource TestCaseRunner runner) {
+        runner.run(jms().purgeQueues()
             .queue("Citrus.Queue.Dummy")
             .queue("Citrus.Queue.Dummy.One.In")
             .queue("Citrus.Queue.Dummy.One.Out")
@@ -56,7 +64,7 @@ public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport implements T
             .queue("Citrus.Queue.Dummy.Three.In")
             .queue("Citrus.Queue.Dummy.Three.Out"));
 
-        run(jms().purgeQueues()
+        runner.run(jms().purgeQueues()
             .connectionFactory(connectionFactory)
             .timeout(150L)
             .queue("Citrus.Queue.Dummy")
@@ -67,7 +75,7 @@ public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport implements T
             .queue("Citrus.Queue.Dummy.Three.In")
             .queue("Citrus.Queue.Dummy.Three.Out"));
 
-        run(jms().purgeQueues()
+        runner.run(jms().purgeQueues()
             .queue(queue1)
             .queue(queue2)
             .queue(queue3)

@@ -30,10 +30,10 @@ import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.jms.endpoint.TextMessageImpl;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyInt;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
+public class PurgeJmsQueuesActionTest extends AbstractUnitTest {
 
     private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private final Connection connection = Mockito.mock(Connection.class);
@@ -240,9 +240,9 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("purgeQueues"));
+        Assertions.assertTrue(endpointBuilders.containsKey("purgeQueues"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("purgeQueues").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("purgeQueues").get().getClass(), PurgeJmsQueuesAction.Builder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("purgeQueues").isPresent());
+        Assertions.assertEquals(PurgeJmsQueuesAction.Builder.class, TestActionBuilder.lookup("purgeQueues").get().getClass());
     }
 }

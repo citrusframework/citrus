@@ -29,11 +29,11 @@ import java.util.HashMap;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
+public class JmsEndpointAdapterTest extends AbstractUnitTest {
 
     private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private Connection connection = Mockito.mock(Connection.class);
@@ -56,7 +56,7 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
     private JmsEndpointAdapter endpointAdapter;
     private JmsSyncEndpointConfiguration endpointConfiguration;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         endpointConfiguration = new JmsSyncEndpointConfiguration();
         endpointConfiguration.setConnectionFactory(connectionFactory);
@@ -87,8 +87,8 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
                 new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<>()));
 
         Message response = endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>"));
-        Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(String.class), "<TestResponse>Hello World!</TestResponse>");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("<TestResponse>Hello World!</TestResponse>", response.getPayload(String.class));
 
         verify(messageProducer).send(any());
         verify(connection).start();
@@ -113,7 +113,7 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
         when(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).thenReturn(
                 new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<>()));
 
-        Assert.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
+        Assertions.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
 
         verify(messageProducer).send(any());
         verify(connection).start();
