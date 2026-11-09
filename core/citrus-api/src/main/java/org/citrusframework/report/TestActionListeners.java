@@ -19,9 +19,13 @@ package org.citrusframework.report;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
+import org.citrusframework.api.container.IteratingActionContainer;
+import org.citrusframework.api.container.TestActionContainer;
+import org.citrusframework.context.TestContext;
 
 /**
  * Class broadcasting test action events to all available test action listeners
@@ -29,7 +33,7 @@ import org.citrusframework.TestCase;
  *
  * @since 1.3
  */
-public class TestActionListeners implements TestActionListenerAware {
+public class TestActionListeners implements TestActionListenerAware, TestActionContainerListener {
 
     /** List of test action listeners **/
     private final List<TestActionListener> testActionListeners = new ArrayList<>();
@@ -56,6 +60,42 @@ public class TestActionListeners implements TestActionListenerAware {
         for (TestActionListener listener : testActionListeners) {
             listener.onTestActionStart(testCase, testAction);
         }
+    }
+
+    @Override
+    public void onContainerStart(TestActionContainer container, TestContext context) {
+        containerListeners().forEach(listener -> listener.onContainerStart(container, context));
+    }
+
+    @Override
+    public void onContainerSuccess(TestActionContainer container, TestContext context) {
+        containerListeners().forEach(listener -> listener.onContainerSuccess(container, context));
+    }
+
+    @Override
+    public void onContainerFailed(TestActionContainer container, TestContext context, Throwable cause) {
+        containerListeners().forEach(listener -> listener.onContainerFailed(container, context, cause));
+    }
+
+    @Override
+    public void onIterationStart(IteratingActionContainer container, int index, TestContext context) {
+        containerListeners().forEach(listener -> listener.onIterationStart(container, index, context));
+    }
+
+    @Override
+    public void onIterationSuccess(IteratingActionContainer container, int index, TestContext context) {
+        containerListeners().forEach(listener -> listener.onIterationSuccess(container, index, context));
+    }
+
+    @Override
+    public void onIterationFailed(IteratingActionContainer container, int index, TestContext context, Throwable cause) {
+        containerListeners().forEach(listener -> listener.onIterationFailed(container, index, context, cause));
+    }
+
+    private Stream<TestActionContainerListener> containerListeners() {
+        return testActionListeners.stream()
+                .filter(TestActionContainerListener.class::isInstance)
+                .map(TestActionContainerListener.class::cast);
     }
 
     @Override
