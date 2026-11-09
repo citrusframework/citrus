@@ -75,7 +75,7 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      */
     private final Duration timeout;
 
-    public AbstractIteratingActionContainer(String name, AbstractIteratingContainerBuilder<?, ?> builder) {
+    protected AbstractIteratingActionContainer(String name, AbstractIteratingContainerBuilder<?, ?> builder) {
         super(name, builder);
 
         this.condition = builder.getCondition();
