@@ -71,8 +71,8 @@ public class HttpMessageTest {
         httpMessage.cookie(expectedCookie);
 
         //THEN
-        assertEquals( 1,httpMessage.getCookies().size());
-        assertEquals( "foobar",httpMessage.getCookies().get(0).getValue());
+        assertEquals(1, httpMessage.getCookies().size());
+        assertEquals("foobar", httpMessage.getCookies().get(0).getValue());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class HttpMessageTest {
 
         //THEN
         assertTrue(httpMessage.getCookies().contains(expectedCookie));
-        assertEquals( 1,httpMessage.getCookies().size());
+        assertEquals(1, httpMessage.getCookies().size());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class HttpMessageTest {
         final HttpMessage messageCopy = new HttpMessage(originalMessage);
 
         //THEN
-        assertEquals( originalMessage.getCookies(),messageCopy.getCookies());
+        assertEquals(originalMessage.getCookies(), messageCopy.getCookies());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParams(queryParamString);
 
         //THEN
-        assertEquals( queryParamString,resultMessage.getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        assertEquals(queryParamString, resultMessage.getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParams(queryParamString);
 
         //THEN
-        assertEquals( queryParamString,resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
+        assertEquals(queryParamString, resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam("bar", "barbar");
 
         //THEN
-        assertEquals( expectedHeaderValue,resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
+        assertEquals(expectedHeaderValue, resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
     }
 
     @Test
@@ -213,7 +213,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam("bar", "barbar");
 
         //THEN
-        assertEquals( expectedHeaderValue,resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
+        assertEquals(expectedHeaderValue, resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
     }
 
     @Test
@@ -236,7 +236,7 @@ public class HttpMessageTest {
         final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
-        assertEquals( HttpStatus.NOT_FOUND,statusCode);
+        assertEquals(HttpStatus.NOT_FOUND, statusCode);
     }
 
     @Test
@@ -248,7 +248,7 @@ public class HttpMessageTest {
         final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
-        assertEquals( HttpStatus.FORBIDDEN,statusCode);
+        assertEquals(HttpStatus.FORBIDDEN, statusCode);
     }
 
     @Test
@@ -261,7 +261,7 @@ public class HttpMessageTest {
         final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
-        assertEquals( HttpStatus.I_AM_A_TEAPOT,statusCode);
+        assertEquals(HttpStatus.I_AM_A_TEAPOT, statusCode);
     }
 
     @Test
@@ -273,7 +273,7 @@ public class HttpMessageTest {
         final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
-        assertEquals( HttpStatusCode.valueOf(555),statusCode);
+        assertEquals(HttpStatusCode.valueOf(555), statusCode);
     }
 
     @Test
@@ -287,7 +287,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam("foo", "foobar");
 
         //THEN
-        assertEquals( expectedHeaderValue,resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
+        assertEquals(expectedHeaderValue, resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
     }
 
     @Test
@@ -339,10 +339,10 @@ public class HttpMessageTest {
         HttpMessage copiedMessage = new HttpMessage(httpMessage);
 
         // Then
-        assertEquals( copiedMessage.getHeader(MessageHeaders.ID),httpMessage.getHeader(MessageHeaders.ID));
-        assertEquals( copiedMessage.getHeader(MessageHeaders.TIMESTAMP),httpMessage.getHeader(MessageHeaders.TIMESTAMP));
-        assertEquals( copiedMessage.getHeader("k1"),httpMessage.getHeader("k1"));
-        assertEquals( copiedMessage.getPayload(),httpMessage.getPayload());
+        assertEquals(copiedMessage.getHeader(MessageHeaders.ID), httpMessage.getHeader(MessageHeaders.ID));
+        assertEquals(copiedMessage.getHeader(MessageHeaders.TIMESTAMP), httpMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(copiedMessage.getHeader("k1"), httpMessage.getHeader("k1"));
+        assertEquals(copiedMessage.getPayload(), httpMessage.getPayload());
 
     }
 
@@ -357,9 +357,9 @@ public class HttpMessageTest {
         HttpMessage copiedMessage = new HttpMessage(httpMessage, true);
 
         // Then
-        assertNotEquals( copiedMessage.getHeader(MessageHeaders.ID),httpMessage.getHeader(MessageHeaders.ID));
-        assertNotEquals( copiedMessage.getHeader(MessageHeaders.TIMESTAMP),httpMessage.getHeader(MessageHeaders.TIMESTAMP));
-        assertEquals( copiedMessage.getHeader("k1"),httpMessage.getHeader("k1"));
-        assertEquals( copiedMessage.getPayload(),httpMessage.getPayload());
+        assertNotEquals(copiedMessage.getHeader(MessageHeaders.ID), httpMessage.getHeader(MessageHeaders.ID));
+        assertNotEquals(copiedMessage.getHeader(MessageHeaders.TIMESTAMP), httpMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(copiedMessage.getHeader("k1"), httpMessage.getHeader("k1"));
+        assertEquals(copiedMessage.getPayload(), httpMessage.getPayload());
     }
 }

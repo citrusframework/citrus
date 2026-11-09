@@ -40,49 +40,49 @@ public class HttpSendResponseActionParserTest extends AbstractActionParserTest<S
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
 
-        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context,action.getMessageType()));
-        Assertions.assertEquals( 2L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context,action.getMessageType()));
+        Assertions.assertEquals(2L, httpMessageBuilder.getMessage().getHeaders().size());
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( beanDefinitionContext.getBean("httpServer", HttpServer.class),action.getEndpoint());
+        Assertions.assertEquals(beanDefinitionContext.getBean("httpServer", HttpServer.class), action.getEndpoint());
         Assertions.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( 5L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(5L, httpMessageBuilder.getMessage().getHeaders().size());
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( "404",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE));
-        Assertions.assertEquals( "NOT_FOUND",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE));
-        Assertions.assertEquals( "HTTP/1.1",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION));
-        Assertions.assertEquals( beanDefinitionContext.getBean("httpServer", HttpServer.class),action.getEndpoint());
+        Assertions.assertEquals("404", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals("NOT_FOUND", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals("HTTP/1.1", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION));
+        Assertions.assertEquals(beanDefinitionContext.getBean("httpServer", HttpServer.class), action.getEndpoint());
         Assertions.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals( "<user><id>1001</id><name>new_user</name></user>",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( "1001",httpMessageBuilder.getMessage().getHeaders().get("userId"));
-        Assertions.assertEquals( 1,httpMessageBuilder.getMessage().getCookies().size());
+        Assertions.assertEquals("<user><id>1001</id><name>new_user</name></user>", httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals("1001", httpMessageBuilder.getMessage().getHeaders().get("userId"));
+        Assertions.assertEquals(1, httpMessageBuilder.getMessage().getCookies().size());
         jakarta.servlet.http.Cookie cookie = httpMessageBuilder.getMessage().getCookies().get(0);
-        Assertions.assertEquals( "session",cookie.getName());
-        Assertions.assertEquals( "abc123",cookie.getValue());
-        Assertions.assertEquals( "/user",cookie.getPath());
-        Assertions.assertEquals( "example.com",cookie.getDomain());
-        Assertions.assertEquals( 3600,cookie.getMaxAge());
+        Assertions.assertEquals("session", cookie.getName());
+        Assertions.assertEquals("abc123", cookie.getValue());
+        Assertions.assertEquals("/user", cookie.getPath());
+        Assertions.assertEquals("example.com", cookie.getDomain());
+        Assertions.assertEquals(3600, cookie.getMaxAge());
         Assertions.assertTrue(cookie.getSecure());
         Assertions.assertTrue(cookie.isHttpOnly());
-        Assertions.assertEquals( beanDefinitionContext.getBean("httpServer", HttpServer.class),action.getEndpoint());
+        Assertions.assertEquals(beanDefinitionContext.getBean("httpServer", HttpServer.class), action.getEndpoint());
         Assertions.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( beanDefinitionContext.getBean("httpServer", HttpServer.class),action.getEndpoint());
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(beanDefinitionContext.getBean("httpServer", HttpServer.class), action.getEndpoint());
         Assertions.assertNull(action.getEndpointUri());
-        Assertions.assertEquals( beanDefinitionContext.getBean("testActor", TestActor.class),action.getActor());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), action.getActor());
     }
 }

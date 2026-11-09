@@ -75,7 +75,7 @@ public class GzipServletFilterTest {
         MockFilterChain filterChain = new MockFilterChain(servlet, new GzipServletFilter(), new OncePerRequestFilter() {
             @Override
             protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
-                Assertions.assertEquals( "Should be decompressed",FileUtils.readToString(request.getInputStream()));
+                Assertions.assertEquals("Should be decompressed", FileUtils.readToString(request.getInputStream()));
             }
         });
         filterChain.doFilter(request, response);
@@ -99,7 +99,7 @@ public class GzipServletFilterTest {
         StreamUtils.copy(new GZIPInputStream(new ByteArrayInputStream(response.getContentAsByteArray())), unzippedStream);
         String unzipped = new String(unzippedStream.toByteArray());
 
-        Assertions.assertEquals( "Should be compressed",unzipped);
+        Assertions.assertEquals("Should be compressed", unzipped);
     }
 
     @Test
@@ -116,8 +116,8 @@ public class GzipServletFilterTest {
         });
         filterChain.doFilter(request, response);
 
-        Assertions.assertEquals( "Should not be decompressed",FileUtils.readToString(request.getInputStream()));
+        Assertions.assertEquals("Should not be decompressed", FileUtils.readToString(request.getInputStream()));
         String unzipped = new String(response.getContentAsByteArray());
-        Assertions.assertEquals( "Should not be compressed",unzipped);
+        Assertions.assertEquals("Should not be compressed", unzipped);
     }
 }

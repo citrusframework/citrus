@@ -98,9 +98,9 @@ public class HttpServerTest extends AbstractUnitTest {
             Message request = invocation.getArgument(0);
 
             Assertions.assertTrue(request instanceof HttpMessage);
-            Assertions.assertEquals( "",request.getPayload(String.class));
+            Assertions.assertEquals("", request.getPayload(String.class));
             Assertions.assertNull(request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
-            Assertions.assertEquals( "/test/hello",request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI));
+            Assertions.assertEquals("/test/hello", request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI));
 
             return new HttpMessage("Hello user")
                             .status(HttpStatus.OK);
@@ -112,13 +112,13 @@ public class HttpServerTest extends AbstractUnitTest {
 
         Message response = client.receive(context);
 
-        Assertions.assertEquals( "Hello user",response.getPayload(String.class));
-        Assertions.assertEquals( 9L,response.getHeaders().size());
+        Assertions.assertEquals("Hello user", response.getPayload(String.class));
+        Assertions.assertEquals(9L, response.getHeaders().size());
         Assertions.assertNotNull(response.getHeader(MessageHeaders.ID));
         Assertions.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( HttpStatus.OK.value(),response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
-        Assertions.assertEquals( HttpStatus.OK.getReasonPhrase().toUpperCase(),response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
-        Assertions.assertEquals( ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8",response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals(HttpStatus.OK.getReasonPhrase().toUpperCase(), response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals(ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8", response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
@@ -132,7 +132,7 @@ public class HttpServerTest extends AbstractUnitTest {
             Message request = invocation.getArgument(0);
 
             Assertions.assertTrue(request instanceof HttpMessage);
-            Assertions.assertEquals( "Hello",request.getPayload(String.class));
+            Assertions.assertEquals("Hello", request.getPayload(String.class));
 
             return new HttpMessage().status(HttpStatus.FOUND);
         });
@@ -142,12 +142,12 @@ public class HttpServerTest extends AbstractUnitTest {
 
         Message response = client.receive(context);
 
-        Assertions.assertEquals( 9L,response.getHeaders().size());
+        Assertions.assertEquals(9L, response.getHeaders().size());
         Assertions.assertNotNull(response.getHeader(MessageHeaders.ID));
         Assertions.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( HttpStatus.FOUND.value(),response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
-        Assertions.assertEquals( HttpStatus.FOUND.getReasonPhrase().toUpperCase(),response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
-        Assertions.assertEquals( ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8",response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertEquals(HttpStatus.FOUND.value(), response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals(HttpStatus.FOUND.getReasonPhrase().toUpperCase(), response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals(ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8", response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
@@ -182,12 +182,12 @@ public class HttpServerTest extends AbstractUnitTest {
         Message response = client.receive(context);
 
         Assertions.assertArrayEquals(responseBody, response.getPayload(byte[].class));
-        Assertions.assertEquals( 9L,response.getHeaders().size());
+        Assertions.assertEquals(9L, response.getHeaders().size());
         Assertions.assertNotNull(response.getHeader(MessageHeaders.ID));
         Assertions.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( HttpStatus.OK.value(),response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
-        Assertions.assertEquals( HttpStatus.OK.getReasonPhrase().toUpperCase(),response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
-        Assertions.assertEquals( ContentType.APPLICATION_OCTET_STREAM.getMimeType(),response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals(HttpStatus.OK.getReasonPhrase().toUpperCase(), response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals(ContentType.APPLICATION_OCTET_STREAM.getMimeType(), response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
@@ -201,9 +201,9 @@ public class HttpServerTest extends AbstractUnitTest {
             Message request = invocation.getArgument(0);
 
             Assertions.assertTrue(request instanceof HttpMessage);
-            Assertions.assertEquals( "Hello",request.getPayload(String.class));
-            Assertions.assertEquals( "application/foo",request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
-            Assertions.assertEquals( "/test/hello",request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI));
+            Assertions.assertEquals("Hello", request.getPayload(String.class));
+            Assertions.assertEquals("application/foo", request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+            Assertions.assertEquals("/test/hello", request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI));
 
             return new HttpMessage("Hello user")
                     .contentType("application/bar")
@@ -217,13 +217,13 @@ public class HttpServerTest extends AbstractUnitTest {
 
         Message response = client.receive(context);
 
-        Assertions.assertEquals( "Hello user",response.getPayload(String.class));
-        Assertions.assertEquals( 9L,response.getHeaders().size());
+        Assertions.assertEquals("Hello user", response.getPayload(String.class));
+        Assertions.assertEquals(9L, response.getHeaders().size());
         Assertions.assertNotNull(response.getHeader(MessageHeaders.ID));
         Assertions.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( HttpStatus.OK.value(),response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
-        Assertions.assertEquals( HttpStatus.OK.getReasonPhrase().toUpperCase(),response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
-        Assertions.assertEquals( "application/bar",response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals(HttpStatus.OK.getReasonPhrase().toUpperCase(), response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals("application/bar", response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE));
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }

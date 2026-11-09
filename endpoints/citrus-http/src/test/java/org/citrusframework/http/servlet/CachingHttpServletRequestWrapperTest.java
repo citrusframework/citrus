@@ -82,7 +82,7 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(1,parameterMap.keySet().size());
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(expectedKey));
     }
 
@@ -101,7 +101,7 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(1,parameterMap.keySet().size());
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertArrayEquals(new String[]{requestMethod.name()}, parameterMap.get(requestMethod.name()));
     }
@@ -126,7 +126,7 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(1,parameterMap.keySet().size());
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(expectedKey));
 
     }
@@ -151,7 +151,7 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(1,parameterMap.keySet().size());
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertArrayEquals(new String[]{requestMethod.name()}, parameterMap.get(requestMethod.name()));
     }
@@ -177,7 +177,7 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(1,parameterMap.keySet().size());
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertArrayEquals(new String[]{requestMethod.name()}, parameterMap.get(requestMethod.name()));
     }
@@ -204,7 +204,7 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(1,parameterMap.keySet().size());
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertArrayEquals(new String[]{ "ÄäÖöÜü" }, parameterMap.get(requestMethod.name()));
     }

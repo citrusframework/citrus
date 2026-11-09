@@ -82,7 +82,7 @@ public class RequestCachingServletFilterTest {
                 StreamUtils.copy(request.getInputStream(), System.out);
                 Map<String, String[]> parameters = request.getParameterMap();
 
-                Assertions.assertEquals( 2L,parameters.size());
+                Assertions.assertEquals(2L, parameters.size());
                 Assertions.assertArrayEquals(new String[] { "test" }, parameters.get("username"));
                 Assertions.assertArrayEquals(new String[] { "secret" }, parameters.get("password"));
             }
@@ -102,7 +102,7 @@ public class RequestCachingServletFilterTest {
                 StreamUtils.copy(request.getInputStream(), System.out);
                 Map<String, String[]> parameters = request.getParameterMap();
 
-                Assertions.assertEquals( 2L,parameters.size());
+                Assertions.assertEquals(2L, parameters.size());
                 Assertions.assertArrayEquals(new String[] { "test" }, parameters.get("username"));
                 Assertions.assertArrayEquals(new String[] { "secret" }, parameters.get("password"));
             }

@@ -53,12 +53,12 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals( 1,enrichedCookies.size());
+        assertEquals(1, enrichedCookies.size());
 
         final Cookie enrichedCookie = enrichedCookies.get(0);
-        assertEquals( "foo",enrichedCookie.getName());
-        assertEquals( "bar",enrichedCookie.getValue());
-        assertEquals( 42,enrichedCookie.getMaxAge());
+        assertEquals("foo", enrichedCookie.getName());
+        assertEquals("bar", enrichedCookie.getValue());
+        assertEquals(42, enrichedCookie.getMaxAge());
         assertTrue(enrichedCookie.isHttpOnly());
         assertTrue(enrichedCookie.getSecure());
     }
@@ -72,7 +72,7 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals( 2,enrichedCookies.size());
+        assertEquals(2, enrichedCookies.size());
     }
 
     @Test
@@ -87,8 +87,8 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals( "foo",enrichedCookies.get(0).getName());
-        assertEquals( "bar",enrichedCookies.get(0).getValue());
+        assertEquals("foo", enrichedCookies.get(0).getName());
+        assertEquals("bar", enrichedCookies.get(0).getValue());
     }
 
     @Test
@@ -103,8 +103,8 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals( "foo",enrichedCookies.get(0).getName());
-        assertEquals( "/path/to/foobar",enrichedCookies.get(0).getPath());
+        assertEquals("foo", enrichedCookies.get(0).getName());
+        assertEquals("/path/to/foobar", enrichedCookies.get(0).getPath());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals( "foo",enrichedCookies.get(0).getName());
-        assertEquals( "localhost",enrichedCookies.get(0).getDomain());
+        assertEquals("foo", enrichedCookies.get(0).getName());
+        assertEquals("localhost", enrichedCookies.get(0).getDomain());
     }
 }

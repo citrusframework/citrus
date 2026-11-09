@@ -24,6 +24,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import org.springframework.test.context.ContextConfiguration;
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_STATUS_CODE;
@@ -36,6 +37,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
 public class HttpServerStandaloneJavaIT implements TestActionSupport {
 
     @Test

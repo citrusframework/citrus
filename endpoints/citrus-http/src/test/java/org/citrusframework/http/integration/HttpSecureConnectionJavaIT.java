@@ -33,10 +33,12 @@ import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
 public class HttpSecureConnectionJavaIT implements TestActionSupport {
 
     private final Resource keyStore = Resources.create("http-server.jks", HttpSecureConnectionJavaIT.class);

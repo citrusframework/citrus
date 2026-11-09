@@ -83,10 +83,10 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody().toString());
-            Assertions.assertEquals( 1,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody().toString());
+            Assertions.assertEquals(1, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( "text/plain;charset=UTF-8",httpRequest.getHeaders().getContentType().toString());
+            Assertions.assertEquals("text/plain;charset=UTF-8", httpRequest.getHeaders().getContentType().toString());
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
@@ -94,9 +94,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -120,11 +120,11 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody().toString());
-            Assertions.assertEquals( 2,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody().toString());
+            Assertions.assertEquals(2, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( "text/xml;charset=ISO-8859-1",httpRequest.getHeaders().getContentType().toString());
-            Assertions.assertEquals( "foo",httpRequest.getHeaders().get("Operation").get(0));
+            Assertions.assertEquals("text/xml;charset=ISO-8859-1", httpRequest.getHeaders().getContentType().toString());
+            Assertions.assertEquals("foo", httpRequest.getHeaders().get("Operation").get(0));
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
@@ -132,9 +132,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -162,11 +162,11 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody().toString());
-            Assertions.assertEquals( 2,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody().toString());
+            Assertions.assertEquals(2, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( "text/xml;charset=ISO-8859-1",httpRequest.getHeaders().getContentType().toString());
-            Assertions.assertEquals( "foo",httpRequest.getHeaders().get("Operation").get(0));
+            Assertions.assertEquals("text/xml;charset=ISO-8859-1", httpRequest.getHeaders().getContentType().toString());
+            Assertions.assertEquals("foo", httpRequest.getHeaders().get("Operation").get(0));
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
@@ -174,9 +174,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(messageConverter, atLeastOnce()).setWriteAcceptCharset(false);
         verify(restTemplate).setInterceptors(anyList());
@@ -202,11 +202,11 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody().toString());
-            Assertions.assertEquals( 2,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody().toString());
+            Assertions.assertEquals(2, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( "application/xml;charset=UTF-8",httpRequest.getHeaders().getContentType().toString());
-            Assertions.assertEquals( "application/xml",httpRequest.getHeaders().getAccept().get(0).toString());
+            Assertions.assertEquals("application/xml;charset=UTF-8", httpRequest.getHeaders().getContentType().toString());
+            Assertions.assertEquals("application/xml", httpRequest.getHeaders().getAccept().get(0).toString());
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
@@ -214,9 +214,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -239,7 +239,7 @@ public class HttpClientTest extends AbstractUnitTest {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
             Assertions.assertNull(httpRequest.getBody()); // null because of GET
-            Assertions.assertEquals( 0,httpRequest.getHeaders().size());
+            Assertions.assertEquals(0, httpRequest.getHeaders().size());
 
             Assertions.assertNull(httpRequest.getHeaders().getContentType());
 
@@ -249,9 +249,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -273,7 +273,7 @@ public class HttpClientTest extends AbstractUnitTest {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
             Assertions.assertNull(httpRequest.getBody()); // null because of GET
-            Assertions.assertEquals( 0,httpRequest.getHeaders().size());
+            Assertions.assertEquals(0, httpRequest.getHeaders().size());
 
             Assertions.assertNull(httpRequest.getHeaders().getContentType());
 
@@ -283,9 +283,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -306,10 +306,10 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody().toString());
-            Assertions.assertEquals( 1,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody().toString());
+            Assertions.assertEquals(1, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( "text/plain;charset=UTF-8",httpRequest.getHeaders().getContentType().toString());
+            Assertions.assertEquals("text/plain;charset=UTF-8", httpRequest.getHeaders().getContentType().toString());
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.PUT), any(HttpEntity.class), eq(String.class));
@@ -317,9 +317,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -351,9 +351,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive("correlationKey", context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -384,9 +384,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -411,8 +411,8 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, 1000L);
-        Assertions.assertEquals( HttpStatus.FORBIDDEN,responseMessage.getStatusCode());
-        Assertions.assertEquals( "FORBIDDEN",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, responseMessage.getStatusCode());
+        Assertions.assertEquals("FORBIDDEN", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -439,7 +439,7 @@ public class HttpClientTest extends AbstractUnitTest {
 
             Assertions.fail("Missing exception due to http error status code");
         } catch (HttpClientErrorException e) {
-            Assertions.assertEquals( "403 FORBIDDEN",e.getMessage());
+            Assertions.assertEquals("403 FORBIDDEN", e.getMessage());
 
             verify(restTemplate).setInterceptors(anyList());
         }
@@ -461,10 +461,10 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody().toString());
-            Assertions.assertEquals( 1,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody().toString());
+            Assertions.assertEquals(1, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( "text/plain;charset=UTF-8",httpRequest.getHeaders().getContentType().toString());
+            Assertions.assertEquals("text/plain;charset=UTF-8", httpRequest.getHeaders().getContentType().toString());
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.PATCH), any(HttpEntity.class), eq(String.class));
@@ -472,9 +472,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -503,11 +503,11 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity<?>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody());
-            Assertions.assertEquals( 2,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody());
+            Assertions.assertEquals(2, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( MediaType.APPLICATION_OCTET_STREAM,httpRequest.getHeaders().getAccept().get(0));
-            Assertions.assertEquals( MediaType.APPLICATION_OCTET_STREAM,httpRequest.getHeaders().getContentType());
+            Assertions.assertEquals(MediaType.APPLICATION_OCTET_STREAM, httpRequest.getHeaders().getAccept().get(0));
+            Assertions.assertEquals(MediaType.APPLICATION_OCTET_STREAM, httpRequest.getHeaders().getContentType());
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(byte[].class));
@@ -515,9 +515,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }
@@ -548,7 +548,7 @@ public class HttpClientTest extends AbstractUnitTest {
                 if (first == null) {
                     first = template;
                 } else {
-                    Assertions.assertSame( template,first);
+                    Assertions.assertSame(template, first);
                 }
             }
         } finally {
@@ -574,10 +574,10 @@ public class HttpClientTest extends AbstractUnitTest {
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
-            Assertions.assertEquals( requestBody,httpRequest.getBody().toString());
-            Assertions.assertEquals( 1,httpRequest.getHeaders().size());
+            Assertions.assertEquals(requestBody, httpRequest.getBody().toString());
+            Assertions.assertEquals(1, httpRequest.getHeaders().size());
 
-            Assertions.assertEquals( "foo",httpRequest.getHeaders().getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+            Assertions.assertEquals("foo", httpRequest.getHeaders().getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE));
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
@@ -585,9 +585,9 @@ public class HttpClientTest extends AbstractUnitTest {
         httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
-        Assertions.assertEquals( responseBody,responseMessage.getPayload());
-        Assertions.assertEquals( HttpStatus.OK,responseMessage.getStatusCode());
-        Assertions.assertEquals( "OK",responseMessage.getReasonPhrase());
+        Assertions.assertEquals(responseBody, responseMessage.getPayload());
+        Assertions.assertEquals(HttpStatus.OK, responseMessage.getStatusCode());
+        Assertions.assertEquals("OK", responseMessage.getReasonPhrase());
 
         verify(restTemplate).setInterceptors(anyList());
     }

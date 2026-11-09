@@ -30,9 +30,11 @@ import org.citrusframework.util.SocketUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
 public class WaitJavaIT implements TestActionSupport {
 
     private final int serverPort = SocketUtils.findAvailableTcpPort();

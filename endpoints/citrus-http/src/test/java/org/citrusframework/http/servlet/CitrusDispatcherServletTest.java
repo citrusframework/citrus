@@ -81,14 +81,14 @@ public class CitrusDispatcherServletTest extends AbstractUnitTest {
 
         servlet.initStrategies(applicationContext);
 
-        Assertions.assertEquals( 2L,handlerInterceptor.getInterceptors().size());
-        Assertions.assertEquals( LoggingHandlerInterceptor.class,handlerInterceptor.getInterceptors().get(0).getClass());
-        Assertions.assertEquals( interceptors.get(0),handlerInterceptor.getInterceptors().get(1));
+        Assertions.assertEquals(2L, handlerInterceptor.getInterceptors().size());
+        Assertions.assertEquals(LoggingHandlerInterceptor.class, handlerInterceptor.getInterceptors().get(0).getClass());
+        Assertions.assertEquals(interceptors.get(0), handlerInterceptor.getInterceptors().get(1));
         Assertions.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
         Assertions.assertFalse(httpMessageController.getEndpointConfiguration().isHandleAttributeHeaders());
         Assertions.assertFalse(httpMessageController.getEndpointConfiguration().isHandleCookies());
 
-        Assertions.assertEquals( EmptyResponseEndpointAdapter.class,httpMessageController.getEndpointAdapter().getClass());
+        Assertions.assertEquals(EmptyResponseEndpointAdapter.class, httpMessageController.getEndpointAdapter().getClass());
     }
 
     @Test
@@ -103,9 +103,9 @@ public class CitrusDispatcherServletTest extends AbstractUnitTest {
 
         servlet.initStrategies(applicationContext);
 
-        Assertions.assertEquals( 1L,handlerInterceptor.getInterceptors().size());
-        Assertions.assertEquals( LoggingHandlerInterceptor.class,handlerInterceptor.getInterceptors().get(0).getClass());
-        Assertions.assertEquals( TimeoutProducingEndpointAdapter.class,httpMessageController.getEndpointAdapter().getClass());
+        Assertions.assertEquals(1L, handlerInterceptor.getInterceptors().size());
+        Assertions.assertEquals(LoggingHandlerInterceptor.class, handlerInterceptor.getInterceptors().get(0).getClass());
+        Assertions.assertEquals(TimeoutProducingEndpointAdapter.class, httpMessageController.getEndpointAdapter().getClass());
         Assertions.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
         Assertions.assertTrue(httpMessageController.getEndpointConfiguration().isHandleAttributeHeaders());
         Assertions.assertTrue(httpMessageController.getEndpointConfiguration().isHandleCookies());

@@ -118,11 +118,11 @@ public class DelegatingHttpEntityMessageConverterTest {
         new Random().nextBytes(pdfData);
 
         return Stream.of(
-                Arguments.of("Hello Citrus!", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "Hello Citrus!",new String(outStream.toByteArray())), MediaType.TEXT_PLAIN),
-                Arguments.of("{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "{ \"message\": \"Hello Citrus!\" }",new String(outStream.toByteArray())), MediaType.APPLICATION_JSON),
-                Arguments.of("{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "{ \"message\": \"Hello Citrus!\" }",new String(outStream.toByteArray())), new MediaType("application", "json", StandardCharsets.UTF_8)),
-                Arguments.of("<message>Hello Citrus!</message>", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "<message>Hello Citrus!</message>",new String(outStream.toByteArray())), MediaType.APPLICATION_XML),
-                Arguments.of(formData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "message=Hello+Citrus%21&user=Leonard",new String(outStream.toByteArray())), MediaType.APPLICATION_FORM_URLENCODED),
+                Arguments.of("Hello Citrus!", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals("Hello Citrus!", new String(outStream.toByteArray())), MediaType.TEXT_PLAIN),
+                Arguments.of("{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals("{ \"message\": \"Hello Citrus!\" }", new String(outStream.toByteArray())), MediaType.APPLICATION_JSON),
+                Arguments.of("{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals("{ \"message\": \"Hello Citrus!\" }", new String(outStream.toByteArray())), new MediaType("application", "json", StandardCharsets.UTF_8)),
+                Arguments.of("<message>Hello Citrus!</message>", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals("<message>Hello Citrus!</message>", new String(outStream.toByteArray())), MediaType.APPLICATION_XML),
+                Arguments.of(formData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals("message=Hello+Citrus%21&user=Leonard", new String(outStream.toByteArray())), MediaType.APPLICATION_FORM_URLENCODED),
                 Arguments.of(pdfData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertArrayEquals(pdfData, outStream.toByteArray()), MediaType.APPLICATION_PDF),
                 Arguments.of(imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertArrayEquals(imageData, outStream.toByteArray()), MediaType.APPLICATION_OCTET_STREAM),
                 Arguments.of(imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertArrayEquals(imageData, outStream.toByteArray()), MediaType.IMAGE_PNG)

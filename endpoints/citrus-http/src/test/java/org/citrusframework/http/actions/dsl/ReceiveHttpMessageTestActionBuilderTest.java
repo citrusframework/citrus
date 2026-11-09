@@ -89,23 +89,23 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport imp
             .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assertions.assertEquals( 1,test.getActionCount());
-        Assertions.assertEquals( ReceiveMessageAction.class,test.getActions().get(0).getClass());
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = (ReceiveMessageAction) test.getActions().get(0);
-        Assertions.assertEquals( "http:receive-request",action.getName());
+        Assertions.assertEquals("http:receive-request", action.getName());
 
-        Assertions.assertEquals( httpServer,action.getEndpoint());
-        Assertions.assertEquals( 2L,action.getValidationContexts().size());
-        Assertions.assertEquals( HeaderValidationContext.class,action.getValidationContexts().get(0).getClass());
-        Assertions.assertEquals( XmlMessageValidationContext.class,action.getValidationContexts().get(1).getClass());
+        Assertions.assertEquals(httpServer, action.getEndpoint());
+        Assertions.assertEquals(2L, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(XmlMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",messageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( 5L,messageBuilder.buildMessageHeaders(context).size());
-        Assertions.assertEquals( HttpMethod.GET.name(),messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
-        Assertions.assertEquals( "/test/foo",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI));
-        Assertions.assertEquals( "noValue,param1=value1,param2=value2",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(5L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(HttpMethod.GET.name(), messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals("/test/foo", messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI));
+        Assertions.assertEquals("noValue,param1=value1,param2=value2", messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
     }
 
     @Test
@@ -133,31 +133,31 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport imp
                         .contentType(ContentType.APPLICATION_XML.getMimeType()));
 
         TestCase test = builder.getTestCase();
-        Assertions.assertEquals( 1,test.getActionCount());
-        Assertions.assertEquals( ReceiveMessageAction.class,test.getActions().get(0).getClass());
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = (ReceiveMessageAction) test.getActions().get(0);
-        Assertions.assertEquals( "http:receive-request",action.getName());
+        Assertions.assertEquals("http:receive-request", action.getName());
 
-        Assertions.assertEquals( httpServer,action.getEndpoint());
-        Assertions.assertEquals( 2L,action.getValidationContexts().size());
-        Assertions.assertEquals( HeaderValidationContext.class,action.getValidationContexts().get(0).getClass());
-        Assertions.assertEquals( XmlMessageValidationContext.class,action.getValidationContexts().get(1).getClass());
+        Assertions.assertEquals(httpServer, action.getEndpoint());
+        Assertions.assertEquals(2L, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(XmlMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",messageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( 9L,messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(9L, messageBuilder.buildMessageHeaders(context).size());
         Assertions.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
         Assertions.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
         Assertions.assertNotNull(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), action.getMessageType());
-        Assertions.assertEquals( HttpMethod.GET.name(),messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
-        Assertions.assertEquals( "/test/foo",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI));
-        Assertions.assertEquals( "/test/foo",messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
-        Assertions.assertEquals( "param1=value1",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assertions.assertEquals( "param1=value1",messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
-        Assertions.assertEquals( ContentType.APPLICATION_XML.getMimeType(),messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_CONTENT_TYPE));
-        Assertions.assertEquals( "foo",messageBuilder.buildMessageHeaders(context).get("X-Foo"));
-        Assertions.assertEquals( "bar",messageBuilder.buildMessageHeaders(context).get("X-Bar"));
+        Assertions.assertEquals(HttpMethod.GET.name(), messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals("/test/foo", messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI));
+        Assertions.assertEquals("/test/foo", messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertEquals("param1=value1", messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals("param1=value1", messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
+        Assertions.assertEquals(ContentType.APPLICATION_XML.getMimeType(), messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertEquals("foo", messageBuilder.buildMessageHeaders(context).get("X-Foo"));
+        Assertions.assertEquals("bar", messageBuilder.buildMessageHeaders(context).get("X-Bar"));
     }
 
     @Test
@@ -180,22 +180,22 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport imp
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assertions.assertEquals( 1,test.getActionCount());
-        Assertions.assertEquals( ReceiveMessageAction.class,test.getActions().get(0).getClass());
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveMessageAction action = (ReceiveMessageAction) test.getActions().get(0);
-        Assertions.assertEquals( "http:receive-response",action.getName());
+        Assertions.assertEquals("http:receive-response", action.getName());
 
-        Assertions.assertEquals( httpClient,action.getEndpoint());
-        Assertions.assertEquals( 2L,action.getValidationContexts().size());
-        Assertions.assertEquals( HeaderValidationContext.class,action.getValidationContexts().get(0).getClass());
-        Assertions.assertEquals( XmlMessageValidationContext.class,action.getValidationContexts().get(1).getClass());
+        Assertions.assertEquals(httpClient, action.getEndpoint());
+        Assertions.assertEquals(2L, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(XmlMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",messageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( 3L,messageBuilder.buildMessageHeaders(context).size());
-        Assertions.assertEquals( 200,messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_STATUS_CODE));
-        Assertions.assertEquals( "OK",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REASON_PHRASE));
-        Assertions.assertEquals( "HTTP/1.1",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_VERSION));
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(3L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(200, messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals("OK", messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals("HTTP/1.1", messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_VERSION));
     }
 }

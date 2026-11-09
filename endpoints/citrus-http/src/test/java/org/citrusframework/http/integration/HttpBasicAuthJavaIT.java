@@ -28,13 +28,16 @@ import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.http.HttpStatus;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 import static org.citrusframework.http.security.HttpAuthentication.basic;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
 public class HttpBasicAuthJavaIT implements TestActionSupport {
 
     private static final int port = findAvailableTcpPort(8888);
@@ -52,6 +55,11 @@ public class HttpBasicAuthJavaIT implements TestActionSupport {
             .requestUrl("http://localhost:%d".formatted(port))
             .authentication(basic("citrus", "secr3t"))
             .build();
+
+    @AfterAll
+    static void stopBasicAuthServer() {
+        basicAuthServer.stop();
+    }
 
     @Test
     @CitrusTest

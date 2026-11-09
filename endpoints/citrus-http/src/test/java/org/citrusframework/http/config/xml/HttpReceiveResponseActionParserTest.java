@@ -41,75 +41,75 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
 
         ReceiveMessageAction action = getNextTestActionFromTest();
 
-        Assertions.assertEquals( 2,action.getValidationContexts().size());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
         Assertions.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assertions.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
 
-        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( 2L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(2L, httpMessageBuilder.getMessage().getHeaders().size());
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( beanDefinitionContext.getBean("httpClient", HttpClient.class),action.getEndpoint());
+        Assertions.assertEquals(beanDefinitionContext.getBean("httpClient", HttpClient.class), action.getEndpoint());
         Assertions.assertNull(action.getEndpointUri());
-        Assertions.assertEquals( 0,action.getMessageProcessors().size());
-        Assertions.assertEquals( 0,action.getControlMessageProcessors().size());
+        Assertions.assertEquals(0, action.getMessageProcessors().size());
+        Assertions.assertEquals(0, action.getControlMessageProcessors().size());
 
         action = getNextTestActionFromTest();
-        Assertions.assertEquals( 2,action.getValidationContexts().size());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
         Assertions.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assertions.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( 5L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(5L, httpMessageBuilder.getMessage().getHeaders().size());
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assertions.assertEquals( "404",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE));
-        Assertions.assertEquals( "NOT_FOUND",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE));
-        Assertions.assertEquals( "HTTP/1.1",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION));
+        Assertions.assertEquals("404", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals("NOT_FOUND", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals("HTTP/1.1", httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION));
         Assertions.assertNull(action.getEndpoint());
-        Assertions.assertEquals( "http://localhost:8080/test",action.getEndpointUri());
+        Assertions.assertEquals("http://localhost:8080/test", action.getEndpointUri());
 
         action = getNextTestActionFromTest();
-        Assertions.assertEquals( 2,action.getValidationContexts().size());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
         Assertions.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assertions.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals( "<user><id>1001</id><name>new_user</name></user>",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
-        Assertions.assertEquals( "1001",httpMessageBuilder.getMessage().getHeaders().get("userId"));
-        Assertions.assertEquals( 1,httpMessageBuilder.getMessage().getCookies().size());
+        Assertions.assertEquals("<user><id>1001</id><name>new_user</name></user>", httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals("1001", httpMessageBuilder.getMessage().getHeaders().get("userId"));
+        Assertions.assertEquals(1, httpMessageBuilder.getMessage().getCookies().size());
         jakarta.servlet.http.Cookie cookie = httpMessageBuilder.getMessage().getCookies().get(0);
-        Assertions.assertEquals( "session",cookie.getName());
-        Assertions.assertEquals( "abc123",cookie.getValue());
-        Assertions.assertEquals( "/user",cookie.getPath());
-        Assertions.assertEquals( "example.com",cookie.getDomain());
-        Assertions.assertEquals( 3600,cookie.getMaxAge());
+        Assertions.assertEquals("session", cookie.getName());
+        Assertions.assertEquals("abc123", cookie.getValue());
+        Assertions.assertEquals("/user", cookie.getPath());
+        Assertions.assertEquals("example.com", cookie.getDomain());
+        Assertions.assertEquals(3600, cookie.getMaxAge());
         Assertions.assertTrue(cookie.getSecure());
         Assertions.assertTrue(cookie.isHttpOnly());
-        Assertions.assertEquals( beanDefinitionContext.getBean("httpClient", HttpClient.class),action.getEndpoint());
+        Assertions.assertEquals(beanDefinitionContext.getBean("httpClient", HttpClient.class), action.getEndpoint());
         Assertions.assertNull(action.getEndpointUri());
 
-        Assertions.assertEquals( 1L,action.getVariableExtractors().size());
-        Assertions.assertEquals( 1L,((DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().size());
-        Assertions.assertEquals( "userId",((DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().get("$.user.id"));
+        Assertions.assertEquals(1L, action.getVariableExtractors().size());
+        Assertions.assertEquals(1L, ((DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().size());
+        Assertions.assertEquals("userId", ((DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().get("$.user.id"));
 
         action = getNextTestActionFromTest();
-        Assertions.assertEquals( 2,action.getValidationContexts().size());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
         Assertions.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assertions.assertTrue(action.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assertions.assertNotNull(httpMessageBuilder);
-        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals("", httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
         Assertions.assertNull(action.getEndpoint());
-        Assertions.assertEquals( "http://localhost:8080/test",action.getEndpointUri());
-        Assertions.assertEquals( beanDefinitionContext.getBean("testActor", TestActor.class),action.getActor());
+        Assertions.assertEquals("http://localhost:8080/test", action.getEndpointUri());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), action.getActor());
     }
 
     @Test

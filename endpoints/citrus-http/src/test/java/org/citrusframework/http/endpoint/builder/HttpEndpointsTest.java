@@ -37,10 +37,10 @@ public class HttpEndpointsTest {
     @Test
     public void shouldLookupEndpoint() {
         Assertions.assertTrue(EndpointBuilder.lookup("http").isPresent());
-        Assertions.assertEquals( HttpEndpointBuilder.class,EndpointBuilder.lookup("http").get().getClass());
+        Assertions.assertEquals(HttpEndpointBuilder.class, EndpointBuilder.lookup("http").get().getClass());
         Assertions.assertTrue(EndpointBuilder.lookup("http.client").isPresent());
-        Assertions.assertEquals( HttpClientBuilder.class,EndpointBuilder.lookup("http.client").get().getClass());
+        Assertions.assertEquals(HttpClientBuilder.class, EndpointBuilder.lookup("http.client").get().getClass());
         Assertions.assertTrue(EndpointBuilder.lookup("http.server").isPresent());
-        Assertions.assertEquals( HttpServerBuilder.class,EndpointBuilder.lookup("http.server").get().getClass());
+        Assertions.assertEquals(HttpServerBuilder.class, EndpointBuilder.lookup("http.server").get().getClass());
     }
 }

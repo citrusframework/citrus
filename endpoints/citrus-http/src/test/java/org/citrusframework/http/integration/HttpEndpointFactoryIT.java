@@ -21,6 +21,7 @@ import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -28,6 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
 public class HttpEndpointFactoryIT {
 
     @Test

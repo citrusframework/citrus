@@ -51,8 +51,6 @@ import org.springframework.web.client.RestTemplate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.lenient;
@@ -138,74 +136,74 @@ public class HttpClientConfigParserTest extends AbstractUnitTest {
 
         // 1st message sender
         Assertions.assertNotNull(httpClient1.getEndpointConfiguration().getRestTemplate());
-        Assertions.assertEquals( "http://localhost:8080/test",httpClient1.getEndpointConfiguration().getRequestUrl());
-        Assertions.assertEquals( InterceptingClientHttpRequestFactory.class,httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass());
-        Assertions.assertEquals( 1L,httpClient1.getEndpointConfiguration().getClientInterceptors().size());
-        Assertions.assertEquals( LoggingClientInterceptor.class,httpClient1.getEndpointConfiguration().getClientInterceptors().get(0).getClass());
-        Assertions.assertEquals( RequestMethod.POST,httpClient1.getEndpointConfiguration().getRequestMethod());
+        Assertions.assertEquals("http://localhost:8080/test", httpClient1.getEndpointConfiguration().getRequestUrl());
+        Assertions.assertEquals(InterceptingClientHttpRequestFactory.class, httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass());
+        Assertions.assertEquals(1L, httpClient1.getEndpointConfiguration().getClientInterceptors().size());
+        Assertions.assertEquals(LoggingClientInterceptor.class, httpClient1.getEndpointConfiguration().getClientInterceptors().get(0).getClass());
+        Assertions.assertEquals(RequestMethod.POST, httpClient1.getEndpointConfiguration().getRequestMethod());
         Assertions.assertTrue(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader());
-        Assertions.assertEquals( DefaultMessageCorrelator.class,httpClient1.getEndpointConfiguration().getCorrelator().getClass());
-        Assertions.assertEquals( 5000L,httpClient1.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, httpClient1.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals(5000L, httpClient1.getEndpointConfiguration().getTimeout());
         Assertions.assertFalse(httpClient1.getEndpointConfiguration().isHandleCookies());
-        Assertions.assertEquals( ErrorHandlingStrategy.PROPAGATE,httpClient1.getEndpointConfiguration().getErrorHandlingStrategy());
-        Assertions.assertEquals( HttpResponseErrorHandler.class,httpClient1.getEndpointConfiguration().getErrorHandler().getClass());
-        Assertions.assertEquals( 6L,httpClient1.getEndpointConfiguration().getBinaryMediaTypes().size());
+        Assertions.assertEquals(ErrorHandlingStrategy.PROPAGATE, httpClient1.getEndpointConfiguration().getErrorHandlingStrategy());
+        Assertions.assertEquals(HttpResponseErrorHandler.class, httpClient1.getEndpointConfiguration().getErrorHandler().getClass());
+        Assertions.assertEquals(6L, httpClient1.getEndpointConfiguration().getBinaryMediaTypes().size());
 
         // 2nd message sender
         Assertions.assertNotNull(httpClient2.getEndpointConfiguration().getRestTemplate());
-        Assertions.assertEquals( "http://localhost:8080/test",httpClient2.getEndpointConfiguration().getRequestUrl());
-        Assertions.assertEquals( InterceptingClientHttpRequestFactory.class,httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass());
-        Assertions.assertEquals( RequestMethod.GET,httpClient2.getEndpointConfiguration().getRequestMethod());
-        Assertions.assertEquals( DefaultMessageCorrelator.class,httpClient2.getEndpointConfiguration().getCorrelator().getClass());
-        Assertions.assertEquals( "text/xml",httpClient2.getEndpointConfiguration().getContentType());
-        Assertions.assertEquals( "ISO-8859-1",httpClient2.getEndpointConfiguration().getCharset());
-        Assertions.assertEquals( messageConverter,httpClient2.getEndpointConfiguration().getMessageConverter());
-        Assertions.assertEquals( endpointResolver,httpClient2.getEndpointConfiguration().getEndpointUriResolver());
-        Assertions.assertEquals( 10000L,httpClient2.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals("http://localhost:8080/test", httpClient2.getEndpointConfiguration().getRequestUrl());
+        Assertions.assertEquals(InterceptingClientHttpRequestFactory.class, httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass());
+        Assertions.assertEquals(RequestMethod.GET, httpClient2.getEndpointConfiguration().getRequestMethod());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, httpClient2.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals("text/xml", httpClient2.getEndpointConfiguration().getContentType());
+        Assertions.assertEquals("ISO-8859-1", httpClient2.getEndpointConfiguration().getCharset());
+        Assertions.assertEquals(messageConverter, httpClient2.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(endpointResolver, httpClient2.getEndpointConfiguration().getEndpointUriResolver());
+        Assertions.assertEquals(10000L, httpClient2.getEndpointConfiguration().getTimeout());
         Assertions.assertFalse(httpClient2.getEndpointConfiguration().isDefaultAcceptHeader());
         Assertions.assertTrue(httpClient2.getEndpointConfiguration().isHandleCookies());
         Assertions.assertTrue(httpClient2.getEndpointConfiguration().isDisableRedirectHandling());
-        Assertions.assertEquals( ErrorHandlingStrategy.THROWS_EXCEPTION,httpClient2.getEndpointConfiguration().getErrorHandlingStrategy());
-        Assertions.assertEquals( errorHandler,httpClient2.getEndpointConfiguration().getErrorHandler());
-        Assertions.assertEquals( 2L,httpClient2.getEndpointConfiguration().getBinaryMediaTypes().size());
+        Assertions.assertEquals(ErrorHandlingStrategy.THROWS_EXCEPTION, httpClient2.getEndpointConfiguration().getErrorHandlingStrategy());
+        Assertions.assertEquals(errorHandler, httpClient2.getEndpointConfiguration().getErrorHandler());
+        Assertions.assertEquals(2L, httpClient2.getEndpointConfiguration().getBinaryMediaTypes().size());
         Assertions.assertTrue(httpClient2.getEndpointConfiguration().getBinaryMediaTypes().contains(MediaType.valueOf("application/custom")));
 
         // 3rd message sender
         Assertions.assertNotNull(httpClient3.getEndpointConfiguration().getRestTemplate());
-        Assertions.assertEquals( restTemplate,httpClient3.getEndpointConfiguration().getRestTemplate());
-        Assertions.assertEquals( "http://localhost:8080/test",httpClient3.getEndpointConfiguration().getRequestUrl());
+        Assertions.assertEquals(restTemplate, httpClient3.getEndpointConfiguration().getRestTemplate());
+        Assertions.assertEquals("http://localhost:8080/test", httpClient3.getEndpointConfiguration().getRequestUrl());
         Assertions.assertNotNull(httpClient3.getEndpointConfiguration().getCorrelator());
-        Assertions.assertEquals( messageCorrelator,httpClient3.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(messageCorrelator, httpClient3.getEndpointConfiguration().getCorrelator());
 
         // 4th message sender
         Assertions.assertNotNull(httpClient4.getActor());
-        Assertions.assertEquals( testActor,httpClient4.getActor());
-        Assertions.assertEquals( InterceptingClientHttpRequestFactory.class,httpClient4.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass());
-        Assertions.assertEquals( 1L,httpClient4.getEndpointConfiguration().getClientInterceptors().size());
-        Assertions.assertEquals( clientInterceptor,httpClient4.getEndpointConfiguration().getClientInterceptors().get(0));
-        Assertions.assertEquals( 250L,httpClient4.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals(testActor, httpClient4.getActor());
+        Assertions.assertEquals(InterceptingClientHttpRequestFactory.class, httpClient4.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass());
+        Assertions.assertEquals(1L, httpClient4.getEndpointConfiguration().getClientInterceptors().size());
+        Assertions.assertEquals(clientInterceptor, httpClient4.getEndpointConfiguration().getClientInterceptors().get(0));
+        Assertions.assertEquals(250L, httpClient4.getEndpointConfiguration().getPollingInterval());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assertions.assertEquals( 8L,validators.size());
+        Assertions.assertEquals(8L, validators.size());
         Assertions.assertNotNull(validators.get("direct.async"));
-        Assertions.assertEquals( DirectEndpointConfigParser.class,validators.get("direct.async").getClass());
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
         Assertions.assertNotNull(validators.get("direct.sync"));
-        Assertions.assertEquals( DirectSyncEndpointConfigParser.class,validators.get("direct.sync").getClass());
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
         Assertions.assertNotNull(validators.get("jms.async"));
-        Assertions.assertEquals( JmsEndpointConfigParser.class,validators.get("jms.async").getClass());
+        Assertions.assertEquals(JmsEndpointConfigParser.class, validators.get("jms.async").getClass());
         Assertions.assertNotNull(validators.get("jms.sync"));
-        Assertions.assertEquals( JmsSyncEndpointConfigParser.class,validators.get("jms.sync").getClass());
+        Assertions.assertEquals(JmsSyncEndpointConfigParser.class, validators.get("jms.sync").getClass());
         Assertions.assertNotNull(validators.get("channel.async"));
-        Assertions.assertEquals( ChannelEndpointConfigParser.class,validators.get("channel.async").getClass());
+        Assertions.assertEquals(ChannelEndpointConfigParser.class, validators.get("channel.async").getClass());
         Assertions.assertNotNull(validators.get("channel.sync"));
-        Assertions.assertEquals( ChannelSyncEndpointConfigParser.class,validators.get("channel.sync").getClass());
+        Assertions.assertEquals(ChannelSyncEndpointConfigParser.class, validators.get("channel.sync").getClass());
         Assertions.assertNotNull(validators.get("http.client"));
-        Assertions.assertEquals( HttpClientConfigParser.class,validators.get("http.client").getClass());
+        Assertions.assertEquals(HttpClientConfigParser.class, validators.get("http.client").getClass());
         Assertions.assertNotNull(validators.get("http.server"));
-        Assertions.assertEquals( HttpServerConfigParser.class,validators.get("http.server").getClass());
+        Assertions.assertEquals(HttpServerConfigParser.class, validators.get("http.server").getClass());
     }
 
     @Test

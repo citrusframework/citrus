@@ -41,7 +41,7 @@ public class HttpActionBuilderTest {
         assertTrue(endpointBuilders.containsKey("http"));
 
         assertTrue(TestActionBuilder.lookup("http").isPresent());
-        assertEquals( HttpActionBuilder.class,TestActionBuilder.lookup("http").get().getClass());
+        assertEquals(HttpActionBuilder.class, TestActionBuilder.lookup("http").get().getClass());
     }
 
     @Test

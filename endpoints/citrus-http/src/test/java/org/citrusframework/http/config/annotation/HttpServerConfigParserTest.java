@@ -48,8 +48,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
@@ -176,124 +174,124 @@ public class HttpServerConfigParserTest extends AbstractUnitTest {
         assertNull(httpServer1.getConnector());
         assertNull(httpServer1.getServletHandler());
         assertNull(httpServer1.getSecurityHandler());
-        assertEquals( 0,httpServer1.getConnectors().length);
-        assertEquals( 0,httpServer1.getFilters().size());
-        assertEquals( 0,httpServer1.getFilterMappings().size());
-        assertEquals( "httpServer1",httpServer1.getName());
-        assertEquals( 8081,httpServer1.getPort());
-        assertEquals( "classpath:org/citrusframework/http/citrus-servlet-context.xml",httpServer1.getContextConfigLocation());
+        assertEquals(0, httpServer1.getConnectors().length);
+        assertEquals(0, httpServer1.getFilters().size());
+        assertEquals(0, httpServer1.getFilterMappings().size());
+        assertEquals("httpServer1", httpServer1.getName());
+        assertEquals(8081, httpServer1.getPort());
+        assertEquals("classpath:org/citrusframework/http/citrus-servlet-context.xml", httpServer1.getContextConfigLocation());
         assertNull(httpServer1.getResourceBase());
         assertFalse(httpServer1.isHandleAttributeHeaders());
         assertFalse(httpServer1.isHandleCookies());
         assertFalse(httpServer1.isAutoStart());
         assertFalse(httpServer1.isDebugLogging());
         assertFalse(httpServer1.isUseRootContextAsParent());
-        assertEquals( HttpStatus.OK.value(),httpServer1.getDefaultStatusCode());
-        assertEquals( "/",httpServer1.getContextPath());
-        assertEquals( "httpServer1-servlet",httpServer1.getServletName());
-        assertEquals( "/*",httpServer1.getServletMappingPath());
-        assertEquals( 6L,httpServer1.getBinaryMediaTypes().size());
+        assertEquals(HttpStatus.OK.value(), httpServer1.getDefaultStatusCode());
+        assertEquals("/", httpServer1.getContextPath());
+        assertEquals("httpServer1-servlet", httpServer1.getServletName());
+        assertEquals("/*", httpServer1.getServletMappingPath());
+        assertEquals(6L, httpServer1.getBinaryMediaTypes().size());
 
         // 2nd message sender
         assertNotNull(httpServer2.getConnector());
-        assertEquals( messageConverter,httpServer2.getMessageConverter());
-        assertEquals( connector1,httpServer2.getConnector());
-        assertEquals( 0,httpServer2.getConnectors().length);
-        assertEquals( 0,httpServer2.getFilters().size());
-        assertEquals( 0,httpServer2.getFilterMappings().size());
-        assertEquals( "httpServer2",httpServer2.getName());
-        assertEquals( 8082,httpServer2.getPort());
-        assertEquals( "classpath:org/citrusframework/http/servlet-context.xml",httpServer2.getContextConfigLocation());
-        assertEquals( "src/it/resources",httpServer2.getResourceBase());
+        assertEquals(messageConverter, httpServer2.getMessageConverter());
+        assertEquals(connector1, httpServer2.getConnector());
+        assertEquals(0, httpServer2.getConnectors().length);
+        assertEquals(0, httpServer2.getFilters().size());
+        assertEquals(0, httpServer2.getFilterMappings().size());
+        assertEquals("httpServer2", httpServer2.getName());
+        assertEquals(8082, httpServer2.getPort());
+        assertEquals("classpath:org/citrusframework/http/servlet-context.xml", httpServer2.getContextConfigLocation());
+        assertEquals("src/it/resources", httpServer2.getResourceBase());
         assertTrue(httpServer2.isHandleAttributeHeaders());
         assertTrue(httpServer2.isHandleCookies());
-        assertEquals( HttpStatus.NOT_FOUND.value(),httpServer2.getDefaultStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND.value(), httpServer2.getDefaultStatusCode());
         assertFalse(httpServer2.isAutoStart());
         assertTrue(httpServer2.isDebugLogging());
         assertTrue(httpServer2.isUseRootContextAsParent());
-        assertEquals( "/citrus",httpServer2.getContextPath());
-        assertEquals( "citrus-http",httpServer2.getServletName());
-        assertEquals( "/foo",httpServer2.getServletMappingPath());
-        assertEquals( 2L,httpServer2.getBinaryMediaTypes().size());
+        assertEquals("/citrus", httpServer2.getContextPath());
+        assertEquals("citrus-http", httpServer2.getServletName());
+        assertEquals("/foo", httpServer2.getServletMappingPath());
+        assertEquals(2L, httpServer2.getBinaryMediaTypes().size());
         assertTrue(httpServer2.getBinaryMediaTypes().contains(MediaType.valueOf("application/custom")));
 
         // 3rd message sender
         assertNull(httpServer3.getConnector());
         assertNotNull(httpServer3.getConnectors());
-        assertEquals( 2L,httpServer3.getConnectors().length);
+        assertEquals(2L, httpServer3.getConnectors().length);
         assertNotNull(httpServer3.getFilters());
-        assertEquals( 2L,httpServer3.getFilters().size());
+        assertEquals(2L, httpServer3.getFilters().size());
         assertNotNull(httpServer3.getFilterMappings());
-        assertEquals( 1L,httpServer3.getFilterMappings().size());
-        assertEquals( "httpServer3",httpServer3.getName());
-        assertEquals( 8083,httpServer3.getPort());
-        assertEquals( "classpath:org/citrusframework/http/citrus-servlet-context.xml",httpServer3.getContextConfigLocation());
+        assertEquals(1L, httpServer3.getFilterMappings().size());
+        assertEquals("httpServer3", httpServer3.getName());
+        assertEquals(8083, httpServer3.getPort());
+        assertEquals("classpath:org/citrusframework/http/citrus-servlet-context.xml", httpServer3.getContextConfigLocation());
         assertNull(httpServer3.getResourceBase());
         assertFalse(httpServer3.isAutoStart());
         assertFalse(httpServer3.isUseRootContextAsParent());
-        assertEquals( "httpServer3-servlet",httpServer3.getServletName());
+        assertEquals("httpServer3-servlet", httpServer3.getServletName());
 
         // 4th message sender
         assertNull(httpServer4.getConnector());
         assertNotNull(httpServer4.getServletHandler());
-        assertEquals( servletHandler,httpServer4.getServletHandler());
-        assertEquals( "httpServer4",httpServer4.getName());
-        assertEquals( 8084,httpServer4.getPort());
-        assertEquals( "classpath:org/citrusframework/http/citrus-servlet-context.xml",httpServer4.getContextConfigLocation());
+        assertEquals(servletHandler, httpServer4.getServletHandler());
+        assertEquals("httpServer4", httpServer4.getName());
+        assertEquals(8084, httpServer4.getPort());
+        assertEquals("classpath:org/citrusframework/http/citrus-servlet-context.xml", httpServer4.getContextConfigLocation());
         assertNull(httpServer4.getResourceBase());
         assertFalse(httpServer4.isAutoStart());
         assertFalse(httpServer4.isUseRootContextAsParent());
-        assertEquals( "httpServer4-servlet",httpServer4.getServletName());
+        assertEquals("httpServer4-servlet", httpServer4.getServletName());
         assertNotNull(httpServer4.getInterceptors());
-        assertEquals( 0L,httpServer4.getInterceptors().size());
+        assertEquals(0L, httpServer4.getInterceptors().size());
 
         // 5th message sender
         assertNull(httpServer5.getConnector());
         assertNotNull(httpServer5.getSecurityHandler());
-        assertEquals( securityHandler,httpServer5.getSecurityHandler());
-        assertEquals( "httpServer5",httpServer5.getName());
-        assertEquals( 8085,httpServer5.getPort());
-        assertEquals( "classpath:org/citrusframework/http/citrus-servlet-context.xml",httpServer5.getContextConfigLocation());
+        assertEquals(securityHandler, httpServer5.getSecurityHandler());
+        assertEquals("httpServer5", httpServer5.getName());
+        assertEquals(8085, httpServer5.getPort());
+        assertEquals("classpath:org/citrusframework/http/citrus-servlet-context.xml", httpServer5.getContextConfigLocation());
         assertNull(httpServer5.getResourceBase());
         assertFalse(httpServer5.isAutoStart());
         assertFalse(httpServer5.isUseRootContextAsParent());
-        assertEquals( "httpServer5-servlet",httpServer5.getServletName());
+        assertEquals("httpServer5-servlet", httpServer5.getServletName());
         assertNotNull(httpServer5.getInterceptors());
-        assertEquals( 2L,httpServer5.getInterceptors().size());
+        assertEquals(2L, httpServer5.getInterceptors().size());
 
         // 6th message sender
         assertNull(httpServer6.getConnector());
         assertNotNull(httpServer6.getEndpointAdapter());
-        assertEquals( endpointAdapter,httpServer6.getEndpointAdapter());
-        assertEquals( "httpServer6",httpServer6.getName());
-        assertEquals( 8086,httpServer6.getPort());
-        assertEquals( "classpath:org/citrusframework/http/citrus-servlet-context.xml",httpServer6.getContextConfigLocation());
+        assertEquals(endpointAdapter, httpServer6.getEndpointAdapter());
+        assertEquals("httpServer6", httpServer6.getName());
+        assertEquals(8086, httpServer6.getPort());
+        assertEquals("classpath:org/citrusframework/http/citrus-servlet-context.xml", httpServer6.getContextConfigLocation());
         assertNull(httpServer6.getResourceBase());
         assertFalse(httpServer6.isAutoStart());
         assertFalse(httpServer6.isUseRootContextAsParent());
-        assertEquals( "httpServer6-servlet",httpServer6.getServletName());
+        assertEquals("httpServer6-servlet", httpServer6.getServletName());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = lookup();
-        assertEquals( 8L,validators.size());
+        assertEquals(8L, validators.size());
         assertNotNull(validators.get("direct.async"));
-        assertEquals( DirectEndpointConfigParser.class,validators.get("direct.async").getClass());
+        assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
         assertNotNull(validators.get("direct.sync"));
-        assertEquals( DirectSyncEndpointConfigParser.class,validators.get("direct.sync").getClass());
+        assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
         assertNotNull(validators.get("jms.async"));
-        assertEquals( JmsEndpointConfigParser.class,validators.get("jms.async").getClass());
+        assertEquals(JmsEndpointConfigParser.class, validators.get("jms.async").getClass());
         assertNotNull(validators.get("jms.sync"));
-        assertEquals( JmsSyncEndpointConfigParser.class,validators.get("jms.sync").getClass());
+        assertEquals(JmsSyncEndpointConfigParser.class, validators.get("jms.sync").getClass());
         assertNotNull(validators.get("channel.async"));
-        assertEquals( ChannelEndpointConfigParser.class,validators.get("channel.async").getClass());
+        assertEquals(ChannelEndpointConfigParser.class, validators.get("channel.async").getClass());
         assertNotNull(validators.get("channel.sync"));
-        assertEquals( ChannelSyncEndpointConfigParser.class,validators.get("channel.sync").getClass());
+        assertEquals(ChannelSyncEndpointConfigParser.class, validators.get("channel.sync").getClass());
         assertNotNull(validators.get("http.client"));
-        assertEquals( HttpClientConfigParser.class,validators.get("http.client").getClass());
+        assertEquals(HttpClientConfigParser.class, validators.get("http.client").getClass());
         assertNotNull(validators.get("http.server"));
-        assertEquals( HttpServerConfigParser.class,validators.get("http.server").getClass());
+        assertEquals(HttpServerConfigParser.class, validators.get("http.server").getClass());
     }
 
     @Test
