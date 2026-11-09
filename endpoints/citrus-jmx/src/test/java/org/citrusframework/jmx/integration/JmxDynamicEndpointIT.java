@@ -18,15 +18,19 @@ package org.citrusframework.jmx.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.5
  */
-@Test
-public class JmxDynamicEndpointIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class JmxDynamicEndpointIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "JmxDynamicEndpointIT")
     public void jmxDynamicEndpointTest() {}
 }

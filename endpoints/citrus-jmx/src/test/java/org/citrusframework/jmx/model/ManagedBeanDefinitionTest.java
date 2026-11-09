@@ -20,8 +20,8 @@ import org.citrusframework.jmx.mbean.HelloBean;
 import org.citrusframework.jmx.mbean.HelloBeanImpl;
 import org.citrusframework.jmx.mbean.NewsBean;
 import org.citrusframework.jmx.mbean.NewsBeanImpl;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.management.MBeanInfo;
 import javax.management.ObjectName;
@@ -40,21 +40,21 @@ public class ManagedBeanDefinitionTest {
         definition.setType(HelloBean.class);
         ObjectName objectName = definition.createObjectName();
 
-        Assert.assertEquals(objectName.toString(), "org.citrusframework.jmx.mbean:type=HelloBean");
+        Assertions.assertEquals("org.citrusframework.jmx.mbean:type=HelloBean", objectName.toString());
 
         definition = new ManagedBeanDefinition();
         definition.setObjectDomain(HelloBean.class.getPackage().getName());
         definition.setObjectName("type=HelloBean,name=Hello");
         objectName = definition.createObjectName();
 
-        Assert.assertEquals(objectName.toString(), "org.citrusframework.jmx.mbean:type=HelloBean,name=Hello");
+        Assertions.assertEquals("org.citrusframework.jmx.mbean:type=HelloBean,name=Hello", objectName.toString());
 
         definition = new ManagedBeanDefinition();
         definition.setObjectDomain(HelloBean.class.getPackage().getName());
         definition.setName(HelloBean.class.getSimpleName());
         objectName = definition.createObjectName();
 
-        Assert.assertEquals(objectName.toString(), "org.citrusframework.jmx.mbean:name=HelloBean");
+        Assertions.assertEquals("org.citrusframework.jmx.mbean:name=HelloBean", objectName.toString());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ManagedBeanDefinitionTest {
         ManagedBeanDefinition definition = new ManagedBeanDefinition();
         MBeanInfo info = definition.createMBeanInfo();
 
-        Assert.assertEquals(info.getClassName(), "org.citrusframework.CitrusMBean");
+        Assertions.assertEquals("org.citrusframework.CitrusMBean", info.getClassName());
     }
 
     @Test
@@ -71,25 +71,25 @@ public class ManagedBeanDefinitionTest {
         definition.setType(HelloBean.class);
         MBeanInfo info = definition.createMBeanInfo();
 
-        Assert.assertEquals(info.getClassName(), "org.citrusframework.jmx.mbean.HelloBean");
-        Assert.assertEquals(info.getAttributes().length, 1);
-        Assert.assertEquals(info.getAttributes()[0].getType(), String.class.getName());
-        Assert.assertEquals(info.getAttributes()[0].getName(), "HelloMessage");
-        Assert.assertEquals(info.getOperations().length, 1);
-        Assert.assertEquals(info.getOperations()[0].getName(), "hello");
-        Assert.assertEquals(info.getOperations()[0].getSignature().length, 1);
-        Assert.assertEquals(info.getOperations()[0].getSignature()[0].getType(), String.class.getName());
-        Assert.assertEquals(info.getOperations()[0].getSignature()[0].getName(), "p1");
-        Assert.assertEquals(info.getOperations()[0].getReturnType(), String.class.getName());
+        Assertions.assertEquals("org.citrusframework.jmx.mbean.HelloBean", info.getClassName());
+        Assertions.assertEquals(1, info.getAttributes().length);
+        Assertions.assertEquals(String.class.getName(), info.getAttributes()[0].getType());
+        Assertions.assertEquals("HelloMessage", info.getAttributes()[0].getName());
+        Assertions.assertEquals(1, info.getOperations().length);
+        Assertions.assertEquals("hello", info.getOperations()[0].getName());
+        Assertions.assertEquals(1, info.getOperations()[0].getSignature().length);
+        Assertions.assertEquals(String.class.getName(), info.getOperations()[0].getSignature()[0].getType());
+        Assertions.assertEquals("p1", info.getOperations()[0].getSignature()[0].getName());
+        Assertions.assertEquals(String.class.getName(), info.getOperations()[0].getReturnType());
 
         definition.setType(NewsBean.class);
         info = definition.createMBeanInfo();
 
-        Assert.assertEquals(info.getClassName(), "org.citrusframework.jmx.mbean.NewsBean");
-        Assert.assertEquals(info.getAttributes().length, 1);
-        Assert.assertEquals(info.getAttributes()[0].getType(), String.class.getName());
-        Assert.assertEquals(info.getAttributes()[0].getName(), "News");
-        Assert.assertEquals(info.getOperations().length, 0);
+        Assertions.assertEquals("org.citrusframework.jmx.mbean.NewsBean", info.getClassName());
+        Assertions.assertEquals(1, info.getAttributes().length);
+        Assertions.assertEquals(String.class.getName(), info.getAttributes()[0].getType());
+        Assertions.assertEquals("News", info.getAttributes()[0].getName());
+        Assertions.assertEquals(0, info.getOperations().length);
     }
 
     @Test
@@ -98,25 +98,25 @@ public class ManagedBeanDefinitionTest {
         definition.setType(HelloBeanImpl.class);
         MBeanInfo info = definition.createMBeanInfo();
 
-        Assert.assertEquals(info.getClassName(), "org.citrusframework.jmx.mbean.HelloBeanImpl");
-        Assert.assertEquals(info.getAttributes().length, 1);
-        Assert.assertEquals(info.getAttributes()[0].getType(), String.class.getName());
-        Assert.assertEquals(info.getAttributes()[0].getName(), "helloMessage");
-        Assert.assertEquals(info.getOperations().length, 1);
-        Assert.assertEquals(info.getOperations()[0].getName(), "hello");
-        Assert.assertEquals(info.getOperations()[0].getSignature().length, 1);
-        Assert.assertEquals(info.getOperations()[0].getSignature()[0].getType(), String.class.getName());
-        Assert.assertEquals(info.getOperations()[0].getSignature()[0].getName(), "p1");
-        Assert.assertEquals(info.getOperations()[0].getReturnType(), String.class.getName());
+        Assertions.assertEquals("org.citrusframework.jmx.mbean.HelloBeanImpl", info.getClassName());
+        Assertions.assertEquals(1, info.getAttributes().length);
+        Assertions.assertEquals(String.class.getName(), info.getAttributes()[0].getType());
+        Assertions.assertEquals("helloMessage", info.getAttributes()[0].getName());
+        Assertions.assertEquals(1, info.getOperations().length);
+        Assertions.assertEquals("hello", info.getOperations()[0].getName());
+        Assertions.assertEquals(1, info.getOperations()[0].getSignature().length);
+        Assertions.assertEquals(String.class.getName(), info.getOperations()[0].getSignature()[0].getType());
+        Assertions.assertEquals("p1", info.getOperations()[0].getSignature()[0].getName());
+        Assertions.assertEquals(String.class.getName(), info.getOperations()[0].getReturnType());
 
         definition.setType(NewsBeanImpl.class);
         info = definition.createMBeanInfo();
 
-        Assert.assertEquals(info.getClassName(), "org.citrusframework.jmx.mbean.NewsBeanImpl");
-        Assert.assertEquals(info.getAttributes().length, 1);
-        Assert.assertEquals(info.getAttributes()[0].getType(), String.class.getName());
-        Assert.assertEquals(info.getAttributes()[0].getName(), "news");
-        Assert.assertEquals(info.getOperations().length, 0);
+        Assertions.assertEquals("org.citrusframework.jmx.mbean.NewsBeanImpl", info.getClassName());
+        Assertions.assertEquals(1, info.getAttributes().length);
+        Assertions.assertEquals(String.class.getName(), info.getAttributes()[0].getType());
+        Assertions.assertEquals("news", info.getAttributes()[0].getName());
+        Assertions.assertEquals(0, info.getOperations().length);
     }
 
     @Test
@@ -141,17 +141,17 @@ public class ManagedBeanDefinitionTest {
 
         MBeanInfo info = definition.createMBeanInfo();
 
-        Assert.assertEquals(info.getClassName(), "GenericBean");
-        Assert.assertEquals(info.getAttributes().length, 2);
-        Assert.assertEquals(info.getAttributes()[0].getType(), String.class.getName());
-        Assert.assertEquals(info.getAttributes()[0].getName(), "message");
-        Assert.assertEquals(info.getAttributes()[1].getType(), Boolean.class.getName());
-        Assert.assertEquals(info.getAttributes()[1].getName(), "standard");
-        Assert.assertEquals(info.getOperations().length, 1);
-        Assert.assertEquals(info.getOperations()[0].getName(), "operation");
-        Assert.assertEquals(info.getOperations()[0].getSignature().length, 1);
-        Assert.assertEquals(info.getOperations()[0].getSignature()[0].getType(), Integer.class.getName());
-        Assert.assertEquals(info.getOperations()[0].getSignature()[0].getName(), "p1");
-        Assert.assertNull(info.getOperations()[0].getReturnType());
+        Assertions.assertEquals("GenericBean", info.getClassName());
+        Assertions.assertEquals(2, info.getAttributes().length);
+        Assertions.assertEquals(String.class.getName(), info.getAttributes()[0].getType());
+        Assertions.assertEquals("message", info.getAttributes()[0].getName());
+        Assertions.assertEquals(Boolean.class.getName(), info.getAttributes()[1].getType());
+        Assertions.assertEquals("standard", info.getAttributes()[1].getName());
+        Assertions.assertEquals(1, info.getOperations().length);
+        Assertions.assertEquals("operation", info.getOperations()[0].getName());
+        Assertions.assertEquals(1, info.getOperations()[0].getSignature().length);
+        Assertions.assertEquals(Integer.class.getName(), info.getOperations()[0].getSignature()[0].getType());
+        Assertions.assertEquals("p1", info.getOperations()[0].getSignature()[0].getName());
+        Assertions.assertNull(info.getOperations()[0].getReturnType());
     }
 }

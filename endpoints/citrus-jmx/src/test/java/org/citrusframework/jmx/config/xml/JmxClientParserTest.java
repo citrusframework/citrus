@@ -20,9 +20,9 @@ import org.citrusframework.TestActor;
 import org.citrusframework.jmx.client.JmxClient;
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.message.MessageCorrelator;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.management.NotificationFilter;
 import java.util.Map;
@@ -33,34 +33,34 @@ public class JmxClientParserTest extends AbstractBeanDefinitionParserTest {
     public void testJmxClientParser() {
         Map<String, JmxClient> clients = beanDefinitionContext.getBeansOfType(JmxClient.class);
 
-        Assert.assertEquals(clients.size(), 2);
+        Assertions.assertEquals(2, clients.size());
 
         // 1st client
         JmxClient jmxClient = clients.get("jmxClient1");
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getServerUrl(), "platform");
-        Assert.assertNull(jmxClient.getEndpointConfiguration().getUsername());
-        Assert.assertNull(jmxClient.getEndpointConfiguration().getPassword());
-        Assert.assertFalse(jmxClient.getEndpointConfiguration().isAutoReconnect());
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getDelayOnReconnect(), 1000L);
-        Assert.assertNull(jmxClient.getEndpointConfiguration().getNotificationFilter());
-        Assert.assertNotNull(jmxClient.getEndpointConfiguration().getMessageConverter());
-        Assert.assertNotNull(jmxClient.getEndpointConfiguration().getCorrelator());
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertNull(jmxClient.getActor());
+        Assertions.assertEquals("platform", jmxClient.getEndpointConfiguration().getServerUrl());
+        Assertions.assertNull(jmxClient.getEndpointConfiguration().getUsername());
+        Assertions.assertNull(jmxClient.getEndpointConfiguration().getPassword());
+        Assertions.assertFalse(jmxClient.getEndpointConfiguration().isAutoReconnect());
+        Assertions.assertEquals(1000L, jmxClient.getEndpointConfiguration().getDelayOnReconnect());
+        Assertions.assertNull(jmxClient.getEndpointConfiguration().getNotificationFilter());
+        Assertions.assertNotNull(jmxClient.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertNotNull(jmxClient.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(5000L, jmxClient.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(500L, jmxClient.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertNull(jmxClient.getActor());
 
         // 2nd client
         jmxClient = clients.get("jmxClient2");
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi");
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getUsername(), "user");
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getPassword(), "s!cr!t");
-        Assert.assertTrue(jmxClient.getEndpointConfiguration().isAutoReconnect());
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getDelayOnReconnect(), 5000L);
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getNotificationFilter(), beanDefinitionContext.getBean("notificationFilter", NotificationFilter.class));
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", JmxMessageConverter.class));
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("messageCorrelator", MessageCorrelator.class));
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(jmxClient.getEndpointConfiguration().getPollingInterval(), 100L);
-        Assert.assertEquals(jmxClient.getActor(), beanDefinitionContext.getBean("actor", TestActor.class));
+        Assertions.assertEquals("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi", jmxClient.getEndpointConfiguration().getServerUrl());
+        Assertions.assertEquals("user", jmxClient.getEndpointConfiguration().getUsername());
+        Assertions.assertEquals("s!cr!t", jmxClient.getEndpointConfiguration().getPassword());
+        Assertions.assertTrue(jmxClient.getEndpointConfiguration().isAutoReconnect());
+        Assertions.assertEquals(5000L, jmxClient.getEndpointConfiguration().getDelayOnReconnect());
+        Assertions.assertEquals(beanDefinitionContext.getBean("notificationFilter", NotificationFilter.class), jmxClient.getEndpointConfiguration().getNotificationFilter());
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter", JmxMessageConverter.class), jmxClient.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageCorrelator", MessageCorrelator.class), jmxClient.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(10000L, jmxClient.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(100L, jmxClient.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals(beanDefinitionContext.getBean("actor", TestActor.class), jmxClient.getActor());
     }
 }

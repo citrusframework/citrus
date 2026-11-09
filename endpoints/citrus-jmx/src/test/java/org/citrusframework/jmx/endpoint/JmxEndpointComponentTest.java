@@ -24,8 +24,8 @@ import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.jmx.client.JmxClient;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.5
@@ -40,16 +40,16 @@ public class JmxEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("jmx:rmi:///jndi/rmi://localhost:1099/someService", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmxClient.class);
+        Assertions.assertEquals(JmxClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:1099/someService");
+        Assertions.assertEquals("service:jmx:rmi:///jndi/rmi://localhost:1099/someService", ((JmxClient)endpoint).getEndpointConfiguration().getServerUrl());
 
         endpoint = component.createEndpoint("jmx:platform", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmxClient.class);
+        Assertions.assertEquals(JmxClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().getServerUrl(), "platform");
-        Assert.assertEquals(((JmxClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("platform", ((JmxClient)endpoint).getEndpointConfiguration().getServerUrl());
+        Assertions.assertEquals(5000L, ((JmxClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -58,35 +58,35 @@ public class JmxEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("jmx:rmi:///jndi/rmi://localhost:1099/someService?autoReconnect=false&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmxClient.class);
+        Assertions.assertEquals(JmxClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:1099/someService");
-        Assert.assertFalse(((JmxClient) endpoint).getEndpointConfiguration().isAutoReconnect());
-        Assert.assertEquals(((JmxClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("service:jmx:rmi:///jndi/rmi://localhost:1099/someService", ((JmxClient)endpoint).getEndpointConfiguration().getServerUrl());
+        Assertions.assertFalse(((JmxClient) endpoint).getEndpointConfiguration().isAutoReconnect());
+        Assertions.assertEquals(10000L, ((JmxClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("jmx:platform?autoReconnect=true", context);
 
-        Assert.assertEquals(endpoint.getClass(), JmxClient.class);
+        Assertions.assertEquals(JmxClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().getServerUrl(), "platform");
-        Assert.assertTrue(((JmxClient) endpoint).getEndpointConfiguration().isAutoReconnect());
-        Assert.assertEquals(((JmxClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("platform", ((JmxClient)endpoint).getEndpointConfiguration().getServerUrl());
+        Assertions.assertTrue(((JmxClient) endpoint).getEndpointConfiguration().isAutoReconnect());
+        Assertions.assertEquals(5000L, ((JmxClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 3L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("jmx"));
-        Assert.assertEquals(validators.get("jmx").getClass(), JmxEndpointComponent.class);
+        Assertions.assertEquals(3L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("jmx"));
+        Assertions.assertEquals(JmxEndpointComponent.class, validators.get("jmx").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("jmx").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("jmx").isPresent());
     }
 }

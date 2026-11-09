@@ -28,17 +28,18 @@ import org.citrusframework.jmx.mbean.NewsBean;
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.jmx.server.JmxServer;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class JmxServerConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class JmxServerConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "jmxServer1")
     @JmxServerConfig(serverUrl="platform",
@@ -80,18 +81,16 @@ public class JmxServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
+        lenient().when(referenceResolver.resolve("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("environmentProperties", Properties.class)).thenReturn(environmentProperties);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
-        when(referenceResolver.resolve("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("environmentProperties", Properties.class)).thenReturn(environmentProperties);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-
-        when(environmentProperties.entrySet()).thenReturn(Collections.<Object, Object>singletonMap("com.sun.management.jmxremote.authenticate", "false").entrySet());
+        lenient().when(environmentProperties.entrySet()).thenReturn(Collections.<Object, Object>singletonMap("com.sun.management.jmxremote.authenticate", "false").entrySet());
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -101,51 +100,51 @@ public class JmxServerConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st server
-        Assert.assertEquals(jmxServer1.getEndpointConfiguration().getServerUrl(), "platform");
-        Assert.assertEquals(jmxServer1.getEndpointConfiguration().getEnvironmentProperties().size(), 0L);
-        Assert.assertFalse(jmxServer1.isCreateRegistry());
-        Assert.assertEquals(jmxServer1.getMbeans().size(), 2L);
-        Assert.assertEquals(jmxServer1.getMbeans().get(0).getType(), HelloBean.class);
-        Assert.assertEquals(jmxServer1.getMbeans().get(0).getOperations().size(), 0L);
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getName(), "fooBean");
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getOperations().size(), 2L);
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getOperations().get(0).getName(), "fooOperation");
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().size(), 2L);
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().get(0).getType(), "java.lang.String");
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().get(1).getType(), "java.lang.Integer");
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getOperations().get(1).getName(), "barOperation");
-        Assert.assertNull(jmxServer1.getMbeans().get(1).getOperations().get(1).getParameter());
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getAttributes().size(), 2L);
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getAttributes().get(0).getName(), "fooAttribute");
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getAttributes().get(0).getType(), "java.lang.String");
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getAttributes().get(1).getName(), "barAttribute");
-        Assert.assertEquals(jmxServer1.getMbeans().get(1).getAttributes().get(1).getType(), "java.lang.Boolean");
-        Assert.assertEquals(jmxServer1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("platform", jmxServer1.getEndpointConfiguration().getServerUrl());
+        Assertions.assertEquals(0L, jmxServer1.getEndpointConfiguration().getEnvironmentProperties().size());
+        Assertions.assertFalse(jmxServer1.isCreateRegistry());
+        Assertions.assertEquals(2L, jmxServer1.getMbeans().size());
+        Assertions.assertEquals(HelloBean.class, jmxServer1.getMbeans().get(0).getType());
+        Assertions.assertEquals(0L, jmxServer1.getMbeans().get(0).getOperations().size());
+        Assertions.assertEquals("fooBean", jmxServer1.getMbeans().get(1).getName());
+        Assertions.assertEquals(2L, jmxServer1.getMbeans().get(1).getOperations().size());
+        Assertions.assertEquals("fooOperation", jmxServer1.getMbeans().get(1).getOperations().get(0).getName());
+        Assertions.assertEquals(2L, jmxServer1.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().size());
+        Assertions.assertEquals("java.lang.String", jmxServer1.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().get(0).getType());
+        Assertions.assertEquals("java.lang.Integer", jmxServer1.getMbeans().get(1).getOperations().get(0).getParameter().getParameter().get(1).getType());
+        Assertions.assertEquals("barOperation", jmxServer1.getMbeans().get(1).getOperations().get(1).getName());
+        Assertions.assertNull(jmxServer1.getMbeans().get(1).getOperations().get(1).getParameter());
+        Assertions.assertEquals(2L, jmxServer1.getMbeans().get(1).getAttributes().size());
+        Assertions.assertEquals("fooAttribute", jmxServer1.getMbeans().get(1).getAttributes().get(0).getName());
+        Assertions.assertEquals("java.lang.String", jmxServer1.getMbeans().get(1).getAttributes().get(0).getType());
+        Assertions.assertEquals("barAttribute", jmxServer1.getMbeans().get(1).getAttributes().get(1).getName());
+        Assertions.assertEquals("java.lang.Boolean", jmxServer1.getMbeans().get(1).getAttributes().get(1).getType());
+        Assertions.assertEquals(5000L, jmxServer1.getEndpointConfiguration().getTimeout());
 
         // 2nd server
-        Assert.assertEquals(jmxServer2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(jmxServer2.getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi");
-        Assert.assertEquals(jmxServer2.getEndpointConfiguration().getEnvironmentProperties().size(), 1L);
-        Assert.assertEquals(jmxServer2.getMbeans().size(), 1L);
-        Assert.assertEquals(jmxServer2.getMbeans().get(0).getType(), NewsBean.class);
-        Assert.assertEquals(jmxServer2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(messageConverter, jmxServer2.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi", jmxServer2.getEndpointConfiguration().getServerUrl());
+        Assertions.assertEquals(1L, jmxServer2.getEndpointConfiguration().getEnvironmentProperties().size());
+        Assertions.assertEquals(1L, jmxServer2.getMbeans().size());
+        Assertions.assertEquals(NewsBean.class, jmxServer2.getMbeans().get(0).getType());
+        Assertions.assertEquals(10000L, jmxServer2.getEndpointConfiguration().getTimeout());
 
         // 3rd server
-        Assert.assertNotNull(jmxServer3.getActor());
-        Assert.assertEquals(jmxServer3.getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:2099/jmxrmi");
-        Assert.assertEquals(jmxServer3.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(jmxServer3.getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(jmxServer3.getEndpointConfiguration().getProtocol(), "rmi");
-        Assert.assertEquals(jmxServer3.getEndpointConfiguration().getBinding(), "jmxrmi");
-        Assert.assertTrue(jmxServer3.isCreateRegistry());
+        Assertions.assertNotNull(jmxServer3.getActor());
+        Assertions.assertEquals("service:jmx:rmi:///jndi/rmi://localhost:2099/jmxrmi", jmxServer3.getEndpointConfiguration().getServerUrl());
+        Assertions.assertEquals("localhost", jmxServer3.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, jmxServer3.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("rmi", jmxServer3.getEndpointConfiguration().getProtocol());
+        Assertions.assertEquals("jmxrmi", jmxServer3.getEndpointConfiguration().getBinding());
+        Assertions.assertTrue(jmxServer3.isCreateRegistry());
 
-        Assert.assertEquals(jmxServer3.getMbeans().size(), 1L);
-        Assert.assertEquals(jmxServer3.getMbeans().get(0).getType(), HelloBean.class);
-        Assert.assertEquals(jmxServer3.getActor(), testActor);
+        Assertions.assertEquals(1L, jmxServer3.getMbeans().size());
+        Assertions.assertEquals(HelloBean.class, jmxServer3.getMbeans().get(0).getType());
+        Assertions.assertEquals(testActor, jmxServer3.getActor());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("jmx.server").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("jmx.server").isPresent());
     }
 }
