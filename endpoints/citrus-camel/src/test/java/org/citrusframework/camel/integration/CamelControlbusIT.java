@@ -28,6 +28,7 @@ import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -36,6 +37,7 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.seda;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares the seda:words queue on the cached Spring CamelContext with CamelRouteActionIT")
 public class CamelControlbusIT implements TestActionSupport {
 
     @Autowired

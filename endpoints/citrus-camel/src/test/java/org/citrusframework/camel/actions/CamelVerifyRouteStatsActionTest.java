@@ -57,23 +57,19 @@ public class CamelVerifyRouteStatsActionTest extends org.citrusframework.junit.j
     @Test
     public void testVerifyCompletedExchangesMismatch() {
 
-        ValidationException thrown = org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
 
-            reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.getExchangesCompleted()).thenReturn(3L);
 
-            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
-            when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
-            when(routeMBean.getExchangesCompleted()).thenReturn(3L);
-
-            CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
-                    .context(camelContext)
-                    .route("route_1")
-                    .completed(5)
-                    .build();
-            action.execute(context);
-    
-        });
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .completed(5)
+                .build();
+        ValidationException thrown = org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*completed exchanges.*did not match.*"), "Unexpected exception message: " + thrown.getMessage());
     }
@@ -98,23 +94,19 @@ public class CamelVerifyRouteStatsActionTest extends org.citrusframework.junit.j
     @Test
     public void testVerifyFailedExchangesMismatch() {
 
-        ValidationException thrown = org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
 
-            reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.getExchangesFailed()).thenReturn(2L);
 
-            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
-            when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
-            when(routeMBean.getExchangesFailed()).thenReturn(2L);
-
-            CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
-                    .context(camelContext)
-                    .route("route_1")
-                    .failed(0)
-                    .build();
-            action.execute(context);
-    
-        });
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .failed(0)
+                .build();
+        ValidationException thrown = org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*failed exchanges.*did not match.*"), "Unexpected exception message: " + thrown.getMessage());
     }
@@ -122,22 +114,18 @@ public class CamelVerifyRouteStatsActionTest extends org.citrusframework.junit.j
     @Test
     public void testVerifyStatsRouteNotManaged() {
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        reset(camelContext, camelContextExtension, managedCamelContext);
 
-            reset(camelContext, camelContextExtension, managedCamelContext);
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("unknown_route")).thenReturn(null);
 
-            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
-            when(managedCamelContext.getManagedRoute("unknown_route")).thenReturn(null);
-
-            CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
-                    .context(camelContext)
-                    .route("unknown_route")
-                    .completed(0)
-                    .build();
-            action.execute(context);
-    
-        });
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("unknown_route")
+                .completed(0)
+                .build();
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*Failed to get managed route statistics.*"), "Unexpected exception message: " + thrown.getMessage());
     }
@@ -183,21 +171,17 @@ public class CamelVerifyRouteStatsActionTest extends org.citrusframework.junit.j
     @Test
     public void testVerifyStatsManagedContextMissing() {
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        reset(camelContext, camelContextExtension);
 
-            reset(camelContext, camelContextExtension);
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(null);
 
-            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(null);
-
-            CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
-                    .context(camelContext)
-                    .route("route_1")
-                    .completed(0)
-                    .build();
-            action.execute(context);
-    
-        });
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .completed(0)
+                .build();
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*managed Camel context extension.*"), "Unexpected exception message: " + thrown.getMessage());
     }
@@ -247,27 +231,23 @@ public class CamelVerifyRouteStatsActionTest extends org.citrusframework.junit.j
     @Test
     public void testVerifyStatsJsonMismatch() {
 
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
 
-            reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+        String actualJson = """
+                {"exchangesCompleted": 5, "exchangesFailed": 0}""";
 
-            String actualJson = """
-                    {"exchangesCompleted": 5, "exchangesFailed": 0}""";
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
 
-            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
-            when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
-            when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
-
-            CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
-                    .context(camelContext)
-                    .route("route_1")
-                    .stats("""
-                            {"exchangesCompleted": 10}""")
-                    .build();
-            action.execute(context);
-    
-        });
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .stats("""
+                        {"exchangesCompleted": 10}""")
+                .build();
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test
@@ -322,30 +302,26 @@ public class CamelVerifyRouteStatsActionTest extends org.citrusframework.junit.j
     @Test
     public void testVerifyStatsViaBiConsumerFailingAssertion() {
 
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+        reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
 
-            reset(camelContext, camelContextExtension, managedCamelContext, routeMBean);
+        String actualJson = """
+                {"exchangesCompleted": 3, "exchangesFailed": 0}""";
 
-            String actualJson = """
-                    {"exchangesCompleted": 3, "exchangesFailed": 0}""";
+        when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
+        when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
+        when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
+        when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
 
-            when(camelContext.getCamelContextExtension()).thenReturn(camelContextExtension);
-            when(camelContextExtension.getContextPlugin(ManagedCamelContext.class)).thenReturn(managedCamelContext);
-            when(managedCamelContext.getManagedRoute("route_1")).thenReturn(routeMBean);
-            when(routeMBean.dumpStatsAsJSon(false)).thenReturn(actualJson);
-
-            CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
-                    .context(camelContext)
-                    .route("route_1")
-                    .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> {
-                        if (stats.getExchangesCompleted() != 5L) {
-                            throw new ValidationException("Expected 5 completed exchanges but got " + stats.getExchangesCompleted());
-                        }
-                    })
-                    .build();
-            action.execute(context);
-    
-        });
+        CamelVerifyRouteStatsAction action = new CamelVerifyRouteStatsAction.Builder()
+                .context(camelContext)
+                .route("route_1")
+                .validate((CamelRouteStats stats, org.citrusframework.context.TestContext ctx) -> {
+                    if (stats.getExchangesCompleted() != 5L) {
+                        throw new ValidationException("Expected 5 completed exchanges but got " + stats.getExchangesCompleted());
+                    }
+                })
+                .build();
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test

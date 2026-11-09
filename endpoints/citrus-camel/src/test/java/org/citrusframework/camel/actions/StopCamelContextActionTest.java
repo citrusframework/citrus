@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -106,16 +105,12 @@ public class StopCamelContextActionTest extends org.citrusframework.junit.jupite
     @Test
     public void testStopContextWithException() throws Exception {
 
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class, () -> {
+        context.getReferenceResolver().bind(CamelSettings.getContextName(), camelContext);
+        Mockito.doThrow(new RuntimeException("Failed to stop")).when(camelContext).stop();
 
-            context.getReferenceResolver().bind(CamelSettings.getContextName(), camelContext);
-            Mockito.doThrow(new RuntimeException("Failed to stop")).when(camelContext).stop();
-
-            StopCamelContextAction action = new StopCamelContextAction.Builder()
-                    .context(camelContext)
-                    .build();
-            action.execute(context);
-    
-        });
+        StopCamelContextAction action = new StopCamelContextAction.Builder()
+                .context(camelContext)
+                .build();
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class, () -> action.execute(context));
     }
 }

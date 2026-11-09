@@ -233,7 +233,7 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
     }
 
     @ParameterizedTest
-    @MethodSource("failedOutputProvider")
+    @MethodSource("failedJsonOutputProvider")
     public void shouldFailVerification(String output) {
         lenient().when(process.isAlive()).thenReturn(true);
         lenient().when(process.exitValue()).thenReturn(0);

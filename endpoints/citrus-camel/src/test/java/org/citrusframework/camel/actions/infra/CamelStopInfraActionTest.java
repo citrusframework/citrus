@@ -82,15 +82,11 @@ public class CamelStopInfraActionTest extends org.citrusframework.junit.jupiter.
     @Test
     public void testStopInfraNotFound() {
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        CamelStopInfraAction action = new CamelStopInfraAction.Builder()
+                .service("unknown")
+                .build();
 
-            CamelStopInfraAction action = new CamelStopInfraAction.Builder()
-                    .service("unknown")
-                    .build();
-
-            action.execute(context);
-    
-        });
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
     }
@@ -98,15 +94,11 @@ public class CamelStopInfraActionTest extends org.citrusframework.junit.jupiter.
     @Test
     public void testStopInfraImplementationNotFound() {
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        CamelStopInfraAction action = new CamelStopInfraAction.Builder()
+                .service("service", "unknown")
+                .build();
 
-            CamelStopInfraAction action = new CamelStopInfraAction.Builder()
-                    .service("service", "unknown")
-                    .build();
-
-            action.execute(context);
-    
-        });
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'service.unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
     }

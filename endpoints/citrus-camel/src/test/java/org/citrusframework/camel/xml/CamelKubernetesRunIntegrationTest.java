@@ -31,7 +31,6 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mock;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
