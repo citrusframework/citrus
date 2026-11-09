@@ -85,9 +85,9 @@ public class RemoveCamelRouteActionTest extends org.citrusframework.junit.jupite
                 .context(camelContext)
                 .routes("route_1", "route_2", "route_3")
                 .build();
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*must be stopped.*"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches(".*must be stopped.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class RemoveCamelRouteActionTest extends org.citrusframework.junit.jupite
                 .context(camelContext)
                 .routes("route_1", "route_2", "route_3")
                 .build();
-        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 
     @Test
@@ -125,6 +125,6 @@ public class RemoveCamelRouteActionTest extends org.citrusframework.junit.jupite
                 .context(camelContext)
                 .routes("route_1", "route_2", "route_3")
                 .build();
-        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 }

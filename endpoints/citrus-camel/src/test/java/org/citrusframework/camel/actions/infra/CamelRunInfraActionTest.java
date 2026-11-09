@@ -162,9 +162,9 @@ public class CamelRunInfraActionTest extends org.citrusframework.junit.jupiter.A
                 .catalog(catalog)
                 .build();
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'unknown'"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'unknown'"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -175,8 +175,8 @@ public class CamelRunInfraActionTest extends org.citrusframework.junit.jupiter.A
                 .catalog(catalog)
                 .build();
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'service.unknown'"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'service.unknown'"), "Unexpected exception message: " + thrown.getMessage());
     }
 }

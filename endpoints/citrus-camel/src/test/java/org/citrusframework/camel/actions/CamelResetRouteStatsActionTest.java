@@ -66,9 +66,9 @@ public class CamelResetRouteStatsActionTest extends org.citrusframework.junit.ju
                 .context(camelContext)
                 .route("unknown_route")
                 .build();
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*Failed to get managed route statistics.*"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches(".*Failed to get managed route statistics.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -83,9 +83,9 @@ public class CamelResetRouteStatsActionTest extends org.citrusframework.junit.ju
                 .context(camelContext)
                 .route("route_1")
                 .build();
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*managed Camel context extension.*"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches(".*managed Camel context extension.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test

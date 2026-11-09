@@ -62,17 +62,17 @@ public class CamelEndpointComponentTest {
 
         Assertions.assertEquals(CamelEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news");
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("direct:news", ((CamelEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(5000L, ((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("camel:seda:news-feed", context);
 
         Assertions.assertEquals(CamelEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "seda:news-feed");
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("seda:news-feed", ((CamelEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(5000L, ((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -86,17 +86,17 @@ public class CamelEndpointComponentTest {
 
         Assertions.assertEquals(CamelSyncEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelSyncEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news");
-        Assertions.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("direct:news", ((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(5000L, ((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("camel:sync:seda:news-feed", context);
 
         Assertions.assertEquals(CamelSyncEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelSyncEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "seda:news-feed");
-        Assertions.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("seda:news-feed", ((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(5000L, ((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -116,9 +116,9 @@ public class CamelEndpointComponentTest {
 
         Assertions.assertEquals(CamelEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news-feed");
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("direct:news-feed", ((CamelEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(10000L, ((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -138,9 +138,9 @@ public class CamelEndpointComponentTest {
 
         Assertions.assertEquals(CamelEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "controlbus:route?routeId=news&action=stats");
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("controlbus:route?routeId=news&action=stats", ((CamelEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(10000L, ((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -161,9 +161,9 @@ public class CamelEndpointComponentTest {
 
         Assertions.assertEquals(CamelEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news?provider=#newsProvider");
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("direct:news?provider=#newsProvider", ((CamelEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(5000L, ((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
         Assertions.assertTrue(registry.containsKey("newsProvider"));
         Assertions.assertEquals(newsProvider, registry.lookupByName("newsProvider"));
     }
@@ -184,9 +184,9 @@ public class CamelEndpointComponentTest {
 
         Assertions.assertEquals(CamelEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news?provider=#newsProvider");
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("direct:news?provider=#newsProvider", ((CamelEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(5000L, ((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
         Assertions.assertFalse(registry.containsKey("newsProvider"));
     }
 
@@ -210,9 +210,9 @@ public class CamelEndpointComponentTest {
 
         Assertions.assertEquals(CamelEndpoint.class, endpoint.getClass());
 
-        Assertions.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news?provider=#newsProvider");
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
-        Assertions.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("direct:news?provider=#newsProvider", ((CamelEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(camelContext, ((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext());
+        Assertions.assertEquals(5000L, ((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
         Assertions.assertTrue(registry.containsKey("newsProvider"));
         Assertions.assertEquals(original, registry.lookupByName("newsProvider"));
     }

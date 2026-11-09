@@ -79,7 +79,7 @@ public class StartCamelRouteActionTest extends org.citrusframework.junit.jupiter
                 .context(camelContext)
                 .routes("route_1", "route_2", "route_3")
                 .build();
-        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
         verify(camelContext).startRoute("route_1");
     }

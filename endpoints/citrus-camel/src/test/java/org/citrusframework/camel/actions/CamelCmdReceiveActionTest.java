@@ -268,7 +268,7 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
                 .withReferenceResolver(context.getReferenceResolver())
                 .build();
 
-        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
+        Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
     @Test
@@ -296,7 +296,7 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
                 .withReferenceResolver(context.getReferenceResolver())
                 .build();
 
-        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
+        Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
 }

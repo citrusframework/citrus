@@ -61,9 +61,9 @@ public class CamelVerifyRouteActionTest extends org.citrusframework.junit.jupite
                 .context(camelContext)
                 .route("unknown_route")
                 .build();
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches(".*does not exist.*"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches(".*does not exist.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class CamelVerifyRouteActionTest extends org.citrusframework.junit.jupite
                 .route("route_1")
                 .status(ServiceStatus.Started)
                 .build();
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test

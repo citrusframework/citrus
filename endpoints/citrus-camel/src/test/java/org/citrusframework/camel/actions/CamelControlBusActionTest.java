@@ -143,7 +143,7 @@ public class CamelControlBusActionTest extends org.citrusframework.junit.jupiter
                 .route("route_1", "status")
                 .result("Stopped")
                 .build();
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test

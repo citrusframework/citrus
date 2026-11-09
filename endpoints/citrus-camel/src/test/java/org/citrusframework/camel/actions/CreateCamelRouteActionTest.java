@@ -144,6 +144,6 @@ public class CreateCamelRouteActionTest extends org.citrusframework.junit.jupite
                 .context(camelContext)
                 .routes(Collections.singletonList(route))
                 .build();
-        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 }
