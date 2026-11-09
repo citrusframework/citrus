@@ -21,23 +21,23 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.jmx.client.JmxClientBuilder;
 import org.citrusframework.jmx.server.JmxServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JmxEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("jmx.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("jmx.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("jmx.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("jmx.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("jmx.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("jmx.client").get().getClass(), JmxClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("jmx.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("jmx.server").get().getClass(), JmxServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("jmx.client").isPresent());
+        Assertions.assertEquals(JmxClientBuilder.class, EndpointBuilder.lookup("jmx.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("jmx.server").isPresent());
+        Assertions.assertEquals(JmxServerBuilder.class, EndpointBuilder.lookup("jmx.server").get().getClass());
     }
 }

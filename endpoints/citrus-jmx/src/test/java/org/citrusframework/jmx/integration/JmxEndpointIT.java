@@ -16,21 +16,28 @@
 
 package org.citrusframework.jmx.integration;
 
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.jmx.client.JmxClient;
 import org.citrusframework.jmx.message.JmxMessage;
 import org.citrusframework.jmx.server.JmxServer;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.5
  */
-@Test
-public class JmxEndpointIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares JVM-global platform MBeanServer with other JMX ITs; parallel classes risk InstanceAlreadyExistsException and message cross-talk")
+public class JmxEndpointIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("jmxHelloClient")
@@ -40,48 +47,50 @@ public class JmxEndpointIT extends TestNGCitrusSpringSupport implements TestActi
     @Qualifier("jmxHelloServer")
     private JmxServer jmxServer;
 
+    @Test
     @CitrusTest
-    public void testClient() {
-        when(send(jmxClient)
+    public void testClient(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(jmxClient)
                 .message(JmxMessage.invocation("java.lang:type=Memory")
                         .attribute("Verbose")));
 
-        then(receive(jmxClient)
+        runner.then(receive(jmxClient)
                 .message(JmxMessage.result(false)));
     }
 
+    @Test
     @CitrusTest
-    public void testServer() {
-        when(send(jmxClient)
+    public void testServer(@CitrusResource TestCaseRunner runner) {
+        runner.when(send(jmxClient)
                 .message(JmxMessage.invocation("org.citrusframework.jmx.mbean:type=HelloBean")
                             .operation("hello")
                             .parameter("Hello JMX this is cool!"))
                 .fork(true));
 
-        then(receive(jmxServer)
+        runner.then(receive(jmxServer)
                 .message(JmxMessage.invocation("org.citrusframework.jmx.mbean:type=HelloBean")
                             .operation("hello")
                             .parameter("Hello JMX this is cool!")));
 
-        when(send(jmxServer)
+        runner.when(send(jmxServer)
                 .message(JmxMessage.result("Hello from JMX!")));
 
-        then(receive(jmxClient)
+        runner.then(receive(jmxClient)
                 .message(JmxMessage.result("Hello from JMX!")));
 
-        when(send(jmxClient)
+        runner.when(send(jmxClient)
                 .message(JmxMessage.invocation("news:name=NewsBean")
                                 .attribute("newsCount"))
                 .fork(true));
 
-        then(receive(jmxServer)
+        runner.then(receive(jmxServer)
                 .message(JmxMessage.invocation("news:name=NewsBean")
                                 .attribute("newsCount")));
 
-        when(send(jmxServer)
+        runner.when(send(jmxServer)
                 .message(JmxMessage.result(100)));
 
-        then(receive(jmxClient)
+        runner.then(receive(jmxClient)
                 .message(JmxMessage.result(100)));
     }
 }

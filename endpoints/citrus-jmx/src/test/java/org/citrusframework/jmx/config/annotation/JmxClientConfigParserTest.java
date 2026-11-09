@@ -29,17 +29,18 @@ import org.citrusframework.jmx.client.JmxClient;
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class JmxClientConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class JmxClientConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "jmxClient1")
     @JmxClientConfig
@@ -70,17 +71,15 @@ public class JmxClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(referenceResolver.resolve("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("messageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(referenceResolver.resolve("notificationFilter", NotificationFilter.class)).thenReturn(notificationFilter);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        lenient().when(referenceResolver.resolve("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("messageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        lenient().when(referenceResolver.resolve("notificationFilter", NotificationFilter.class)).thenReturn(notificationFilter);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -90,48 +89,48 @@ public class JmxClientConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st client
-        Assert.assertEquals(jmxClient1.getEndpointConfiguration().getServerUrl(), "platform");
-        Assert.assertNull(jmxClient1.getEndpointConfiguration().getUsername());
-        Assert.assertNull(jmxClient1.getEndpointConfiguration().getPassword());
-        Assert.assertFalse(jmxClient1.getEndpointConfiguration().isAutoReconnect());
-        Assert.assertEquals(jmxClient1.getEndpointConfiguration().getDelayOnReconnect(), 1000L);
-        Assert.assertNull(jmxClient1.getEndpointConfiguration().getNotificationFilter());
-        Assert.assertNotNull(jmxClient1.getEndpointConfiguration().getMessageConverter());
-        Assert.assertNotNull(jmxClient1.getEndpointConfiguration().getCorrelator());
-        Assert.assertEquals(jmxClient1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(jmxClient1.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertNull(jmxClient1.getActor());
+        Assertions.assertEquals("platform", jmxClient1.getEndpointConfiguration().getServerUrl());
+        Assertions.assertNull(jmxClient1.getEndpointConfiguration().getUsername());
+        Assertions.assertNull(jmxClient1.getEndpointConfiguration().getPassword());
+        Assertions.assertFalse(jmxClient1.getEndpointConfiguration().isAutoReconnect());
+        Assertions.assertEquals(1000L, jmxClient1.getEndpointConfiguration().getDelayOnReconnect());
+        Assertions.assertNull(jmxClient1.getEndpointConfiguration().getNotificationFilter());
+        Assertions.assertNotNull(jmxClient1.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertNotNull(jmxClient1.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(5000L, jmxClient1.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(500L, jmxClient1.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertNull(jmxClient1.getActor());
 
         // 2nd client
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi");
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getUsername(), "user");
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getPassword(), "s!cr!t");
-        Assert.assertTrue(jmxClient2.getEndpointConfiguration().isAutoReconnect());
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getDelayOnReconnect(), 5000L);
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getNotificationFilter(), notificationFilter);
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getCorrelator(), messageCorrelator);
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(jmxClient2.getEndpointConfiguration().getPollingInterval(), 100L);
-        Assert.assertEquals(jmxClient2.getActor(), testActor);
+        Assertions.assertEquals("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi", jmxClient2.getEndpointConfiguration().getServerUrl());
+        Assertions.assertEquals("user", jmxClient2.getEndpointConfiguration().getUsername());
+        Assertions.assertEquals("s!cr!t", jmxClient2.getEndpointConfiguration().getPassword());
+        Assertions.assertTrue(jmxClient2.getEndpointConfiguration().isAutoReconnect());
+        Assertions.assertEquals(5000L, jmxClient2.getEndpointConfiguration().getDelayOnReconnect());
+        Assertions.assertEquals(notificationFilter, jmxClient2.getEndpointConfiguration().getNotificationFilter());
+        Assertions.assertEquals(messageConverter, jmxClient2.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(messageCorrelator, jmxClient2.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(10000L, jmxClient2.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(100L, jmxClient2.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals(testActor, jmxClient2.getActor());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 4L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("jmx.client"));
-        Assert.assertEquals(validators.get("jmx.client").getClass(), JmxClientConfigParser.class);
-        Assert.assertNotNull(validators.get("jmx.server"));
-        Assert.assertEquals(validators.get("jmx.server").getClass(), JmxServerConfigParser.class);
+        Assertions.assertEquals(4L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        Assertions.assertNotNull(validators.get("jmx.client"));
+        Assertions.assertEquals(JmxClientConfigParser.class, validators.get("jmx.client").getClass());
+        Assertions.assertNotNull(validators.get("jmx.server"));
+        Assertions.assertEquals(JmxServerConfigParser.class, validators.get("jmx.server").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("jmx.client").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("jmx.client").isPresent());
     }
 }
