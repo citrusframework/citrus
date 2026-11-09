@@ -19,7 +19,6 @@ package org.citrusframework.container;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.TestActionBuilder;
@@ -29,7 +28,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.util.BooleanExpressionParser;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
@@ -199,13 +197,6 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
         }
         onIterationFinish(iterationIndex, context);
         notifyTestActionListeners(context, listeners -> listeners.onIterationFinish(this, iterationIndex, context));
-    }
-
-    private void notifyTestActionListeners(TestContext context, Consumer<TestActionListeners> notification) {
-        TestActionListeners testActionListeners = context.getTestActionListeners();
-        if (nonNull(testActionListeners)) {
-            notification.accept(testActionListeners);
-        }
     }
 
     /**

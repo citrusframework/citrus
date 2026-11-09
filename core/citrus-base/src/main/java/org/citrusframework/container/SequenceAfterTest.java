@@ -58,7 +58,7 @@ public class SequenceAfterTest extends AbstractTestBoundaryActionContainer imple
 
         for (TestActionBuilder<?> actionBuilder : actions)  {
             TestAction action = actionBuilder.build();
-            action.execute(context);
+            executeNestedAction(action, context);
         }
     }
 
