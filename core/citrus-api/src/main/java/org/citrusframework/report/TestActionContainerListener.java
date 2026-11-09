@@ -16,6 +16,7 @@
 
 package org.citrusframework.report;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.api.container.IteratingActionContainer;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
@@ -27,11 +28,17 @@ import org.citrusframework.context.TestContext;
  * interfaces receives the container callbacks in addition to the regular test action events. All methods are
  * no-op by default so implementations only override the callbacks they are interested in.
  * <p>
- * Currently, the callbacks are fired by iterating containers ({@code iterate}, {@code repeat},
+ * Container and iteration callbacks are fired by iterating containers ({@code iterate}, {@code repeat},
  * {@code repeat-on-error}). When such a container is configured with a timeout, the iterations are executed in a
  * separate worker thread. The iteration callbacks are then invoked on that worker thread while the container
- * callbacks are invoked on the calling thread. Implementations relying on thread bound state (e.g. MDC) must take
- * this into account.
+ * callbacks are invoked on the calling thread.
+ * <p>
+ * Nested action callbacks are fired for every action executed within a container, including the before/after test
+ * and before/after suite sequences. Top level test actions are not reported here, they are reported via
+ * {@link TestActionListener}. Containers executing their nested actions concurrently (e.g. {@code parallel},
+ * {@code async}) invoke the nested action callbacks on their worker threads.
+ * <p>
+ * Implementations relying on thread bound state (e.g. MDC) must take these threading aspects into account.
  */
 public interface TestActionContainerListener {
 
@@ -76,5 +83,29 @@ public interface TestActionContainerListener {
      * In timeout scenarios this callback may arrive after {@link #onContainerFailed}.
      */
     default void onIterationFailed(IteratingActionContainer container, int index, TestContext context, Throwable cause) {
+    }
+
+    /**
+     * Invoked before a nested action of the container gets executed.
+     */
+    default void onNestedActionStart(TestActionContainer container, TestAction action, TestContext context) {
+    }
+
+    /**
+     * Invoked after a nested action of the container has been executed successfully.
+     */
+    default void onNestedActionSuccess(TestActionContainer container, TestAction action, TestContext context) {
+    }
+
+    /**
+     * Invoked when a nested action of the container has failed.
+     */
+    default void onNestedActionFailed(TestActionContainer container, TestAction action, TestContext context, Throwable cause) {
+    }
+
+    /**
+     * Invoked when a nested action of the container is disabled and therefore skipped.
+     */
+    default void onNestedActionSkipped(TestActionContainer container, TestAction action, TestContext context) {
     }
 }
