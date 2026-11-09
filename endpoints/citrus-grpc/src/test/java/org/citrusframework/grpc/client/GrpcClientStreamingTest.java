@@ -36,10 +36,10 @@ import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.message.GrpcMessage;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -50,7 +50,7 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
  * Client streaming and bidirectional streaming calls, driven through the Citrus DSL against a real
  * grpc-java server that implements both methods with dynamic message handlers.
  */
-public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
+public class GrpcClientStreamingTest extends AbstractUnitTest {
 
     private static final String STORE_USERS = "grpc2grpc.PetStoreService/StoreUsers";
     private static final String BULK_USERS = "grpc2grpc.PetStoreService/BulkUsers";
@@ -68,7 +68,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
     private final List<DynamicMessage> bulkUsers = new ArrayList<>();
     private DynamicMessage storeUsersResponse;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() throws Exception {
         storedUsers.clear();
         bulkUsers.clear();
@@ -102,7 +102,7 @@ public class GrpcClientStreamingTest extends AbstractTestNGUnitTest {
                 .build();
     }
 
-    @AfterMethod
+    @AfterEach
     public void tearDown() {
         if (client != null) {
             client.destroy();

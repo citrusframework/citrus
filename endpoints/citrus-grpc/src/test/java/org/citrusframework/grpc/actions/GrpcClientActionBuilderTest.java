@@ -28,9 +28,9 @@ import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GrpcClientActionBuilderTest extends AbstractTestNGUnitTest {
+public class GrpcClientActionBuilderTest extends AbstractUnitTest {
 
     private GrpcClient client;
     private Producer producer;
@@ -50,7 +50,7 @@ public class GrpcClientActionBuilderTest extends AbstractTestNGUnitTest {
 
     private final List<Message> sent = new ArrayList<>();
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         client = mock(GrpcClient.class);
         producer = mock(Producer.class);

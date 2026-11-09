@@ -30,7 +30,7 @@ import org.citrusframework.grpc.validation.GrpcStatusValidationContext;
 import org.citrusframework.grpc.validation.GrpcStatusValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

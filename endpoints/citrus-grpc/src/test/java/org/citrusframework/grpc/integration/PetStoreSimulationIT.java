@@ -20,10 +20,14 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.grpc.client.GrpcClient;
 import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.server.GrpcServer;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.json.dsl.JsonPathSupport.jsonPath;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
@@ -34,8 +38,9 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
  * all five RPC kinds: unary (twice), server streaming, client streaming and bidirectional
  * streaming.
  */
-@Test
-public class PetStoreSimulationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class PetStoreSimulationIT implements TestActionSupport {
 
     private static final String PET_STORE = "grpc2grpc.PetStoreService";
     private static final String DESCRIPTORS = "classpath:org/citrusframework/grpc/streaming/petstore.proto";
@@ -43,7 +48,7 @@ public class PetStoreSimulationIT extends TestNGCitrusSpringSupport implements T
     private GrpcServer simulator;
     private GrpcClient client;
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeEach
     public void startSimulator() {
         int port = findAvailableTcpPort(18890);
 
@@ -62,7 +67,7 @@ public class PetStoreSimulationIT extends TestNGCitrusSpringSupport implements T
                 .build();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void stopSimulator() {
         if (client != null) {
             client.destroy();
@@ -72,173 +77,178 @@ public class PetStoreSimulationIT extends TestNGCitrusSpringSupport implements T
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallPetById() {
-        when(grpc().client(client).send()
+    public void shouldCallPetById(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(client).send()
                 .call(PET_STORE + "/PetById")
                 .message()
                 .body("{ \"id\": 123 }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call(PET_STORE + "/PetById")
                 .message()
                 .body("{ \"id\": 123 }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response()
                 .message()
                 .body("{ \"pet\": { \"id\": 304104, \"name\": \"Jellybean\" } }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .message()
                 .validate(jsonPath().expression("$.pet.id", "@isNumber()@"))
                 .validate(jsonPath().expression("$.pet.name", "@notEmpty()@")));
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallUserByName() {
-        when(grpc().client(client).send()
+    public void shouldCallUserByName(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(client).send()
                 .call(PET_STORE + "/UserByName")
                 .message()
                 .body("{ \"username\": \"ada\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call(PET_STORE + "/UserByName")
                 .message()
                 .body("{ \"username\": \"ada\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response()
                 .message()
                 .body("{ \"user\": { \"id\": 166755, \"username\": \"Nienow8333\", \"email\": \"eldorazulauf@schroeder.io\", \"phone\": \"4132863446\" } }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .message()
                 .validate(jsonPath().expression("$.user.username", "@notEmpty()@"))
                 .validate(jsonPath().expression("$.user.email", "@contains('@')@")));
     }
 
+    @Test
     @CitrusTest
-    public void shouldStreamUsersAndComplete() {
-        when(grpc().client(client).send()
+    public void shouldStreamUsersAndComplete(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(client).send()
                 .call(PET_STORE + "/ListUsers")
                 .message()
                 .body("{ \"msg\": \"hello\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call(PET_STORE + "/ListUsers")
                 .message()
                 .body("{ \"msg\": \"hello\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 168414, \"username\": \"Pacocha4001\", \"email\": \"christianahilll@schiller.com\", \"phone\": \"2746917635\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 945780, \"username\": \"Schroeder1676\", \"email\": \"marcellemertz@schaden.net\", \"phone\": \"8822339849\" }"));
 
-        then(grpc().server(simulator).send().streamCompleted());
+        runner.then(grpc().server(simulator).send().streamCompleted());
 
         for (int i = 0; i < 2; i++) {
-            then(grpc().client(client).receive()
+            runner.then(grpc().client(client).receive()
                     .streamMessage()
                     .message()
                     .validate(jsonPath().expression("$.username", "@notEmpty()@")));
         }
 
-        then(grpc().client(client).receive().streamCompleted());
+        runner.then(grpc().client(client).receive().streamCompleted());
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallClientStreamingMethod() {
-        when(grpc().client(client).send()
+    public void shouldCallClientStreamingMethod(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(client).send()
                 .call(PET_STORE + "/StoreUsers")
                 .message()
                 .body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call(PET_STORE + "/StoreUsers")
                 .message()
                 .body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }"));
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }"));
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 3, \"username\": \"cid\", \"email\": \"cid@example.com\", \"phone\": \"555-3\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 3, \"username\": \"cid\", \"email\": \"cid@example.com\", \"phone\": \"555-3\" }"));
 
-        when(grpc().client(client).send().streamCompleted());
+        runner.when(grpc().client(client).send().streamCompleted());
 
-        then(grpc().server(simulator).receive().streamCompleted());
+        runner.then(grpc().server(simulator).receive().streamCompleted());
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response()
                 .message()
                 .body("{ \"msg\": \"received 3\" }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .message()
                 .validate(jsonPath().expression("$.msg", "@notEmpty()@")));
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallBidirectionalMethod() {
-        when(grpc().client(client).send()
+    public void shouldCallBidirectionalMethod(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(client).send()
                 .call(PET_STORE + "/BulkUsers")
                 .message()
                 .body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call(PET_STORE + "/BulkUsers")
                 .message()
                 .body("{ \"id\": 1, \"username\": \"ada\", \"email\": \"ada@example.com\", \"phone\": \"555-1\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 10, \"username\": \"echo\", \"email\": \"echo@example.com\", \"phone\": \"555-10\" }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .streamMessage()
                 .message()
                 .validate(jsonPath().expression("$.username", "echo")));
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .streamMessage()
                 .message()
                 .body("{ \"id\": 2, \"username\": \"bob\", \"email\": \"bob@example.com\", \"phone\": \"555-2\" }"));
 
-        when(grpc().client(client).send().streamCompleted());
+        runner.when(grpc().client(client).send().streamCompleted());
 
-        then(grpc().server(simulator).receive().streamCompleted());
+        runner.then(grpc().server(simulator).receive().streamCompleted());
 
-        then(grpc().server(simulator).send().streamCompleted());
+        runner.then(grpc().server(simulator).send().streamCompleted());
 
-        then(grpc().client(client).receive().streamCompleted());
+        runner.then(grpc().client(client).receive().streamCompleted());
     }
 }

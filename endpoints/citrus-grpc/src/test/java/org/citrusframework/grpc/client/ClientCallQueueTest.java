@@ -17,7 +17,7 @@
 package org.citrusframework.grpc.client;
 
 import org.citrusframework.grpc.message.GrpcMessage;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -18,7 +18,7 @@ package org.citrusframework.grpc.config.annotation;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.grpc.server.GrpcServer;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

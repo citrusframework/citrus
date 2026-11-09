@@ -45,9 +45,9 @@ import org.citrusframework.grpc.test.proto.helloworld.GreeterGrpc;
 import org.citrusframework.grpc.test.proto.helloworld.HelloReply;
 import org.citrusframework.grpc.test.proto.helloworld.HelloRequest;
 import org.citrusframework.message.DefaultMessage;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -64,13 +64,13 @@ public class GrpcServerTest {
 
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         context = new TestContext();
         executor = Executors.newCachedThreadPool();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void tearDown() {
         channels.forEach(ManagedChannel::shutdownNow);
         channels.clear();

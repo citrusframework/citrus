@@ -25,8 +25,8 @@ import com.google.protobuf.Timestamp;
 import org.citrusframework.grpc.descriptor.GrpcDescriptorRegistry;
 import org.citrusframework.grpc.test.proto.helloworld.HelloReply;
 import org.citrusframework.grpc.test.proto.helloworld.HelloRequest;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,7 +37,7 @@ public class GrpcMessageCodecTest {
 
     private GrpcDescriptorRegistry registry;
 
-    @BeforeClass
+    @BeforeEach
     public void setUpRegistry() {
         registry = new GrpcDescriptorRegistry(List.of(DESCRIPTOR_SET));
     }

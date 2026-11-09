@@ -27,18 +27,23 @@ import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.grpc.server.GrpcServer;
 import org.citrusframework.grpc.server.GrpcServerBuilder;
 import org.citrusframework.message.MessageHeaders;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * Two calls in flight on one client are kept apart and can be selected by their call id.
  */
-@Test
-public class ParallelCallsIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class ParallelCallsIT implements TestActionSupport {
 
     private static final String CLIENT_NAME = "greeterClient";
     private static final String SERVER_NAME = "greeterSimulator";
@@ -46,7 +51,7 @@ public class ParallelCallsIT extends TestNGCitrusSpringSupport implements TestAc
     private GrpcServer simulator;
     private GrpcClient client;
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeEach
     public void startSimulator() {
         int port = findAvailableTcpPort(18860);
 
@@ -69,7 +74,7 @@ public class ParallelCallsIT extends TestNGCitrusSpringSupport implements TestAc
                 .build();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void stopSimulator() {
         if (client != null) {
             client.destroy();
@@ -79,108 +84,110 @@ public class ParallelCallsIT extends TestNGCitrusSpringSupport implements TestAc
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldKeepConcurrentCallsApart() {
+    public void shouldKeepConcurrentCallsApart(@CitrusResource GherkinTestActionRunner runner) {
         List<String> callIds = new ArrayList<>();
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Ada\" }"));
-        run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
+        runner.run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Grace\" }"));
-        run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
+        runner.run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
 
         // the two calls may arrive in any order - echo the name actually received
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .extract(extractor().jsonPath().expression("$.name", "name")));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response()
                 .message()
                 .body("{ \"message\": \"Hello ${name}\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .extract(extractor().jsonPath().expression("$.name", "name")));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response()
                 .message()
                 .body("{ \"message\": \"Hello ${name}\" }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .selector("header:" + GrpcMessageHeaders.CALL_ID + "=" + callIds.get(0))
                 .message()
                 .body("{ \"message\": \"Hello Ada\" }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .selector("header:" + GrpcMessageHeaders.CALL_ID + "=" + callIds.get(1))
                 .message()
                 .body("{ \"message\": \"Hello Grace\" }"));
     }
 
+    @Test
     @CitrusTest
-    public void shouldRespondToSpecificCallOnTheServer() {
+    public void shouldRespondToSpecificCallOnTheServer(@CitrusResource GherkinTestActionRunner runner) {
         List<String> callIds = new ArrayList<>();
         List<String> serverCallIds = new ArrayList<>();
         List<String> names = new ArrayList<>();
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Ada\" }"));
-        run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
+        runner.run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Grace\" }"));
-        run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
+        runner.run(context -> callIds.add((String) context.getVariable(GrpcMessageHeaders.callIdVariableName(CLIENT_NAME))));
 
         // collect the incoming calls including the server side call id
         for (int i = 0; i < 2; i++) {
-            then(grpc().server(simulator).receive()
+            runner.then(grpc().server(simulator).receive()
                     .call("helloworld.Greeter/SayHello")
                     .message()
                     .extract(extractor().jsonPath().expression("$.name", "name")));
 
-            run(context -> {
+            runner.run(context -> {
                 names.add(context.getVariable("name"));
                 serverCallIds.add((String) context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + SERVER_NAME));
             });
         }
 
         // respond to the second call first - the explicit call id targets exactly one call
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .callId(serverCallIds.get(1))
                 .response()
                 .message()
                 .body("{ \"message\": \"Hello " + names.get(1) + "\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .callId(serverCallIds.get(0))
                 .response()
                 .message()
                 .body("{ \"message\": \"Hello " + names.get(0) + "\" }"));
 
         // the responses arrive in reverse order on the client
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .selector("header:" + GrpcMessageHeaders.CALL_ID + "=" + callIds.get(1))
                 .message()
                 .body("{ \"message\": \"Hello Grace\" }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .selector("header:" + GrpcMessageHeaders.CALL_ID + "=" + callIds.get(0))
                 .message()

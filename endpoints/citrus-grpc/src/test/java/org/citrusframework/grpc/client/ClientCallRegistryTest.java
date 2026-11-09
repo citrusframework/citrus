@@ -25,8 +25,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.grpc.message.GrpcMessage;
 import org.citrusframework.grpc.test.proto.helloworld.HelloRequest;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,7 +36,7 @@ public class ClientCallRegistryTest {
 
     private ClientCallRegistry registry;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         registry = new ClientCallRegistry();
     }

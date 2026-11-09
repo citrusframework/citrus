@@ -25,10 +25,14 @@ import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.integration.service.GreeterService;
 import org.citrusframework.grpc.integration.service.PricesService;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,10 +41,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 /**
  * A Citrus client calls a real grpc-java service implemented with generated stubs.
  */
-@Test
-public class GrpcClientIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GrpcClientIT implements TestActionSupport {
 
-    private final int port = findAvailableTcpPort(18810);
+    private static final int port = findAvailableTcpPort(18810);
 
     @BindToRegistry
     private final GrpcClient greeter = GrpcEndpoints.grpc().client()
@@ -49,10 +54,10 @@ public class GrpcClientIT extends TestNGCitrusSpringSupport implements TestActio
             .timeout(5000L)
             .build();
 
-    private Server server;
+    private static Server server;
 
-    @BeforeClass(alwaysRun = true)
-    public void startGrpcService() throws Exception {
+    @BeforeAll
+    public static void startGrpcService() throws Exception {
         server = ServerBuilder.forPort(port)
                 .addService(new GreeterService())
                 .addService(new PricesService())
@@ -61,24 +66,25 @@ public class GrpcClientIT extends TestNGCitrusSpringSupport implements TestActio
                 .start();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stopGrpcService() {
+    @AfterAll
+    public static void stopGrpcService() {
         if (server != null) {
             server.shutdownNow();
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallUnaryMethodWithMetadataAndTrailers() {
+    public void shouldCallUnaryMethodWithMetadataAndTrailers(@CitrusResource GherkinTestActionRunner runner) {
         GreeterService.reset();
 
-        when(grpc().client(greeter).send()
+        runner.when(grpc().client(greeter).send()
                 .call("helloworld.Greeter/SayHello")
                 .metadata("x-request-id", "42")
                 .message()
                 .body("{ \"name\": \"Ada\" }"));
 
-        then(grpc().client(greeter).receive()
+        runner.then(grpc().client(greeter).receive()
                 .response()
                 .trailer("x-trailer", "trailer-value")
                 .message()
@@ -88,84 +94,90 @@ public class GrpcClientIT extends TestNGCitrusSpringSupport implements TestActio
                 .isEqualTo("42");
     }
 
+    @Test
     @CitrusTest
-    public void shouldExpectErrorStatus() {
-        when(grpc().client(greeter).send()
+    public void shouldExpectErrorStatus(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(greeter).send()
                 .call("helloworld.Greeter/GetUser")
                 .message()
                 .body("{ \"id\": \"unknown\" }"));
 
-        then(grpc().client(greeter).receive()
+        runner.then(grpc().client(greeter).receive()
                 .response("NOT_FOUND")
                 .statusDescription("@contains('unknown')@"));
     }
 
+    @Test
     @CitrusTest
-    public void shouldFailOnUnexpectedErrorStatus() {
-        when(grpc().client(greeter).send()
+    public void shouldFailOnUnexpectedErrorStatus(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(greeter).send()
                 .call("helloworld.Greeter/GetUser")
                 .message()
                 .body("{ \"id\": \"unknown\" }"));
 
-        assertThatThrownBy(() -> when(grpc().client(greeter).receive().response()))
+        assertThatThrownBy(() -> runner.when(grpc().client(greeter).receive().response()))
                 .hasMessageContaining("NOT_FOUND")
                 .hasMessageContaining("unknown user");
     }
 
+    @Test
     @CitrusTest
-    public void shouldReceiveStreamMessagesInOrder() {
-        when(grpc().client(greeter).send()
+    public void shouldReceiveStreamMessagesInOrder(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(greeter).send()
                 .call("market.Prices/Subscribe")
                 .message()
                 .body("{ \"symbol\": \"ACME\" }"));
 
         for (int i = 0; i < 3; i++) {
             int amount = i;
-            then(grpc().client(greeter).receive()
+            runner.then(grpc().client(greeter).receive()
                     .streamMessage()
                     .message()
                     .body("{ \"symbol\": \"ACME\", \"amount\": { \"currency\": \"EUR\", \"amount\": \"%d\" } }"
                             .formatted(amount)));
         }
 
-        then(grpc().client(greeter).receive().streamCompleted());
+        runner.then(grpc().client(greeter).receive().streamCompleted());
     }
 
+    @Test
     @CitrusTest
-    public void shouldCancelEndlessSubscription() {
-        when(grpc().client(greeter).send()
+    public void shouldCancelEndlessSubscription(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(greeter).send()
                 .call("market.Prices/Watch")
                 .message()
                 .body("{ \"symbol\": \"ACME\" }"));
 
-        then(grpc().client(greeter).receive()
+        runner.then(grpc().client(greeter).receive()
                 .streamMessage()
                 .message()
                 .body("{ \"symbol\": \"ACME\", \"amount\": { \"currency\": \"EUR\", \"amount\": \"0\" } }"));
 
-        then(grpc().client(greeter).cancel());
+        runner.then(grpc().client(greeter).cancel());
     }
 
+    @Test
     @CitrusTest
-    public void shouldApplyPerCallDeadline() {
-        when(grpc().client(greeter).send()
+    public void shouldApplyPerCallDeadline(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(greeter).send()
                 .call("helloworld.Greeter/GetUser")
                 .deadline(java.time.Duration.ofMillis(100))
                 .message()
                 .body("{ \"id\": \"slow\" }"));
 
-        then(grpc().client(greeter).receive()
+        runner.then(grpc().client(greeter).receive()
                 .response("DEADLINE_EXCEEDED"));
     }
 
+    @Test
     @CitrusTest
-    public void shouldRaiseReceiveTimeoutInsteadOfDeadline() {
-        when(grpc().client(greeter).send()
+    public void shouldRaiseReceiveTimeoutInsteadOfDeadline(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(grpc().client(greeter).send()
                 .call("helloworld.Greeter/GetUser")
                 .message()
                 .body("{ \"id\": \"slow\" }"));
 
-        assertThatThrownBy(() -> when(grpc().client(greeter).receive().response().timeout(100L)))
+        assertThatThrownBy(() -> runner.when(grpc().client(greeter).receive().response().timeout(100L)))
                 .hasMessageContaining("Action timeout after 100 milliseconds")
                 .hasCauseInstanceOf(MessageTimeoutException.class);
     }

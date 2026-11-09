@@ -21,23 +21,28 @@ import org.citrusframework.grpc.client.GrpcClient;
 import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.server.GrpcServer;
 import org.citrusframework.grpc.test.proto.helloworld.GreeterGrpc;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * The same call works with descriptors from a .proto file, a descriptor set and a generated class.
  */
-@Test
-public class DescriptorSourcesIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class DescriptorSourcesIT implements TestActionSupport {
 
     private GrpcServer simulator;
     private int port;
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeEach
     public void startSimulator() {
         port = findAvailableTcpPort(18850);
         simulator = GrpcEndpoints.grpc().server()
@@ -49,26 +54,29 @@ public class DescriptorSourcesIT extends TestNGCitrusSpringSupport implements Te
                 .build();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void stopSimulator() {
         if (simulator != null) {
             simulator.stop();
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallWithProtoFileSource() {
-        verifyCall(clientWith("classpath:helloworld/greeter.proto"));
+    public void shouldCallWithProtoFileSource(@CitrusResource GherkinTestActionRunner runner) {
+        verifyCall(runner, clientWith("classpath:helloworld/greeter.proto"));
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallWithDescriptorSetSource() {
-        verifyCall(clientWith("classpath:descriptors/test-protos.binpb"));
+    public void shouldCallWithDescriptorSetSource(@CitrusResource GherkinTestActionRunner runner) {
+        verifyCall(runner, clientWith("classpath:descriptors/test-protos.binpb"));
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallWithGeneratedClassSource() {
-        verifyCall(clientWith(GreeterGrpc.class.getName()));
+    public void shouldCallWithGeneratedClassSource(@CitrusResource GherkinTestActionRunner runner) {
+        verifyCall(runner, clientWith(GreeterGrpc.class.getName()));
     }
 
     private GrpcClient clientWith(String descriptorSource) {
@@ -79,24 +87,24 @@ public class DescriptorSourcesIT extends TestNGCitrusSpringSupport implements Te
                 .build();
     }
 
-    private void verifyCall(GrpcClient client) {
+    private void verifyCall(GherkinTestActionRunner runner, GrpcClient client) {
         try {
-            when(grpc().client(client).send()
+            runner.when(grpc().client(client).send()
                     .call("helloworld.Greeter/SayHello")
                     .message()
                     .body("{ \"name\": \"Ada\" }"));
 
-            then(grpc().server(simulator).receive()
+            runner.then(grpc().server(simulator).receive()
                     .call("helloworld.Greeter/SayHello")
                     .message()
                     .body("{ \"name\": \"Ada\", \"userId\": 0 }"));
 
-            then(grpc().server(simulator).send()
+            runner.then(grpc().server(simulator).send()
                     .response()
                     .message()
                     .body("{ \"message\": \"Hello Ada\" }"));
 
-            then(grpc().client(client).receive()
+            runner.then(grpc().client(client).receive()
                     .response()
                     .message()
                     .body("{ \"message\": \"Hello Ada\" }"));
