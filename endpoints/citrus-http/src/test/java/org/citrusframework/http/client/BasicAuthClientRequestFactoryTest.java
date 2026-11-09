@@ -19,28 +19,28 @@ package org.citrusframework.http.client;
 import java.io.IOException;
 import java.net.URI;
 
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class BasicAuthClientRequestFactoryTest extends AbstractTestNGUnitTest {
+public class BasicAuthClientRequestFactoryTest extends AbstractUnitTest {
 
     @Autowired
     private HttpComponentsClientHttpRequestFactory requestFactory;
 
     @Test
     public void testFactory() {
-        Assert.assertNotNull(requestFactory);
-        Assert.assertNotNull(requestFactory.getHttpClient());
+        Assertions.assertNotNull(requestFactory);
+        Assertions.assertNotNull(requestFactory.getHttpClient());
     }
 
     @Test
     public void testCreateRequestWithAuthScope() throws IOException {
         ClientHttpRequest request = requestFactory.createRequest(URI.create("http://localhost:8088"), HttpMethod.GET);
-        Assert.assertNotNull(request);
+        Assertions.assertNotNull(request);
     }
 }

@@ -35,17 +35,18 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.messaging.Producer;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpMethod;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implements TestActionSupport {
 
     @Mock
@@ -53,18 +54,10 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
     @Mock
     private Producer messageProducer;
 
-    private AutoCloseable mockCloseable;
-
     @Override
-    @BeforeMethod
+    @BeforeEach
     public void prepareTest() {
         super.prepareTest();
-        mockCloseable = MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterMethod
-    public void closeMocks() throws Exception {
-        mockCloseable.close();
     }
 
     @Test
@@ -73,11 +66,11 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "Foo");
+            Assertions.assertEquals( "Foo",message.getPayload(String.class));
             return null;
         }).doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "Bar");
+            Assertions.assertEquals( "Bar",message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -96,39 +89,39 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
                 .fork(true));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
+        Assertions.assertEquals( 2,test.getActionCount());
+        Assertions.assertEquals( SendMessageAction.class,test.getActions().get(0).getClass());
+        Assertions.assertEquals( SendMessageAction.class,test.getActions().get(1).getClass());
 
         SendMessageAction action = ((SendMessageAction)(test.getActions().get(0)));
-        Assert.assertEquals(action.getName(), "http:send-request");
+        Assertions.assertEquals( "http:send-request",action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
+        Assertions.assertEquals( httpClient,action.getEndpoint());
+        Assertions.assertEquals( HttpMessageBuilder.class,action.getMessageBuilder().getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 4L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
+        Assertions.assertEquals( "Foo",messageBuilder.getMessage().getPayload(String.class));
+        Assertions.assertEquals( 4L,messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals( MessageType.PLAINTEXT.name(),messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE));
+        Assertions.assertEquals( HttpMethod.GET.name(),messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "foo",messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals( "additionalValue",messageBuilder.buildMessageHeaders(context).get("additional"));
 
-        Assert.assertFalse(action.isForkMode());
+        Assertions.assertFalse(action.isForkMode());
 
         action = ((SendMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "http:send-request");
+        Assertions.assertEquals( "http:send-request",action.getName());
 
         messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Bar");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 3L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "bar");
+        Assertions.assertEquals( httpClient,action.getEndpoint());
+        Assertions.assertEquals( HttpMessageBuilder.class,action.getMessageBuilder().getClass());
+        Assertions.assertEquals( "Bar",messageBuilder.getMessage().getPayload(String.class));
+        Assertions.assertEquals( 3L,messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals( MessageType.PLAINTEXT.name(),messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE));
+        Assertions.assertEquals( HttpMethod.POST.name(),messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "bar",messageBuilder.buildMessageHeaders(context).get("operation"));
 
-        Assert.assertTrue(action.isForkMode());
+        Assertions.assertTrue(action.isForkMode());
     }
 
     @Test
@@ -137,7 +130,7 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "Foo");
+            Assertions.assertEquals( "Foo",message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -153,28 +146,28 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
             .header("additional", "additionalValue"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals( 1,test.getActionCount());
+        Assertions.assertEquals( SendMessageAction.class,test.getActions().get(0).getClass());
 
         SendMessageAction action = ((SendMessageAction)(test.getActions().get(0)));
-        Assert.assertEquals(action.getName(), "http:send-request");
+        Assertions.assertEquals( "http:send-request",action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
+        Assertions.assertEquals( httpClient,action.getEndpoint());
+        Assertions.assertEquals( HttpMessageBuilder.class,action.getMessageBuilder().getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 7L);
-        Assert.assertNotEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("Content-Type"), ContentType.APPLICATION_JSON.getMimeType());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Foo"), "Foo=123456");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Bar"), "Bar=987654");
-        Assert.assertEquals(((HttpMessage) messageBuilder.getMessage()).getCookies().size(), 2L);
-        Assert.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Foo")));
-        Assert.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Bar")));
+        Assertions.assertEquals( "Foo",messageBuilder.getMessage().getPayload(String.class));
+        Assertions.assertEquals( 7L,messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertNotEquals( MessageType.PLAINTEXT,messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE));
+        Assertions.assertEquals( HttpMethod.GET.name(),messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( ContentType.APPLICATION_JSON.getMimeType(),messageBuilder.buildMessageHeaders(context).get("Content-Type"));
+        Assertions.assertEquals( "foo",messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals( "additionalValue",messageBuilder.buildMessageHeaders(context).get("additional"));
+        Assertions.assertEquals( "Foo=123456",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Foo"));
+        Assertions.assertEquals( "Bar=987654",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Bar"));
+        Assertions.assertEquals( 2L,((HttpMessage) messageBuilder.getMessage()).getCookies().size());
+        Assertions.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Foo")));
+        Assertions.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Bar")));
     }
 
     @Test
@@ -183,8 +176,8 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+            Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",message.getPayload(String.class));
+            Assertions.assertEquals( HttpMethod.GET.name(),message.getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -196,19 +189,19 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals( 1,test.getActionCount());
+        Assertions.assertEquals( SendMessageAction.class,test.getActions().get(0).getClass());
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "http:send-request");
+        Assertions.assertEquals( "http:send-request",action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
+        Assertions.assertEquals( httpClient,action.getEndpoint());
+        Assertions.assertEquals( HttpMessageBuilder.class,action.getMessageBuilder().getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals( 1L,messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals( HttpMethod.GET.name(),messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
     }
 
     @Test
@@ -217,9 +210,9 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-            Assert.assertEquals(message.getHeader(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+            Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",message.getPayload(String.class));
+            Assertions.assertEquals( "http://localhost:8080/",message.getHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+            Assertions.assertEquals( "/test",message.getHeader(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -232,22 +225,22 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals( 1,test.getActionCount());
+        Assertions.assertEquals( SendMessageAction.class,test.getActions().get(0).getClass());
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "http:send-request");
+        Assertions.assertEquals( "http:send-request",action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
+        Assertions.assertEquals( httpClient,action.getEndpoint());
+        Assertions.assertEquals( HttpMessageBuilder.class,action.getMessageBuilder().getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 4L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), "GET");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+        Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals( 4L,messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals( "GET",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "http://localhost:8080/",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI));
+        Assertions.assertEquals( "http://localhost:8080/",messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertEquals( "/test",messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
     }
 
     @Test
@@ -256,9 +249,9 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
         when(httpClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-            Assert.assertEquals(message.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+            Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",message.getPayload(String.class));
+            Assertions.assertEquals( "http://localhost:8080/",message.getHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+            Assertions.assertEquals( "param1=value1,param2=value2",message.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -272,22 +265,22 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport implem
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assertions.assertEquals( 1,test.getActionCount());
+        Assertions.assertEquals( SendMessageAction.class,test.getActions().get(0).getClass());
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "http:send-request");
+        Assertions.assertEquals( "http:send-request",action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
+        Assertions.assertEquals( httpClient,action.getEndpoint());
+        Assertions.assertEquals( HttpMessageBuilder.class,action.getMessageBuilder().getClass());
 
         HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 5L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), "GET");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "param1=value1,param2=value2");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+        Assertions.assertEquals( "<TestRequest><Message>Hello World!</Message></TestRequest>",messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals( 5L,messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals( "GET",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "http://localhost:8080/",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI));
+        Assertions.assertEquals( "param1=value1,param2=value2",messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( "http://localhost:8080/",messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertEquals( "param1=value1,param2=value2",messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
     }
 }

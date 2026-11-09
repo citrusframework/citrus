@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.context.TestContext;
@@ -36,18 +37,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.messaging.MessageHeaders;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNull;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HttpMessageConverterTest {
     private CookieConverter cookieConverterMock;
@@ -59,7 +61,7 @@ public class HttpMessageConverterTest {
 
     private final String payload = "Hello World!";
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         cookieConverterMock = mock(CookieConverter.class);
         messageConverter = new HttpMessageConverter(cookieConverterMock);
@@ -181,27 +183,26 @@ public class HttpMessageConverterTest {
         assertEquals("foobar", contentTypeHeader.get(0));
     }
 
-    @DataProvider(name = "bodylessRequestMethods")
-    public static Object[][] bodylessRequestMethods() {
-        return new Object[][] {
-            new Object[] { HttpMethod.GET },
-            new Object[] { HttpMethod.HEAD },
-            new Object[] { HttpMethod.OPTIONS },
-            new Object[] { HttpMethod.TRACE }
-        };
+    static Stream<HttpMethod> bodylessRequestMethods() {
+        return Stream.of(
+            HttpMethod.GET,
+            HttpMethod.HEAD,
+            HttpMethod.OPTIONS,
+            HttpMethod.TRACE
+        );
     }
 
-    @DataProvider(name = "bodyRequestMethods")
-    public static Object[][] bodyRequestMethods() {
-        return new Object[][] {
-            new Object[] { HttpMethod.POST },
-            new Object[] { HttpMethod.PUT },
-            new Object[] { HttpMethod.DELETE },
-            new Object[] { HttpMethod.PATCH }
-        };
+    static Stream<HttpMethod> bodyRequestMethods() {
+        return Stream.of(
+            HttpMethod.POST,
+            HttpMethod.PUT,
+            HttpMethod.DELETE,
+            HttpMethod.PATCH
+        );
     }
 
-    @Test(dataProvider = "bodylessRequestMethods")
+    @ParameterizedTest
+    @MethodSource("bodylessRequestMethods")
     public void testHttpContentTypeIsNotSetForBodylessRequestMethodsOnOutbound(HttpMethod method) {
         // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, method);
@@ -214,7 +215,8 @@ public class HttpMessageConverterTest {
         assertNull(httpEntity.getHeaders().getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE));
     }
 
-    @Test(dataProvider = "bodyRequestMethods")
+    @ParameterizedTest
+    @MethodSource("bodyRequestMethods")
     public void testHttpContentTypeIsSetForBodyRequestMethodsOnOutbound(HttpMethod method) {
         // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, method);
@@ -456,7 +458,7 @@ public class HttpMessageConverterTest {
         final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
 
         // THEN
-        assertEquals(httpMessage.getPayload(String.class), payload);
+        assertEquals(payload, httpMessage.getPayload(String.class));
     }
 
     @Test
@@ -468,7 +470,7 @@ public class HttpMessageConverterTest {
         final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
 
         // THEN
-        assertEquals(httpMessage.getPayload(String.class), "");
+        assertEquals("", httpMessage.getPayload(String.class));
     }
 
     @Test

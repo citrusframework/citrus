@@ -16,12 +16,16 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
 
+import org.springframework.test.context.ContextConfiguration;
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_STATUS_CODE;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.oneOf;
@@ -30,14 +34,16 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-@Test
-public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class HttpServerStandaloneJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void httpServerStandalone() {
-        variable("custom_header_id", "123456789");
+    public void httpServerStandalone(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("custom_header_id", "123456789"));
 
-        given(http().client("httpStandaloneClient")
+        runner.given(http().client("httpStandaloneClient")
             .send()
             .post()
             .message()
@@ -46,7 +52,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));
 
-        when(http().client("httpStandaloneClient")
+        runner.when(http().client("httpStandaloneClient")
             .receive()
             .response(OK)
             .message()
@@ -55,7 +61,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                     "</testResponseMessage>")
             .version("HTTP/1.1"));
 
-        then(http().client("httpStandaloneClient")
+        runner.then(http().client("httpStandaloneClient")
             .send()
             .post()
             .message()
@@ -64,7 +70,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));
 
-        then(http().client("httpStandaloneClient")
+        runner.then(http().client("httpStandaloneClient")
             .receive()
             .response()
             .message()
@@ -74,9 +80,9 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                     "</testResponseMessage>")
             .version("HTTP/1.1"));
 
-        run(echo("Test pure Http status code validation"));
+        runner.run(echo("Test pure Http status code validation"));
 
-        when(http().client("httpStandaloneClient")
+        runner.when(http().client("httpStandaloneClient")
             .send()
             .post()
             .message()
@@ -85,13 +91,13 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));
 
-        then(http().client("httpStandaloneClient")
+        runner.then(http().client("httpStandaloneClient")
             .receive()
             .response(OK));
 
-        run(echo("Test Http status code matcher validation"));
+        runner.run(echo("Test Http status code matcher validation"));
 
-        when(http().client("httpStandaloneClient")
+        runner.when(http().client("httpStandaloneClient")
                 .send()
                 .post()
                 .message()
@@ -100,7 +106,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                         "</moreRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}"));
 
-        then(http().client("httpStandaloneClient")
+        runner.then(http().client("httpStandaloneClient")
                 .receive()
                 .response()
                 .message()
@@ -109,9 +115,9 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                                 ACCEPTED.value(),
                                 OK.value()))));
 
-        run(echo("Test header validation error"));
+        runner.run(echo("Test header validation error"));
 
-        when(http().client("httpStandaloneClient")
+        runner.when(http().client("httpStandaloneClient")
             .send()
             .post()
             .message()
@@ -120,7 +126,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSpringSupport implem
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));
 
-        then(assertException().exception(ValidationException.class).when(
+        runner.then(assertException().exception(ValidationException.class).when(
             http().client("httpStandaloneClient")
                 .receive()
                 .response(NOT_FOUND)

@@ -18,10 +18,17 @@ package org.citrusframework.http.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-public class FormUrlEncodedIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class FormUrlEncodedIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_PlainText_IT")
@@ -31,7 +38,8 @@ public class FormUrlEncodedIT extends TestNGCitrusSpringSupport {
     @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_FormData_IT")
     public void formUrlEncodedFormData() {}
 
-    @Test(enabled = false)
+    @Test
+    @Disabled
     @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_Manual_IT")
     public void formUrlEncodedManual() {}
 

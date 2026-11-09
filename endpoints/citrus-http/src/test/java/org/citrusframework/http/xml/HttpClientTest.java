@@ -55,10 +55,10 @@ import org.citrusframework.xml.actions.XmlTestActionBuilder;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 
@@ -83,7 +83,7 @@ public class HttpClientTest extends AbstractXmlActionTest {
 
     private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         EndpointAdapter endpointAdapter = new DirectEndpointAdapter(new DirectSyncEndpointConfiguration()) {
             @Override
@@ -110,7 +110,7 @@ public class HttpClientTest extends AbstractXmlActionTest {
                 .build();
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterEach
     public void cleanupEndpoints() {
         if (httpServer != null) {
             httpServer.stop();
@@ -133,32 +133,32 @@ public class HttpClientTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "HttpClientTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 10L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "http:send-request");
+        Assertions.assertEquals( "HttpClientTest",result.getName());
+        Assertions.assertEquals( "Christoph",result.getMetaInfo().getAuthor());
+        Assertions.assertEquals( TestCaseMetaInfo.Status.FINAL,result.getMetaInfo().getStatus());
+        Assertions.assertEquals( 10L,result.getActionCount());
+        Assertions.assertEquals( SendMessageAction.class,result.getTestAction(0).getClass());
+        Assertions.assertEquals( "http:send-request",result.getTestAction(0).getName());
 
-        Assert.assertEquals(result.getTestAction(1).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(result.getTestAction(1).getName(), "http:receive-response");
+        Assertions.assertEquals( ReceiveMessageAction.class,result.getTestAction(1).getClass());
+        Assertions.assertEquals( "http:receive-response",result.getTestAction(1).getName());
 
         int actionIndex = 0;
 
         SendMessageAction sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertFalse(sendMessageAction.isForkMode());
-        Assert.assertTrue(sendMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
+        Assertions.assertFalse(sendMessageAction.isForkMode());
+        Assertions.assertTrue(sendMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
         HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 3L);
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
+        Assertions.assertEquals( 3L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertEquals( HttpMethod.GET.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertEquals( "httpClient",sendMessageAction.getEndpointUri());
 
         Message controlMessage = new DefaultMessage("");
         Message request = inboundQueue.receive();
@@ -166,133 +166,133 @@ public class HttpClientTest extends AbstractXmlActionTest {
         validator.validateMessage(request, controlMessage, context, new DefaultValidationContext());
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
+        Assertions.assertEquals( 2,receiveMessageAction.getValidationContexts().size());
+        Assertions.assertEquals( 0L,receiveMessageAction.getReceiveTimeout());
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
+        Assertions.assertNotNull(httpMessageBuilder);
 
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 2L);
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertNull(receiveMessageAction.getEndpoint());
-        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
-        Assert.assertEquals(receiveMessageAction.getMessageProcessors().size(), 0);
-        Assert.assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()));
+        Assertions.assertEquals( 2L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertNull(receiveMessageAction.getEndpoint());
+        Assertions.assertEquals( "httpClient",receiveMessageAction.getEndpointUri());
+        Assertions.assertEquals( 0,receiveMessageAction.getMessageProcessors().size());
+        Assertions.assertEquals( 0,receiveMessageAction.getControlMessageProcessors().size());
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertTrue(sendMessageAction.isForkMode());
+        Assertions.assertTrue(sendMessageAction.isForkMode());
         httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
 
         Map<String, Object> requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(requestHeaders.size(), 9L);
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/order/12345");
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI), "/order/12345");
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/xml");
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_ACCEPT), "application/xml");
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "id=12345,type=gold");
-        Assert.assertEquals(requestHeaders.get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "id=12345,type=gold");
-        Assert.assertEquals(requestHeaders.get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), uri);
-        Assert.assertNull(sendMessageAction.getEndpoint());
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertEquals( 9L,requestHeaders.size());
+        Assertions.assertEquals( HttpMethod.GET.name(),requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "/order/12345",requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertEquals( "/order/12345",requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_URI));
+        Assertions.assertEquals( "application/xml",requestHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertEquals( "application/xml",requestHeaders.get(HttpMessageHeaders.HTTP_ACCEPT));
+        Assertions.assertEquals( "HTTP/1.1",requestHeaders.get(HttpMessageHeaders.HTTP_VERSION));
+        Assertions.assertEquals( "id=12345,type=gold",requestHeaders.get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( "id=12345,type=gold",requestHeaders.get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
+        Assertions.assertEquals( uri,requestHeaders.get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertNull(sendMessageAction.getEndpoint());
+        Assertions.assertEquals( "httpClient",sendMessageAction.getEndpointUri());
 
-        Assert.assertEquals(result.getTestAction(actionIndex++).getClass(), SleepAction.class);
+        Assertions.assertEquals( SleepAction.class,result.getTestAction(actionIndex++).getClass());
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
+        Assertions.assertEquals( 2,receiveMessageAction.getValidationContexts().size());
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "<order><id>12345</id><item>foo</item></order>");
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "<order><id>12345</id><item>foo</item></order>",httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Map<String, Object> responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(responseHeaders.size(), 4L);
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), "200");
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/xml");
-        Assert.assertNull(receiveMessageAction.getEndpoint());
-        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertEquals( 4L,responseHeaders.size());
+        Assertions.assertEquals( "200",responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals( "OK",responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals( "HTTP/1.1",responseHeaders.get(HttpMessageHeaders.HTTP_VERSION));
+        Assertions.assertEquals( "application/xml",responseHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertNull(receiveMessageAction.getEndpoint());
+        Assertions.assertEquals( "httpClient",receiveMessageAction.getEndpointUri());
 
-        Assert.assertEquals(receiveMessageAction.getVariableExtractors().size(), 1L);
-        Assert.assertEquals(((DelegatingPayloadVariableExtractor)receiveMessageAction.getVariableExtractors().get(0)).getPathExpressions().size(), 1L);
-        Assert.assertEquals(((DelegatingPayloadVariableExtractor)receiveMessageAction.getVariableExtractors().get(0)).getPathExpressions().get("/order/id"), "orderId");
+        Assertions.assertEquals( 1L,receiveMessageAction.getVariableExtractors().size());
+        Assertions.assertEquals( 1L,((DelegatingPayloadVariableExtractor)receiveMessageAction.getVariableExtractors().get(0)).getPathExpressions().size());
+        Assertions.assertEquals( "orderId",((DelegatingPayloadVariableExtractor)receiveMessageAction.getVariableExtractors().get(0)).getPathExpressions().get("/order/id"));
 
-        Assert.assertEquals(context.getVariable("orderId"), "12345");
+        Assertions.assertEquals( "12345",context.getVariable("orderId"));
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user");
-        Assert.assertEquals(httpMessageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_CONTEXT_PATH), "/test");
-        Assert.assertEquals(httpMessageBuilder.buildMessageHeaders(context).get("userId"), "1001");
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "<user><id>1001</id><name>new_user</name></user>",httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
+        Assertions.assertEquals( HttpMethod.POST.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "/user",httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertEquals( "/test",httpMessageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_CONTEXT_PATH));
+        Assertions.assertEquals( "1001",httpMessageBuilder.buildMessageHeaders(context).get("userId"));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         assertCookie(httpMessageBuilder);
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertEquals( "httpClient",sendMessageAction.getEndpointUri());
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 2);
-        Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
+        Assertions.assertEquals( 2,receiveMessageAction.getValidationContexts().size());
+        Assertions.assertEquals( 2000L,receiveMessageAction.getReceiveTimeout());
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
+        Assertions.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof DefaultMessageValidationContext);
 
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(responseHeaders.size(), 4L);
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), "404");
-        Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "NOT_FOUND");
-        Assert.assertEquals(responseHeaders.get("userId"), "1001");
+        Assertions.assertEquals( 4L,responseHeaders.size());
+        Assertions.assertEquals( "404",responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE));
+        Assertions.assertEquals( "NOT_FOUND",responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE));
+        Assertions.assertEquals( "1001",responseHeaders.get("userId"));
         assertCookie(httpMessageBuilder);
-        Assert.assertNull(receiveMessageAction.getEndpoint());
-        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertNull(receiveMessageAction.getEndpoint());
+        Assertions.assertEquals( "httpClient",receiveMessageAction.getEndpointUri());
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.DELETE.name());
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user/${id}");
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
+        Assertions.assertEquals( HttpMethod.DELETE.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "/user/${id}",httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( "httpClient",sendMessageAction.getEndpointUri());
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
         requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
-        Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.HEAD.name());
-        Assert.assertNull(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
-        Assert.assertNull(requestHeaders.get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertEquals(requestHeaders.get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), uri);
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
+        Assertions.assertEquals( HttpMethod.HEAD.name(),requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertNull(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(requestHeaders.get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( uri,requestHeaders.get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertEquals( "httpClient",sendMessageAction.getEndpointUri());
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex);
         httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.OPTIONS.name());
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertEquals(sendMessageAction.getEndpointUri(), "http://localhost:${port}/test");
-        Assert.assertEquals(sendMessageAction.getActor(), testActor);
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, sendMessageAction.getMessageType()));
+        Assertions.assertEquals( HttpMethod.OPTIONS.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( "http://localhost:${port}/test",sendMessageAction.getEndpointUri());
+        Assertions.assertEquals( testActor,sendMessageAction.getActor());
     }
 
     private jakarta.servlet.http.Cookie createCookie() {
@@ -308,20 +308,20 @@ public class HttpClientTest extends AbstractXmlActionTest {
     }
 
     private void assertCookie(HttpMessageBuilder messageBuilder) {
-        Assert.assertEquals(messageBuilder.getMessage().getCookies().size(), 1);
+        Assertions.assertEquals( 1,messageBuilder.getMessage().getCookies().size());
         jakarta.servlet.http.Cookie cookie = messageBuilder.getMessage().getCookies().get(0);
-        Assert.assertEquals(cookie.getName(), "session");
-        Assert.assertEquals(cookie.getValue(), "abc123");
-        Assert.assertEquals(cookie.getPath(), "/user");
-        Assert.assertEquals(cookie.getDomain(), "example.com");
-        Assert.assertEquals(cookie.getMaxAge(), 3600);
-        Assert.assertTrue(cookie.getSecure());
-        Assert.assertTrue(cookie.isHttpOnly());
+        Assertions.assertEquals( "session",cookie.getName());
+        Assertions.assertEquals( "abc123",cookie.getValue());
+        Assertions.assertEquals( "/user",cookie.getPath());
+        Assertions.assertEquals( "example.com",cookie.getDomain());
+        Assertions.assertEquals( 3600,cookie.getMaxAge());
+        Assertions.assertTrue(cookie.getSecure());
+        Assertions.assertTrue(cookie.isHttpOnly());
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("http").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("http").get().getClass(), Http.class);
+        Assertions.assertTrue(XmlTestActionBuilder.lookup("http").isPresent());
+        Assertions.assertEquals( Http.class,XmlTestActionBuilder.lookup("http").get().getClass());
     }
 }

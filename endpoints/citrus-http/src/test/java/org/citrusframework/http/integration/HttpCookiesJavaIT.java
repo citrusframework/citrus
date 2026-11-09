@@ -18,20 +18,28 @@ package org.citrusframework.http.integration;
 
 import jakarta.servlet.http.Cookie;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpCookiesJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void httpCookies() {
-        variable("correlationId", "citrus:randomNumber(10)");
-        variable("messageId", "citrus:randomNumber(10)");
-        variable("user", "Christoph");
+    public void httpCookies(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("correlationId", "citrus:randomNumber(10)"));
+        runner.given(createVariable("messageId", "citrus:randomNumber(10)"));
+        runner.given(createVariable("user", "Christoph"));
 
         Cookie cookie = new Cookie("Token", "${messageId}");
         cookie.setPath("/test/cookie.py");
@@ -39,7 +47,7 @@ public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport implements Test
         cookie.setDomain("citrusframework.org");
         cookie.setMaxAge(86400);
 
-        given(http().client("echoHttpClient")
+        runner.given(http().client("echoHttpClient")
             .send()
             .post()
             .fork(true)
@@ -52,7 +60,7 @@ public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport implements Test
                     "</HelloRequest>")
             .cookie(new Cookie("Token", "${messageId}")));
 
-        when(http().server("echoHttpServer")
+        runner.when(http().server("echoHttpServer")
             .receive()
             .post()
             .message()
@@ -64,7 +72,7 @@ public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport implements Test
                     "</HelloRequest>")
             .cookie(new Cookie("Token", "${messageId}")));
 
-       then(http().server("echoHttpServer")
+       runner.then(http().server("echoHttpServer")
            .send()
            .response(HttpStatus.OK.value())
            .message()
@@ -76,7 +84,7 @@ public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport implements Test
                    "</HelloResponse>")
            .cookie(cookie));
 
-       then(http().client("echoHttpClient")
+       runner.then(http().client("echoHttpClient")
             .receive()
             .response(HttpStatus.OK)
             .message()

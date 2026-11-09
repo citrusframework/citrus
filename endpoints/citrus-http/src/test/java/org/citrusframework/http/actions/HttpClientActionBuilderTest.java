@@ -4,21 +4,22 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatusCode;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_REASON_PHRASE;
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_STATUS_CODE;
-import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.testng.Assert.assertTrue;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(MockitoExtension.class)
 public class HttpClientActionBuilderTest {
 
     @Mock
@@ -26,11 +27,8 @@ public class HttpClientActionBuilderTest {
 
     private HttpClientActionBuilder fixture;
 
-    private AutoCloseable openMocks;
-
-    @BeforeMethod
+    @BeforeEach
     void beforeMethodSetup() {
-        openMocks = openMocks(this);
         fixture = new HttpClientActionBuilder(httpClientMock);
     }
 
@@ -68,10 +66,5 @@ public class HttpClientActionBuilderTest {
     @Test
     public void isReferenceResolverAwareTestActionBuilder() {
         assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
-    }
-
-    @AfterMethod
-    public void afterMethod() throws Exception {
-        openMocks.close();
     }
 }

@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HttpEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("http"));
-        Assert.assertTrue(endpointBuilders.containsKey("http.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("http.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("http"));
+        Assertions.assertTrue(endpointBuilders.containsKey("http.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("http.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("http").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("http").get().getClass(), HttpEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("http.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("http.client").get().getClass(), HttpClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("http.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("http.server").get().getClass(), HttpServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("http").isPresent());
+        Assertions.assertEquals( HttpEndpointBuilder.class,EndpointBuilder.lookup("http").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("http.client").isPresent());
+        Assertions.assertEquals( HttpClientBuilder.class,EndpointBuilder.lookup("http.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("http.server").isPresent());
+        Assertions.assertEquals( HttpServerBuilder.class,EndpointBuilder.lookup("http.server").get().getClass());
     }
 }

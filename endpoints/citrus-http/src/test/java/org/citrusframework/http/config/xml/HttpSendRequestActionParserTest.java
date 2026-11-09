@@ -23,11 +23,11 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.MessageHeaders;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.http.HttpMethod;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HttpSendRequestActionParserTest extends AbstractActionParserTest<SendMessageAction> {
 
@@ -38,98 +38,98 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
 
         SendMessageAction action = getNextTestActionFromTest();
         HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 3L);
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals( 3L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertEquals( HttpMethod.GET.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertEquals( beanDefinitionContext.getBean("httpClient", HttpClient.class),action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 10L);
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/order/${id}");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/order/${id}");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/xml");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_ACCEPT), "text/xml");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "id=12345,type=gold");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "id=12345,type=gold");
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
-        Assert.assertNull(action.getEndpoint());
-        Assert.assertEquals(action.getEndpointUri(), "http://localhost:8080/test");
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals( 10L,httpMessageBuilder.getMessage().getHeaders().size());
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assertions.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assertions.assertEquals( HttpMethod.GET.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "/order/${id}",httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertEquals( "/order/${id}",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI));
+        Assertions.assertEquals( "text/xml",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE));
+        Assertions.assertEquals( "text/xml",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_ACCEPT));
+        Assertions.assertEquals( "HTTP/1.1",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION));
+        Assertions.assertEquals( "id=12345,type=gold",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( "id=12345,type=gold",httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertNull(action.getEndpoint());
+        Assertions.assertEquals( "http://localhost:8080/test",action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTEXT_PATH), "/test");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get("userId"), "1001");
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertEquals(httpMessageBuilder.getMessage().getCookies().size(), 1);
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "<user><id>1001</id><name>new_user</name></user>",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals( HttpMethod.POST.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "/user",httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertEquals( "/test",httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTEXT_PATH));
+        Assertions.assertEquals( "1001",httpMessageBuilder.getMessage().getHeaders().get("userId"));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( 1,httpMessageBuilder.getMessage().getCookies().size());
         jakarta.servlet.http.Cookie cookie = httpMessageBuilder.getMessage().getCookies().get(0);
-        Assert.assertEquals(cookie.getName(), "session");
-        Assert.assertEquals(cookie.getValue(), "abc123");
-        Assert.assertEquals(cookie.getPath(), "/user");
-        Assert.assertEquals(cookie.getDomain(), "example.com");
-        Assert.assertEquals(cookie.getMaxAge(), 3600);
-        Assert.assertTrue(cookie.getSecure());
-        Assert.assertTrue(cookie.isHttpOnly());
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertEquals( "session",cookie.getName());
+        Assertions.assertEquals( "abc123",cookie.getValue());
+        Assertions.assertEquals( "/user",cookie.getPath());
+        Assertions.assertEquals( "example.com",cookie.getDomain());
+        Assertions.assertEquals( 3600,cookie.getMaxAge());
+        Assertions.assertTrue(cookie.getSecure());
+        Assertions.assertTrue(cookie.isHttpOnly());
+        Assertions.assertEquals( beanDefinitionContext.getBean("httpClient", HttpClient.class),action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.DELETE.name());
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user/${id}");
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals( HttpMethod.DELETE.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertEquals( "/user/${id}",httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( beanDefinitionContext.getBean("httpClient", HttpClient.class),action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.HEAD.name());
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/test");
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
-        Assert.assertNull(action.getEndpointUri());
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals( HttpMethod.HEAD.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertEquals( "http://localhost:8080/test",httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assertions.assertEquals( beanDefinitionContext.getBean("httpClient", HttpClient.class),action.getEndpoint());
+        Assertions.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
-        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.OPTIONS.name());
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
-        Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertNull(action.getEndpoint());
-        Assert.assertEquals(action.getEndpointUri(), "http://localhost:8080/test");
-        Assert.assertEquals(action.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertNotNull(httpMessageBuilder);
+        Assertions.assertEquals( "",httpMessageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals( HttpMethod.OPTIONS.name(),httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
+        Assertions.assertNull(action.getEndpoint());
+        Assertions.assertEquals( "http://localhost:8080/test",action.getEndpointUri());
+        Assertions.assertEquals( beanDefinitionContext.getBean("testActor", TestActor.class),action.getActor());
     }
 
     @Test
     public void testHttpRequestActionParserFailed() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to invalid attributes");
+            Assertions.fail("Missing bean creation exception due to invalid attributes");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getCause().getMessage().startsWith("Neither http request uri nor http client endpoint reference is given"));
+            Assertions.assertTrue(e.getCause().getMessage().startsWith("Neither http request uri nor http client endpoint reference is given"));
         }
     }
 }

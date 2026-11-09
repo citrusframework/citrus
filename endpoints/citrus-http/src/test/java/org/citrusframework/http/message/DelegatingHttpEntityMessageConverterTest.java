@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.mockito.Mockito;
 import org.springframework.http.HttpHeaders;
@@ -31,10 +32,11 @@ import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.when;
 
@@ -45,20 +47,8 @@ public class DelegatingHttpEntityMessageConverterTest {
 
     private DelegatingHttpEntityMessageConverter messageConverter = new DelegatingHttpEntityMessageConverter();
 
-    private MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
-    byte[] imageData = new byte[25];
-    byte[] pdfData = new byte[25];
-
-    @BeforeClass
-    public void setup() {
-        formData.add("message", "Hello Citrus!");
-        formData.add("user", "Leonard");
-
-        new Random().nextBytes(imageData);
-        new Random().nextBytes(pdfData);
-    }
-
-    @Test(dataProvider = "readProvider")
+    @ParameterizedTest
+    @MethodSource("readProvider")
     public void testRead(InputStream bodyInput, Object expected, MediaType contentType) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(contentType);
@@ -70,25 +60,38 @@ public class DelegatingHttpEntityMessageConverterTest {
 
         Object converted = messageConverter.read(Object.class, message);
 
-        Assert.assertEquals(converted.getClass(), expected.getClass());
-        Assert.assertEquals(converted, expected);
+        if (expected instanceof byte[] expectedBytes) {
+            Assertions.assertArrayEquals(expectedBytes, (byte[]) converted);
+        } else {
+            Assertions.assertEquals(expected.getClass(), converted.getClass());
+            Assertions.assertEquals(expected, converted);
+        }
     }
 
-    @DataProvider
-    public Object[][] readProvider() {
-        return new Object[][] {
-                new Object[] { new ByteArrayInputStream("Hello Citrus!".getBytes()), "Hello Citrus!", MediaType.TEXT_PLAIN },
-                new Object[] { new ByteArrayInputStream("{ \"message\": \"Hello Citrus!\" }".getBytes()), "{ \"message\": \"Hello Citrus!\" }", MediaType.APPLICATION_JSON },
-                new Object[] { new ByteArrayInputStream("{ \"message\": \"Hello Citrus!\" }".getBytes()), "{ \"message\": \"Hello Citrus!\" }", new MediaType("application", "json", StandardCharsets.UTF_8) },
-                new Object[] { new ByteArrayInputStream("<message>Hello Citrus!</message>".getBytes()), "<message>Hello Citrus!</message>", MediaType.APPLICATION_XML },
-                new Object[] { new ByteArrayInputStream("message=Hello+Citrus%21&user=Leonard".getBytes()), formData, MediaType.APPLICATION_FORM_URLENCODED },
-                new Object[] { new ByteArrayInputStream(pdfData), pdfData, MediaType.APPLICATION_PDF },
-                new Object[] { new ByteArrayInputStream(imageData), imageData, MediaType.APPLICATION_OCTET_STREAM },
-                new Object[] { new ByteArrayInputStream(imageData), imageData, MediaType.IMAGE_PNG }
-        };
+    static Stream<Arguments> readProvider() {
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("message", "Hello Citrus!");
+        formData.add("user", "Leonard");
+
+        byte[] imageData = new byte[25];
+        new Random().nextBytes(imageData);
+        byte[] pdfData = new byte[25];
+        new Random().nextBytes(pdfData);
+
+        return Stream.of(
+                Arguments.of(new ByteArrayInputStream("Hello Citrus!".getBytes()), "Hello Citrus!", MediaType.TEXT_PLAIN),
+                Arguments.of(new ByteArrayInputStream("{ \"message\": \"Hello Citrus!\" }".getBytes()), "{ \"message\": \"Hello Citrus!\" }", MediaType.APPLICATION_JSON),
+                Arguments.of(new ByteArrayInputStream("{ \"message\": \"Hello Citrus!\" }".getBytes()), "{ \"message\": \"Hello Citrus!\" }", new MediaType("application", "json", StandardCharsets.UTF_8)),
+                Arguments.of(new ByteArrayInputStream("<message>Hello Citrus!</message>".getBytes()), "<message>Hello Citrus!</message>", MediaType.APPLICATION_XML),
+                Arguments.of(new ByteArrayInputStream("message=Hello+Citrus%21&user=Leonard".getBytes()), formData, MediaType.APPLICATION_FORM_URLENCODED),
+                Arguments.of(new ByteArrayInputStream(pdfData), pdfData, MediaType.APPLICATION_PDF),
+                Arguments.of(new ByteArrayInputStream(imageData), imageData, MediaType.APPLICATION_OCTET_STREAM),
+                Arguments.of(new ByteArrayInputStream(imageData), imageData, MediaType.IMAGE_PNG)
+        );
     }
 
-    @Test(dataProvider = "writeProvider")
+    @ParameterizedTest
+    @MethodSource("writeProvider")
     public void testWrite(Object bodyOutput, Consumer<ByteArrayOutputStream> verify, MediaType contentType) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(contentType);
@@ -104,17 +107,25 @@ public class DelegatingHttpEntityMessageConverterTest {
         verify.accept(outputStream);
     }
 
-    @DataProvider
-    public Object[][] writeProvider() {
-        return new Object[][] {
-                new Object[] { "Hello Citrus!", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "Hello Citrus!"), MediaType.TEXT_PLAIN },
-                new Object[] { "{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "{ \"message\": \"Hello Citrus!\" }"), MediaType.APPLICATION_JSON },
-                new Object[] { "{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "{ \"message\": \"Hello Citrus!\" }"), new MediaType("application", "json", StandardCharsets.UTF_8) },
-                new Object[] { "<message>Hello Citrus!</message>", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "<message>Hello Citrus!</message>"), MediaType.APPLICATION_XML },
-                new Object[] { formData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "message=Hello+Citrus%21&user=Leonard"), MediaType.APPLICATION_FORM_URLENCODED },
-                new Object[] { pdfData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(outStream.toByteArray(), pdfData), MediaType.APPLICATION_PDF },
-                new Object[] { imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(outStream.toByteArray(), imageData), MediaType.APPLICATION_OCTET_STREAM },
-                new Object[] { imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(outStream.toByteArray(), imageData), MediaType.IMAGE_PNG }
-        };
+    static Stream<Arguments> writeProvider() {
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("message", "Hello Citrus!");
+        formData.add("user", "Leonard");
+
+        byte[] imageData = new byte[25];
+        new Random().nextBytes(imageData);
+        byte[] pdfData = new byte[25];
+        new Random().nextBytes(pdfData);
+
+        return Stream.of(
+                Arguments.of("Hello Citrus!", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "Hello Citrus!",new String(outStream.toByteArray())), MediaType.TEXT_PLAIN),
+                Arguments.of("{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "{ \"message\": \"Hello Citrus!\" }",new String(outStream.toByteArray())), MediaType.APPLICATION_JSON),
+                Arguments.of("{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "{ \"message\": \"Hello Citrus!\" }",new String(outStream.toByteArray())), new MediaType("application", "json", StandardCharsets.UTF_8)),
+                Arguments.of("<message>Hello Citrus!</message>", (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "<message>Hello Citrus!</message>",new String(outStream.toByteArray())), MediaType.APPLICATION_XML),
+                Arguments.of(formData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertEquals( "message=Hello+Citrus%21&user=Leonard",new String(outStream.toByteArray())), MediaType.APPLICATION_FORM_URLENCODED),
+                Arguments.of(pdfData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertArrayEquals(pdfData, outStream.toByteArray()), MediaType.APPLICATION_PDF),
+                Arguments.of(imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertArrayEquals(imageData, outStream.toByteArray()), MediaType.APPLICATION_OCTET_STREAM),
+                Arguments.of(imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assertions.assertArrayEquals(imageData, outStream.toByteArray()), MediaType.IMAGE_PNG)
+        );
     }
 }

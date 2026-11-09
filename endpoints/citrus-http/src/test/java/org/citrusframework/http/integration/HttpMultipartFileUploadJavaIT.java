@@ -19,25 +19,33 @@ package org.citrusframework.http.integration;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.util.LinkedMultiValueMap;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-@Test
-public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpMultipartFileUploadJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void httpMultipartFileUpload() {
+    public void httpMultipartFileUpload(@CitrusResource GherkinTestActionRunner runner) {
         Map<String, List<Object>> files = new LinkedMultiValueMap<>();
         files.put("file", List.of(new ClassPathResource("org/citrusframework/ws/soapAttachment.txt")));
 
-        given(http().client("echoHttpClient")
+        runner.given(http().client("echoHttpClient")
             .send()
             .post()
             .fork(true)
@@ -45,7 +53,7 @@ public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport imp
             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
             .body(files));
 
-        when(http().server("echoHttpServer")
+        runner.when(http().server("echoHttpServer")
             .receive()
             .post()
             .message()
@@ -53,11 +61,11 @@ public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport imp
             .contentType("@startsWith(multipart/form-data)@")
             .body("@contains(This is an attachment!)@"));
 
-       then(http().server("echoHttpServer")
+       runner.then(http().server("echoHttpServer")
            .send()
            .response(HttpStatus.OK));
 
-       then(http().client("echoHttpClient")
+       runner.then(http().client("echoHttpClient")
             .receive()
             .response(HttpStatus.OK));
     }

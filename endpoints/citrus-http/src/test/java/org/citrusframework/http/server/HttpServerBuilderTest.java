@@ -20,7 +20,7 @@ import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.eclipse.jetty.server.ServerConnector;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

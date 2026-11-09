@@ -25,7 +25,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Consumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.MessageValidator;
@@ -33,13 +33,16 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidator;
 import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 /**
@@ -47,7 +50,8 @@ import static org.mockito.Mockito.when;
  * When receiving an HTTP response with type=plaintext and a validation matcher like @contains(...)@,
  * the validation must correctly fail if the received payload does not match.
  */
-public class HttpReceivePlaintextValidationTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class HttpReceivePlaintextValidationTest extends AbstractUnitTest {
 
     @Mock
     private Endpoint endpoint;
@@ -58,19 +62,18 @@ public class HttpReceivePlaintextValidationTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
         return TestContextFactory.newInstance();
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        when(endpoint.getActor()).thenReturn(null);
+        lenient().when(endpoint.createConsumer()).thenReturn(consumer);
+        lenient().when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        lenient().when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        lenient().when(endpoint.getActor()).thenReturn(null);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailPlaintextContainsValidationOnJsonPayload() {
         Message receivedMessage = new HttpMessage("{\"models\":[]}").status(HttpStatus.OK);
         when(consumer.receive(any(), anyLong())).thenReturn(receivedMessage);
@@ -80,7 +83,7 @@ public class HttpReceivePlaintextValidationTest extends AbstractTestNGUnitTest {
         builder.message().type("plaintext").body("@contains('granite4:3b')@");
 
         ReceiveMessageAction action = builder.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test
@@ -97,7 +100,7 @@ public class HttpReceivePlaintextValidationTest extends AbstractTestNGUnitTest {
         action.execute(context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailPlaintextContainsValidationOnJsonPayloadWithContentType() {
         Message receivedMessage = new HttpMessage("{\"models\":[]}").status(HttpStatus.OK)
                 .contentType("application/json");
@@ -108,10 +111,10 @@ public class HttpReceivePlaintextValidationTest extends AbstractTestNGUnitTest {
         builder.message().type("plaintext").body("@contains('granite4:3b')@");
 
         ReceiveMessageAction action = builder.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldFailPlaintextValidationWithoutPlaintextValidator() {
         DefaultMessageValidatorRegistry registry = new DefaultMessageValidatorRegistry();
         registry.getMessageValidators().clear();
@@ -128,6 +131,6 @@ public class HttpReceivePlaintextValidationTest extends AbstractTestNGUnitTest {
         builder.message().type("plaintext").body("@contains('granite4:3b')@");
 
         ReceiveMessageAction action = builder.build();
-        action.execute(context);
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 }

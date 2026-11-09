@@ -35,9 +35,10 @@ import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 
@@ -61,7 +62,7 @@ public class HttpPlaintextValidationTest extends AbstractYamlActionTest {
     private final MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
     private final Queue<HttpMessage> responses = new ArrayBlockingQueue<>(6);
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         EndpointAdapter endpointAdapter = new DirectEndpointAdapter(new DirectSyncEndpointConfiguration()) {
             @Override
@@ -86,14 +87,14 @@ public class HttpPlaintextValidationTest extends AbstractYamlActionTest {
                 .build();
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterEach
     public void cleanupEndpoints() {
         if (httpServer != null) {
             httpServer.stop();
         }
     }
 
-    @Test(expectedExceptions = { TestCaseFailedException.class })
+    @Test
     public void shouldFailPlaintextContainsValidation() {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/yaml/http-plaintext-validation.citrus.it.yaml");
 
@@ -102,6 +103,6 @@ public class HttpPlaintextValidationTest extends AbstractYamlActionTest {
 
         responses.add(new HttpMessage("{\"models\":[]}").status(HttpStatus.OK));
 
-        testLoader.load();
+        Assertions.assertThrows(TestCaseFailedException.class, testLoader::load);
     }
 }
