@@ -134,7 +134,7 @@ public class InfraServiceUtilsTest {
 
     @Test
     public void shouldListInfraServices() {
-        Assertions.assertEquals(InfraServiceUtils.getInfraServiceNames().stream().sorted().collect(Collectors.joining("\n")), """
+        Assertions.assertEquals("""
              arangodb
              artemis
              artemis.amqp
@@ -212,7 +212,7 @@ public class InfraServiceUtilsTest {
              spiffe
              weaviate
              xmpp
-             zookeeper""");
+             zookeeper""", InfraServiceUtils.getInfraServiceNames().stream().sorted().collect(Collectors.joining("\n")));
     }
 
 }

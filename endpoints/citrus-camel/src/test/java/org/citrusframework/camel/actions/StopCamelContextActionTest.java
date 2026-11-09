@@ -111,6 +111,6 @@ public class StopCamelContextActionTest extends org.citrusframework.junit.jupite
         StopCamelContextAction action = new StopCamelContextAction.Builder()
                 .context(camelContext)
                 .build();
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class, () -> action.execute(context));
+        Assertions.assertThrows(IllegalStateException.class, () -> action.execute(context));
     }
 }

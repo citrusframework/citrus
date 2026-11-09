@@ -120,9 +120,9 @@ public class CamelTransformMessageProcessorTest extends org.citrusframework.juni
 
         Message in = new DefaultMessage()
                 .setHeader("operation", "sayHello");
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> messageProcessor.process(in, context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> messageProcessor.process(in, context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to process message.*"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches("Failed to process message.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     private static final class Pojo implements Processor {

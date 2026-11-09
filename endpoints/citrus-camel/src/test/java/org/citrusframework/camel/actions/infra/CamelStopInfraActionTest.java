@@ -86,9 +86,9 @@ public class CamelStopInfraActionTest extends org.citrusframework.junit.jupiter.
                 .service("unknown")
                 .build();
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -98,8 +98,8 @@ public class CamelStopInfraActionTest extends org.citrusframework.junit.jupiter.
                 .service("service", "unknown")
                 .build();
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
-        org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'service.unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
+        Assertions.assertTrue(thrown.getMessage().matches("No such Camel infra service 'service.unknown' in current test context"), "Unexpected exception message: " + thrown.getMessage());
     }
 }
