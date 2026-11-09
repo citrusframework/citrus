@@ -31,7 +31,6 @@ import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

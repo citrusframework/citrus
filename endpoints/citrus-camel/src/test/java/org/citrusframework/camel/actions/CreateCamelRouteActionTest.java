@@ -133,22 +133,17 @@ public class CreateCamelRouteActionTest extends org.citrusframework.junit.jupite
     @Test
     public void testCreateRouteWithException() throws Exception {
 
-        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        reset(camelContext, route);
 
-            reset(camelContext, route);
+        when(camelContext.getName()).thenReturn("camel_context");
+        when(route.getId()).thenReturn("route_1");
 
-            when(camelContext.getName()).thenReturn("camel_context");
-            when(route.getId()).thenReturn("route_1");
+        doThrow(new FailedToStartRouteException("routeId", "Failed to start route")).when(camelContext).addRoutes(any(RouteBuilder.class));
 
-            doThrow(new FailedToStartRouteException("routeId", "Failed to start route")).when(camelContext).addRoutes(any(RouteBuilder.class));
-
-            CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
-                    .context(camelContext)
-                    .routes(Collections.singletonList(route))
-                    .build();
-            action.execute(context);
-
-    
-        });
+        CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
+                .context(camelContext)
+                .routes(Collections.singletonList(route))
+                .build();
+        org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
     }
 }

@@ -27,7 +27,6 @@ import org.apache.camel.Processor;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
@@ -114,18 +113,14 @@ public class CamelTransformMessageProcessorTest extends org.citrusframework.juni
     @Test
     public void shouldHandleExchangeException() {
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        CamelTransformMessageProcessor messageProcessor = transform()
+                .method(new Pojo(), "fail")
+                .camelContext(camelContext)
+                .build();
 
-            CamelTransformMessageProcessor messageProcessor = transform()
-                    .method(new Pojo(), "fail")
-                    .camelContext(camelContext)
-                    .build();
-
-            Message in = new DefaultMessage()
-                    .setHeader("operation", "sayHello");
-            messageProcessor.process(in, context);
-    
-        });
+        Message in = new DefaultMessage()
+                .setHeader("operation", "sayHello");
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> messageProcessor.process(in, context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to process message.*"), "Unexpected exception message: " + thrown.getMessage());
     }

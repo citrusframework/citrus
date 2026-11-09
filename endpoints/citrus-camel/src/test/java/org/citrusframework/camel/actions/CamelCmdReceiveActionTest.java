@@ -247,64 +247,56 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
     @Test
     public void shouldTimeoutWhenNoMessage() {
 
-        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> {
+        String output = """
+        Starting to receive messages from existing Camel: my-route (pid: 12345)
+        Waiting for messages ...
+        """;
 
-            String output = """
-            Starting to receive messages from existing Camel: my-route (pid: 12345)
-            Waiting for messages ...
-            """;
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
-            lenient().when(process.isAlive()).thenReturn(true);
-            lenient().when(process.exitValue()).thenReturn(0);
+        lenient().when(pao.getOutput()).thenReturn(output);
+        when(camelCli.receive(any(String[].class))).thenReturn(pao);
 
-            lenient().when(pao.getOutput()).thenReturn(output);
-            when(camelCli.receive(any(String[].class))).thenReturn(pao);
+        context.getReferenceResolver().bind("camelCli", camelCli);
 
-            context.getReferenceResolver().bind("camelCli", camelCli);
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .maxAttempts(3)
+                .delayBetweenAttempts(1000L)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
 
-            CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
-                    .integration("my-route")
-                    .endpoint("jms:queue:foo")
-                    .maxAttempts(3)
-                    .delayBetweenAttempts(1000L)
-                    .withReferenceResolver(context.getReferenceResolver())
-                    .build();
-
-            action.execute(context);
-    
-        });
+        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
     @Test
     public void shouldTimeoutWhenNoMessageJsonOutput() {
 
-        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> {
+        String output = """
+        Starting to receive messages from existing Camel: my-route (pid: 12345)
+        Waiting for messages ...
+        """;
 
-            String output = """
-            Starting to receive messages from existing Camel: my-route (pid: 12345)
-            Waiting for messages ...
-            """;
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
 
-            lenient().when(process.isAlive()).thenReturn(true);
-            lenient().when(process.exitValue()).thenReturn(0);
+        lenient().when(pao.getOutput()).thenReturn(output);
+        when(camelCli.receive(any(String[].class))).thenReturn(pao);
 
-            lenient().when(pao.getOutput()).thenReturn(output);
-            when(camelCli.receive(any(String[].class))).thenReturn(pao);
+        context.getReferenceResolver().bind("camelCli", camelCli);
 
-            context.getReferenceResolver().bind("camelCli", camelCli);
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .maxAttempts(3)
+                .delayBetweenAttempts(1000L)
+                .jsonOutput(true)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
 
-            CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
-                    .integration("my-route")
-                    .endpoint("jms:queue:foo")
-                    .maxAttempts(3)
-                    .delayBetweenAttempts(1000L)
-                    .jsonOutput(true)
-                    .withReferenceResolver(context.getReferenceResolver())
-                    .build();
-
-            action.execute(context);
-    
-        });
+        org.junit.jupiter.api.Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
 }

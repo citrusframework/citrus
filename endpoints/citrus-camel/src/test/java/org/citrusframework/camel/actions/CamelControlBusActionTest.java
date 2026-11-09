@@ -123,32 +123,27 @@ public class CamelControlBusActionTest extends org.citrusframework.junit.jupiter
     @Test
     public void testControlBusRouteActionWithResultFailed() {
 
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+        String endpointUri = "controlbus:route?routeId=route_1&action=status";
 
-            String endpointUri = "controlbus:route?routeId=route_1&action=status";
+        DefaultMessage message = new DefaultMessage(camelContext);
+        message.setBody("Started");
+        Exchange exchange = new DefaultExchange(camelContext);
+        exchange.setIn(message);
 
-            DefaultMessage message = new DefaultMessage(camelContext);
-            message.setBody("Started");
-            Exchange exchange = new DefaultExchange(camelContext);
-            exchange.setIn(message);
+        reset(camelContext, producerTemplate);
 
-            reset(camelContext, producerTemplate);
+        when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
+        when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
-            when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
-            when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
-            when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-            when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
-            when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
-
-            CamelControlBusAction action = new CamelControlBusAction.Builder()
-                    .context(camelContext)
-                    .route("route_1", "status")
-                    .result("Stopped")
-                    .build();
-            action.execute(context);
-
-    
-        });
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .route("route_1", "status")
+                .result("Stopped")
+                .build();
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test

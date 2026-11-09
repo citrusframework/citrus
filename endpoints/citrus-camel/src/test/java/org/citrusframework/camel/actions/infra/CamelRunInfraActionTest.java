@@ -26,7 +26,6 @@ import org.citrusframework.log.LogModifier;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -77,10 +76,6 @@ public class CamelRunInfraActionTest extends org.citrusframework.junit.jupiter.A
 
     @Mock
     private CamelCatalog catalog;
-
-    @BeforeEach
-    public void setupMocks() {
-    }
 
     @BeforeEach
     public void init() {
@@ -162,16 +157,12 @@ public class CamelRunInfraActionTest extends org.citrusframework.junit.jupiter.A
     @Test
     public void testRunInfraNotFound() {
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        CamelRunInfraAction action = new CamelRunInfraAction.Builder()
+                .service("unknown")
+                .catalog(catalog)
+                .build();
 
-            CamelRunInfraAction action = new CamelRunInfraAction.Builder()
-                    .service("unknown")
-                    .catalog(catalog)
-                    .build();
-
-            action.execute(context);
-    
-        });
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'unknown'"), "Unexpected exception message: " + thrown.getMessage());
     }
@@ -179,16 +170,12 @@ public class CamelRunInfraActionTest extends org.citrusframework.junit.jupiter.A
     @Test
     public void testRunInfraImplementationNotFound() {
 
-        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+        CamelRunInfraAction action = new CamelRunInfraAction.Builder()
+                .service("service", "unknown")
+                .catalog(catalog)
+                .build();
 
-            CamelRunInfraAction action = new CamelRunInfraAction.Builder()
-                    .service("service", "unknown")
-                    .catalog(catalog)
-                    .build();
-
-            action.execute(context);
-    
-        });
+        CitrusRuntimeException thrown = org.junit.jupiter.api.Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
 
         org.junit.jupiter.api.Assertions.assertTrue(thrown.getMessage().matches("Failed to resolve Camel infra service for 'service.unknown'"), "Unexpected exception message: " + thrown.getMessage());
     }
