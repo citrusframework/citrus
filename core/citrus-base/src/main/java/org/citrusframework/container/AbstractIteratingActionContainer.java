@@ -19,6 +19,7 @@ package org.citrusframework.container;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 import org.citrusframework.AbstractIteratingContainerBuilder;
 import org.citrusframework.TestActionBuilder;
@@ -28,6 +29,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.util.BooleanExpressionParser;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
@@ -73,7 +75,7 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      */
     private final Duration timeout;
 
-    public AbstractIteratingActionContainer(String name, AbstractIteratingContainerBuilder<?, ?> builder) {
+    protected AbstractIteratingActionContainer(String name, AbstractIteratingContainerBuilder<?, ?> builder) {
         super(name, builder);
 
         this.condition = builder.getCondition();
@@ -88,11 +90,21 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
     public final void doExecute(TestContext context) {
         index = start;
 
-        if (nonNull(timeout) && timeout.toMillis() > 0) {
-            executeIterationWithTimeout(context);
-        } else {
-            executeIteration(context);
+        onContainerStart(context);
+        notifyTestActionListeners(context, listeners -> listeners.onContainerStart(this, context));
+        try {
+            if (nonNull(timeout) && timeout.toMillis() > 0) {
+                executeIterationWithTimeout(context);
+            } else {
+                executeIteration(context);
+            }
+        } catch (RuntimeException | Error e) {
+            onContainerFailed(context, e);
+            notifyTestActionListeners(context, listeners -> listeners.onContainerFailed(this, context, e));
+            throw e;
         }
+        onContainerFinish(context);
+        notifyTestActionListeners(context, listeners -> listeners.onContainerFinish(this, context));
     }
 
     private void executeIterationWithTimeout(TestContext context) {
@@ -173,9 +185,63 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
         iterations++;
         context.setVariable(indexName, String.valueOf(index));
 
-        for (TestActionBuilder<?> actionBuilder : actions) {
-            executeAction(actionBuilder.build(), context);
+        int iterationIndex = index;
+        onIterationStart(iterationIndex, context);
+        notifyTestActionListeners(context, listeners -> listeners.onIterationStart(this, iterationIndex, context));
+        try {
+            for (TestActionBuilder<?> actionBuilder : actions) {
+                executeAction(actionBuilder.build(), context);
+            }
+        } catch (RuntimeException | Error e) {
+            onIterationFailed(iterationIndex, context, e);
+            notifyTestActionListeners(context, listeners -> listeners.onIterationFailed(this, iterationIndex, context, e));
+            throw e;
         }
+        onIterationFinish(iterationIndex, context);
+        notifyTestActionListeners(context, listeners -> listeners.onIterationFinish(this, iterationIndex, context));
+    }
+
+    private void notifyTestActionListeners(TestContext context, Consumer<TestActionListeners> notification) {
+        TestActionListeners testActionListeners = context.getTestActionListeners();
+        if (nonNull(testActionListeners)) {
+            notification.accept(testActionListeners);
+        }
+    }
+
+    /**
+     * Lifecycle hook invoked when the container starts its execution. No-op by default.
+     */
+    protected void onContainerStart(TestContext context) {
+    }
+
+    /**
+     * Lifecycle hook invoked when the container has finished its execution successfully. No-op by default.
+     */
+    protected void onContainerFinish(TestContext context) {
+    }
+
+    /**
+     * Lifecycle hook invoked when the container execution has failed. No-op by default.
+     */
+    protected void onContainerFailed(TestContext context, Throwable cause) {
+    }
+
+    /**
+     * Lifecycle hook invoked before the nested actions of an iteration get executed. No-op by default.
+     */
+    protected void onIterationStart(int iterationIndex, TestContext context) {
+    }
+
+    /**
+     * Lifecycle hook invoked after all nested actions of an iteration have been executed successfully. No-op by default.
+     */
+    protected void onIterationFinish(int iterationIndex, TestContext context) {
+    }
+
+    /**
+     * Lifecycle hook invoked when one of the nested actions of an iteration has failed. No-op by default.
+     */
+    protected void onIterationFailed(int iterationIndex, TestContext context, Throwable cause) {
     }
 
     /**
