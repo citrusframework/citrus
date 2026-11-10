@@ -16,13 +16,13 @@
 package org.citrusframework.graphql.client;
 
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GraphQlEndpointComponentTest extends AbstractTestNGUnitTest {
+public class GraphQlEndpointComponentTest extends AbstractUnitTest {
 
     @Test
     public void shouldCreateHttpClientFromUri() {

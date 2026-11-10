@@ -18,8 +18,10 @@ package org.citrusframework.graphql.integration.zero;
 
 import java.util.Map;
 
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.graphql.actions.GraphQlClientRequestActionBuilder;
 import org.citrusframework.graphql.actions.GraphQlClientResponseActionBuilder;
@@ -27,11 +29,15 @@ import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
 import org.citrusframework.json.dsl.JsonSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.validation.ValidationProcessor;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import tools.jackson.databind.json.JsonMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,8 +55,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
  * entity callbacks ({@code JsonSupport.validate(...).mapper(...).validator(...)}) on the six
  * {@code Get*} reads.
  */
-@Test
-public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlZeroSendReceiveIT {
 
     private final int port = findAvailableTcpPort(20000, 32767);
 
@@ -145,10 +154,11 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         return JsonSupport.validate(type).mapper(JSON).validator(assertions).build();
     }
 
+    @Test
     @CitrusTest
-    public void posts() {
+    public void posts(@CitrusResource GherkinTestActionRunner runner) {
         // query GetPost
-        run(send("""
+        runner.run(send("""
                     query GetPost($id: ID!) {
                       post(id: $id) {
                         id
@@ -158,7 +168,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.post.id", "1"},
                 {"$.post.title", "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"},
                 {"$.post.user.name", "Leanne Graham"},
@@ -170,7 +180,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         })));
 
         // query ListPosts
-        run(send("""
+        runner.run(send("""
                     query ListPosts($options: PageQueryOptions) {
                       posts(options: $options) {
                         data { id title }
@@ -179,7 +189,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.posts.meta.totalCount", 100},
                 {"$.posts.data.length()", 2},
                 {"$.posts.data[0].id", "1"},
@@ -187,44 +197,45 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         }));
 
         // mutation CreatePost (input sent as a record, not a JSON string)
-        run(send("""
+        runner.run(send("""
                     mutation CreatePost($input: CreatePostInput!) {
                       createPost(input: $input) { id title body }
                     }""",
                 Map.of("input", new CreatePostInput("Citrus", "GraphQL rocks"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.createPost.id", "101"},
                 {"$.createPost.title", "Citrus"},
                 {"$.createPost.body", "GraphQL rocks"},
         }));
 
         // mutation UpdatePost (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation UpdatePost($id: ID!, $input: UpdatePostInput!) {
                       updatePost(id: $id, input: $input) { id body }
                     }""",
                 Map.of("id", "1", "input", Map.of("body", "Updated by Citrus"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.updatePost.id", "1"},
                 {"$.updatePost.body", "Updated by Citrus"},
         }));
 
         // mutation DeletePost
-        run(send("""
+        runner.run(send("""
                     mutation DeletePost($id: ID!) {
                       deletePost(id: $id)
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.deletePost", true},
         }));
     }
 
+    @Test
     @CitrusTest
-    public void users() {
+    public void users(@CitrusResource GherkinTestActionRunner runner) {
         // query GetUser
-        run(send("""
+        runner.run(send("""
                     query GetUser($id: ID!) {
                       user(id: $id) {
                         id
@@ -236,7 +247,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.user.name", "Leanne Graham"},
                 {"$.user.username", "Bret"},
                 {"$.user.email", "Sincere@april.biz"},
@@ -249,7 +260,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         })));
 
         // query ListUsers
-        run(send("""
+        runner.run(send("""
                     query ListUsers($options: PageQueryOptions) {
                       users(options: $options) {
                         data { id name }
@@ -258,7 +269,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.users.meta.totalCount", 10},
                 {"$.users.data.length()", 2},
                 {"$.users.data[0].id", "1"},
@@ -266,44 +277,45 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         }));
 
         // mutation CreateUser (input sent as a record, not a JSON string)
-        run(send("""
+        runner.run(send("""
                     mutation CreateUser($input: CreateUserInput!) {
                       createUser(input: $input) { id name username email }
                     }""",
                 Map.of("input", new CreateUserInput("Citrus Tester", "citrus", "citrus@example.org"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.createUser.id", "11"},
                 {"$.createUser.username", "citrus"},
                 {"$.createUser.email", "citrus@example.org"},
         }));
 
         // mutation UpdateUser (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation UpdateUser($id: ID!, $input: UpdateUserInput!) {
                       updateUser(id: $id, input: $input) { id name }
                     }""",
                 Map.of("id", "1", "input", Map.of("name", "Leanne Citrus"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.updateUser.id", "1"},
                 {"$.updateUser.name", "Leanne Citrus"},
         }));
 
         // mutation DeleteUser
-        run(send("""
+        runner.run(send("""
                     mutation DeleteUser($id: ID!) {
                       deleteUser(id: $id)
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.deleteUser", true},
         }));
     }
 
+    @Test
     @CitrusTest
-    public void comments() {
+    public void comments(@CitrusResource GherkinTestActionRunner runner) {
         // query GetComment
-        run(send("""
+        runner.run(send("""
                     query GetComment($id: ID!) {
                       comment(id: $id) {
                         id
@@ -314,7 +326,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.comment.name", "id labore ex et quam laborum"},
                 {"$.comment.email", "Eliseo@gardner.biz"},
                 {"$.comment.post.id", "1"},
@@ -325,7 +337,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         })));
 
         // query ListComments
-        run(send("""
+        runner.run(send("""
                     query ListComments($options: PageQueryOptions) {
                       comments(options: $options) {
                         data { id }
@@ -334,50 +346,51 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.comments.meta.totalCount", 500},
                 {"$.comments.data.length()", 2},
                 {"$.comments.data[0].id", "1"},
         }));
 
         // mutation CreateComment (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation CreateComment($input: CreateCommentInput!) {
                       createComment(input: $input) { id name email body }
                     }""",
                 Map.of("input", Map.of("name", "Citrus", "email", "citrus@example.org", "body", "Nice post"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.createComment.id", "501"},
                 {"$.createComment.body", "Nice post"},
         }));
 
         // mutation UpdateComment (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation UpdateComment($id: ID!, $input: UpdateCommentInput!) {
                       updateComment(id: $id, input: $input) { id body }
                     }""",
                 Map.of("id", "1", "input", Map.of("body", "Edited by Citrus"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.updateComment.id", "1"},
                 {"$.updateComment.body", "Edited by Citrus"},
         }));
 
         // mutation DeleteComment
-        run(send("""
+        runner.run(send("""
                     mutation DeleteComment($id: ID!) {
                       deleteComment(id: $id)
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.deleteComment", true},
         }));
     }
 
+    @Test
     @CitrusTest
-    public void todos() {
+    public void todos(@CitrusResource GherkinTestActionRunner runner) {
         // query GetTodo
-        run(send("""
+        runner.run(send("""
                     query GetTodo($id: ID!) {
                       todo(id: $id) {
                         id
@@ -388,7 +401,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.todo.title", "delectus aut autem"},
                 {"$.todo.completed", false},
                 {"$.todo.user.id", "1"},
@@ -399,7 +412,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         })));
 
         // query ListTodos
-        run(send("""
+        runner.run(send("""
                     query ListTodos($options: PageQueryOptions) {
                       todos(options: $options) {
                         data { id }
@@ -408,51 +421,52 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.todos.meta.totalCount", 200},
                 {"$.todos.data.length()", 2},
                 {"$.todos.data[0].id", "1"},
         }));
 
         // mutation CreateTodo (variables sent as objects, booleans keep their type)
-        run(send("""
+        runner.run(send("""
                     mutation CreateTodo($input: CreateTodoInput!) {
                       createTodo(input: $input) { id title completed }
                     }""",
                 Map.of("input", Map.of("title", "Write GraphQL tests", "completed", false))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.createTodo.id", "201"},
                 {"$.createTodo.title", "Write GraphQL tests"},
                 {"$.createTodo.completed", false},
         }));
 
         // mutation UpdateTodo (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation UpdateTodo($id: ID!, $input: UpdateTodoInput!) {
                       updateTodo(id: $id, input: $input) { id completed }
                     }""",
                 Map.of("id", "1", "input", Map.of("completed", true))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.updateTodo.id", "1"},
                 {"$.updateTodo.completed", true},
         }));
 
         // mutation DeleteTodo
-        run(send("""
+        runner.run(send("""
                     mutation DeleteTodo($id: ID!) {
                       deleteTodo(id: $id)
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.deleteTodo", true},
         }));
     }
 
+    @Test
     @CitrusTest
-    public void albums() {
+    public void albums(@CitrusResource GherkinTestActionRunner runner) {
         // query GetAlbum
-        run(send("""
+        runner.run(send("""
                     query GetAlbum($id: ID!) {
                       album(id: $id) {
                         id
@@ -462,7 +476,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.album.title", "quidem molestiae enim"},
                 {"$.album.user.id", "1"},
         }, entity(AlbumResponse.class, (response, headers, context) -> {
@@ -471,7 +485,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         })));
 
         // query ListAlbums
-        run(send("""
+        runner.run(send("""
                     query ListAlbums($options: PageQueryOptions) {
                       albums(options: $options) {
                         data { id }
@@ -480,50 +494,51 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.albums.meta.totalCount", 100},
                 {"$.albums.data.length()", 2},
                 {"$.albums.data[0].id", "1"},
         }));
 
         // mutation CreateAlbum (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation CreateAlbum($input: CreateAlbumInput!) {
                       createAlbum(input: $input) { id title }
                     }""",
                 Map.of("input", Map.of("title", "Citrus album", "userId", "1"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.createAlbum.id", "101"},
                 {"$.createAlbum.title", "Citrus album"},
         }));
 
         // mutation UpdateAlbum (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation UpdateAlbum($id: ID!, $input: UpdateAlbumInput!) {
                       updateAlbum(id: $id, input: $input) { id title }
                     }""",
                 Map.of("id", "1", "input", Map.of("title", "Renamed by Citrus"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.updateAlbum.id", "1"},
                 {"$.updateAlbum.title", "Renamed by Citrus"},
         }));
 
         // mutation DeleteAlbum
-        run(send("""
+        runner.run(send("""
                     mutation DeleteAlbum($id: ID!) {
                       deleteAlbum(id: $id)
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.deleteAlbum", true},
         }));
     }
 
+    @Test
     @CitrusTest
-    public void photos() {
+    public void photos(@CitrusResource GherkinTestActionRunner runner) {
         // query GetPhoto
-        run(send("""
+        runner.run(send("""
                     query GetPhoto($id: ID!) {
                       photo(id: $id) {
                         id
@@ -534,7 +549,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.photo.title", "accusamus beatae ad facilis cum similique qui sunt"},
                 {"$.photo.url", "https://picsum.photos/seed/1/600"},
                 {"$.photo.album.id", "1"},
@@ -546,7 +561,7 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
         })));
 
         // query ListPhotos
-        run(send("""
+        runner.run(send("""
                     query ListPhotos($options: PageQueryOptions) {
                       photos(options: $options) {
                         data { id }
@@ -555,43 +570,43 @@ public class GraphQlZeroSendReceiveIT extends TestNGCitrusSpringSupport {
                     }""",
                 """
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.photos.meta.totalCount", 5000},
                 {"$.photos.data.length()", 2},
                 {"$.photos.data[0].id", "1"},
         }));
 
         // mutation CreatePhoto (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation CreatePhoto($input: CreatePhotoInput!) {
                       createPhoto(input: $input) { id title url }
                     }""",
                 Map.of("input", Map.of("title", "Citrus", "url", "https://example.org/citrus.png",
                         "thumbnailUrl", "https://example.org/citrus-t.png"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.createPhoto.id", "5001"},
                 {"$.createPhoto.url", "https://example.org/citrus.png"},
         }));
 
         // mutation UpdatePhoto (variables sent as objects)
-        run(send("""
+        runner.run(send("""
                     mutation UpdatePhoto($id: ID!, $input: UpdatePhotoInput!) {
                       updatePhoto(id: $id, input: $input) { id title }
                     }""",
                 Map.of("id", "1", "input", Map.of("title", "Retitled by Citrus"))));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.updatePhoto.id", "1"},
                 {"$.updatePhoto.title", "Retitled by Citrus"},
         }));
 
         // mutation DeletePhoto
-        run(send("""
+        runner.run(send("""
                     mutation DeletePhoto($id: ID!) {
                       deletePhoto(id: $id)
                     }""",
                 """
                     {"id": "1"}"""));
-        run(receive(new Object[][]{
+        runner.run(receive(new Object[][]{
                 {"$.deletePhoto", true},
         }));
     }

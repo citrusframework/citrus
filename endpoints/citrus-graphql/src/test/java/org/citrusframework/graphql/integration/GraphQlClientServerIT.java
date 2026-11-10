@@ -15,14 +15,20 @@
  */
 package org.citrusframework.graphql.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
@@ -30,8 +36,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 /**
  * A GraphQL client calling the GraphQL simulator: queries and mutations over POST and GET.
  */
-@Test
-public class GraphQlClientServerIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlClientServerIT implements TestActionSupport {
 
     private final int port = findAvailableTcpPort(20000, 32767);
 
@@ -48,113 +57,118 @@ public class GraphQlClientServerIT extends TestNGCitrusSpringSupport implements 
             .timeout(5000L)
             .build();
 
+    @Test
     @CitrusTest
-    public void queryOverPost() {
-        variable("id", "42");
+    public void queryOverPost(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("id", "42"));
 
-        when(graphql().client(bookClient).send()
+        runner.when(graphql().client(bookClient).send()
                 .query("query Book($id: ID!) { book(id: $id) { title } }")
                 .operationName("Book")
                 .variable("id", "${id}")
                 .fork(true));
 
-        then(graphql().server(bookServer).receive()
+        runner.then(graphql().server(bookServer).receive()
                 .operationName("Book")
                 .query("query Book($id: ID!) {\n  book(id: $id) { title }\n}")
                 .variable("id", "${id}")
                 .method("POST"));
 
-        then(graphql().server(bookServer).send()
+        runner.then(graphql().server(bookServer).send()
                 .data("{\"book\":{\"title\":\"Dune\"}}"));
 
-        then(graphql().client(bookClient).receive()
+        runner.then(graphql().client(bookClient).receive()
                 .data("$.book.title", "Dune")
                 .message()
                 .status(200)
                 .header("Content-Type", "@startsWith('application/graphql-response+json')@"));
     }
 
+    @Test
     @CitrusTest
-    public void mutationOverPost() {
-        when(graphql().client(bookClient).send()
+    public void mutationOverPost(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(bookClient).send()
                 .query("mutation AddBook($title: String!) { addBook(title: $title) { id } }")
                 .variable("title", "Dune")
                 .fork(true));
 
-        then(graphql().server(bookServer).receive()
+        runner.then(graphql().server(bookServer).receive()
                 .operationName("AddBook")
                 .variable("title", "Dune")
                 .message()
                 .header("citrus_graphql_operation_type", "mutation"));
 
-        then(graphql().server(bookServer).send()
+        runner.then(graphql().server(bookServer).send()
                 .data("{\"addBook\":{\"id\":\"7\"}}"));
 
-        then(graphql().client(bookClient).receive()
+        runner.then(graphql().client(bookClient).receive()
                 .data("$.addBook.id", "7"));
     }
 
+    @Test
     @CitrusTest
-    public void queryOverGet() {
-        when(graphql().client(bookClient).send()
+    public void queryOverGet(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(bookClient).send()
                 .get()
                 .query("query Books($first: Int, $filter: String) { books(first: $first, filter: $filter) { title } }")
                 .variable("first", 10)
                 .variable("filter", "a, b & c")
                 .fork(true));
 
-        then(graphql().server(bookServer).receive()
+        runner.then(graphql().server(bookServer).receive()
                 .operationName("Books")
                 .variable("first", 10)
                 .variable("filter", "a, b & c")
                 .query("query Books($first: Int, $filter: String) { books(first: $first, filter: $filter) { title } }")
                 .method("GET"));
 
-        then(graphql().server(bookServer).send()
+        runner.then(graphql().server(bookServer).send()
                 .data("{\"books\":[{\"title\":\"Dune\"},{\"title\":\"Emma\"}]}"));
 
-        then(graphql().client(bookClient).receive()
+        runner.then(graphql().client(bookClient).receive()
                 .data("$.books[1].title", "Emma")
                 .data("$.books.length()", 2));
     }
 
+    @Test
     @CitrusTest
-    public void queryFromResourceWithTypedVariables() {
-        variable("id", "42");
+    public void queryFromResourceWithTypedVariables(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("id", "42"));
 
-        when(graphql().client(bookClient).send()
+        runner.when(graphql().client(bookClient).send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/book.graphql")
                 .variables("{\"id\": \"${id}\", \"limit\": ${limit}}".replace("${limit}", "3"))
                 .fork(true));
 
-        then(graphql().server(bookServer).receive()
+        runner.then(graphql().server(bookServer).receive()
                 .operationName("Book")
                 .variables("{\"id\":\"42\",\"limit\":3}")
                 .variable("limit", "@isNumber()@"));
 
-        then(graphql().server(bookServer).send()
+        runner.then(graphql().server(bookServer).send()
                 .data("{\"book\":{\"title\":\"Dune\"}}"));
 
-        then(graphql().client(bookClient).receive()
+        runner.then(graphql().client(bookClient).receive()
                 .data("{\"book\":{\"title\":\"@ignore@\"}}"));
     }
 
+    @Test
     @CitrusTest
-    public void extractOperationHeaders() {
-        when(graphql().client(bookClient).send()
+    public void extractOperationHeaders(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(graphql().client(bookClient).send()
                 .query("query Book { book(id: 1) { title } }")
                 .fork(true));
 
-        then(graphql().server(bookServer).receive()
+        runner.then(graphql().server(bookServer).receive()
                 .message()
                 .extract(fromHeaders()
                         .header("citrus_graphql_operation_name", "operationName")
                         .header("citrus_graphql_operation_type", "operationType")));
 
-        then(graphql().server(bookServer).send()
+        runner.then(graphql().server(bookServer).send()
                 .data("{\"book\":{\"title\":\"${operationName}-${operationType}\"}}"));
 
-        then(graphql().client(bookClient).receive()
+        runner.then(graphql().client(bookClient).receive()
                 .data("$.book.title", "Book-query"));
     }
 }

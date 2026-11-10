@@ -24,12 +24,12 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -43,13 +43,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GraphQlServerActionBuilderTest extends AbstractTestNGUnitTest {
+public class GraphQlServerActionBuilderTest extends AbstractUnitTest {
 
     private GraphQlServer server;
     private Producer producer;
     private Consumer consumer;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupServer() {
         producer = mock(Producer.class);
         consumer = mock(Consumer.class);

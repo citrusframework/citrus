@@ -17,13 +17,19 @@ package org.citrusframework.graphql.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Runs a GraphQL client against the GraphQL simulator from a Yaml test; both endpoints are declared in the test.
  */
-public class GraphQlYamlIT extends TestNGCitrusSpringSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GraphQlYamlIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.YAML, name = "graphql-yaml.citrus.it", packageName = "org.citrusframework.graphql.integration")

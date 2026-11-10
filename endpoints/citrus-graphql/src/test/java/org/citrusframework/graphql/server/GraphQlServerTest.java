@@ -27,13 +27,13 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.ReplyProducer;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
-public class GraphQlServerTest extends AbstractTestNGUnitTest {
+public class GraphQlServerTest extends AbstractUnitTest {
 
     @Test
     public void shouldUseGraphQlDefaults() {

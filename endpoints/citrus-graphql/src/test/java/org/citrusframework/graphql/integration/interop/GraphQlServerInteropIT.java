@@ -18,17 +18,23 @@ package org.citrusframework.graphql.integration.interop;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.graphql.ResponseError;
 import org.springframework.graphql.client.ClientGraphQlResponse;
 import org.springframework.graphql.client.HttpSyncGraphQlClient;
 import org.springframework.web.client.RestClient;
-import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.api.graphql.GraphQlError.error;
@@ -37,8 +43,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 /**
  * A real Spring GraphQL client against the GraphQL simulator.
  */
-@Test
-public class GraphQlServerInteropIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlServerInteropIT implements TestActionSupport {
 
     private final int port = findAvailableTcpPort(20000, 32767);
 
@@ -49,20 +58,21 @@ public class GraphQlServerInteropIT extends TestNGCitrusSpringSupport implements
             .timeout(5000L)
             .build();
 
+    @Test
     @CitrusTest
-    public void springClientReadsSimulatedData() throws Exception {
+    public void springClientReadsSimulatedData(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         CompletableFuture<ClientGraphQlResponse> response = CompletableFuture.supplyAsync(() -> springClient()
                 .document("query Book($id: ID!) { book(id: $id) { title } }")
                 .variable("id", "1")
                 .executeSync());
 
-        then(graphql().server(simulator).receive()
+        runner.then(graphql().server(simulator).receive()
                 .operationName("Book")
                 .variable("id", "1")
                 .message()
                 .header("Accept", "@contains('application/graphql-response+json')@"));
 
-        then(graphql().server(simulator).send()
+        runner.then(graphql().server(simulator).send()
                 .data("{\"book\":{\"title\":\"Dune\"}}"));
 
         ClientGraphQlResponse result = response.get(10, TimeUnit.SECONDS);
@@ -71,15 +81,16 @@ public class GraphQlServerInteropIT extends TestNGCitrusSpringSupport implements
         assertThat(result.field("book.title").<String>getValue()).isEqualTo("Dune");
     }
 
+    @Test
     @CitrusTest
-    public void springClientReadsSimulatedErrors() throws Exception {
+    public void springClientReadsSimulatedErrors(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         CompletableFuture<ClientGraphQlResponse> response = CompletableFuture.supplyAsync(() -> springClient()
                 .document("{ book(id: \"7\") { title } }")
                 .executeSync());
 
-        then(graphql().server(simulator).receive());
+        runner.then(graphql().server(simulator).receive());
 
-        then(graphql().server(simulator).send()
+        runner.then(graphql().server(simulator).send()
                 .data("{\"book\":null}")
                 .error(error().message("Book 7 not found").path("book").code("NOT_FOUND")));
 

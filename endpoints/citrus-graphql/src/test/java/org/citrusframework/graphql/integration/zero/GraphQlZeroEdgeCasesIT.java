@@ -15,15 +15,21 @@
  */
 package org.citrusframework.graphql.integration.zero;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.api.graphql.GraphQlError.error;
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
@@ -37,8 +43,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
  * <p>Unlike the public Apollo server, the simulator needs no CSRF preflight header for GET and
  * answers GraphQL errors with status 200.
  */
-@Test
-public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlZeroEdgeCasesIT implements TestActionSupport {
 
     private final int port = findAvailableTcpPort(20000, 32767);
 
@@ -58,9 +67,10 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
             .build();
 
     /** The simulator serves GET without any preflight header. */
+    @Test
     @CitrusTest
-    public void queryOverGet() {
-        $(graphql().client(graphqlZero)
+    public void queryOverGet(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .get()
                 .query("""
@@ -73,7 +83,7 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
                 .variables("""
                     {"options": {"paginate": {"page": 1, "limit": 2}}}"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.posts.meta.totalCount", 100)
                 .data("$.posts.data.length()", 2)
@@ -83,9 +93,10 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
     }
 
     /** The downloaded schema rejects the document before anything is sent. */
+    @Test
     @CitrusTest
-    public void schemaRejectsUnknownFieldBeforeSending() {
-        $(assertException()
+    public void schemaRejectsUnknownFieldBeforeSending(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(assertException()
                 .exception(ValidationException.class)
                 .message("@contains('isbn')@")
                 .when(graphql().client(graphqlZero)
@@ -94,9 +105,10 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
     }
 
     /** Deleting an unknown user is a GraphQL error, matched by code and message. */
+    @Test
     @CitrusTest
-    public void deleteUnknownUserReturnsNotFound() {
-        $(graphql().client(graphqlZero)
+    public void deleteUnknownUserReturnsNotFound(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .query("""
                     mutation DeleteUser($id: ID!) {
@@ -104,16 +116,17 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
                     }""")
                 .variable("id", "7"));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .expectError(error().code("NOT_FOUND").message("User 7 not found").path("deleteUser"))
                 .message()
                 .status(200));
     }
 
+    @Test
     @CitrusTest
-    public void unexpectedErrorsFailTheTest() {
-        $(graphql().client(graphqlZero)
+    public void unexpectedErrorsFailTheTest(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .query("""
                     mutation DeleteUser($id: ID!) {
@@ -121,42 +134,45 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
                     }""")
                 .variable("id", "7"));
 
-        $(assertException()
+        runner.run(assertException()
                 .exception(ValidationException.class)
                 .message("@startsWith('GraphQL response contains 1 unexpected error: [NOT_FOUND]')@")
                 .when(graphql().client(graphqlZero).receive()));
     }
 
     /** An unknown id is not an error: the fields come back null. */
+    @Test
     @CitrusTest
-    public void unknownIdReturnsNullFields() {
-        $(graphql().client(graphqlZero)
+    public void unknownIdReturnsNullFields(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .query("query GetPost($id: ID!) { post(id: $id) { id title } }")
                 .variable("id", "9999"));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("{\"post\": {\"id\": null, \"title\": null}}"));
     }
 
+    @Test
     @CitrusTest
-    public void multiOperationDocumentWithOperationName() {
-        $(graphql().client(graphqlZero)
+    public void multiOperationDocumentWithOperationName(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .query("""
                         query GetUser { user(id: 2) { name } }
                         query GetTodo { todo(id: 2) { title completed } }""")
                 .operationName("GetTodo"));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("{\"todo\": {\"title\": \"@ignore@\", \"completed\": \"@ignore@\"}}"));
     }
 
+    @Test
     @CitrusTest
-    public void aliasesAndFragments() {
-        $(graphql().client(graphqlZero)
+    public void aliasesAndFragments(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .query("""
                         query Users {
@@ -165,22 +181,23 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
                         }
                         fragment UserFields on User { name username }"""));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.first.username", "Bret")
                 .data("$.second.name", "Ervin Howell"));
     }
 
+    @Test
     @CitrusTest
-    public void nestedQueryFromResourceWithTypedOptions() {
-        variable("limit", "3");
+    public void nestedQueryFromResourceWithTypedOptions(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("limit", "3"));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .queryResource("classpath:org/citrusframework/graphql/integration/zero/post-with-comments.graphql")
                 .variables("{\"id\": \"1\", \"options\": {\"paginate\": {\"page\": 1, \"limit\": ${limit}}}}"));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.post.comments.data.length()", 3)
                 .data("$.post.comments.meta.totalCount", 5)
@@ -188,24 +205,25 @@ public class GraphQlZeroEdgeCasesIT extends TestNGCitrusSpringSupport implements
     }
 
     /** A value extracted from one response drives the next request. */
+    @Test
     @CitrusTest
-    public void chainValuesBetweenRequests() {
-        $(graphql().client(graphqlZero)
+    public void chainValuesBetweenRequests(@CitrusResource GherkinTestActionRunner runner) {
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .query("query GetPost($id: ID!) { post(id: $id) { user { id } } }")
                 .variable("id", "1"));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .message()
                 .extract(fromBody().expression("$.data.post.user.id", "authorId")));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .send()
                 .query("query GetUser($id: ID!) { user(id: $id) { id username } }")
                 .variable("id", "${authorId}"));
 
-        $(graphql().client(graphqlZero)
+        runner.run(graphql().client(graphqlZero)
                 .receive()
                 .data("$.user.id", "${authorId}")
                 .data("$.user.username", "Bret"));

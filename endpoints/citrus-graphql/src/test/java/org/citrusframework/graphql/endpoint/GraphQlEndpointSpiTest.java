@@ -26,7 +26,7 @@ import org.citrusframework.graphql.config.annotation.GraphQlServerConfigParser;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpointBuilder;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServerBuilder;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -31,7 +31,7 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

@@ -15,15 +15,21 @@
  */
 package org.citrusframework.graphql.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.api.graphql.GraphQlError.error;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
@@ -31,8 +37,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 /**
  * GraphQL errors: an HTTP 200 with errors fails unless the test expects them.
  */
-@Test
-public class GraphQlErrorsIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@Isolated("GraphQL ITs share Citrus Spring context state and bind dynamic/fixed ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class GraphQlErrorsIT implements TestActionSupport {
 
     private final int port = findAvailableTcpPort(20000, 32767);
 
@@ -49,81 +58,87 @@ public class GraphQlErrorsIT extends TestNGCitrusSpringSupport implements TestAc
             .timeout(5000L)
             .build();
 
+    @Test
     @CitrusTest
-    public void unexpectedErrorsFailEvenWithHttp200() {
-        exchange(graphql().server(errorServer).send()
+    public void unexpectedErrorsFailEvenWithHttp200(@CitrusResource GherkinTestActionRunner runner) {
+        exchange(runner, graphql().server(errorServer).send()
                 .error(error().message("Book not found").path("book").code("NOT_FOUND")));
 
-        then(assertException()
+        runner.then(assertException()
                 .exception(ValidationException.class)
                 .message("@startsWith('GraphQL response contains 1 unexpected error: [NOT_FOUND] Book not found at book')@")
                 .when(graphql().client(errorClient).receive()));
     }
 
+    @Test
     @CitrusTest
-    public void expectedErrorMatches() {
-        exchange(graphql().server(errorServer).send()
+    public void expectedErrorMatches(@CitrusResource GherkinTestActionRunner runner) {
+        exchange(runner, graphql().server(errorServer).send()
                 .error(error().message("boom").path("books", 1, "title").code("INTERNAL"))
                 .error(error().message("Book 7 not found").path("book").code("NOT_FOUND")));
 
-        then(graphql().client(errorClient).receive()
+        runner.then(graphql().client(errorClient).receive()
                 .expectError(error().code("NOT_FOUND").message("@contains('not found')@").path("book"))
                 .expectError(error().path("books", 1, "title")));
     }
 
+    @Test
     @CitrusTest
-    public void noMatchingErrorFails() {
-        exchange(graphql().server(errorServer).send()
+    public void noMatchingErrorFails(@CitrusResource GherkinTestActionRunner runner) {
+        exchange(runner, graphql().server(errorServer).send()
                 .error(error().message("boom").code("INTERNAL")));
 
-        then(assertException()
+        runner.then(assertException()
                 .exception(ValidationException.class)
                 .message("No GraphQL error matched [NOT_FOUND]; received: [INTERNAL] boom")
                 .when(graphql().client(errorClient).receive()
                         .expectError(error().code("NOT_FOUND"))));
     }
 
+    @Test
     @CitrusTest
-    public void expectedErrorsMissingFails() {
-        exchange(graphql().server(errorServer).send().data("{\"books\":[]}"));
+    public void expectedErrorsMissingFails(@CitrusResource GherkinTestActionRunner runner) {
+        exchange(runner, graphql().server(errorServer).send().data("{\"books\":[]}"));
 
-        then(assertException()
+        runner.then(assertException()
                 .exception(ValidationException.class)
                 .message("GraphQL errors expected but none were returned")
                 .when(graphql().client(errorClient).receive().expectErrors()));
     }
 
+    @Test
     @CitrusTest
-    public void partialResult() {
-        exchange(graphql().server(errorServer).send()
+    public void partialResult(@CitrusResource GherkinTestActionRunner runner) {
+        exchange(runner, graphql().server(errorServer).send()
                 .data("{\"book\":{\"title\":\"Dune\",\"author\":null}}")
                 .error(error().message("Author unavailable").path("book", "author").code("PARTIAL")));
 
-        then(graphql().client(errorClient).receive()
+        runner.then(graphql().client(errorClient).receive()
                 .expectError(error().path("book", "author"))
                 .data("$.book.title", "Dune"));
     }
 
+    @Test
     @CitrusTest
-    public void errorsWithClientErrorStatus() {
+    public void errorsWithClientErrorStatus(@CitrusResource GherkinTestActionRunner runner) {
         var reply = graphql().server(errorServer).send()
                 .error(error().message("Validation error (FieldUndefined)").code("GRAPHQL_VALIDATION_FAILED"));
         reply.message().status(400);
-        exchange(reply);
+        exchange(runner, reply);
 
-        then(graphql().client(errorClient).receive()
+        runner.then(graphql().client(errorClient).receive()
                 .expectError(error().code("GRAPHQL_VALIDATION_FAILED"))
                 .message()
                 .status(400));
     }
 
-    private void exchange(org.citrusframework.TestActionBuilder<?> reply) {
-        when(graphql().client(errorClient).send()
+    private void exchange(GherkinTestActionRunner runner, org.citrusframework.TestActionBuilder<?> reply) {
+        runner.when(graphql().client(errorClient).send()
                 .query("{ book(id: 7) { title } }")
                 .fork(true));
 
-        then(graphql().server(errorServer).receive());
+        runner.then(graphql().server(errorServer).receive());
 
-        then(reply);
+        runner.then(reply);
     }
 }
