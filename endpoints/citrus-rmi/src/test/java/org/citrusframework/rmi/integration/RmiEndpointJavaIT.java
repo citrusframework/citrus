@@ -16,23 +16,30 @@
 
 package org.citrusframework.rmi.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.rmi.client.RmiClient;
 import org.citrusframework.rmi.message.RmiMessage;
 import org.citrusframework.rmi.remote.HelloService;
 import org.citrusframework.rmi.remote.NewsService;
 import org.citrusframework.rmi.server.RmiServer;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.5
  */
-@Test(enabled = false) // unstable on local environment
-public class RmiEndpointJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Disabled("unstable on local environment")
+public class RmiEndpointJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("rmiNewsClient")
@@ -50,65 +57,67 @@ public class RmiEndpointJavaIT extends TestNGCitrusSpringSupport implements Test
     @Qualifier("rmiHelloServer")
     private RmiServer rmiHelloServer;
 
+    @Test
     @CitrusTest
-    public void testClient() {
-        when(send(rmiNewsClient)
+    public void testClient(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(send(rmiNewsClient)
                 .fork(true)
                 .message(RmiMessage.invocation("getNews")));
 
-        when(receive(rmiNewsServer)
+        runner.when(receive(rmiNewsServer)
                 .message(RmiMessage.invocation(NewsService.class, "getNews")));
 
-        then(send(rmiNewsServer)
+        runner.then(send(rmiNewsServer)
                 .message(RmiMessage.result("This is news from RMI!")));
 
-        then(receive(rmiNewsClient)
+        runner.then(receive(rmiNewsClient)
                 .message(RmiMessage.result("This is news from RMI!")));
 
-        when(send(rmiNewsClient)
+        runner.when(send(rmiNewsClient)
                 .fork(true)
                 .message(RmiMessage.invocation("setNews")
                                 .argument("This is breaking news!")));
 
-        when(receive(rmiNewsServer)
+        runner.when(receive(rmiNewsServer)
                 .message(RmiMessage.invocation(NewsService.class, "setNews")
                         .argument("This is breaking news!")));
 
-        then(send(rmiNewsServer)
+        runner.then(send(rmiNewsServer)
                 .message(RmiMessage.result()));
 
-        then(receive(rmiNewsClient)
+        runner.then(receive(rmiNewsClient)
                 .message(RmiMessage.result()));
     }
 
+    @Test
     @CitrusTest
-    public void testServer() {
-        given(send(rmiHelloClient)
+    public void testServer(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(send(rmiHelloClient)
                 .message(RmiMessage.invocation(HelloService.class, "sayHello")
                         .argument("Hello RMI this is cool!"))
                 .fork(true));
 
-        when(receive(rmiHelloServer)
+        runner.when(receive(rmiHelloServer)
                 .message(RmiMessage.invocation(HelloService.class, "sayHello")
                                     .argument("Hello RMI this is cool!")));
 
-        then(send(rmiHelloServer)
+        runner.then(send(rmiHelloServer)
                 .message(RmiMessage.result()));
 
-        then(receive(rmiHelloClient)
+        runner.then(receive(rmiHelloClient)
                 .message(RmiMessage.result()));
 
-        given(send(rmiHelloClient)
+        runner.given(send(rmiHelloClient)
                 .message(RmiMessage.invocation(HelloService.class, "getHelloCount"))
                 .fork(true));
 
-        when(receive(rmiHelloServer)
+        runner.when(receive(rmiHelloServer)
                 .message(RmiMessage.invocation(HelloService.class, "getHelloCount")));
 
-        then(send(rmiHelloServer)
+        runner.then(send(rmiHelloServer)
                 .message(RmiMessage.result(100)));
 
-        then(receive(rmiHelloClient)
+        runner.then(receive(rmiHelloClient)
                 .message(RmiMessage.result(100)));
     }
 }

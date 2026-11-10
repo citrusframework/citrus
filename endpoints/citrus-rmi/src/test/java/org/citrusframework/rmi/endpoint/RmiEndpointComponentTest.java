@@ -24,8 +24,8 @@ import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.rmi.client.RmiClient;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.5
@@ -40,46 +40,46 @@ public class RmiEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("rmi://localhost:2099", context);
 
-        Assert.assertEquals(endpoint.getClass(), RmiClient.class);
+        Assertions.assertEquals(RmiClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((RmiClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, ((RmiClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals(5000L, ((RmiClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("rmi://localhost:2099/news", context);
 
-        Assert.assertEquals(endpoint.getClass(), RmiClient.class);
+        Assertions.assertEquals(RmiClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getBinding(), "news");
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((RmiClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, ((RmiClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("news", ((RmiClient) endpoint).getEndpointConfiguration().getBinding());
+        Assertions.assertEquals(5000L, ((RmiClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("rmi://localhost:2099/service/news", context);
 
-        Assert.assertEquals(endpoint.getClass(), RmiClient.class);
+        Assertions.assertEquals(RmiClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getBinding(), "service/news");
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((RmiClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, ((RmiClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("service/news", ((RmiClient) endpoint).getEndpointConfiguration().getBinding());
+        Assertions.assertEquals(5000L, ((RmiClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("rmi:rmiserverhost", context);
 
-        Assert.assertEquals(endpoint.getClass(), RmiClient.class);
+        Assertions.assertEquals(RmiClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getHost(), "rmiserverhost");
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 1099);
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("rmiserverhost", ((RmiClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(1099, ((RmiClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals(5000L, ((RmiClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("rmi:localhost/service", context);
 
-        Assert.assertEquals(endpoint.getClass(), RmiClient.class);
+        Assertions.assertEquals(RmiClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 1099);
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getBinding(), "service");
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((RmiClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(1099, ((RmiClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("service", ((RmiClient) endpoint).getEndpointConfiguration().getBinding());
+        Assertions.assertEquals(5000L, ((RmiClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -88,37 +88,37 @@ public class RmiEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("rmi://localhost:2099?binding=rmiBinding&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), RmiClient.class);
+        Assertions.assertEquals(RmiClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getBinding(), "rmiBinding");
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("localhost", ((RmiClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, ((RmiClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("rmiBinding", ((RmiClient) endpoint).getEndpointConfiguration().getBinding());
+        Assertions.assertEquals(10000L, ((RmiClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("rmi://localhost:2099/binding?binding=rmiBinding", context);
 
-        Assert.assertEquals(endpoint.getClass(), RmiClient.class);
+        Assertions.assertEquals(RmiClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getBinding(), "rmiBinding");
-        Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((RmiClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, ((RmiClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("rmiBinding", ((RmiClient) endpoint).getEndpointConfiguration().getBinding());
+        Assertions.assertEquals(5000L, ((RmiClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 3L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("rmi"));
-        Assert.assertEquals(validators.get("rmi").getClass(), RmiEndpointComponent.class);
+        Assertions.assertEquals(3L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("rmi"));
+        Assertions.assertEquals(RmiEndpointComponent.class, validators.get("rmi").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("rmi").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("rmi").isPresent());
     }
 }

@@ -18,37 +18,33 @@ package org.citrusframework.rmi.client;
 
 import java.rmi.registry.Registry;
 
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.rmi.endpoint.RmiEndpointConfiguration;
 import org.citrusframework.rmi.message.RmiMessage;
 import org.citrusframework.rmi.remote.HelloService;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.util.FileUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
 /**
  * @since 2.5
  */
-public class RmiClientTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class RmiClientTest extends AbstractUnitTest {
 
     @Mock
     private HelloService remoteInterface;
     @Mock
     private Registry registry;
-
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testRmiClient() throws Exception {
@@ -64,17 +60,15 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRegistry(registry);
 
-        reset(registry, remoteInterface);
-
         when(registry.lookup(binding)).thenReturn(remoteInterface);
         when(remoteInterface.getHelloCount()).thenReturn(100);
 
         rmiClient.send(requestMessage, context);
 
         Message responseMessage = rmiClient.receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(
-                responseMessage.getPayload(String.class).replaceAll("\\s", ""),
-                responseBody.replaceAll("\\s", "")
+        Assertions.assertEquals(
+                responseBody.replaceAll("\\s", ""),
+                responseMessage.getPayload(String.class).replaceAll("\\s", "")
         );
     }
 
@@ -92,16 +86,14 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRegistry(registry);
 
-        reset(registry, remoteInterface);
-
         when(registry.lookup(binding)).thenReturn(remoteInterface);
 
         rmiClient.send(requestMessage, context);
 
         Message responseMessage = rmiClient.receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(
-                responseMessage.getPayload(String.class).replaceAll("\\s", ""),
-                responseBody.replaceAll("\\s", "")
+        Assertions.assertEquals(
+                responseBody.replaceAll("\\s", ""),
+                responseMessage.getPayload(String.class).replaceAll("\\s", "")
         );
 
         verify(remoteInterface).sayHello(eq("Christoph"));
@@ -124,8 +116,6 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRegistry(registry);
 
-        reset(registry, remoteInterface, correlator);
-
         when(registry.lookup(binding)).thenReturn(remoteInterface);
 
         when(remoteInterface.getHelloCount())
@@ -137,9 +127,9 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
         rmiClient.send(requestMessage, context);
 
         Message responseMessage = rmiClient.receive("correlationKey", context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(
-                responseMessage.getPayload(String.class).replaceAll("\\s", ""),
-                responseBody.replaceAll("\\s", "")
+        Assertions.assertEquals(
+                responseBody.replaceAll("\\s", ""),
+                responseMessage.getPayload(String.class).replaceAll("\\s", "")
         );
     }
 }
