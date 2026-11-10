@@ -23,8 +23,10 @@ import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 
+@Isolated("Shares the helloRequests/helloResponses in-memory channels on the cached Spring context with ChannelEndpointFactoryIT")
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 public class ChannelEndpointIT {
