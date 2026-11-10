@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.springintegration.channel.ChannelEndpointBuilder;
 import org.citrusframework.springintegration.channel.ChannelSyncEndpointBuilder;
 import org.citrusframework.endpoint.EndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessageChannelEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("channel"));
-        Assert.assertTrue(endpointBuilders.containsKey("channel.sync"));
-        Assert.assertTrue(endpointBuilders.containsKey("channel.async"));
+        Assertions.assertTrue(endpointBuilders.containsKey("channel"));
+        Assertions.assertTrue(endpointBuilders.containsKey("channel.sync"));
+        Assertions.assertTrue(endpointBuilders.containsKey("channel.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("channel").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("channel").get().getClass(), MessageChannelEndpointsBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("channel.sync").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("channel.sync").get().getClass(), ChannelSyncEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("channel.async").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("channel.async").get().getClass(), ChannelEndpointBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("channel").isPresent());
+        Assertions.assertEquals(MessageChannelEndpointsBuilder.class, EndpointBuilder.lookup("channel").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("channel.sync").isPresent());
+        Assertions.assertEquals(ChannelSyncEndpointBuilder.class, EndpointBuilder.lookup("channel.sync").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("channel.async").isPresent());
+        Assertions.assertEquals(ChannelEndpointBuilder.class, EndpointBuilder.lookup("channel.async").get().getClass());
     }
 }

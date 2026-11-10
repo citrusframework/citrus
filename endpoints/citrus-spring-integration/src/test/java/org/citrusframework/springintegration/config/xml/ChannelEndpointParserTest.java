@@ -20,9 +20,9 @@ import java.util.Map;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.springintegration.channel.ChannelEndpoint;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ChannelEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -30,35 +30,35 @@ public class ChannelEndpointParserTest extends AbstractBeanDefinitionParserTest 
     public void testChannelEndpointParser() {
         Map<String, ChannelEndpoint> endpoints = beanDefinitionContext.getBeansOfType(ChannelEndpoint.class);
 
-        Assert.assertEquals(endpoints.size(), 4);
+        Assertions.assertEquals(4, endpoints.size());
 
         // 1st message receiver
         ChannelEndpoint channelEndpoint = endpoints.get("channelEndpoint1");
-        Assert.assertEquals(channelEndpoint.getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannel());
-        Assert.assertEquals(channelEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertNotNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
-        Assert.assertFalse(channelEndpoint.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertTrue(channelEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals("channelName", channelEndpoint.getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(channelEndpoint.getEndpointConfiguration().getChannel());
+        Assertions.assertEquals(5000L, channelEndpoint.getEndpointConfiguration().getTimeout());
+        Assertions.assertNotNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
+        Assertions.assertFalse(channelEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertTrue(channelEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         channelEndpoint = endpoints.get("channelEndpoint2");
-        Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannelName());
-        Assert.assertNotNull(channelEndpoint.getEndpointConfiguration().getChannel());
-        Assert.assertEquals(channelEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
+        Assertions.assertNull(channelEndpoint.getEndpointConfiguration().getChannelName());
+        Assertions.assertNotNull(channelEndpoint.getEndpointConfiguration().getChannel());
+        Assertions.assertEquals(10000L, channelEndpoint.getEndpointConfiguration().getTimeout());
+        Assertions.assertNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
 
         // 3rd message receiver
         channelEndpoint = endpoints.get("channelEndpoint3");
-        Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannelName());
-        Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannel());
-        Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
+        Assertions.assertNull(channelEndpoint.getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(channelEndpoint.getEndpointConfiguration().getChannel());
+        Assertions.assertNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
 
         // 4th message receiver
         channelEndpoint = endpoints.get("channelEndpoint4");
-        Assert.assertNotNull(channelEndpoint.getActor());
-        Assert.assertTrue(channelEndpoint.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(channelEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
-        Assert.assertEquals(channelEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertNotNull(channelEndpoint.getActor());
+        Assertions.assertTrue(channelEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(channelEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), channelEndpoint.getActor());
     }
 }

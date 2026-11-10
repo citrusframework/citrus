@@ -17,9 +17,9 @@
 package org.citrusframework.springintegration;
 
 import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 
-public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
+public abstract class UnitTestSupport extends AbstractUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {

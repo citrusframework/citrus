@@ -17,9 +17,9 @@
 package org.citrusframework.springintegration.config.xml;
 
 import org.citrusframework.springintegration.channel.MessageSelectingQueueChannel;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -29,28 +29,28 @@ public class MessageSelectingQueueChannelParserTest extends AbstractBeanDefiniti
     public void testMessageSelectingQueueChannelParser() {
         Map<String, MessageSelectingQueueChannel> channels = beanDefinitionContext.getBeansOfType(MessageSelectingQueueChannel.class);
 
-        Assert.assertEquals(channels.size(), 6);
+        Assertions.assertEquals(6, channels.size());
 
         // 1st channel
-        Assert.assertTrue(channels.containsKey("channel1"));
+        Assertions.assertTrue(channels.containsKey("channel1"));
 
         // 2nd chanel with capacity
         MessageSelectingQueueChannel channel = channels.get("channel2");
-        Assert.assertEquals(channel.getRemainingCapacity(), 5);
+        Assertions.assertEquals(5, channel.getRemainingCapacity());
 
         // 3rd chanel with polling interval
         channel = channels.get("channel3");
-        Assert.assertEquals(channel.getPollingInterval(), 550);
+        Assertions.assertEquals(550, channel.getPollingInterval());
 
         // 4th channel
-        Assert.assertTrue(channels.containsKey("channel4"));
+        Assertions.assertTrue(channels.containsKey("channel4"));
 
         // 5th chanel with capacity
         channel = channels.get("channel5");
-        Assert.assertEquals(channel.getRemainingCapacity(), 5);
+        Assertions.assertEquals(5, channel.getRemainingCapacity());
 
         // 6th chanel with polling interval
         channel = channels.get("channel6");
-        Assert.assertEquals(channel.getPollingInterval(), 550);
+        Assertions.assertEquals(550, channel.getPollingInterval());
     }
 }

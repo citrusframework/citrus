@@ -19,15 +19,15 @@ package org.citrusframework.springintegration.channel;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.springframework.integration.channel.QueueChannel;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
-public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
+public class ChannelEndpointAdapterTest extends AbstractUnitTest {
 
     private QueueChannel channel = new QueueChannel();
     private ChannelEndpointAdapter endpointAdapter;
@@ -47,7 +47,7 @@ public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
         return testContextFactory;
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void purgeChannel() {
         channel.purge(message -> {
             return false; //purge all messages
@@ -62,8 +62,8 @@ public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
         try {
             executor.execute(() -> {
                 Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
-                Assert.assertNotNull(receivedMessage);
-                Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
+                Assertions.assertNotNull(receivedMessage);
+                Assertions.assertEquals(request.getPayload(), receivedMessage.getPayload());
 
                 endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"), context);
             });
@@ -72,12 +72,12 @@ public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
         }
 
         Message response = endpointAdapter.handleMessage(request);
-        Assert.assertNotNull(response);
-        Assert.assertEquals(response.getPayload(String.class), "OK");
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("OK", response.getPayload(String.class));
     }
 
     @Test
     public void testNoResponse() {
-        Assert.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
+        Assertions.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
     }
 }

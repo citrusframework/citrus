@@ -24,15 +24,15 @@ import org.citrusframework.springintegration.channel.selector.HeaderMatchingMess
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.core.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
+public class ChannelEndpointConsumerTest extends AbstractUnitTest {
 
     private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
 
@@ -67,8 +67,8 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getHeaders().getId(), receivedMessage.getHeader(MessageHeaders.ID));
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
 
@@ -95,8 +95,8 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getHeaders().getId(), receivedMessage.getHeader(MessageHeaders.ID));
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
@@ -120,8 +120,8 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getHeaders().getId(), receivedMessage.getHeader(MessageHeaders.ID));
 
         verify(messagingTemplate).setReceiveTimeout(10000L);
     }
@@ -145,8 +145,8 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         Message receivedMessage = endpoint.createConsumer().receive(context, 25000L);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getHeaders().getId(), receivedMessage.getHeader(MessageHeaders.ID));
 
         verify(messagingTemplate).setReceiveTimeout(25000L);
     }
@@ -163,9 +163,9 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             endpoint.createConsumer().receive(context);
-            Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+            Assertions.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
         }
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
@@ -182,9 +182,9 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             endpoint.createConsumer().receive("Operation = 'sayHello'", context);
-            Assert.fail("Missing exception due to unsupported operation");
+            Assertions.fail("Missing exception due to unsupported operation");
         } catch (CitrusRuntimeException e) {
-            Assert.assertNotNull(e.getMessage());
+            Assertions.assertNotNull(e.getMessage());
         }
 
         MessageSelectingQueueChannel queueChannel = Mockito.mock(MessageSelectingQueueChannel.class);
@@ -196,9 +196,9 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannel(queueChannel);
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
 
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
-        Assert.assertEquals(receivedMessage.getHeader("Operation"), "sayHello");
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getHeaders().getId(), receivedMessage.getHeader(MessageHeaders.ID));
+        Assertions.assertEquals("sayHello", receivedMessage.getHeader("Operation"));
 
     }
 
@@ -218,9 +218,9 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             endpoint.createConsumer().receive("Operation = 'sayHello'", context, 1500L);
-            Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+            Assertions.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 1500 milliseconds. Failed to receive message on endpoint: "));
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 1500 milliseconds. Failed to receive message on endpoint: "));
         }
 
     }

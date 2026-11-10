@@ -19,9 +19,9 @@ package org.citrusframework.springintegration.config.xml;
 import java.util.Map;
 
 import org.citrusframework.springintegration.channel.ChannelEndpointAdapter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -32,24 +32,24 @@ public class ChannelEndpointAdapterParserTest extends AbstractBeanDefinitionPars
     public void testParseBeanDefinition() {
         Map<String, ChannelEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(ChannelEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 2);
+        Assertions.assertEquals(2, adapters.size());
 
         // 1st endpoint adapter
         ChannelEndpointAdapter adapter = adapters.get("endpointAdapter1");
-        Assert.assertEquals(adapter.getName(), "endpointAdapter1");
-        Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(adapter.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertEquals((adapter.getEndpointConfiguration()).getChannelName(), "serverChannel");
-        Assert.assertFalse(adapter.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
-        Assert.assertNull(adapter.getFallbackEndpointAdapter());
+        Assertions.assertEquals("endpointAdapter1", adapter.getName());
+        Assertions.assertEquals(5000L, adapter.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(500L, adapter.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals("serverChannel", (adapter.getEndpointConfiguration()).getChannelName());
+        Assertions.assertFalse(adapter.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNull(adapter.getFallbackEndpointAdapter());
 
         adapter = adapters.get("endpointAdapter2");
-        Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(adapter.getEndpointConfiguration().getPollingInterval(), 250L);
-        Assert.assertEquals((adapter.getEndpointConfiguration()).getChannelName(), "fooChannel");
-        Assert.assertTrue(adapter.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
-        Assert.assertEquals(adapter.getFallbackEndpointAdapter(), beanDefinitionContext.getBean("mockEndpointAdapter"));
+        Assertions.assertEquals(10000L, adapter.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(250L, adapter.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertEquals("fooChannel", (adapter.getEndpointConfiguration()).getChannelName());
+        Assertions.assertTrue(adapter.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals(beanDefinitionContext.getBean("mockEndpointAdapter"), adapter.getFallbackEndpointAdapter());
     }
 }

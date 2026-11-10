@@ -19,8 +19,8 @@ package org.citrusframework.springintegration.channel.selector;
 import org.citrusframework.springintegration.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.springframework.integration.support.MessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JsonPathPayloadMessageSelectorTest extends UnitTestSupport {
 
@@ -28,29 +28,29 @@ public class JsonPathPayloadMessageSelectorTest extends UnitTestSupport {
     public void testJsonPathEvaluation() {
         JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar", context);
 
-        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"foobar\" } }").build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"barfoo\" } }").build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"bar\": { \"text\": \"foobar\" } }").build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("This is plain text!").build()));
+        Assertions.assertTrue(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"foobar\" } }").build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"barfoo\" } }").build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"bar\": { \"text\": \"foobar\" } }").build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("This is plain text!").build()));
     }
 
     @Test
     public void testJsonPathEvaluationValidationMatcher() {
         JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "@startsWith(foo)@", context);
 
-        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"foobar\" } }").build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"barfoo\" } }").build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"bar\": { \"text\": \"foobar\" } }").build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("This is plain text!").build()));
+        Assertions.assertTrue(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"foobar\" } }").build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"barfoo\" } }").build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"bar\": { \"text\": \"foobar\" } }").build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("This is plain text!").build()));
     }
 
     @Test
     public void testJsonPathEvaluationWithMessageObjectPayload() {
         JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar", context);
 
-        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")).build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")).build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }")).build()));
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("This is plain text!")).build()));
+        Assertions.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")).build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")).build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }")).build()));
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("This is plain text!")).build()));
     }
 }

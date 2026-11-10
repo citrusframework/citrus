@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,14 +30,14 @@ import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
+public class PurgeMessageChannelActionTest extends AbstractUnitTest {
 
     @Autowired
     @Qualifier(value="mockChannel")
@@ -104,9 +104,9 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("purgeChannels"));
+        Assertions.assertTrue(endpointBuilders.containsKey("purgeChannels"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("purgeChannels").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("purgeChannels").get().getClass(), PurgeMessageChannelAction.Builder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("purgeChannels").isPresent());
+        Assertions.assertEquals(PurgeMessageChannelAction.Builder.class, TestActionBuilder.lookup("purgeChannels").get().getClass());
     }
 }

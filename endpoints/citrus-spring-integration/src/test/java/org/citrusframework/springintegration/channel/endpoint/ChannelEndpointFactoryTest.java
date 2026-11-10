@@ -25,8 +25,8 @@ import org.citrusframework.springintegration.channel.ChannelEndpoint;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -45,7 +45,7 @@ public class ChannelEndpointFactoryTest {
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("channel:channel.name", context);
 
-        Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
-        Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channel.name");
+        Assertions.assertEquals(ChannelEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals("channel.name", ((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName());
     }
 }
