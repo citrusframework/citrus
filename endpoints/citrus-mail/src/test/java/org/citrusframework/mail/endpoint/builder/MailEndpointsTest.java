@@ -19,28 +19,28 @@ package org.citrusframework.mail.endpoint.builder;
 import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.citrusframework.mail.client.MailClientBuilder;
 import org.citrusframework.mail.server.MailServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class MailEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("mail"));
-        Assert.assertTrue(endpointBuilders.containsKey("mail.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("mail.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("mail"));
+        Assertions.assertTrue(endpointBuilders.containsKey("mail.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("mail.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("mail").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("mail").get().getClass(), MailEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("mail.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("mail.client").get().getClass(), MailClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("mail.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("mail.server").get().getClass(), MailServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("mail").isPresent());
+        Assertions.assertEquals(MailEndpointBuilder.class, EndpointBuilder.lookup("mail").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("mail.client").isPresent());
+        Assertions.assertEquals(MailClientBuilder.class, EndpointBuilder.lookup("mail.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("mail.server").isPresent());
+        Assertions.assertEquals(MailServerBuilder.class, EndpointBuilder.lookup("mail.server").get().getClass());
     }
 }

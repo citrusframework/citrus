@@ -25,21 +25,22 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser;
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.mail.client.MailClient;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class MailClientConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "mailClient1")
     @MailClientConfig(host="localhost",
@@ -73,18 +74,16 @@ public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.resolve("messageConverter", MailMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("marshaller", MailMarshaller.class)).thenReturn(marshaller);
-        when(referenceResolver.resolve("javaMailProperties", Properties.class)).thenReturn(mailProperties);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
+        lenient().when(referenceResolver.resolve("messageConverter", MailMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("marshaller", MailMarshaller.class)).thenReturn(marshaller);
+        lenient().when(referenceResolver.resolve("javaMailProperties", Properties.class)).thenReturn(mailProperties);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
-    @BeforeMethod
-    public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -93,49 +92,47 @@ public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st mail mailClient
-        Assert.assertEquals(mailClient1.getName(), "mailClient1");
-        Assert.assertEquals(mailClient1.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(mailClient1.getEndpointConfiguration().getPort(), 25000);
-        Assert.assertEquals(mailClient1.getEndpointConfiguration().getJavaMailProperties().getProperty("mail.smtp.host"), "localhost");
-        Assert.assertEquals(mailClient1.getEndpointConfiguration().getJavaMailProperties().getProperty("mail.smtp.port"), "25000");
-        Assert.assertNull(mailClient1.getActor());
+        Assertions.assertEquals("mailClient1", mailClient1.getName());
+        Assertions.assertEquals("localhost", mailClient1.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(25000, mailClient1.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("localhost", mailClient1.getEndpointConfiguration().getJavaMailProperties().getProperty("mail.smtp.host"));
+        Assertions.assertEquals("25000", mailClient1.getEndpointConfiguration().getJavaMailProperties().getProperty("mail.smtp.port"));
+        Assertions.assertNull(mailClient1.getActor());
 
         // 2nd mail mailClient
-        Assert.assertEquals(mailClient2.getName(), "mailClient2");
-        Assert.assertEquals(mailClient2.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(mailClient2.getEndpointConfiguration().getPort(), 25000);
-        Assert.assertEquals(mailClient2.getEndpointConfiguration().getUsername(), "mailus");
-        Assert.assertEquals(mailClient2.getEndpointConfiguration().getPassword(), "secret");
-        Assert.assertNotNull(mailClient2.getEndpointConfiguration().getAuthenticator());
-        Assert.assertEquals(mailClient2.getEndpointConfiguration().getJavaMailProperties().get("mail.smtp.auth"), "true");
-        Assert.assertNull(mailClient2.getActor());
+        Assertions.assertEquals("mailClient2", mailClient2.getName());
+        Assertions.assertEquals("localhost", mailClient2.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(25000, mailClient2.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("mailus", mailClient2.getEndpointConfiguration().getUsername());
+        Assertions.assertEquals("secret", mailClient2.getEndpointConfiguration().getPassword());
+        Assertions.assertNotNull(mailClient2.getEndpointConfiguration().getAuthenticator());
+        Assertions.assertEquals("true", mailClient2.getEndpointConfiguration().getJavaMailProperties().get("mail.smtp.auth"));
+        Assertions.assertNull(mailClient2.getActor());
 
         // 3rd mail mailClient
-        Assert.assertEquals(mailClient3.getName(), "mailClient3");
-        Assert.assertEquals(mailClient3.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(mailClient3.getEndpointConfiguration().getPort(), 25000);
-        Assert.assertNotNull(mailClient3.getActor());
-        Assert.assertEquals(mailClient3.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(mailClient3.getEndpointConfiguration().getMarshaller(), marshaller);
-        Assert.assertEquals(mailClient3.getEndpointConfiguration().getJavaMailProperties(), mailProperties);
+        Assertions.assertEquals("mailClient3", mailClient3.getName());
+        Assertions.assertNotNull(mailClient3.getActor());
+        Assertions.assertEquals(messageConverter, mailClient3.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(marshaller, mailClient3.getEndpointConfiguration().getMarshaller());
+        Assertions.assertEquals(mailProperties, mailClient3.getEndpointConfiguration().getJavaMailProperties());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 4L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("mail.client"));
-        Assert.assertEquals(validators.get("mail.client").getClass(), MailClientConfigParser.class);
-        Assert.assertNotNull(validators.get("mail.server"));
-        Assert.assertEquals(validators.get("mail.server").getClass(), MailServerConfigParser.class);
+        Assertions.assertEquals(4L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        Assertions.assertNotNull(validators.get("mail.client"));
+        Assertions.assertEquals(MailClientConfigParser.class, validators.get("mail.client").getClass());
+        Assertions.assertNotNull(validators.get("mail.server"));
+        Assertions.assertEquals(MailServerConfigParser.class, validators.get("mail.server").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("mail.client").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("mail.client").isPresent());
     }
 }

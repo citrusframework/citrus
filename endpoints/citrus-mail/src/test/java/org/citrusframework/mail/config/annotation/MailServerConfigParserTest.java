@@ -24,21 +24,22 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.mail.server.MailServer;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class MailServerConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "mailServer1")
     @MailServerConfig()
@@ -74,19 +75,17 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.resolve("messageConverter", MailMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("marshaller", MailMarshaller.class)).thenReturn(marshaller);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-        when(referenceResolver.resolve("javaMailProperties", Properties.class)).thenReturn(mailProperties);
-        when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
-    }
+        lenient().when(referenceResolver.resolve("messageConverter", MailMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("marshaller", MailMarshaller.class)).thenReturn(marshaller);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        lenient().when(referenceResolver.resolve("javaMailProperties", Properties.class)).thenReturn(mailProperties);
+        lenient().when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
 
-    @BeforeMethod
-    public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -95,46 +94,46 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st mail server
-        Assert.assertEquals(mailServer1.getName(), "mailServer1");
-        Assert.assertEquals(mailServer1.getPort(), 25);
-        Assert.assertFalse(mailServer1.isAutoStart());
-        Assert.assertFalse(mailServer1.isSplitMultipart());
-        Assert.assertTrue(mailServer1.isAuthRequired());
-        Assert.assertTrue(mailServer1.isAutoAccept());
-        Assert.assertEquals(mailServer1.getEndpointAdapter().getClass(), DirectEndpointAdapter.class);
-        Assert.assertTrue(mailServer1.getJavaMailProperties().isEmpty());
-        Assert.assertTrue(mailServer1.getKnownUsers().isEmpty());
+        Assertions.assertEquals("mailServer1", mailServer1.getName());
+        Assertions.assertEquals(25, mailServer1.getPort());
+        Assertions.assertFalse(mailServer1.isAutoStart());
+        Assertions.assertFalse(mailServer1.isSplitMultipart());
+        Assertions.assertTrue(mailServer1.isAuthRequired());
+        Assertions.assertTrue(mailServer1.isAutoAccept());
+        Assertions.assertEquals(DirectEndpointAdapter.class, mailServer1.getEndpointAdapter().getClass());
+        Assertions.assertTrue(mailServer1.getJavaMailProperties().isEmpty());
+        Assertions.assertTrue(mailServer1.getKnownUsers().isEmpty());
 
         // 2nd mail server
-        Assert.assertEquals(mailServer2.getName(), "mailServer2");
-        Assert.assertEquals(mailServer2.getPort(), 25000);
-        Assert.assertFalse(mailServer2.isAutoStart());
-        Assert.assertFalse(mailServer2.isSplitMultipart());
-        Assert.assertFalse(mailServer2.isAuthRequired());
-        Assert.assertFalse(mailServer2.isAutoAccept());
-        Assert.assertTrue(mailServer2.getJavaMailProperties().isEmpty());
-        Assert.assertTrue(mailServer2.getKnownUsers().isEmpty());
+        Assertions.assertEquals("mailServer2", mailServer2.getName());
+        Assertions.assertEquals(25000, mailServer2.getPort());
+        Assertions.assertFalse(mailServer2.isAutoStart());
+        Assertions.assertFalse(mailServer2.isSplitMultipart());
+        Assertions.assertFalse(mailServer2.isAuthRequired());
+        Assertions.assertFalse(mailServer2.isAutoAccept());
+        Assertions.assertTrue(mailServer2.getJavaMailProperties().isEmpty());
+        Assertions.assertTrue(mailServer2.getKnownUsers().isEmpty());
 
         // 3rd mail server
-        Assert.assertEquals(mailServer3.getName(), "mailServer3");
-        Assert.assertEquals(mailServer3.getPort(), 25);
-        Assert.assertFalse(mailServer3.isAutoStart());
-        Assert.assertTrue(mailServer3.isSplitMultipart());
-        Assert.assertTrue(mailServer3.isAuthRequired());
-        Assert.assertTrue(mailServer3.isAutoAccept());
-        Assert.assertEquals(mailServer3.getEndpointAdapter(), endpointAdapter);
-        Assert.assertEquals(mailServer3.getJavaMailProperties(), mailProperties);
-        Assert.assertEquals(mailServer3.getMessageConverter(), messageConverter);
-        Assert.assertEquals(mailServer3.getMarshaller(), marshaller);
-        Assert.assertFalse(mailServer3.getJavaMailProperties().isEmpty());
-        Assert.assertFalse(mailServer3.getKnownUsers().isEmpty());
-        Assert.assertEquals(mailServer3.getKnownUsers().size(), 2L);
-        Assert.assertEquals(mailServer3.getKnownUsers().get(0), "foo@example.com:foo-user:secr3t");
-        Assert.assertEquals(mailServer3.getKnownUsers().get(1), "bar@example.com:bar-user:secr3t");
+        Assertions.assertEquals("mailServer3", mailServer3.getName());
+        Assertions.assertEquals(25, mailServer3.getPort());
+        Assertions.assertFalse(mailServer3.isAutoStart());
+        Assertions.assertTrue(mailServer3.isSplitMultipart());
+        Assertions.assertTrue(mailServer3.isAuthRequired());
+        Assertions.assertTrue(mailServer3.isAutoAccept());
+        Assertions.assertEquals(endpointAdapter, mailServer3.getEndpointAdapter());
+        Assertions.assertEquals(mailProperties, mailServer3.getJavaMailProperties());
+        Assertions.assertEquals(messageConverter, mailServer3.getMessageConverter());
+        Assertions.assertEquals(marshaller, mailServer3.getMarshaller());
+        Assertions.assertFalse(mailServer3.getJavaMailProperties().isEmpty());
+        Assertions.assertFalse(mailServer3.getKnownUsers().isEmpty());
+        Assertions.assertEquals(2L, mailServer3.getKnownUsers().size());
+        Assertions.assertEquals("foo@example.com:foo-user:secr3t", mailServer3.getKnownUsers().get(0));
+        Assertions.assertEquals("bar@example.com:bar-user:secr3t", mailServer3.getKnownUsers().get(1));
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("mail.server").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("mail.server").isPresent());
     }
 }

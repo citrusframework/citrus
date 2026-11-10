@@ -16,38 +16,44 @@
 
 package org.citrusframework.mail.model;
 
+import java.util.stream.Stream;
+
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.api.xml.StringResult;
 import org.citrusframework.api.xml.StringSource;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class MailMarshallerTest {
 
     private final MailMarshaller mailMarshaller = new MailMarshaller();
 
-    @Test(dataProvider = "mailSourceProvider")
+    @ParameterizedTest
+    @MethodSource("mailSourceProvider")
     public void testUnmarshalMail(String requestSource, String responseSource) throws Exception {
         MailRequest request = (MailRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(requestSource))));
         MailResponse response = (MailResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(responseSource))));
 
-        Assert.assertEquals(request.getFrom(), "foo@mail.com");
-        Assert.assertEquals(request.getTo(), "bar@mail.com,copy@mail.com");
+        Assertions.assertEquals("foo@mail.com", request.getFrom());
+        Assertions.assertEquals("bar@mail.com,copy@mail.com", request.getTo());
 
-        Assert.assertEquals(response.getCode(), 250);
-        Assert.assertEquals(response.getMessage(), "OK");
+        Assertions.assertEquals(250, response.getCode());
+        Assertions.assertEquals("OK", response.getMessage());
     }
 
-    @Test(dataProvider = "acceptSourceProvider")
+    @ParameterizedTest
+    @MethodSource("acceptSourceProvider")
     public void testUnmarshalAccept(String requestSource, String responseSource) throws Exception {
         AcceptRequest request = (AcceptRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(requestSource))));
         AcceptResponse response = (AcceptResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(responseSource))));
 
-        Assert.assertEquals(request.getFrom(), "foo@mail.com");
+        Assertions.assertEquals("foo@mail.com", request.getFrom());
 
-        Assert.assertTrue(response.isAccept());
+        Assertions.assertTrue(response.isAccept());
     }
 
     @Test
@@ -66,23 +72,21 @@ public class MailMarshallerTest {
         mailMarshaller.marshal(mailRequest, mailRequestResult);
 
         MailRequest result = (MailRequest) mailMarshaller.unmarshal(new StringSource(mailRequestResult.toString()));
-        Assert.assertEquals(result.getFrom(), "foo@mail.com");
-        Assert.assertEquals(result.getTo(), "bar@mail.com,copy@mail.com");
+        Assertions.assertEquals("foo@mail.com", result.getFrom());
+        Assertions.assertEquals("bar@mail.com,copy@mail.com", result.getTo());
     }
 
-    @DataProvider
-    public Object[][] mailSourceProvider() {
-        return new Object[][] {
-            new Object[] { "org/citrusframework/mail/server/text_mail.xml", "org/citrusframework/mail/server/mail_response.xml" },
-            new Object[] { "org/citrusframework/mail/server/text_mail.json", "org/citrusframework/mail/server/mail_response.json" }
-        };
+    static Stream<Arguments> mailSourceProvider() {
+        return Stream.of(
+            Arguments.of("org/citrusframework/mail/server/text_mail.xml", "org/citrusframework/mail/server/mail_response.xml"),
+            Arguments.of("org/citrusframework/mail/server/text_mail.json", "org/citrusframework/mail/server/mail_response.json")
+        );
     }
 
-    @DataProvider
-    public Object[][] acceptSourceProvider() {
-        return new Object[][] {
-            new Object[] { "org/citrusframework/mail/server/accept-request.xml", "org/citrusframework/mail/server/accept-response.xml" },
-            new Object[] { "org/citrusframework/mail/server/accept-request.json", "org/citrusframework/mail/server/accept-response.json" }
-        };
+    static Stream<Arguments> acceptSourceProvider() {
+        return Stream.of(
+            Arguments.of("org/citrusframework/mail/server/accept-request.xml", "org/citrusframework/mail/server/accept-response.xml"),
+            Arguments.of("org/citrusframework/mail/server/accept-request.json", "org/citrusframework/mail/server/accept-response.json")
+        );
     }
 }

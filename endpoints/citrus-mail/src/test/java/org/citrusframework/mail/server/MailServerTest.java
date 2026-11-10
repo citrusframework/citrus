@@ -29,10 +29,11 @@ import org.citrusframework.message.Message;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.TestUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -40,13 +41,11 @@ import java.util.Collections;
 import java.util.Date;
 
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.openMocks;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 @SuppressWarnings("removal")
 public class MailServerTest {
-
-    private AutoCloseable mockitoContext;
 
     @Mock
     private EndpointAdapter endpointAdapterMock;
@@ -56,10 +55,8 @@ public class MailServerTest {
 
     private MailServer fixture;
 
-    @BeforeMethod
+    @BeforeEach
     void beforeMethodSetup() {
-        mockitoContext = openMocks(this);
-
         fixture = new MailServer();
         fixture.setEndpointAdapter(endpointAdapterMock);
     }
@@ -71,7 +68,7 @@ public class MailServerTest {
 
         fixture.startup();
 
-        assertEquals(fixture.getSmtpServer(), greenMailMock);
+        assertEquals(greenMailMock, fixture.getSmtpServer());
     }
 
     @Test
@@ -81,19 +78,19 @@ public class MailServerTest {
 
             assertNotNull(message.getPayload());
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com,copy@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("foobar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("secret@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("reply@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+            assertEquals("Testmail", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("text/plain", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -119,27 +116,27 @@ public class MailServerTest {
 
             assertNotNull(message.getPayload());
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
 
             // compare the Date as a Date rather than a String, otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String) message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
-            assertEquals(actualDate, expectedDateDate);
+            assertEquals(expectedDateDate, actualDate);
 
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
+            assertEquals("Multipart Testmail", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("multipart/mixed", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
 
             try {
                 assertEquals(
                         TestUtils.normalizeLineEndings(
-                                message.getPayload(String.class).replaceAll("\\s", "")
+                                FileUtils.readToString(Resources.create("multipart_mail.xml", MailServer.class)).replaceAll("\\s", "")
                         ),
                         TestUtils.normalizeLineEndings(
-                                FileUtils.readToString(Resources.create("multipart_mail.xml", MailServer.class)).replaceAll("\\s", "")
+                                message.getPayload(String.class).replaceAll("\\s", "")
                         )
                 );
             } catch (IOException e) {
@@ -164,25 +161,25 @@ public class MailServerTest {
             Message message = (Message) invocation.getArguments()[0];
 
             assertNotNull(message.getPayload());
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+            assertEquals("<52A1988D.2060403@foo.bar>", message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            assertEquals("Foo <foo@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("FooBar <foobar@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("Foo <foo@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
 
             // compare the Date as a Date rather than a String, otherwsie this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String) message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
-            assertEquals(actualDate, expectedDateDate);
+            assertEquals(expectedDateDate, actualDate);
 
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
+            assertEquals("This is brand_logo.png", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("multipart/mixed", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("binary_mail.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("binary_mail.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -207,8 +204,8 @@ public class MailServerTest {
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("accept-request.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("accept-request.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -258,19 +255,19 @@ public class MailServerTest {
 
             assertNotNull(message.getPayload());
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com,copy@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("foobar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("secret@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("reply@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+            assertEquals("Testmail", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("text/plain", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -297,24 +294,24 @@ public class MailServerTest {
 
             assertNotNull(message.getPayload());
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
 
             // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String) message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
-            assertEquals(actualDate, expectedDateDate);
+            assertEquals(expectedDateDate, actualDate);
 
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
+            assertEquals("Multipart Testmail", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("text/plain; charset=utf-8", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("multipart_mail_1.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("multipart_mail_1.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -326,28 +323,28 @@ public class MailServerTest {
 
             assertNotNull(message.getPayload());
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
 
             // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String) message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
-            assertEquals(actualDate, expectedDateDate);
+            assertEquals(expectedDateDate, actualDate);
 
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/html; charset=utf-8");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
+            assertEquals("Multipart Testmail", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("text/html; charset=utf-8", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
+            assertEquals("index.html", message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME));
 
             try {
                 assertEquals(
                         TestUtils.normalizeLineEndings(
-                                message.getPayload(String.class).replaceAll("\\s", "")
+                                FileUtils.readToString(Resources.create("multipart_mail_2.xml", MailServer.class)).replaceAll("\\s", "")
                         ),
                         TestUtils.normalizeLineEndings(
-                                FileUtils.readToString(Resources.create("multipart_mail_2.xml", MailServer.class)).replaceAll("\\s", "")
+                                message.getPayload(String.class).replaceAll("\\s", "")
                         )
                 );
             } catch (IOException e) {
@@ -374,25 +371,25 @@ public class MailServerTest {
             Message message = (Message) invocation.getArguments()[0];
 
             assertNotNull(message.getPayload());
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+            assertEquals("<52A1988D.2060403@foo.bar>", message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            assertEquals("Foo <foo@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("FooBar <foobar@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("Foo <foo@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
 
-            // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
+            // compare the Date as a Date rather than a String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String) message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
-            assertEquals(actualDate, expectedDateDate);
+            assertEquals(expectedDateDate, actualDate);
 
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
+            assertEquals("This is brand_logo.png", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("text/plain; charset=ISO-8859-15; format=flowed", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("binary_mail_1.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("binary_mail_1.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -403,26 +400,26 @@ public class MailServerTest {
             Message message = (Message) invocation.getArguments()[0];
 
             assertNotNull(message.getPayload());
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+            assertEquals("<52A1988D.2060403@foo.bar>", message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            assertEquals("Foo <foo@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("FooBar <foobar@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("Foo <foo@mail.com>", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
 
-            // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
+            // compare the Date as a Date rather than a String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String) message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
-            assertEquals(actualDate, expectedDateDate);
+            assertEquals(expectedDateDate, actualDate);
 
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
+            assertEquals("This is brand_logo.png", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("image/png", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
+            assertEquals("brand_logo.png", message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME));
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("binary_mail_2.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("binary_mail_2.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -445,19 +442,19 @@ public class MailServerTest {
 
             assertNotNull(message.getPayload());
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+            assertEquals("foo@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_FROM));
+            assertEquals("bar@mail.com,copy@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_TO));
+            assertEquals("foobar@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_CC));
+            assertEquals("secret@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_BCC));
+            assertEquals("reply@mail.com", message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO));
             assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-            assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+            assertEquals("Testmail", message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT));
+            assertEquals("text/plain", message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE));
 
             try {
                 assertEquals(
-                        message.getPayload(String.class).replaceAll("\\s", ""),
-                        FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", "")
+                        FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", ""),
+                        message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -474,12 +471,7 @@ public class MailServerTest {
             fixture.deliver(message);
             throw new CitrusRuntimeException("Missing reject exception due to simulated error");
         } catch (CitrusRuntimeException e) {
-            assertEquals(e.getMessage(), "443 Failed!");
+            assertEquals("443 Failed!", e.getMessage());
         }
-    }
-
-    @AfterMethod
-    void afterMethodTeardown() throws Exception {
-        mockitoContext.close();
     }
 }

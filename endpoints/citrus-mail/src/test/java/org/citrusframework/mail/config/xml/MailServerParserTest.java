@@ -19,12 +19,12 @@ package org.citrusframework.mail.config.xml;
 import java.util.Map;
 
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.mail.server.MailServer;
 import org.citrusframework.message.MessageConverter;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.4
@@ -35,47 +35,47 @@ public class MailServerParserTest extends AbstractBeanDefinitionParserTest {
     public void testMailServerParser() {
         Map<String, MailServer> servers = beanDefinitionContext.getBeansOfType(MailServer.class);
 
-        Assert.assertEquals(servers.size(), 3);
+        Assertions.assertEquals(3, servers.size());
 
         // 1st mail server
         MailServer server = servers.get("mailServer1");
-        Assert.assertEquals(server.getName(), "mailServer1");
-        Assert.assertEquals(server.getPort(), 25);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertFalse(server.isSplitMultipart());
-        Assert.assertTrue(server.isAuthRequired());
-        Assert.assertTrue(server.isAutoAccept());
-        Assert.assertEquals(server.getEndpointAdapter().getClass(), DirectEndpointAdapter.class);
-        Assert.assertTrue(server.getJavaMailProperties().isEmpty());
-        Assert.assertTrue(server.getKnownUsers().isEmpty());
+        Assertions.assertEquals("mailServer1", server.getName());
+        Assertions.assertEquals(25, server.getPort());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertFalse(server.isSplitMultipart());
+        Assertions.assertTrue(server.isAuthRequired());
+        Assertions.assertTrue(server.isAutoAccept());
+        Assertions.assertEquals(DirectEndpointAdapter.class, server.getEndpointAdapter().getClass());
+        Assertions.assertTrue(server.getJavaMailProperties().isEmpty());
+        Assertions.assertTrue(server.getKnownUsers().isEmpty());
 
         // 2nd mail server
         server = servers.get("mailServer2");
-        Assert.assertEquals(server.getName(), "mailServer2");
-        Assert.assertEquals(server.getPort(), 25000);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertFalse(server.isSplitMultipart());
-        Assert.assertFalse(server.isAuthRequired());
-        Assert.assertFalse(server.isAutoAccept());
-        Assert.assertTrue(server.getJavaMailProperties().isEmpty());
-        Assert.assertTrue(server.getKnownUsers().isEmpty());
+        Assertions.assertEquals("mailServer2", server.getName());
+        Assertions.assertEquals(25000, server.getPort());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertFalse(server.isSplitMultipart());
+        Assertions.assertFalse(server.isAuthRequired());
+        Assertions.assertFalse(server.isAutoAccept());
+        Assertions.assertTrue(server.getJavaMailProperties().isEmpty());
+        Assertions.assertTrue(server.getKnownUsers().isEmpty());
 
         // 3rd mail server
         server = servers.get("mailServer3");
-        Assert.assertEquals(server.getName(), "mailServer3");
-        Assert.assertEquals(server.getPort(), 25);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertTrue(server.isSplitMultipart());
-        Assert.assertTrue(server.isAuthRequired());
-        Assert.assertTrue(server.isAutoAccept());
-        Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("endpointAdapter"));
-        Assert.assertEquals(server.getJavaMailProperties(), beanDefinitionContext.getBean("mailProperties"));
-        Assert.assertEquals(server.getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
-        Assert.assertEquals(server.getMarshaller(), beanDefinitionContext.getBean("marshaller", MailMarshaller.class));
-        Assert.assertFalse(server.getJavaMailProperties().isEmpty());
-        Assert.assertFalse(server.getKnownUsers().isEmpty());
-        Assert.assertEquals(server.getKnownUsers().size(), 2L);
-        Assert.assertEquals(server.getKnownUsers().get(0), "foo@example.com:foo-user:secr3t");
-        Assert.assertEquals(server.getKnownUsers().get(1), "bar@example.com:bar-user:secr3t");
+        Assertions.assertEquals("mailServer3", server.getName());
+        Assertions.assertEquals(25, server.getPort());
+        Assertions.assertFalse(server.isAutoStart());
+        Assertions.assertTrue(server.isSplitMultipart());
+        Assertions.assertTrue(server.isAuthRequired());
+        Assertions.assertTrue(server.isAutoAccept());
+        Assertions.assertEquals(beanDefinitionContext.getBean("endpointAdapter"), server.getEndpointAdapter());
+        Assertions.assertEquals(beanDefinitionContext.getBean("mailProperties"), server.getJavaMailProperties());
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter", MessageConverter.class), server.getMessageConverter());
+        Assertions.assertEquals(beanDefinitionContext.getBean("marshaller", MailMarshaller.class), server.getMarshaller());
+        Assertions.assertFalse(server.getJavaMailProperties().isEmpty());
+        Assertions.assertFalse(server.getKnownUsers().isEmpty());
+        Assertions.assertEquals(2L, server.getKnownUsers().size());
+        Assertions.assertEquals("foo@example.com:foo-user:secr3t", server.getKnownUsers().get(0));
+        Assertions.assertEquals("bar@example.com:bar-user:secr3t", server.getKnownUsers().get(1));
     }
 }

@@ -16,17 +16,28 @@
 
 package org.citrusframework.mail.integration;
 
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.mail.client.MailClient;
 import org.citrusframework.mail.message.MailMessage;
 import org.citrusframework.mail.server.MailServer;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-public class MailServerUserAuthIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("ITs share mail servers on fixed ports 25025/25050/25075 with GreenMail state")
+public class MailServerUserAuthIT implements TestActionSupport {
 
     @Autowired
     private MailClient securedMailClient;
@@ -36,27 +47,30 @@ public class MailServerUserAuthIT extends TestNGCitrusSpringSupport implements T
 
     @Test
     @CitrusTest
-    public void shouldAuthenticateUsers() {
-        run(send()
+    public void shouldAuthenticateUsers(@CitrusResource TestCaseRunner runner) {
+        runner.run(send()
             .endpoint(securedMailClient)
                 .message(MailMessage.request("foo@citrusframework.org", "bar@citrusframework.org", "Important!")
                         .body("Hello from foo-user!"))
         );
 
-        run(receive()
+        runner.run(receive()
             .endpoint(securedMailServer)
             .message(MailMessage.request("foo@citrusframework.org", "bar@citrusframework.org", "Important!")
                     .body("Hello from foo-user!"))
         );
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to send mail message!")
+    @Test
     @CitrusTest
-    public void shouldFailOnUnauthenticatedUsers() {
-        run(send()
-            .endpoint("unauthorizedMailClient")
-                .message(MailMessage.request("foo@citrusframework.org", "bar@citrusframework.org", "Important!")
-                        .body("Hello from foo-user!"))
+    public void shouldFailOnUnauthenticatedUsers(@CitrusResource TestCaseRunner runner) {
+        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () ->
+            runner.run(send()
+                .endpoint("unauthorizedMailClient")
+                    .message(MailMessage.request("foo@citrusframework.org", "bar@citrusframework.org", "Important!")
+                            .body("Hello from foo-user!"))
+            )
         );
+        assertEquals("Failed to send mail message!", e.getMessage());
     }
 }
