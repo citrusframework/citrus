@@ -26,7 +26,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.ssh.model.SshMarshaller;
 import org.citrusframework.ssh.model.SshRequest;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.api.xml.StringResult;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -37,8 +37,9 @@ import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.argThat;
@@ -46,13 +47,13 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @since 12.09.12
  */
-public class SshClientTest extends AbstractTestNGUnitTest {
+public class SshClientTest extends AbstractUnitTest {
 
     private static final String COMMAND = "ls";
     private static final String STDIN = "Hello world";
@@ -64,7 +65,7 @@ public class SshClientTest extends AbstractTestNGUnitTest {
     private ChannelExec channel;
     private static final int CONNECTTION_TIMEOUT = 50;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() throws JSchException {
         jsch = Mockito.mock(JSch.class);
 
@@ -88,28 +89,40 @@ public class SshClientTest extends AbstractTestNGUnitTest {
         outStream = new ByteArrayOutputStream();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*user.*")
+    @Test
     public void noUser() {
         client.getEndpointConfiguration().setUser(null);
-        send();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            send();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*user.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*knownHosts.*")
+    @Test
     public void strictHostCheckingWithoutKnownHosts() {
         strictHostChecking(true, null);
-        send();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            send();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*knownHosts.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*blaHosts.*")
+    @Test
     public void strictHostCheckingWithFaultyKnownHosts() {
         strictHostChecking(true, "classpath:/org/citrusframework/ssh/blaHosts");
-        send();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            send();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*blaHosts.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/does/not/exist.*")
+    @Test
     public void strictHostCheckingWithFaultyKnownHosts2() {
         strictHostChecking(true, "/file/that/does/not/exist");
-        send();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            send();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*/does/not/exist.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -126,20 +139,26 @@ public class SshClientTest extends AbstractTestNGUnitTest {
         send();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*/that/does/not/exist.*")
+    @Test
     public void withUnknownPrivateKey() throws JSchException {
         strictHostChecking(false,null);
         client.getEndpointConfiguration().setPrivateKeyPath("/file/that/does/not/exist");
         doThrow(new JSchException("No such file")).when(jsch).addIdentity("/file/that/does/not/exist", (String) null);
-        send();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            send();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*/that/does/not/exist.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/notthere\\.key.*")
+    @Test
     public void withUnknownPrivateKey2() throws JSchException {
         strictHostChecking(false,null);
         client.getEndpointConfiguration().setPrivateKeyPath("classpath:org/citrusframework/ssh/notthere.key");
         jsch.addIdentity("classpath:org/citrusframework/ssh/notthere.key",(String) null);
-        send();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            send();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*/notthere\\.key.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test

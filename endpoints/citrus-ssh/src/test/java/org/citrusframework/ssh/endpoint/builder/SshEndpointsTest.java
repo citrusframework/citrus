@@ -21,23 +21,23 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.ssh.client.SshClientBuilder;
 import org.citrusframework.ssh.server.SshServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SshEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("ssh.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("ssh.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("ssh.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("ssh.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("ssh.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("ssh.client").get().getClass(), SshClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("ssh.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("ssh.server").get().getClass(), SshServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("ssh.client").isPresent());
+        Assertions.assertEquals(SshClientBuilder.class, EndpointBuilder.lookup("ssh.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("ssh.server").isPresent());
+        Assertions.assertEquals(SshServerBuilder.class, EndpointBuilder.lookup("ssh.server").get().getClass());
     }
 }
