@@ -19,10 +19,10 @@ package org.citrusframework.mail.message;
 import java.nio.charset.StandardCharsets;
 
 import org.citrusframework.CitrusSettings;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.mail.message.MailMessageConverter.parseCharsetFromContentType;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 2.7.3
@@ -30,11 +30,11 @@ import static org.testng.Assert.assertEquals;
 public class MailMessageConverterTest {
     @Test
     public void testParseCharsetFromContentType() {
-        assertEquals(parseCharsetFromContentType("text/plain; charset=UTF-8"), StandardCharsets.UTF_8.name());
-        assertEquals(parseCharsetFromContentType("text/plain;charset=UTF-8"), StandardCharsets.UTF_8.name());
-        assertEquals(parseCharsetFromContentType("text/*; charset=ISO-8859-1"), StandardCharsets.ISO_8859_1.name());
-        assertEquals(parseCharsetFromContentType("*/*;     charset=ISO-8859-1"), StandardCharsets.ISO_8859_1.name());
-        assertEquals(parseCharsetFromContentType("text/plain"), CitrusSettings.getFileEncoding());
-        assertEquals(parseCharsetFromContentType("text/plain   ;    "), CitrusSettings.getFileEncoding());
+        assertEquals(StandardCharsets.UTF_8.name(), parseCharsetFromContentType("text/plain; charset=UTF-8"));
+        assertEquals(StandardCharsets.UTF_8.name(), parseCharsetFromContentType("text/plain;charset=UTF-8"));
+        assertEquals(StandardCharsets.ISO_8859_1.name(), parseCharsetFromContentType("text/*; charset=ISO-8859-1"));
+        assertEquals(StandardCharsets.ISO_8859_1.name(), parseCharsetFromContentType("*/*;     charset=ISO-8859-1"));
+        assertEquals(CitrusSettings.getFileEncoding(), parseCharsetFromContentType("text/plain"));
+        assertEquals(CitrusSettings.getFileEncoding(), parseCharsetFromContentType("text/plain   ;    "));
     }
 }

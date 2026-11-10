@@ -23,18 +23,18 @@ import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.mail.model.MailRequest;
 import org.citrusframework.mail.server.MailServer;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -42,19 +42,16 @@ import static org.mockito.Mockito.doAnswer;
 /**
  * @since 1.4
  */
-class MailClientTest extends AbstractTestNGUnitTest {
-
-    private AutoCloseable mockitoContext;
+@ExtendWith(MockitoExtension.class)
+class MailClientTest extends AbstractUnitTest {
 
     @Mock
     private MailSender mailSenderMock;
 
     private MailClient fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethodSetup() {
-        mockitoContext = MockitoAnnotations.openMocks(this);
-
         fixture = new MailClient();
         fixture.setMailSender(mailSenderMock);
     }
@@ -69,16 +66,16 @@ class MailClientTest extends AbstractTestNGUnitTest {
 
         doAnswer(invocation -> {
             MimeMessage mimeMessage = (MimeMessage) invocation.getArguments()[0];
-            Assert.assertEquals(getAddresses(mimeMessage.getFrom()), "foo@mail.com");
-            Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.TO)), "bar@mail.com,copy@mail.com");
-            Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.CC)), "foobar@mail.com");
-            Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.BCC)), "secret@mail.com");
-            Assert.assertEquals(getAddresses(mimeMessage.getReplyTo()), "foo@mail.com");
-            Assert.assertNotNull(mimeMessage.getSentDate());
-            Assert.assertEquals(mimeMessage.getSubject(), "Testmail");
-            Assert.assertEquals(mimeMessage.getContentType(), "text/plain");
+            Assertions.assertEquals("foo@mail.com", getAddresses(mimeMessage.getFrom()));
+            Assertions.assertEquals("bar@mail.com,copy@mail.com", getAddresses(mimeMessage.getRecipients(Message.RecipientType.TO)));
+            Assertions.assertEquals("foobar@mail.com", getAddresses(mimeMessage.getRecipients(Message.RecipientType.CC)));
+            Assertions.assertEquals("secret@mail.com", getAddresses(mimeMessage.getRecipients(Message.RecipientType.BCC)));
+            Assertions.assertEquals("foo@mail.com", getAddresses(mimeMessage.getReplyTo()));
+            Assertions.assertNotNull(mimeMessage.getSentDate());
+            Assertions.assertEquals("Testmail", mimeMessage.getSubject());
+            Assertions.assertEquals("text/plain", mimeMessage.getContentType());
 
-            Assert.assertEquals(mimeMessage.getContent().toString(), "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.");
+            Assertions.assertEquals("Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.", mimeMessage.getContent().toString());
             return null;
         }).when(mailSenderMock).send(any(MimeMessage.class));
 
@@ -95,26 +92,26 @@ class MailClientTest extends AbstractTestNGUnitTest {
 
         doAnswer(invocation -> {
             MimeMessage mimeMessage = (MimeMessage) invocation.getArguments()[0];
-            Assert.assertEquals(getAddresses(mimeMessage.getFrom()), "foo@mail.com");
-            Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.TO)), "bar@mail.com");
-            Assert.assertEquals(getAddresses(mimeMessage.getReplyTo()), "foo@mail.com");
-            Assert.assertNotNull(mimeMessage.getSentDate());
-            Assert.assertEquals(mimeMessage.getSubject(), "Multipart Testmail");
-            Assert.assertEquals(mimeMessage.getContentType(), "text/plain");
+            Assertions.assertEquals("foo@mail.com", getAddresses(mimeMessage.getFrom()));
+            Assertions.assertEquals("bar@mail.com", getAddresses(mimeMessage.getRecipients(Message.RecipientType.TO)));
+            Assertions.assertEquals("foo@mail.com", getAddresses(mimeMessage.getReplyTo()));
+            Assertions.assertNotNull(mimeMessage.getSentDate());
+            Assertions.assertEquals("Multipart Testmail", mimeMessage.getSubject());
+            Assertions.assertEquals("text/plain", mimeMessage.getContentType());
 
-            Assert.assertEquals(mimeMessage.getContent().getClass(), MimeMultipart.class);
+            Assertions.assertEquals(MimeMultipart.class, mimeMessage.getContent().getClass());
 
             MimeMultipart multipart = (MimeMultipart) mimeMessage.getContent();
 
-            Assert.assertEquals(multipart.getCount(), 2L);
-            Assert.assertTrue(multipart.getContentType().startsWith("multipart/mixed"));
-            Assert.assertTrue(((MimeMultipart) multipart.getBodyPart(0).getContent()).getContentType().startsWith("multipart/related"));
-            Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getCount(), 1L);
-            Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContent().toString(), "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.");
-            Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContentType(), "text/plain");
-            Assert.assertEquals(multipart.getBodyPart(1).getContent().toString().replaceAll("\\s", ""), "<html><head></head><body><h1>HTMLAttachment</h1></body></html>");
-            Assert.assertEquals(multipart.getBodyPart(1).getFileName(), "index.html");
-            Assert.assertEquals(multipart.getBodyPart(1).getDisposition(), "attachment");
+            Assertions.assertEquals(2L, multipart.getCount());
+            Assertions.assertTrue(multipart.getContentType().startsWith("multipart/mixed"));
+            Assertions.assertTrue(((MimeMultipart) multipart.getBodyPart(0).getContent()).getContentType().startsWith("multipart/related"));
+            Assertions.assertEquals(1L, ((MimeMultipart) multipart.getBodyPart(0).getContent()).getCount());
+            Assertions.assertEquals("Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.", ((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContent().toString());
+            Assertions.assertEquals("text/plain", ((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContentType());
+            Assertions.assertEquals("<html><head></head><body><h1>HTMLAttachment</h1></body></html>", multipart.getBodyPart(1).getContent().toString().replaceAll("\\s", ""));
+            Assertions.assertEquals("index.html", multipart.getBodyPart(1).getFileName());
+            Assertions.assertEquals("attachment", multipart.getBodyPart(1).getDisposition());
             return null;
         }).when(mailSenderMock).send(any(MimeMessage.class));
 
@@ -136,10 +133,5 @@ class MailClientTest extends AbstractTestNGUnitTest {
         }
 
         return builder.toString();
-    }
-
-    @AfterMethod
-    void afterMethodTeardown() throws Exception {
-        mockitoContext.close();
     }
 }

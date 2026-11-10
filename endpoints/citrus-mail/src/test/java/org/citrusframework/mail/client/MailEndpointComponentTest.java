@@ -25,10 +25,10 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.spi.ReferenceResolver;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -39,7 +39,7 @@ public class MailEndpointComponentTest {
     private MailMarshaller marshaller = Mockito.mock(MailMarshaller.class);
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -50,27 +50,27 @@ public class MailEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("smtp://localhost:22000", context);
 
-        Assert.assertEquals(endpoint.getClass(), MailClient.class);
+        Assertions.assertEquals(MailClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((MailClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), 22000);
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((MailClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(22000, ((MailClient) endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals(5000L, ((MailClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("mail:localhost:25000", context);
 
-        Assert.assertEquals(endpoint.getClass(), MailClient.class);
+        Assertions.assertEquals(MailClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((MailClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), 25000);
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((MailClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(25000, ((MailClient) endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals(5000L, ((MailClient) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("mail:localhost", context);
 
-        Assert.assertEquals(endpoint.getClass(), MailClient.class);
+        Assertions.assertEquals(MailClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((MailClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), -1);
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((MailClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(-1, ((MailClient) endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals(5000L, ((MailClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -82,34 +82,34 @@ public class MailEndpointComponentTest {
         when(referenceResolver.resolve("myMarshaller", MailMarshaller.class)).thenReturn(marshaller);
         Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&marshaller=myMarshaller", context);
 
-        Assert.assertEquals(endpoint.getClass(), MailClient.class);
+        Assertions.assertEquals(MailClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((MailClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), -1);
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getUsername(), "foo");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPassword(), "1234");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getMarshaller(), marshaller);
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("localhost", ((MailClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(-1, ((MailClient) endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("foo", ((MailClient) endpoint).getEndpointConfiguration().getUsername());
+        Assertions.assertEquals("1234", ((MailClient) endpoint).getEndpointConfiguration().getPassword());
+        Assertions.assertEquals(marshaller, ((MailClient) endpoint).getEndpointConfiguration().getMarshaller());
+        Assertions.assertEquals(10000L, ((MailClient) endpoint).getEndpointConfiguration().getTimeout());
 
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 4L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("mail"));
-        Assert.assertEquals(validators.get("mail").getClass(), MailEndpointComponent.class);
-        Assert.assertNotNull(validators.get("smtp"));
-        Assert.assertEquals(validators.get("smtp").getClass(), MailEndpointComponent.class);
+        Assertions.assertEquals(4L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("mail"));
+        Assertions.assertEquals(MailEndpointComponent.class, validators.get("mail").getClass());
+        Assertions.assertNotNull(validators.get("smtp"));
+        Assertions.assertEquals(MailEndpointComponent.class, validators.get("smtp").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("mail").isPresent());
-        Assert.assertTrue(EndpointComponent.lookup("smtp").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("mail").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("smtp").isPresent());
     }
 }
