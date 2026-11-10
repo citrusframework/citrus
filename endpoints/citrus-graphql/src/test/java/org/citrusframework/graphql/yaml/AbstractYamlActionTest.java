@@ -63,7 +63,7 @@ public class AbstractYamlActionTest extends AbstractUnitTest {
             CitrusAnnotations.parseConfiguration(invocationOnMock.getArgument(0, Object.class), citrusContext);
             return null;
         }).when(citrusContext).parseConfiguration((Object) any());
-        lenient().doAnswer(invocationOnMock-> {
+        lenient().doAnswer(invocationOnMock -> {
             context.getReferenceResolver().bind(invocationOnMock.getArgument(0), invocationOnMock.getArgument(1));
             return null;
         }).when(citrusContext).addComponent(anyString(), any());
