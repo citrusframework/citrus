@@ -26,7 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Isolated("Binds fixed port 10022 SSH server on the cached Spring context")
+@Isolated
 public class SshServerIT {
 
     @Test
