@@ -81,7 +81,7 @@ public class SshCommandTest {
         String error = "Error, Error";
         int exitCode = 12;
 
-        assertEquals(cmd.getCommand(),COMMAND);
+        assertEquals(COMMAND, cmd.getCommand());
 
         prepare(input, output, error, exitCode);
         cmd.run();
