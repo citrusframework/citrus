@@ -57,7 +57,7 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
             TestAction action = actionBuilder.build();
             try {
                 /* Executing test action and validate its success */
-                action.execute(context);
+                executeNestedAction(action, context);
             } catch (Exception e) {
                 logger.error("Task failed {}Nested exception is: ", action.getName(), e);
                 throw new CitrusRuntimeException(e);

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,8 +32,13 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.report.TestActionContainerListener;
+import org.citrusframework.report.TestActionListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 /**
  * Abstract base class for all containers holding several embedded test actions.
@@ -52,11 +58,11 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     /** Last executed action for error reporting reasons */
     private TestAction activeAction;
 
-    public AbstractActionContainer(String name) {
+    protected AbstractActionContainer(String name) {
         this(name, new Sequence.Builder());
     }
 
-    public AbstractActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
+    protected AbstractActionContainer(String name, AbstractTestContainerBuilder<?, ?> builder) {
         super(name, builder);
         actions = builder.getActions();
     }
@@ -69,9 +75,39 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     protected void executeAction(TestAction action, TestContext context) {
         try {
             setActiveAction(action);
-            action.execute(context);
+            executeNestedAction(action, context);
         } finally {
             setExecutedAction(action);
+        }
+    }
+
+    /**
+     * Runs the given nested action and notifies the {@link TestActionContainerListener}s about its execution.
+     * In contrast to {@link #executeAction(TestAction, TestContext)} the active and executed action state of this
+     * container is not changed. Containers that are shared across tests (e.g. before/after test sequences) use this
+     * method in order to not keep any state between test executions.
+     */
+    protected void executeNestedAction(TestAction action, TestContext context) {
+        if (action.isDisabled(context)) {
+            notifyTestActionListeners(context, listeners -> listeners.onNestedActionSkipped(this, action, context));
+            action.execute(context);
+            return;
+        }
+
+        notifyTestActionListeners(context, listeners -> listeners.onNestedActionStart(this, action, context));
+        try {
+            action.execute(context);
+        } catch (RuntimeException | Error e) {
+            notifyTestActionListeners(context, listeners -> listeners.onNestedActionFailed(this, action, context, e));
+            throw e;
+        }
+        notifyTestActionListeners(context, listeners -> listeners.onNestedActionSuccess(this, action, context));
+    }
+
+    void notifyTestActionListeners(TestContext context, Consumer<TestActionListeners> notification) {
+        TestActionListeners testActionListeners = context.getTestActionListeners();
+        if (nonNull(testActionListeners)) {
+            notification.accept(testActionListeners);
         }
     }
 
@@ -103,21 +139,27 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
         }
 
         if (activeAction != null && !executedActions.contains(activeAction)) {
-            logger.debug("{} not completed yet", Optional.ofNullable(activeAction.getName()).filter(name -> !name.trim().isEmpty())
-                    .orElseGet(() -> activeAction.getClass().getName()));
+            if (logger.isDebugEnabled()) {
+                logger.debug("{} not completed yet",
+                    ofNullable(activeAction.getName()).filter(name -> !name.trim().isEmpty())
+                        .orElseGet(() -> activeAction.getClass().getName()));
+            }
             return false;
         }
 
         synchronized (executedActions) {
             Optional<TestAction> pending = executedActions.stream()
-                    .filter(action -> action instanceof Completable)
+                    .filter(Completable.class::isInstance)
                     .filter(action -> !((Completable)action).isDone(context))
                     .findAny();
 
             if (pending.isPresent()) {
                 TestAction action = pending.get();
-                logger.info("{} not completed yet", Optional.ofNullable(action.getName()).filter(name -> !name.trim().isEmpty())
-                        .orElseGet(() -> action.getClass().getName()));
+                if (logger.isInfoEnabled()) {
+                    logger.info("{} not completed yet",
+                        ofNullable(action.getName()).filter(name -> !name.trim().isEmpty())
+                            .orElseGet(() -> action.getClass().getName()));
+                }
                 return false;
             }
         }

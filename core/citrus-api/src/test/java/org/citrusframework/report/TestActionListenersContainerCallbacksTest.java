@@ -16,6 +16,7 @@
 
 package org.citrusframework.report;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.api.container.IteratingActionContainer;
 import org.citrusframework.context.TestContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,9 @@ class TestActionListenersContainerCallbacksTest {
 
     @Mock
     private TestContext contextMock;
+
+    @Mock
+    private TestAction actionMock;
 
     private final Throwable cause = new IllegalStateException("failed");
 
@@ -98,6 +102,38 @@ class TestActionListenersContainerCallbacksTest {
         fixture.onIterationFailed(containerMock, 1, contextMock, cause);
 
         verify(containerListener()).onIterationFailed(containerMock, 1, contextMock, cause);
+        verifyNoInteractions(plainListenerMock);
+    }
+
+    @Test
+    void onNestedActionStart_isDispatchedToContainerListenersOnly() {
+        fixture.onNestedActionStart(containerMock, actionMock, contextMock);
+
+        verify(containerListener()).onNestedActionStart(containerMock, actionMock, contextMock);
+        verifyNoInteractions(plainListenerMock);
+    }
+
+    @Test
+    void onNestedActionSuccess_isDispatchedToContainerListenersOnly() {
+        fixture.onNestedActionSuccess(containerMock, actionMock, contextMock);
+
+        verify(containerListener()).onNestedActionSuccess(containerMock, actionMock, contextMock);
+        verifyNoInteractions(plainListenerMock);
+    }
+
+    @Test
+    void onNestedActionFailed_isDispatchedToContainerListenersOnly() {
+        fixture.onNestedActionFailed(containerMock, actionMock, contextMock, cause);
+
+        verify(containerListener()).onNestedActionFailed(containerMock, actionMock, contextMock, cause);
+        verifyNoInteractions(plainListenerMock);
+    }
+
+    @Test
+    void onNestedActionSkipped_isDispatchedToContainerListenersOnly() {
+        fixture.onNestedActionSkipped(containerMock, actionMock, contextMock);
+
+        verify(containerListener()).onNestedActionSkipped(containerMock, actionMock, contextMock);
         verifyNoInteractions(plainListenerMock);
     }
 

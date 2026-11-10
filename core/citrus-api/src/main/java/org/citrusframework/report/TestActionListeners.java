@@ -92,6 +92,26 @@ public class TestActionListeners implements TestActionListenerAware, TestActionC
         containerListeners().forEach(listener -> listener.onIterationFailed(container, index, context, cause));
     }
 
+    @Override
+    public void onNestedActionStart(TestActionContainer container, TestAction action, TestContext context) {
+        containerListeners().forEach(listener -> listener.onNestedActionStart(container, action, context));
+    }
+
+    @Override
+    public void onNestedActionSuccess(TestActionContainer container, TestAction action, TestContext context) {
+        containerListeners().forEach(listener -> listener.onNestedActionSuccess(container, action, context));
+    }
+
+    @Override
+    public void onNestedActionFailed(TestActionContainer container, TestAction action, TestContext context, Throwable cause) {
+        containerListeners().forEach(listener -> listener.onNestedActionFailed(container, action, context, cause));
+    }
+
+    @Override
+    public void onNestedActionSkipped(TestActionContainer container, TestAction action, TestContext context) {
+        containerListeners().forEach(listener -> listener.onNestedActionSkipped(container, action, context));
+    }
+
     private Stream<TestActionContainerListener> containerListeners() {
         return testActionListeners.stream()
                 .filter(TestActionContainerListener.class::isInstance)
