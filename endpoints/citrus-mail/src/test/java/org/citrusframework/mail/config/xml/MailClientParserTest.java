@@ -58,6 +58,8 @@ public class MailClientParserTest extends AbstractBeanDefinitionParserTest {
         // 3rd mail sender
         sender = senders.get("mailClient3");
         Assertions.assertEquals("mailClient3", sender.getName());
+        Assertions.assertEquals("localhost", sender.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(25000, sender.getEndpointConfiguration().getPort());
         Assertions.assertNotNull(sender.getActor());
         Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter", MessageConverter.class), sender.getEndpointConfiguration().getMessageConverter());
         Assertions.assertEquals(beanDefinitionContext.getBean("marshaller", MailMarshaller.class), sender.getEndpointConfiguration().getMarshaller());

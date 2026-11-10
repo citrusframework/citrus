@@ -111,6 +111,8 @@ public class MailClientConfigParserTest extends AbstractUnitTest {
 
         // 3rd mail mailClient
         Assertions.assertEquals("mailClient3", mailClient3.getName());
+        Assertions.assertEquals("localhost", mailClient3.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(25000, mailClient3.getEndpointConfiguration().getPort());
         Assertions.assertNotNull(mailClient3.getActor());
         Assertions.assertEquals(messageConverter, mailClient3.getEndpointConfiguration().getMessageConverter());
         Assertions.assertEquals(marshaller, mailClient3.getEndpointConfiguration().getMarshaller());
