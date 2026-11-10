@@ -18,16 +18,16 @@ package org.citrusframework.springintegration.channel;
 
 import org.citrusframework.springintegration.channel.selector.DispatchingMessageSelector;
 import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.doThrow;
 /**
  * @since 2.5
  */
-public class MultiThreadingMessageSelectionTest extends AbstractTestNGUnitTest {
+public class MultiThreadingMessageSelectionTest extends AbstractUnitTest {
 
     private BeanFactory beanFactory = Mockito.mock(BeanFactory.class);
 
@@ -48,7 +48,7 @@ public class MultiThreadingMessageSelectionTest extends AbstractTestNGUnitTest {
             .setHeader("operation", "foobar0"))
             .build();
 
-    @BeforeClass
+    @BeforeEach
     public void setupMock() {
         doThrow(new NoSuchBeanDefinitionException(NamespaceContextBuilder.class)).when(beanFactory).getBean(NamespaceContextBuilder.class);
 
@@ -61,7 +61,7 @@ public class MultiThreadingMessageSelectionTest extends AbstractTestNGUnitTest {
     }
 
     @SuppressWarnings("unchecked")
-    @Test(invocationCount = 100, threadPoolSize = 100)
+    @RepeatedTest(100)
     public void testHeaderMatchingSelectorConcurrent() {
         int i = index.incrementAndGet();
 
@@ -78,6 +78,6 @@ public class MultiThreadingMessageSelectionTest extends AbstractTestNGUnitTest {
 
         declinedMessage.getPayload().setHeader("time" + i, System.currentTimeMillis());
 
-        Assert.assertEquals(received.getPayload().getHeader("operation"), "foo" + (i-1));
+        Assertions.assertEquals("foo" + (i-1), received.getPayload().getHeader("operation"));
     }
 }

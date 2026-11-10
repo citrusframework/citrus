@@ -25,8 +25,8 @@ import org.mockito.Mock;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PurgeChannelsTest extends AbstractYamlActionTest {
 
@@ -52,41 +52,41 @@ public class PurgeChannelsTest extends AbstractYamlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "PurgeChannelsTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 3L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), PurgeMessageChannelAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "purge-channel");
+        Assertions.assertEquals("PurgeChannelsTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(3L, result.getActionCount());
+        Assertions.assertEquals(PurgeMessageChannelAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("purge-channel", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         PurgeMessageChannelAction action = (PurgeMessageChannelAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getMessageSelector());
-        Assert.assertNotNull(action.getChannelResolver());
-        Assert.assertEquals(action.getChannels().size(), 0);
-        Assert.assertEquals(action.getChannelNames().size(), 1);
-        Assert.assertEquals(action.getChannelNames().get(0), "testChannel");
+        Assertions.assertNotNull(action.getMessageSelector());
+        Assertions.assertNotNull(action.getChannelResolver());
+        Assertions.assertEquals(0, action.getChannels().size());
+        Assertions.assertEquals(1, action.getChannelNames().size());
+        Assertions.assertEquals("testChannel", action.getChannelNames().get(0));
 
         action = (PurgeMessageChannelAction) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getMessageSelector());
-        Assert.assertEquals(action.getChannelResolver(), context.getReferenceResolver().resolve("channelResolver"));
-        Assert.assertEquals(action.getChannels().size(), 0);
-        Assert.assertEquals(action.getChannelNames().size(), 2);
-        Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
-        Assert.assertEquals(action.getChannelNames().get(1), "testChannel2");
+        Assertions.assertNotNull(action.getMessageSelector());
+        Assertions.assertEquals(context.getReferenceResolver().resolve("channelResolver"), action.getChannelResolver());
+        Assertions.assertEquals(0, action.getChannels().size());
+        Assertions.assertEquals(2, action.getChannelNames().size());
+        Assertions.assertEquals("testChannel1", action.getChannelNames().get(0));
+        Assertions.assertEquals("testChannel2", action.getChannelNames().get(1));
 
         action = (PurgeMessageChannelAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(action.getMessageSelector(), context.getReferenceResolver().resolve("messageSelector"));
-        Assert.assertEquals(action.getChannels().size(), 0);
-        Assert.assertEquals(action.getChannelNames().size(), 1);
-        Assert.assertEquals(action.getChannelNames().get(0), "testChannel3");
+        Assertions.assertEquals(context.getReferenceResolver().resolve("messageSelector"), action.getMessageSelector());
+        Assertions.assertEquals(0, action.getChannels().size());
+        Assertions.assertEquals(1, action.getChannelNames().size());
+        Assertions.assertEquals("testChannel3", action.getChannelNames().get(0));
     }
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(YamlTestActionBuilder.lookup().containsKey("purgeChannels"));
-        Assert.assertTrue(YamlTestActionBuilder.lookup("purgeChannels").isPresent());
-        Assert.assertEquals(YamlTestActionBuilder.lookup("purgeChannels").get().getClass(), PurgeChannels.class);
+        Assertions.assertTrue(YamlTestActionBuilder.lookup().containsKey("purgeChannels"));
+        Assertions.assertTrue(YamlTestActionBuilder.lookup("purgeChannels").isPresent());
+        Assertions.assertEquals(PurgeChannels.class, YamlTestActionBuilder.lookup("purgeChannels").get().getClass());
     }
 }

@@ -28,20 +28,21 @@ import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser
 import org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class ChannelEndpointConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class ChannelEndpointConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint
     @ChannelEndpointConfig(channelName="testChannel")
@@ -80,21 +81,17 @@ public class ChannelEndpointConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(referenceResolver.resolve("messagingTemplate", MessagingTemplate.class)).thenReturn(messagingTemplate);
-        when(referenceResolver.resolve("channelQueue", MessageChannel.class)).thenReturn(channelQueue);
-        when(referenceResolver.resolve("messageConverter", ChannelMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("channelResolver", DestinationResolver.class)).thenReturn(channelResolver);
-        when(referenceResolver.resolve("channelNameResolver", EndpointUriResolver.class)).thenReturn(channelNameResolver);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
-
-    @BeforeMethod
-    public void setMocks() {
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
         context.setReferenceResolver(referenceResolver);
+        lenient().when(referenceResolver.resolve("messagingTemplate", MessagingTemplate.class)).thenReturn(messagingTemplate);
+        lenient().when(referenceResolver.resolve("channelQueue", MessageChannel.class)).thenReturn(channelQueue);
+        lenient().when(referenceResolver.resolve("messageConverter", ChannelMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("channelResolver", DestinationResolver.class)).thenReturn(channelResolver);
+        lenient().when(referenceResolver.resolve("channelNameResolver", EndpointUriResolver.class)).thenReturn(channelNameResolver);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
     }
 
     @Test
@@ -102,47 +99,47 @@ public class ChannelEndpointConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver
-        Assert.assertEquals(channelEndpoint1.getEndpointConfiguration().getMessageConverter().getClass(), ChannelMessageConverter.class);
-        Assert.assertEquals(channelEndpoint1.getEndpointConfiguration().getChannelName(), "testChannel");
-        Assert.assertNull(channelEndpoint1.getEndpointConfiguration().getChannel());
-        Assert.assertEquals(channelEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertFalse(channelEndpoint1.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertTrue(channelEndpoint1.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals(ChannelMessageConverter.class, channelEndpoint1.getEndpointConfiguration().getMessageConverter().getClass());
+        Assertions.assertEquals("testChannel", channelEndpoint1.getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(channelEndpoint1.getEndpointConfiguration().getChannel());
+        Assertions.assertEquals(5000L, channelEndpoint1.getEndpointConfiguration().getTimeout());
+        Assertions.assertFalse(channelEndpoint1.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertTrue(channelEndpoint1.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
-        Assert.assertEquals(channelEndpoint2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(channelEndpoint2.getEndpointConfiguration().getChannelResolver(), channelResolver);
-        Assert.assertNull(channelEndpoint2.getEndpointConfiguration().getChannelName());
-        Assert.assertNotNull(channelEndpoint2.getEndpointConfiguration().getChannel());
-        Assert.assertEquals(channelEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(messageConverter, channelEndpoint2.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(channelResolver, channelEndpoint2.getEndpointConfiguration().getChannelResolver());
+        Assertions.assertNull(channelEndpoint2.getEndpointConfiguration().getChannelName());
+        Assertions.assertNotNull(channelEndpoint2.getEndpointConfiguration().getChannel());
+        Assertions.assertEquals(10000L, channelEndpoint2.getEndpointConfiguration().getTimeout());
 
         // 3rd message receiver
-        Assert.assertNull(channelEndpoint3.getEndpointConfiguration().getChannelName());
-        Assert.assertNull(channelEndpoint3.getEndpointConfiguration().getChannel());
-        Assert.assertTrue(channelEndpoint3.getEndpointConfiguration().isUseObjectMessages());
-        Assert.assertFalse(channelEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNull(channelEndpoint3.getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(channelEndpoint3.getEndpointConfiguration().getChannel());
+        Assertions.assertTrue(channelEndpoint3.getEndpointConfiguration().isUseObjectMessages());
+        Assertions.assertFalse(channelEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
-        Assert.assertNotNull(channelEndpoint4.getActor());
-        Assert.assertEquals(channelEndpoint4.getActor(), testActor);
+        Assertions.assertNotNull(channelEndpoint4.getActor());
+        Assertions.assertEquals(testActor, channelEndpoint4.getActor());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 4L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("channel.async"));
-        Assert.assertEquals(validators.get("channel.async").getClass(), ChannelEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("channel.sync"));
-        Assert.assertEquals(validators.get("channel.sync").getClass(), ChannelSyncEndpointConfigParser.class);
+        Assertions.assertEquals(4L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        Assertions.assertNotNull(validators.get("channel.async"));
+        Assertions.assertEquals(ChannelEndpointConfigParser.class, validators.get("channel.async").getClass());
+        Assertions.assertNotNull(validators.get("channel.sync"));
+        Assertions.assertEquals(ChannelSyncEndpointConfigParser.class, validators.get("channel.sync").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("channel.async").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("channel.async").isPresent());
     }
 }

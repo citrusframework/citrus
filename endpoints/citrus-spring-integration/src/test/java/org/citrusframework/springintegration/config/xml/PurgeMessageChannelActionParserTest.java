@@ -18,10 +18,10 @@ package org.citrusframework.springintegration.config.xml;
 
 import org.citrusframework.springintegration.actions.PurgeMessageChannelAction;
 import org.citrusframework.spring.config.CitrusNamespaceParserRegistry;
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PurgeMessageChannelActionParserTest extends AbstractActionParserTest<PurgeMessageChannelAction> {
 
@@ -31,38 +31,38 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
         assertActionClassAndName(PurgeMessageChannelAction.class, "purge-channel");
 
         PurgeMessageChannelAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getMessageSelector());
-        Assert.assertEquals(action.getChannels().size(), 0);
-        Assert.assertEquals(action.getChannelNames().size(), 3);
-        Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
-        Assert.assertEquals(action.getChannelNames().get(1), "testChannel2");
-        Assert.assertEquals(action.getChannelNames().get(2), "testChannel3");
+        Assertions.assertNotNull(action.getMessageSelector());
+        Assertions.assertEquals(0, action.getChannels().size());
+        Assertions.assertEquals(3, action.getChannelNames().size());
+        Assertions.assertEquals("testChannel1", action.getChannelNames().get(0));
+        Assertions.assertEquals("testChannel2", action.getChannelNames().get(1));
+        Assertions.assertEquals("testChannel3", action.getChannelNames().get(2));
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getMessageSelector());
-        Assert.assertEquals(action.getChannels().size(), 1);
-        Assert.assertEquals(action.getChannelNames().size(), 3);
-        Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
-        Assert.assertEquals(action.getChannelNames().get(1), "testChannel2");
-        Assert.assertEquals(action.getChannelNames().get(2), "testChannel3");
+        Assertions.assertNotNull(action.getMessageSelector());
+        Assertions.assertEquals(1, action.getChannels().size());
+        Assertions.assertEquals(3, action.getChannelNames().size());
+        Assertions.assertEquals("testChannel1", action.getChannelNames().get(0));
+        Assertions.assertEquals("testChannel2", action.getChannelNames().get(1));
+        Assertions.assertEquals("testChannel3", action.getChannelNames().get(2));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessageSelector(), beanDefinitionContext.getBean("testMessageSelector"));
-        Assert.assertEquals(action.getChannels().size(), 1);
-        Assert.assertEquals(action.getChannelNames().size(), 1);
-        Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
+        Assertions.assertEquals(beanDefinitionContext.getBean("testMessageSelector"), action.getMessageSelector());
+        Assertions.assertEquals(1, action.getChannels().size());
+        Assertions.assertEquals(1, action.getChannelNames().size());
+        Assertions.assertEquals("testChannel1", action.getChannelNames().get(0));
     }
 
-    @Test(expectedExceptions = BeanDefinitionStoreException.class)
+    @Test
     public void testPurgeMessageChannelActionParserFailed() {
-        createApplicationContext("failed");
+        Assertions.assertThrows(BeanDefinitionStoreException.class, () -> createApplicationContext("failed"));
     }
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("purge-channel"));
-        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
+        Assertions.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("purge-channel"));
+        Assertions.assertEquals(PurgeMessageChannelActionParser.class, CitrusNamespaceParserRegistry.lookupBeanParser().get("purge-channel").getClass());
 
-        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
+        Assertions.assertEquals(PurgeMessageChannelActionParser.class, CitrusNamespaceParserRegistry.getBeanParser("purge-channel").getClass());
     }
 }

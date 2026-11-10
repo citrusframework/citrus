@@ -28,9 +28,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
@@ -40,7 +40,7 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
 
     private BeanFactory beanFactory = Mockito.mock(BeanFactory.class);
 
-    @BeforeMethod
+    @BeforeEach
     public void setupMock() {
         reset(beanFactory);
         doThrow(new NoSuchBeanDefinitionException(NamespaceContextBuilder.class)).when(beanFactory).getBean(NamespaceContextBuilder.class);
@@ -58,8 +58,8 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foobar")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -75,8 +75,8 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -93,8 +93,8 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DispatchingMessageSelector("payload = 'FooTest'", beanFactory, context);
 
@@ -107,23 +107,23 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
     public void testPayloadAndHeaderMatchingDelegation() {
         DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("header:payload = 'foo' AND payload = 'foo'", beanFactory, context);
 
-        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("foo")
+        Assertions.assertTrue(messageSelector.accept(MessageBuilder.withPayload("foo")
                 .setHeader("payload", "foo")
                 .build()));
 
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("foo")
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("foo")
                 .setHeader("payload", "bar")
                 .build()));
 
-        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("bar")
+        Assertions.assertFalse(messageSelector.accept(MessageBuilder.withPayload("bar")
                 .setHeader("payload", "foo")
                 .build()));
     }
@@ -142,8 +142,8 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DispatchingMessageSelector("root-qname = 'FooTest'", beanFactory, context);
 
@@ -156,8 +156,8 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -172,8 +172,8 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -190,13 +190,13 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DispatchingMessageSelector("xpath://FooTest/text = 'foobar'", beanFactory, context);
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -222,13 +222,13 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DispatchingMessageSelector("xpath://foo:FooTest/foo:text = 'foobar'", beanFactory, context);
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
     }
 
@@ -246,13 +246,13 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
 
         messageSelector = new DispatchingMessageSelector("jsonPath:$.foo.text = 'foobar'", beanFactory, context);
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 
     @Test
@@ -286,7 +286,7 @@ public class DispatchingMessageSelectorTest extends UnitTestSupport {
                 .setHeader("operation", "foo")
                 .build();
 
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
+        Assertions.assertTrue(messageSelector.accept(acceptMessage));
+        Assertions.assertFalse(messageSelector.accept(declineMessage));
     }
 }

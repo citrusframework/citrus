@@ -25,14 +25,14 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
+public class ChannelEndpointSyncProducerTest extends AbstractUnitTest {
 
     private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
     private MessageChannel channel = Mockito.mock(MessageChannel.class);
@@ -119,8 +119,8 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         Message replyMessage = channelSyncProducer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+        Assertions.assertEquals(response.getPayload(), replyMessage.getPayload());
+        Assertions.assertEquals(response.getHeaders().getId(), replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID));
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
@@ -150,8 +150,8 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         Message replyMessage = channelSyncProducer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message),
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+        Assertions.assertEquals(response.getPayload(), replyMessage.getPayload());
+        Assertions.assertEquals(response.getHeaders().getId(), replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID));
 
         verify(messagingTemplate).setReceiveTimeout(10000L);
     }
@@ -184,8 +184,8 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         Message replyMessage = channelSyncProducer.getCorrelationManager().find(MessageHeaders.ID + " = '123456789'",
                 endpoint.getEndpointConfiguration().getTimeout());
-        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+        Assertions.assertEquals(response.getPayload(), replyMessage.getPayload());
+        Assertions.assertEquals(response.getHeaders().getId(), replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID));
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
@@ -206,12 +206,12 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         try {
             endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Action timeout after 5000 milliseconds. " +
-                    "Failed to receive synchronous reply message on endpoint: 'mockChannel'");
+            Assertions.assertEquals("Action timeout after 5000 milliseconds. " +
+                    "Failed to receive synchronous reply message on endpoint: 'mockChannel'", e.getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of reply timeout");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because of reply timeout");
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
 
@@ -227,7 +227,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                 channelSyncProducer.toString(), context);
         channelSyncProducer.getCorrelationManager().store(channelSyncProducer.toString(), message);
 
-        Assert.assertEquals(channelSyncProducer.receive(context), message);
+        Assertions.assertEquals(message, channelSyncProducer.receive(context));
     }
 
     @Test
@@ -239,6 +239,6 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.getCorrelationManager().store(new DefaultMessageCorrelator().getCorrelationKey(message), message);
 
-        Assert.assertEquals(channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
+        Assertions.assertEquals(message, channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context));
     }
 }

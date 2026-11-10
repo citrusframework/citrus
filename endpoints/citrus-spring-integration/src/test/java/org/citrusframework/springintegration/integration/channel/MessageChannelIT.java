@@ -16,13 +16,19 @@
 
 package org.citrusframework.springintegration.integration.channel;
 
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
-public class MessageChannelIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class MessageChannelIT {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void MessageChannelIT() {}
+    public void MessageChannelIT(@CitrusResource TestCaseRunner runner) {}
 }

@@ -25,15 +25,17 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.core.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class ChannelEndpointComponentTest {
 
     @Mock
@@ -43,9 +45,8 @@ public class ChannelEndpointComponentTest {
 
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -56,12 +57,12 @@ public class ChannelEndpointComponentTest {
         reset(referenceResolver);
         Endpoint endpoint = component.createEndpoint("channel:channelName", context);
 
-        Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
+        Assertions.assertEquals(ChannelEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
-        Assert.assertNotNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver());
-        Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("channelName", ((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
+        Assertions.assertNotNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver());
+        Assertions.assertEquals(5000L, ((ChannelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
     }
 
@@ -72,11 +73,11 @@ public class ChannelEndpointComponentTest {
         reset(referenceResolver);
         Endpoint endpoint = component.createEndpoint("channel:sync:channelName", context);
 
-        Assert.assertEquals(endpoint.getClass(), ChannelSyncEndpoint.class);
+        Assertions.assertEquals(ChannelSyncEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((ChannelSyncEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
-        Assert.assertNotNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver());
+        Assertions.assertEquals("channelName", ((ChannelSyncEndpoint)endpoint).getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
+        Assertions.assertNotNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver());
 
     }
 
@@ -89,29 +90,29 @@ public class ChannelEndpointComponentTest {
         when(referenceResolver.resolve("myChannelResolver", DestinationResolver.class)).thenReturn(channelResolver);
         Endpoint endpoint = component.createEndpoint("channel:channelName?timeout=10000&channelResolver=myChannelResolver", context);
 
-        Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
+        Assertions.assertEquals(ChannelEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
-        Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver(), channelResolver);
-        Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("channelName", ((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
+        Assertions.assertEquals(channelResolver, ((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver());
+        Assertions.assertEquals(10000L, ((ChannelEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 3L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("channel"));
-        Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
+        Assertions.assertEquals(3L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("channel"));
+        Assertions.assertEquals(ChannelEndpointComponent.class, validators.get("channel").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("channel").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("channel").isPresent());
     }
 }

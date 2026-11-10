@@ -19,18 +19,18 @@ package org.citrusframework.springintegration.channel;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.core.DestinationResolver;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
-public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
+public class ChannelEndpointProducerTest extends AbstractUnitTest {
 
     private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
     private MessageChannel channel = Mockito.mock(MessageChannel.class);
@@ -91,13 +91,13 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
         try {
             endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Failed to send message to channel: "));
-            Assert.assertNotNull(e.getCause());
-            Assert.assertEquals(e.getCause().getClass(), MessageDeliveryException.class);
-            Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Failed to send message to channel: "));
+            Assertions.assertNotNull(e.getCause());
+            Assertions.assertEquals(MessageDeliveryException.class, e.getCause().getClass());
+            Assertions.assertEquals("Internal error!", e.getCause().getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because no message was received");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because no message was received");
     }
 }

@@ -19,17 +19,21 @@ package org.citrusframework.springintegration.integration;
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.BeanDefinitionParserConfiguration;
 import org.citrusframework.spring.SpringXmlTestLoaderConfiguration;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.spring.config.xml.BaseTestCaseMetaInfoParser;
 import org.citrusframework.spring.config.xml.BaseTestCaseParser;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.xml.DomUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 import org.w3c.dom.Element;
 
 @SpringXmlTestLoaderConfiguration(
@@ -37,17 +41,19 @@ import org.w3c.dom.Element;
                 @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoaderIT.CustomTestCaseParser.class),
                 @BeanDefinitionParserConfiguration(name = "meta-info", parser = SpringXmlTestLoaderIT.CustomTestCaseMetaInfoParser.class)
         })
-public class SpringXmlTestLoaderIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class SpringXmlTestLoaderIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.SPRING)
-    public void SpringXmlTestLoaderIT() {
-        TestCase testCase = getTestCase();
-        Assert.assertTrue(testCase instanceof CustomTestCase);
+    public void SpringXmlTestLoaderIT(@CitrusResource TestCaseRunner runner) {
+        TestCase testCase = runner.getTestCase();
+        Assertions.assertTrue(testCase instanceof CustomTestCase);
 
         TestCaseMetaInfo metaInfo = testCase.getMetaInfo();
-        Assert.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
-        Assert.assertEquals(((CustomTestCaseMetaInfo)metaInfo).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
+        Assertions.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
+        Assertions.assertEquals("Foo bar: F#!$§ed up beyond all repair", ((CustomTestCaseMetaInfo)metaInfo).getDescription());
     }
 
     /**

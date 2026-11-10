@@ -17,16 +17,16 @@
 package org.citrusframework.springintegration.channel;
 
 import org.citrusframework.springintegration.channel.selector.HeaderMatchingMessageSelector;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
+public class MessageSelectingQueueChannelTest extends AbstractUnitTest {
 
     @Test
     public void testReceiveSelected() {
@@ -39,8 +39,8 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
 
         Message<?> receivedMessage = channel.receive(selector, 1000L);
 
-        Assert.assertEquals(receivedMessage.getPayload(), "FooMessage");
-        Assert.assertEquals(receivedMessage.getHeaders().get("foo"), "bar");
+        Assertions.assertEquals("FooMessage", receivedMessage.getPayload());
+        Assertions.assertEquals("bar", receivedMessage.getHeaders().get("foo"));
     }
 
     @Test
@@ -60,9 +60,9 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
 
         Message<?> receivedMessage = channel.receive(selector, 1000L);
 
-        Assert.assertEquals(receivedMessage.getPayload(), "FooMessage");
-        Assert.assertEquals(receivedMessage.getHeaders().get("foo"), "bar");
-        Assert.assertEquals(retries.get(), 8L);
+        Assertions.assertEquals("FooMessage", receivedMessage.getPayload());
+        Assertions.assertEquals("bar", receivedMessage.getHeaders().get("foo"));
+        Assertions.assertEquals(8L, retries.get());
     }
 
     @Test
@@ -83,8 +83,8 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
 
         Message<?> receivedMessage = channel.receive(selector, 1000L);
 
-        Assert.assertNull(receivedMessage);
-        Assert.assertEquals(retries.get(), 3L);
+        Assertions.assertNull(receivedMessage);
+        Assertions.assertEquals(3L, retries.get());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
 
         Message<?> receivedMessage = channel.receive(selector, 1000L);
 
-        Assert.assertNull(receivedMessage);
-        Assert.assertEquals(retries.get(), 4L);
+        Assertions.assertNull(receivedMessage);
+        Assertions.assertEquals(4L, retries.get());
     }
 }

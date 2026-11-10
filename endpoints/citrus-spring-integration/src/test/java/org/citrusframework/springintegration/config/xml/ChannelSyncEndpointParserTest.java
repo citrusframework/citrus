@@ -22,10 +22,10 @@ import org.citrusframework.TestActor;
 import org.citrusframework.springintegration.channel.ChannelSyncEndpoint;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.springframework.integration.core.MessagingTemplate;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ChannelSyncEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -33,38 +33,38 @@ public class ChannelSyncEndpointParserTest extends AbstractBeanDefinitionParserT
     public void testChannelSyncEndpointAsConsumerParser() {
         Map<String, ChannelSyncEndpoint> endpoints = beanDefinitionContext.getBeansOfType(ChannelSyncEndpoint.class);
 
-        Assert.assertEquals(endpoints.size(), 3);
+        Assertions.assertEquals(3, endpoints.size());
 
         // 1st message receiver
         ChannelSyncEndpoint channelSyncEndpoint = endpoints.get("syncChannelEndpoint1");
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannel());
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getPollingInterval(), 500L);
-        Assert.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getChannelResolver());
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertTrue(channelSyncEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertEquals("channelName", channelSyncEndpoint.getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannel());
+        Assertions.assertEquals(5000L, channelSyncEndpoint.getEndpointConfiguration().getTimeout());
+        Assertions.assertEquals(500L, channelSyncEndpoint.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getChannelResolver());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, channelSyncEndpoint.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertTrue(channelSyncEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         channelSyncEndpoint = endpoints.get("syncChannelEndpoint2");
-        Assert.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelName());
-        Assert.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getChannel());
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelResolver());
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator", MessageCorrelator.class));
+        Assertions.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelName());
+        Assertions.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getChannel());
+        Assertions.assertEquals(10000L, channelSyncEndpoint.getEndpointConfiguration().getTimeout());
+        Assertions.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelResolver());
+        Assertions.assertEquals(beanDefinitionContext.getBean("replyMessageCorrelator", MessageCorrelator.class), channelSyncEndpoint.getEndpointConfiguration().getCorrelator());
 
         // 3rd message receiver
         channelSyncEndpoint = endpoints.get("syncChannelEndpoint3");
-        Assert.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelName());
-        Assert.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannel());
-        Assert.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelResolver());
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getMessagingTemplate());
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getMessagingTemplate(), beanDefinitionContext.getBean("messagingTemplate", MessagingTemplate.class));
-        Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getPollingInterval(), 250L);
-        Assert.assertFalse(channelSyncEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
-        Assert.assertNotNull(channelSyncEndpoint.getActor());
-        Assert.assertEquals(channelSyncEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelName());
+        Assertions.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannel());
+        Assertions.assertNull(channelSyncEndpoint.getEndpointConfiguration().getChannelResolver());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, channelSyncEndpoint.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getMessagingTemplate());
+        Assertions.assertEquals(beanDefinitionContext.getBean("messagingTemplate", MessagingTemplate.class), channelSyncEndpoint.getEndpointConfiguration().getMessagingTemplate());
+        Assertions.assertEquals(250L, channelSyncEndpoint.getEndpointConfiguration().getPollingInterval());
+        Assertions.assertFalse(channelSyncEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
+        Assertions.assertNotNull(channelSyncEndpoint.getActor());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), channelSyncEndpoint.getActor());
     }
 
 }
