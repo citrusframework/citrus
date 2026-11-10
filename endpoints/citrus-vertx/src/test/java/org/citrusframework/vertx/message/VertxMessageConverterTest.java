@@ -18,18 +18,18 @@ package org.citrusframework.vertx.message;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.vertx.endpoint.VertxEndpointConfiguration;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
 /**
  * @since 2.0
  */
-public class VertxMessageConverterTest extends AbstractTestNGUnitTest {
+public class VertxMessageConverterTest extends AbstractUnitTest {
 
     private io.vertx.core.eventbus.Message vertxMessage = Mockito.mock(io.vertx.core.eventbus.Message.class);
 
@@ -46,24 +46,28 @@ public class VertxMessageConverterTest extends AbstractTestNGUnitTest {
 
         Message message = messageConverter.convertInbound(vertxMessage, new VertxEndpointConfiguration(), context);
 
-        Assert.assertEquals(message.getPayload(), "Hello Citrus!");
-        Assert.assertEquals(message.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), "hello");
-        Assert.assertEquals(message.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "answer");
+        Assertions.assertEquals("Hello Citrus!", message.getPayload());
+        Assertions.assertEquals("hello", message.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS));
+        Assertions.assertEquals("answer", message.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS));
 
     }
 
     @Test
     public void testConvertInboundNullMessage() {
-        Assert.assertNull(messageConverter.convertInbound(null, new VertxEndpointConfiguration(), context));
+        Assertions.assertNull(messageConverter.convertInbound(null, new VertxEndpointConfiguration(), context));
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test
     public void testConvertOutbound() {
-        messageConverter.convertOutbound(new DefaultMessage("This is a test!"), new VertxEndpointConfiguration(), context);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            messageConverter.convertOutbound(new DefaultMessage("This is a test!"), new VertxEndpointConfiguration(), context);
+        });
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test
     public void testConvertOutboundOnExternalMessage() {
-        messageConverter.convertOutbound(vertxMessage, new DefaultMessage("This is a test!"), new VertxEndpointConfiguration(), context);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            messageConverter.convertOutbound(vertxMessage, new DefaultMessage("This is a test!"), new VertxEndpointConfiguration(), context);
+        });
     }
 }

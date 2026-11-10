@@ -19,14 +19,14 @@ package org.citrusframework.vertx.endpoint;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.vertx.factory.SingleVertxInstanceFactory;
 import org.citrusframework.vertx.message.CitrusVertxMessageHeaders;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
  * @since 1.4.1
  */
 @SuppressWarnings("unchecked")
-public class VertxEndpointTest extends AbstractTestNGUnitTest {
+public class VertxEndpointTest extends AbstractUnitTest {
 
     private Vertx vertx = Mockito.mock(Vertx.class);
     private EventBus eventBus = Mockito.mock(EventBus.class);
@@ -48,7 +48,7 @@ public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
     private SingleVertxInstanceFactory instanceFactory = new SingleVertxInstanceFactory();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         instanceFactory.setVertx(vertx);
     }
@@ -118,9 +118,9 @@ public class VertxEndpointTest extends AbstractTestNGUnitTest {
         }).when(eventBus).consumer(eq(eventBusAddress), any(Handler.class));
 
         Message receivedMessage = vertxEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(receivedMessage.getPayload(), "Hello from Vertx!");
-        Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
-        Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
+        Assertions.assertEquals("Hello from Vertx!", receivedMessage.getPayload());
+        Assertions.assertEquals(eventBusAddress, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS));
+        Assertions.assertEquals("replyAddress", receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS));
 
         verify(messageConsumer).unregister();
     }

@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.vertx.endpoint.VertxEndpointBuilder;
 import org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class VertxEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("vertx"));
-        Assert.assertTrue(endpointBuilders.containsKey("vertx.sync"));
-        Assert.assertTrue(endpointBuilders.containsKey("vertx.async"));
+        Assertions.assertTrue(endpointBuilders.containsKey("vertx"));
+        Assertions.assertTrue(endpointBuilders.containsKey("vertx.sync"));
+        Assertions.assertTrue(endpointBuilders.containsKey("vertx.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("vertx").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("vertx").get().getClass(), VertxEndpointsBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("vertx.sync").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("vertx.sync").get().getClass(), VertxSyncEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("vertx.async").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("vertx.async").get().getClass(), VertxEndpointBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("vertx").isPresent());
+        Assertions.assertEquals(VertxEndpointsBuilder.class, EndpointBuilder.lookup("vertx").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("vertx.sync").isPresent());
+        Assertions.assertEquals(VertxSyncEndpointBuilder.class, EndpointBuilder.lookup("vertx.sync").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("vertx.async").isPresent());
+        Assertions.assertEquals(VertxEndpointBuilder.class, EndpointBuilder.lookup("vertx.async").get().getClass());
     }
 }

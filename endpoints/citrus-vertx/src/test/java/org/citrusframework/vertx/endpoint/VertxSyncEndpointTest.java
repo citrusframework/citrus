@@ -19,16 +19,16 @@ package org.citrusframework.vertx.endpoint;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.report.MessageListeners;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.vertx.factory.SingleVertxInstanceFactory;
 import org.citrusframework.vertx.message.CitrusVertxMessageHeaders;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.DeliveryOptions;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
 
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
  * @since 1.4.1
  */
 @SuppressWarnings("unchecked")
-public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
+public class VertxSyncEndpointTest extends AbstractUnitTest {
 
     private Vertx vertx = Mockito.mock(Vertx.class);
     private EventBus eventBus = Mockito.mock(EventBus.class);
@@ -49,7 +49,7 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
     private final SingleVertxInstanceFactory instanceFactory = new SingleVertxInstanceFactory();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         instanceFactory.setVertx(vertx);
     }
@@ -83,9 +83,9 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
         vertxEndpoint.createProducer().send(requestMessage, context);
         Message reply = vertxEndpoint.createConsumer().receive(context, 5000L);
 
-        Assert.assertEquals(reply.getPayload(), "Hello from Vertx!");
-        Assert.assertEquals(reply.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
-        Assert.assertEquals(reply.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
+        Assertions.assertEquals("Hello from Vertx!", reply.getPayload());
+        Assertions.assertEquals(eventBusAddress, reply.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS));
+        Assertions.assertEquals("replyAddress", reply.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS));
 
     }
 
@@ -117,9 +117,9 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
         when(eventBus.send("replyAddress", replyMessage.getPayload())).thenReturn(eventBus);
 
         Message receivedMessage = vertxEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(receivedMessage.getPayload(), "Hello from Vertx!");
-        Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
-        Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
+        Assertions.assertEquals("Hello from Vertx!", receivedMessage.getPayload());
+        Assertions.assertEquals(eventBusAddress, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS));
+        Assertions.assertEquals("replyAddress", receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS));
 
         vertxEndpoint.createProducer().send(replyMessage, context);
 
