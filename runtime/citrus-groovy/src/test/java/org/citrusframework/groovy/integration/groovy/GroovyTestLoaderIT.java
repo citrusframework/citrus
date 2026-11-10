@@ -26,6 +26,7 @@ import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -33,6 +34,7 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("Shares the say-hello queue with GroovyScript_IT under parallel classes")
 public class GroovyTestLoaderIT {
 
     @Test
