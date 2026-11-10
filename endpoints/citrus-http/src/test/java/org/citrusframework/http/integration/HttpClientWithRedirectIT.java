@@ -18,15 +18,22 @@ package org.citrusframework.http.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class HttpClientWithRedirectIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpClientWithRedirectIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "HttpClientWithRedirectIT")
     public void testHttpClientWithRedirect() {}
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "HttpClientWithRedirectDisabledIT")
     public void testHttpClientWithRedirectDisabled() {}
 }

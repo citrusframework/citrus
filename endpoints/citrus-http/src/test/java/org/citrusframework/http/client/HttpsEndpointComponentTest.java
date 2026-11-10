@@ -30,9 +30,9 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -43,7 +43,7 @@ public class HttpsEndpointComponentTest {
     private ClientHttpRequestFactory requestFactory = Mockito.mock(ClientHttpRequestFactory.class);
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -54,12 +54,12 @@ public class HttpsEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("https://localhost:8088/test", context);
 
-        Assert.assertEquals(endpoint.getClass(), HttpClient.class);
+        Assertions.assertEquals(HttpClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl(), "https://localhost:8088/test");
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod(), RequestMethod.POST);
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("https://localhost:8088/test", ((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl());
+        Assertions.assertEquals(RequestMethod.POST, ((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod());
+        Assertions.assertEquals(ErrorHandlingStrategy.PROPAGATE, ((HttpClient) endpoint).getEndpointConfiguration().getErrorHandlingStrategy());
+        Assertions.assertEquals(5000L, ((HttpClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -71,11 +71,11 @@ public class HttpsEndpointComponentTest {
         when(referenceResolver.resolve("sslRequestFactory", ClientHttpRequestFactory.class)).thenReturn(requestFactory);
         Endpoint endpoint = component.createEndpoint("https:localhost:8088?requestFactory=sslRequestFactory", context);
 
-        Assert.assertEquals(endpoint.getClass(), HttpClient.class);
+        Assertions.assertEquals(HttpClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl(), "https://localhost:8088");
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestFactory(), requestFactory);
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("https://localhost:8088", ((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl());
+        Assertions.assertEquals(requestFactory, ((HttpClient) endpoint).getEndpointConfiguration().getRequestFactory());
+        Assertions.assertEquals(5000L, ((HttpClient) endpoint).getEndpointConfiguration().getTimeout());
 
     }
 
@@ -85,33 +85,33 @@ public class HttpsEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("https://localhost:8088/test?requestMethod=DELETE&customParam=foo", context);
 
-        Assert.assertEquals(endpoint.getClass(), HttpClient.class);
+        Assertions.assertEquals(HttpClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl(), "https://localhost:8088/test?customParam=foo");
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod(), RequestMethod.DELETE);
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("https://localhost:8088/test?customParam=foo", ((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl());
+        Assertions.assertEquals(RequestMethod.DELETE, ((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod());
+        Assertions.assertEquals(5000L, ((HttpClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 6L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("jms"));
-        Assert.assertEquals(validators.get("jms").getClass(), JmsEndpointComponent.class);
-        Assert.assertNotNull(validators.get("channel"));
-        Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
-        Assert.assertNotNull(validators.get("http"));
-        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
-        Assert.assertNotNull(validators.get("https"));
-        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+        Assertions.assertEquals(6L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("jms"));
+        Assertions.assertEquals(JmsEndpointComponent.class, validators.get("jms").getClass());
+        Assertions.assertNotNull(validators.get("channel"));
+        Assertions.assertEquals(ChannelEndpointComponent.class, validators.get("channel").getClass());
+        Assertions.assertNotNull(validators.get("http"));
+        Assertions.assertEquals(HttpEndpointComponent.class, validators.get("http").getClass());
+        Assertions.assertNotNull(validators.get("https"));
+        Assertions.assertEquals(HttpsEndpointComponent.class, validators.get("https").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("https").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("https").isPresent());
     }
 }

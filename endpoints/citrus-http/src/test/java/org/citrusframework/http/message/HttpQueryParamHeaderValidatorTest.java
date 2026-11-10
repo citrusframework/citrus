@@ -19,39 +19,44 @@ package org.citrusframework.http.message;
 import java.util.Collections;
 
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
 
 /**
  * @since 2.7.6
  */
-public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
+public class HttpQueryParamHeaderValidatorTest extends AbstractUnitTest {
 
     private final HttpQueryParamHeaderValidator validator = new HttpQueryParamHeaderValidator();
     private final HeaderValidationContext validationContext = new HeaderValidationContext.Builder().build();
 
-    @Test(dataProvider = "successData")
+    @ParameterizedTest
+    @MethodSource("successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {
         validator.validateHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, receivedValue, controlValue, context, validationContext);
     }
 
-    @DataProvider
-    public Object[][] successData() {
-        return new Object[][] {
-                new Object[] { "foobar", "@contains(foo)@" },
-                new Object[] { "foo=fooValue,bar=barValue", "foo=fooValue,bar=barValue" },
-                new Object[] { "foo=,bar=barValue", "foo=,bar=barValue" },
-                new Object[] { "foo=1,foo=2,foo=3,bar=barValue", "foo=1,foo=2,foo=3,bar=barValue" },
-                new Object[] { "foo=1,foo=2,foo=3,bar=barValue", "foo=3,foo=2,foo=1,bar=barValue" },
-                new Object[] { "$select=Name%2CValue,$top=10", "$select=Name%2CValue,$top=10" },
-                new Object[] { null, null },
-                new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "value") },
-                new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", is("value")) }
-        };
+    static Stream<Arguments> successData() {
+        return Stream.of(
+                Arguments.of("foobar", "@contains(foo)@"),
+                Arguments.of("foo=fooValue,bar=barValue", "foo=fooValue,bar=barValue"),
+                Arguments.of("foo=,bar=barValue", "foo=,bar=barValue"),
+                Arguments.of("foo=1,foo=2,foo=3,bar=barValue", "foo=1,foo=2,foo=3,bar=barValue"),
+                Arguments.of("foo=1,foo=2,foo=3,bar=barValue", "foo=3,foo=2,foo=1,bar=barValue"),
+                Arguments.of("$select=Name%2CValue,$top=10", "$select=Name%2CValue,$top=10"),
+                Arguments.of(null, null),
+                Arguments.of(Collections.singletonMap("key", "value"), Collections.singletonMap("key", "value")),
+                Arguments.of(Collections.singletonMap("key", "value"), Collections.singletonMap("key", is("value")))
+        );
     }
 
     @Test
@@ -66,19 +71,20 @@ public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
         validator.validateHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, "foo=fooValue,bar=barValue", "foo=fooValue,bar=@hasLength(8)@", context, validationContext);
     }
 
-    @Test(dataProvider = "errorData", expectedExceptions = ValidationException.class)
+    @ParameterizedTest
+    @MethodSource("errorData")
     public void testValidateHeaderError(Object receivedValue, Object controlValue) {
-        validator.validateHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, receivedValue, controlValue, context, validationContext);
+        Assertions.assertThrows(ValidationException.class, () ->
+                validator.validateHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, receivedValue, controlValue, context, validationContext));
     }
 
-    @DataProvider
-    public Object[][] errorData() {
-        return new Object[][] {
-                new Object[] { "foobar", "@contains(wrong)@" },
-                new Object[] { "foo=fooValue,bar=barValue", "foo=fooValue,bar=wrong" },
-                new Object[] { "foo=,bar=barValue", "foo=fooValue,bar=barValue" },
-                new Object[] { "foo=fooValue,bar=barValue", "foo=,bar=barValue" },
-                new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "wrong") }
-        };
+    static Stream<Arguments> errorData() {
+        return Stream.of(
+                Arguments.of("foobar", "@contains(wrong)@"),
+                Arguments.of("foo=fooValue,bar=barValue", "foo=fooValue,bar=wrong"),
+                Arguments.of("foo=,bar=barValue", "foo=fooValue,bar=barValue"),
+                Arguments.of("foo=fooValue,bar=barValue", "foo=,bar=barValue"),
+                Arguments.of(Collections.singletonMap("key", "value"), Collections.singletonMap("key", "wrong"))
+        );
     }
 }

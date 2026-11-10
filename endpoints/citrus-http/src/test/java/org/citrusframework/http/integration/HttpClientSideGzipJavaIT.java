@@ -16,21 +16,28 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.server.HttpServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.validation.interceptor.GzipMessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpClientSideGzipJavaIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("echoHttpClient")
@@ -40,12 +47,13 @@ public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport implemen
     @Qualifier("echoHttpServer")
     private HttpServer server;
 
+    @Test
     @CitrusTest
-    public void testClientSideGzipCompression(){
+    public void testClientSideGzipCompression(@CitrusResource GherkinTestActionRunner runner){
 
         String text = "This is the text";
 
-        given(http().client(client)
+        runner.given(http().client(client)
                 .send()
                 .post()
                 .message()
@@ -55,7 +63,7 @@ public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport implemen
                 .body(text)
                 .fork(true));
 
-        when(http().server(server)
+        runner.when(http().server(server)
                 .receive()
                 .post("/echo")
                 .message()
@@ -63,13 +71,13 @@ public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport implemen
                 .header(HttpHeaders.CONTENT_ENCODING, "gzip")
                 .body(text));
 
-        then(http().server(server)
+        runner.then(http().server(server)
                 .respond()
                 .message()
                 .contentType(MediaType.TEXT_PLAIN_VALUE)
                 .header(HttpHeaders.CONTENT_ENCODING, "gzip"));
 
-        then(http().client(client)
+        runner.then(http().client(client)
                 .receive()
                 .response()
                 .message()

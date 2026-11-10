@@ -22,9 +22,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.*;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,7 +41,7 @@ public class RequestCachingServletFilterTest {
     private HttpServer httpServer = new HttpServer();
     private CitrusDispatcherServlet servlet;
 
-    @BeforeClass
+    @BeforeEach
     public void setUp() throws ServletException {
         servlet = new CitrusDispatcherServlet(httpServer);
 
@@ -82,9 +82,9 @@ public class RequestCachingServletFilterTest {
                 StreamUtils.copy(request.getInputStream(), System.out);
                 Map<String, String[]> parameters = request.getParameterMap();
 
-                Assert.assertEquals(parameters.size(), 2L);
-                Assert.assertEquals(parameters.get("username"), new String[] { "test" });
-                Assert.assertEquals(parameters.get("password"), new String[] { "secret" });
+                Assertions.assertEquals(2L, parameters.size());
+                Assertions.assertArrayEquals(new String[] { "test" }, parameters.get("username"));
+                Assertions.assertArrayEquals(new String[] { "secret" }, parameters.get("password"));
             }
         });
         filterChain.doFilter(request, response);
@@ -102,9 +102,9 @@ public class RequestCachingServletFilterTest {
                 StreamUtils.copy(request.getInputStream(), System.out);
                 Map<String, String[]> parameters = request.getParameterMap();
 
-                Assert.assertEquals(parameters.size(), 2L);
-                Assert.assertEquals(parameters.get("username"), new String[] { "test" });
-                Assert.assertEquals(parameters.get("password"), new String[] { "secret" });
+                Assertions.assertEquals(2L, parameters.size());
+                Assertions.assertArrayEquals(new String[] { "test" }, parameters.get("username"));
+                Assertions.assertArrayEquals(new String[] { "secret" }, parameters.get("password"));
             }
         });
         filterChain.doFilter(request, response);

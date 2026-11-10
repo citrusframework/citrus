@@ -20,14 +20,14 @@ import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNull;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CookieConverterTest {
 
@@ -36,7 +36,7 @@ public class CookieConverterTest {
     private Cookie cookie;
     private HttpHeaders cookieHeaders;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         cookie = new Cookie("foo", "bar");
         cookieHeaders = new HttpHeaders();

@@ -26,13 +26,13 @@ import org.citrusframework.http.interceptor.DelegatingHandlerInterceptor;
 import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.server.HttpServer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  * @since 1.4
  */
-public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
+public class CitrusDispatcherServletTest extends AbstractUnitTest {
 
     private HttpServer httpServer = Mockito.mock(HttpServer.class);
     private CitrusDispatcherServlet servlet;
@@ -51,7 +51,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     @Autowired
     private DelegatingHandlerInterceptor handlerInterceptor;
 
-    @BeforeClass
+    @BeforeEach
     public void setUp() {
         servlet = new CitrusDispatcherServlet(httpServer);
     }
@@ -81,14 +81,14 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         servlet.initStrategies(applicationContext);
 
-        Assert.assertEquals(handlerInterceptor.getInterceptors().size(), 2L);
-        Assert.assertEquals(handlerInterceptor.getInterceptors().get(0).getClass(), LoggingHandlerInterceptor.class);
-        Assert.assertEquals(handlerInterceptor.getInterceptors().get(1), interceptors.get(0));
-        Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
-        Assert.assertFalse(httpMessageController.getEndpointConfiguration().isHandleAttributeHeaders());
-        Assert.assertFalse(httpMessageController.getEndpointConfiguration().isHandleCookies());
+        Assertions.assertEquals(2L, handlerInterceptor.getInterceptors().size());
+        Assertions.assertEquals(LoggingHandlerInterceptor.class, handlerInterceptor.getInterceptors().get(0).getClass());
+        Assertions.assertEquals(interceptors.get(0), handlerInterceptor.getInterceptors().get(1));
+        Assertions.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertFalse(httpMessageController.getEndpointConfiguration().isHandleAttributeHeaders());
+        Assertions.assertFalse(httpMessageController.getEndpointConfiguration().isHandleCookies());
 
-        Assert.assertEquals(httpMessageController.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
+        Assertions.assertEquals(EmptyResponseEndpointAdapter.class, httpMessageController.getEndpointAdapter().getClass());
     }
 
     @Test
@@ -103,11 +103,11 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         servlet.initStrategies(applicationContext);
 
-        Assert.assertEquals(handlerInterceptor.getInterceptors().size(), 1L);
-        Assert.assertEquals(handlerInterceptor.getInterceptors().get(0).getClass(), LoggingHandlerInterceptor.class);
-        Assert.assertEquals(httpMessageController.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
-        Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
-        Assert.assertTrue(httpMessageController.getEndpointConfiguration().isHandleAttributeHeaders());
-        Assert.assertTrue(httpMessageController.getEndpointConfiguration().isHandleCookies());
+        Assertions.assertEquals(1L, handlerInterceptor.getInterceptors().size());
+        Assertions.assertEquals(LoggingHandlerInterceptor.class, handlerInterceptor.getInterceptors().get(0).getClass());
+        Assertions.assertEquals(TimeoutProducingEndpointAdapter.class, httpMessageController.getEndpointAdapter().getClass());
+        Assertions.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertTrue(httpMessageController.getEndpointConfiguration().isHandleAttributeHeaders());
+        Assertions.assertTrue(httpMessageController.getEndpointConfiguration().isHandleCookies());
     }
 }

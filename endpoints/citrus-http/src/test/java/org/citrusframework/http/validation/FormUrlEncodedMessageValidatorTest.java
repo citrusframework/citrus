@@ -23,13 +23,14 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
+public class FormUrlEncodedMessageValidatorTest extends AbstractUnitTest {
 
     /** Class under test */
     private FormUrlEncodedMessageValidator validator = new FormUrlEncodedMessageValidator();
@@ -67,7 +68,7 @@ public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext));
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidationError() {
         Message controlMessage = new DefaultMessage(expectedFormData);
 
@@ -75,15 +76,17 @@ public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
                 .setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, "/form-test");
 
-        validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext));
+        Assertions.assertThrows(ValidationException.class, () ->
+                validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext)));
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidationErrorMissingFormAction() {
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=test");
 
-        validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext));
+        Assertions.assertThrows(ValidationException.class, () ->
+                validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext)));
     }
 }

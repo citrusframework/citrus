@@ -25,19 +25,21 @@ import java.util.stream.Stream;
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.citrusframework.http.message.HttpMessageHeaders.HTTP_COOKIE_PREFIX;
 import static org.citrusframework.http.message.HttpMessageUtils.getQueryParameterMap;
 import static org.citrusframework.message.MessageHeaders.ID;
 import static org.citrusframework.message.MessageHeaders.MESSAGE_TYPE;
 import static org.citrusframework.message.MessageHeaders.TIMESTAMP;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @since 2.7
@@ -56,16 +58,16 @@ public class HttpMessageUtilsTest {
 
         HttpMessageUtils.copy(from, to);
 
-        assertNotEquals(from.getId(), to.getId());
-        assertEquals(to.getName(), "FooMessage");
-        assertEquals(to.getPayload(String.class), "fooMessage");
-        assertEquals(to.getHeaders().size(), 4L);
+        assertNotEquals(to.getId(), from.getId());
+        assertEquals("FooMessage", to.getName());
+        assertEquals("fooMessage", to.getPayload(String.class));
+        assertEquals(4L, to.getHeaders().size());
         assertNotNull(to.getHeader(ID));
         assertNotNull(to.getHeader(MESSAGE_TYPE));
         assertNotNull(to.getHeader(TIMESTAMP));
-        assertEquals(to.getHeader("X-Foo"), "foo");
-        assertEquals(to.getHeaderData().size(), 1L);
-        assertEquals(to.getHeaderData().get(0), "HeaderData");
+        assertEquals("foo", to.getHeader("X-Foo"));
+        assertEquals(1L, to.getHeaderData().size());
+        assertEquals("HeaderData", to.getHeaderData().get(0));
     }
 
     @Test
@@ -86,20 +88,20 @@ public class HttpMessageUtilsTest {
 
         HttpMessageUtils.copy(from, to);
 
-        assertNotEquals(from.getId(), to.getId());
-        assertEquals(to.getName(), "FooMessage");
-        assertEquals(to.getPayload(String.class), "fooMessage");
-        assertEquals(to.getHeaders().size(), 7L);
+        assertNotEquals(to.getId(), from.getId());
+        assertEquals("FooMessage", to.getName());
+        assertEquals("fooMessage", to.getPayload(String.class));
+        assertEquals(7L, to.getHeaders().size());
         assertNotNull(to.getHeader(ID));
         assertNotNull(to.getHeader(MESSAGE_TYPE));
         assertNotNull(to.getHeader(TIMESTAMP));
-        assertEquals(to.getHeader("X-Foo"), "foo");
-        assertEquals(to.getHeader("X-Existing"), "existing");
-        assertEquals(to.getHeader(HTTP_COOKIE_PREFIX + "Foo"), "Foo=fooCookie");
-        assertEquals(to.getHeader(HTTP_COOKIE_PREFIX + "Existing"), "Existing=existingCookie");
-        assertEquals(to.getHeaderData().size(), 2L);
-        assertEquals(to.getHeaderData().get(0), "ExistingHeaderData");
-        assertEquals(to.getHeaderData().get(1), "HeaderData");
+        assertEquals("foo", to.getHeader("X-Foo"));
+        assertEquals("existing", to.getHeader("X-Existing"));
+        assertEquals("Foo=fooCookie", to.getHeader(HTTP_COOKIE_PREFIX + "Foo"));
+        assertEquals("Existing=existingCookie", to.getHeader(HTTP_COOKIE_PREFIX + "Existing"));
+        assertEquals(2L, to.getHeaderData().size());
+        assertEquals("ExistingHeaderData", to.getHeaderData().get(0));
+        assertEquals("HeaderData", to.getHeaderData().get(1));
     }
 
     @Test
@@ -114,37 +116,37 @@ public class HttpMessageUtilsTest {
 
         HttpMessageUtils.copy(from, to);
 
-        assertNotEquals(from.getId(), to.getId());
-        assertEquals(to.getName(), "FooMessage");
-        assertEquals(to.getPayload(String.class), "fooMessage");
-        assertEquals(to.getHeader("X-Foo"), "foo");
-        assertEquals(to.getHeaderData().size(), 1L);
-        assertEquals(to.getHeaderData().get(0), "HeaderData");
+        assertNotEquals(to.getId(), from.getId());
+        assertEquals("FooMessage", to.getName());
+        assertEquals("fooMessage", to.getPayload(String.class));
+        assertEquals("foo", to.getHeader("X-Foo"));
+        assertEquals(1L, to.getHeaderData().size());
+        assertEquals("HeaderData", to.getHeaderData().get(0));
     }
 
-    @Test(dataProvider = "queryParamStrings")
+    @ParameterizedTest
+    @MethodSource("queryParamStrings")
     public void testQueryParamsExtraction(String queryParamString, Map<String, String> params) {
         HttpMessage message = new HttpMessage();
         message.queryParams(queryParamString);
-        assertEquals(message.getQueryParams().size(), params.size());
-        params.forEach((key, value) -> Assert.assertTrue(message.getQueryParams().get(key).contains(value)));
+        assertEquals(params.size(), message.getQueryParams().size());
+        params.forEach((key, value) -> Assertions.assertTrue(message.getQueryParams().get(key).contains(value)));
     }
 
-    @DataProvider
-    public Object[][] queryParamStrings() {
-        return new Object[][] {
-            new Object[] { "", Collections.emptyMap() },
-            new Object[] { "key=value", Collections.singletonMap("key", "value") },
-            new Object[] { "key1=value1,key2=value2", Stream.of(new String[] { "key1", "value1" },
+    static Stream<Arguments> queryParamStrings() {
+        return Stream.of(
+            Arguments.of("", Collections.emptyMap()),
+            Arguments.of("key=value", Collections.singletonMap("key", "value")),
+            Arguments.of("key1=value1,key2=value2", Stream.of(new String[] { "key1", "value1" },
                                                                 new String[] { "key2", "value2" })
-                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])) },
-            new Object[] { "key1,key2=value2", Stream.of(new String[] { "key1", "" },
-                                                         new String[] { "key2", "value2" })
-                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])) },
-            new Object[] { "key1,key2", Stream.of(new String[] { "key1", "" },
-                                                  new String[] { "key2", "" })
-                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])) }
-        };
+                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]))),
+            Arguments.of("key1,key2=value2", Stream.of(new String[] { "key1", "" },
+                                                          new String[] { "key2", "value2" })
+                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]))),
+            Arguments.of("key1,key2", Stream.of(new String[] { "key1", "" },
+                                                   new String[] { "key2", "" })
+                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])))
+        );
     }
 
     @Test
@@ -158,7 +160,7 @@ public class HttpMessageUtilsTest {
 
         Map<String, List<String>> queryParams = getQueryParameterMap(httpMessage);
 
-        assertEquals(queryParams.size(), 3);
+        assertEquals(3, queryParams.size());
         List<String> q1Values = queryParams.get("q1");
         assertTrue(q1Values.contains("v1"));
         assertTrue(q1Values.contains("v2"));
@@ -176,7 +178,7 @@ public class HttpMessageUtilsTest {
 
         Map<String, List<String>> queryParams = getQueryParameterMap(httpMessage);
 
-        assertEquals(queryParams.size(), 2);
+        assertEquals(2, queryParams.size());
         List<String> selectValues = queryParams.get("$select");
         assertTrue(selectValues.contains("Name,Value"));
         List<String> topValues = queryParams.get("$top");
@@ -201,7 +203,7 @@ public class HttpMessageUtilsTest {
 
         Map<String, List<String>> queryParams = getQueryParameterMap(httpMessage);
 
-        assertEquals(queryParams.size(), 3);
+        assertEquals(3, queryParams.size());
         List<String> q1Values = queryParams.get("q1");
         assertTrue(q1Values.contains(""));
         List<String> q2Values = queryParams.get("q2");

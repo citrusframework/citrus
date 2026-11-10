@@ -24,18 +24,20 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Consumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.PathExpressionValidationContext;
 import org.citrusframework.validation.context.path.DynamicPathExpressionValidationContext;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 /**
@@ -46,7 +48,8 @@ import static org.mockito.Mockito.when;
  * gets silently bypassed because the expression is misinterpreted as JSONPath due to the leading
  * dollar sign.
  */
-public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class HttpReceiveVariableExpressionValidationTest extends AbstractUnitTest {
 
     @Mock
     private Endpoint endpoint;
@@ -57,16 +60,15 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
         return TestContextFactory.newInstance();
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        when(endpoint.getActor()).thenReturn(null);
+        lenient().when(endpoint.createConsumer()).thenReturn(consumer);
+        lenient().when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        lenient().when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+        lenient().when(endpoint.getActor()).thenReturn(null);
     }
 
     @Test
@@ -79,7 +81,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
 
         ReceiveMessageAction action = builder.build();
 
-        Assert.assertTrue(action.getValidationContexts()
+        Assertions.assertTrue(action.getValidationContexts()
                 .stream()
                 .anyMatch(DynamicPathExpressionValidationContext.class::isInstance));
     }
@@ -101,7 +103,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
         action.execute(context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailXpathValidationFromVariableWithWrongValue() {
         context.setVariable("VERSION_PATH", "/root/version/@number");
 
@@ -115,7 +117,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
                 .build());
 
         ReceiveMessageAction action = builder.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test
@@ -135,7 +137,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
         action.execute(context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailJsonPathValidationFromVariableWithWrongValue() {
         context.setVariable("VERSION_PATH", "$.version.number");
 
@@ -149,10 +151,10 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
                 .build());
 
         ReceiveMessageAction action = builder.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailControlMessageBodyComparisonWithJsonPayloadFromVariable() {
         context.setVariable("VERSION_PATH", "$.version.number");
 
@@ -167,10 +169,10 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
                 .build());
 
         ReceiveMessageAction action = builder.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailControlMessageBodyComparisonWithXmlPayloadFromVariable() {
         context.setVariable("VERSION_PATH", "/root/version/@number");
 
@@ -185,7 +187,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
                 .build());
 
         ReceiveMessageAction action = builder.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test
@@ -208,7 +210,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
         action.execute(context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailXpathValidationFromVariableUsingXmlDslWithWrongValue() {
         context.setVariable("VERSION_PATH", "/root/version/@number");
 
@@ -225,7 +227,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
         receive.getValidates().add(validate);
 
         ReceiveMessageAction action = receive.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 
     @Test
@@ -248,7 +250,7 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
         action.execute(context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void shouldFailXpathValidationFromVariableUsingYamlDslWithWrongValue() {
         context.setVariable("VERSION_PATH", "/root/version/@number");
 
@@ -265,6 +267,6 @@ public class HttpReceiveVariableExpressionValidationTest extends AbstractTestNGU
         receive.getValidate().add(validate);
 
         ReceiveMessageAction action = receive.build();
-        action.execute(context);
+        Assertions.assertThrows(ValidationException.class, () -> action.execute(context));
     }
 }

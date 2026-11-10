@@ -19,6 +19,8 @@ package org.citrusframework.http.integration;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
@@ -26,16 +28,21 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.config.annotation.HttpClientConfig;
 import org.citrusframework.http.config.annotation.HttpServerConfig;
 import org.citrusframework.http.server.HttpServer;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
 import org.apache.hc.core5.http.ContentType;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpServerBinaryJavaIT implements TestActionSupport {
 
     /** Random http server port */
     private final static int serverPort = SocketUtils.findAvailableTcpPort();
@@ -49,19 +56,20 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements
     @HttpServerConfig(binaryMediaTypes = { MEDIA_TYPE_APPLICATION_CUSTOM })
     private HttpServer httpServer;
 
+    @Test
     @CitrusTest
-    public void customMediaTypeAndEncoding() {
+    public void customMediaTypeAndEncoding(@CitrusResource GherkinTestActionRunner runner) {
         byte[] binaryDataUtf8 = "$&%!!Äöü".getBytes(StandardCharsets.UTF_8);
         byte[] binaryDataLatin1 = "$&%!!Äöü".getBytes(Charset.forName("latin1"));
 
         httpClient.getEndpointConfiguration().setRequestUrl(String.format(httpClient.getEndpointConfiguration().getRequestUrl(), serverPort));
         httpServer.setPort(serverPort);
 
-        given(start(httpServer));
+        runner.given(start(httpServer));
 
-        run(doFinally().actions(stop(httpServer)));
+        runner.run(doFinally().actions(stop(httpServer)));
 
-        given(http().client(httpClient)
+        runner.given(http().client(httpClient)
                 .send()
                 .post()
                 .fork(true)
@@ -70,7 +78,7 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements
                 .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
 
-        when(http().server(httpServer)
+        runner.when(http().server(httpServer)
                 .receive()
                 .post("/test")
                 .message(new DefaultMessage(binaryDataUtf8))
@@ -78,14 +86,14 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM)
                 .accept(MEDIA_TYPE_APPLICATION_CUSTOM));
 
-        then(http().server(httpServer)
+        runner.then(http().server(httpServer)
                 .send()
                 .response(HttpStatus.OK.value())
                 .message(new DefaultMessage(binaryDataLatin1))
                 .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
 
-        then(http().client(httpClient)
+        runner.then(http().client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
                 .message(new DefaultMessage(binaryDataLatin1))
@@ -93,11 +101,12 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
     }
 
+    @Test
     @CitrusTest
-    public void httpServerBinary() {
+    public void httpServerBinary(@CitrusResource GherkinTestActionRunner runner) {
         byte[] binaryData = "$&%!!".getBytes();
 
-        given(http().client("echoHttpClient")
+        runner.given(http().client("echoHttpClient")
                 .send()
                 .post()
                 .fork(true)
@@ -106,7 +115,7 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements
                 .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
                 .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
 
-        when(http().server("echoHttpServer")
+        runner.when(http().server("echoHttpServer")
                     .receive()
                     .post("/echo")
                     .message(new DefaultMessage(binaryData))
@@ -114,14 +123,14 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport implements
                     .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
                     .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
 
-        then(http().server("echoHttpServer")
+        runner.then(http().server("echoHttpServer")
                 .send()
                 .response(HttpStatus.OK.value())
                 .message(new DefaultMessage(binaryData))
                 .type(MessageType.BINARY)
                 .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
 
-        then(http().client("echoHttpClient")
+        runner.then(http().client("echoHttpClient")
                 .receive()
                 .response(HttpStatus.OK)
                 .message(new DefaultMessage(binaryData))

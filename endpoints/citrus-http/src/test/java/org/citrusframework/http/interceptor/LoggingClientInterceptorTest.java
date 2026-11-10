@@ -13,8 +13,8 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpResponse;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class LoggingClientInterceptorTest {
     private LoggingClientInterceptor loggingClientInterceptor;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         loggingClientInterceptor = new LoggingClientInterceptor();
     }

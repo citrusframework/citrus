@@ -16,24 +16,32 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.message.HttpMessage;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpMessageControllerJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest(name = "HttpMessageControllerJavaIT")
-    public void httpMessageControllerIT() {
-        variable("id", "123456789");
+    public void httpMessageControllerIT(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("id", "123456789"));
 
-        run(echo("First request without query parameter and context path variables."));
+        runner.run(echo("First request without query parameter and context path variables."));
 
-        when(parallel().actions(
+        runner.when(parallel().actions(
             http().client("httpClient")
                 .send()
                 .get()
@@ -55,16 +63,16 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
             )
         ));
 
-        then(http().client("httpClient")
+        runner.then(http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
 
-        run(echo("Use context path variables."));
+        runner.run(echo("Use context path variables."));
 
-        when(parallel().actions(
+        runner.when(parallel().actions(
             http().client("httpClient")
                 .send()
                 .get()
@@ -86,16 +94,16 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
             )
         ));
 
-        then(http().client("httpClient")
+        runner.then(http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
 
-        run(echo("Use query parameter and context path variables."));
+        runner.run(echo("Use query parameter and context path variables."));
 
-        when(parallel().actions(
+        runner.when(parallel().actions(
             http().client("httpClient")
                 .send()
                 .get()
@@ -124,16 +132,16 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
             )
         ));
 
-        then(http().client("httpClient")
+        runner.then(http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
             .message()
             .version("HTTP/1.1"));
 
-        run(echo("Query WSDL with special query param"));
+        runner.run(echo("Query WSDL with special query param"));
 
-        when(parallel().actions(
+        runner.when(parallel().actions(
                 http().client("httpClient")
                         .send()
                         .get()
@@ -153,7 +161,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport imple
                                 .queryParam("wsdl"))
         ));
 
-        then(http().client("httpClient")
+        runner.then(http().client("httpClient")
                 .receive()
                 .response(HttpStatus.OK)
                 .timeout(2000L)

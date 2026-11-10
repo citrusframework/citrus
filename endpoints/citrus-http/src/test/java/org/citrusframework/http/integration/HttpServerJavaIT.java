@@ -16,22 +16,30 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpServerJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void httpServer() {
-        variable("custom_header_id", "123456789");
+    public void httpServer(@CitrusResource GherkinTestActionRunner runner) {
+        runner.given(createVariable("custom_header_id", "123456789"));
 
-        run(echo("Send Http message and respond with 200 OK"));
+        runner.run(echo("Send Http message and respond with 200 OK"));
 
-        when(parallel().actions(
+        runner.when(parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
@@ -72,7 +80,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
             )
         ));
 
-        then(http().client("httpClient")
+        runner.then(http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
             .message()
@@ -82,9 +90,9 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
             .header("CustomHeaderId", "${custom_header_id}")
             .version("HTTP/1.1"));
 
-        run(echo("Send Http request and respond with 404 status code"));
+        runner.run(echo("Send Http request and respond with 404 status code"));
 
-        when(parallel().actions(
+        runner.when(parallel().actions(
             http().client("httpClient")
                 .send()
                 .post()
@@ -127,7 +135,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
             )
         ));
 
-        then(http().client("httpClient")
+        runner.then(http().client("httpClient")
             .receive()
             .response()
             .message()
@@ -138,9 +146,9 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
             .header("CustomHeaderId", "${custom_header_id}")
             .version("HTTP/1.1"));
 
-        run(echo("Skip response and use fallback endpoint adapter"));
+        runner.run(echo("Skip response and use fallback endpoint adapter"));
 
-        when(http().client("httpClient")
+        runner.when(http().client("httpClient")
             .send()
             .post()
             .message()
@@ -151,7 +159,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport implements TestA
             .contentType("application/xml")
             .accept("application/xml"));
 
-        then(http().client("httpClient")
+        runner.then(http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
             .message()

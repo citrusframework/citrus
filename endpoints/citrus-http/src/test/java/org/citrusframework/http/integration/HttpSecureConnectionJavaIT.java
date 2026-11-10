@@ -16,6 +16,8 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
@@ -23,16 +25,21 @@ import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpSecureConnectionJavaIT implements TestActionSupport {
 
     private final Resource keyStore = Resources.create("http-server.jks", HttpSecureConnectionJavaIT.class);
 
@@ -52,9 +59,10 @@ public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport implem
                     .trustStore(keyStore, "secret"))
             .build();
 
+    @Test
     @CitrusTest
-    public void secureHttpConnection() {
-        when(http().client(secureHttpClient)
+    public void secureHttpConnection(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(http().client(secureHttpClient)
                 .send()
                 .post("/secured")
                 .fork(true)
@@ -62,21 +70,21 @@ public class HttpSecureConnectionJavaIT extends TestNGCitrusSpringSupport implem
                 .body("Hello from secure Http client")
                 .contentType("text/plain"));
 
-        then(http().server(secureHttpServer)
+        runner.then(http().server(secureHttpServer)
                 .receive()
                 .post("/secured")
                 .message()
                 .body("Hello from secure Http client")
                 .contentType("text/plain"));
 
-        then(http().server(secureHttpServer)
+        runner.then(http().server(secureHttpServer)
                 .send()
                 .response(HttpStatus.OK.value())
                 .message()
                 .body("Hi from secured Http server")
                 .contentType("text/plain"));
 
-        then(http().client(secureHttpClient)
+        runner.then(http().client(secureHttpClient)
                 .receive()
                 .response(HttpStatus.OK)
                 .message()

@@ -18,19 +18,27 @@ package org.citrusframework.http.integration;
 
 import jakarta.servlet.http.Cookie;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.server.HttpServer;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpHandleCookiesIT implements TestActionSupport {
 
     @Autowired
     @Qualifier("echoHttpClient")
@@ -46,14 +54,14 @@ public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void testClientSideCookie() {
+    public void testClientSideCookie(@CitrusResource GherkinTestActionRunner runner) {
 
         //GIVEN
         final Cookie aCookie = new Cookie("a", "a");
         final Cookie bCookie = new Cookie("b", "b");
 
         //WHEN
-        when(http().client(httpClient)
+        runner.when(http().client(httpClient)
                 .send()
                 .delete()
                 .message()
@@ -61,7 +69,7 @@ public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport implements Te
                 .cookie(bCookie));
 
         //THEN
-        then(http().server(httpServer)
+        runner.then(http().server(httpServer)
                 .receive()
                 .delete()
                 .message()
@@ -71,28 +79,28 @@ public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void testServerSideCookie(){
+    public void testServerSideCookie(@CitrusResource GherkinTestActionRunner runner){
 
         //GIVEN
         final Cookie loginCookie = new Cookie("JSESSIONID", "asd");
 
-        given(http().client(httpClient)
+        runner.given(http().client(httpClient)
                 .send()
                 .get()
                 .fork(true));
 
-        given(http().server(httpServer)
+        runner.given(http().server(httpServer)
                 .receive()
                 .get());
 
         //WHEN
-        when(http().server(httpServer)
+        runner.when(http().server(httpServer)
                 .respond()
                 .message()
                 .cookie(loginCookie));
 
         //THEN
-        then(http().client(httpClient)
+        runner.then(http().client(httpClient)
                 .receive()
                 .response()
                 .message()

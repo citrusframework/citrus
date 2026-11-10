@@ -3,8 +3,8 @@ package org.citrusframework.http.actions;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.MessageBuilder;
 import org.springframework.http.HttpStatusCode;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -15,7 +15,7 @@ public class HttpClientResponseActionBuilderTest {
     private HttpMessage httpMessageMock;
     private MessageBuilder messageBuilderMock;
 
-    @BeforeMethod
+    @BeforeEach
     void beforeMethodSetup() {
         httpMessageMock = mock(HttpMessage.class);
         messageBuilderMock = mock(MessageBuilder.class);

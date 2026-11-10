@@ -16,25 +16,33 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ZipMessage;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class HttpServerZipFileJavaIT implements TestActionSupport {
 
     public static final String APPLICATION_ZIP_VALUE = "application/zip";
 
+    @Test
     @CitrusTest
-    public void httpServerZipFile() {
+    public void httpServerZipFile(@CitrusResource GherkinTestActionRunner runner) {
         ZipMessage zipMessage = new ZipMessage().addEntry(Resources.fromClasspath("schemas"));
 
-        given(http().client("echoHttpClient")
+        runner.given(http().client("echoHttpClient")
                 .send()
                 .post()
                 .fork(true)
@@ -43,7 +51,7 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport implement
                 .contentType(APPLICATION_ZIP_VALUE)
                 .accept(APPLICATION_ZIP_VALUE));
 
-        when(http().server("echoHttpServer")
+        runner.when(http().server("echoHttpServer")
                     .receive()
                     .post("/echo")
                     .message(zipMessage)
@@ -51,14 +59,14 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport implement
                     .contentType(APPLICATION_ZIP_VALUE)
                     .accept(APPLICATION_ZIP_VALUE));
 
-        then(http().server("echoHttpServer")
+        runner.then(http().server("echoHttpServer")
                 .send()
                 .response(HttpStatus.OK)
                 .message(zipMessage)
                 .type(MessageType.BINARY)
                 .contentType(APPLICATION_ZIP_VALUE));
 
-        then(http().client("echoHttpClient")
+        runner.then(http().client("echoHttpClient")
                 .receive()
                 .response(HttpStatus.OK)
                 .message(zipMessage)

@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
@@ -30,44 +31,44 @@ import org.apache.hc.core5.http.ContentType;
 import org.citrusframework.util.ObjectHelper;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CachingHttpServletRequestWrapperTest {
 
     private HttpServletRequest serverRequestMock;
     private CachingHttpServletRequestWrapper wrapper;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupClasses(){
         serverRequestMock = mock(HttpServletRequest.class);
         wrapper = new CachingHttpServletRequestWrapper(serverRequestMock);
     }
 
-    @DataProvider(name = "queryStringRequestMethods")
-    public static Object[][] queryStringRequestMethods() {
-        return new Object[][] {
-            new Object[] { RequestMethod.DELETE },
-            new Object[] { RequestMethod.GET },
-            new Object[] { RequestMethod.HEAD },
-            new Object[] { RequestMethod.OPTIONS },
-            new Object[] { RequestMethod.PATCH },
-            new Object[] { RequestMethod.TRACE }
-        };
+    static Stream<RequestMethod> queryStringRequestMethods() {
+        return Stream.of(
+            RequestMethod.DELETE,
+            RequestMethod.GET,
+            RequestMethod.HEAD,
+            RequestMethod.OPTIONS,
+            RequestMethod.PATCH,
+            RequestMethod.TRACE
+        );
     }
 
-    @DataProvider(name = "bodyPayloadRequestMethods")
-    public static Object[][] bodyPayloadRequestMethods() {
-        return new Object[][] {
-            new Object[] { RequestMethod.POST },
-            new Object[] { RequestMethod.PUT}
-        };
+    static Stream<RequestMethod> bodyPayloadRequestMethods() {
+        return Stream.of(
+            RequestMethod.POST,
+            RequestMethod.PUT
+        );
     }
 
     @Test
@@ -81,11 +82,12 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(parameterMap.keySet().size(),1);
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(expectedKey));
     }
 
-    @Test(dataProvider = "queryStringRequestMethods")
+    @ParameterizedTest
+    @MethodSource("queryStringRequestMethods")
     public void testFillMapFromQueryString(final RequestMethod requestMethod) throws Exception {
 
         //GIVEN
@@ -99,12 +101,13 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(parameterMap.keySet().size(),1);
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
-        assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
+        assertArrayEquals(new String[]{requestMethod.name()}, parameterMap.get(requestMethod.name()));
     }
 
-    @Test(dataProvider = "bodyPayloadRequestMethods")
+    @ParameterizedTest
+    @MethodSource("bodyPayloadRequestMethods")
     public void testDelegateGetParameterIfContentTypeNotUrlencoded(final RequestMethod requestMethod)  throws Exception {
 
         //GIVEN
@@ -123,12 +126,13 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(parameterMap.keySet().size(),1);
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(expectedKey));
 
     }
 
-    @Test(dataProvider = "bodyPayloadRequestMethods")
+    @ParameterizedTest
+    @MethodSource("bodyPayloadRequestMethods")
     public void testParseUrlEncodedBody(final RequestMethod requestMethod)  throws Exception {
 
         //GIVEN
@@ -147,12 +151,13 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(parameterMap.keySet().size(),1);
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
-        assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
+        assertArrayEquals(new String[]{requestMethod.name()}, parameterMap.get(requestMethod.name()));
     }
 
-    @Test(dataProvider = "bodyPayloadRequestMethods")
+    @ParameterizedTest
+    @MethodSource("bodyPayloadRequestMethods")
     public void testParseUrlEncodedBodyWithExtendedApplicationType(final RequestMethod requestMethod)  throws Exception {
 
         //GIVEN
@@ -172,9 +177,9 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(parameterMap.keySet().size(),1);
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
-        assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
+        assertArrayEquals(new String[]{requestMethod.name()}, parameterMap.get(requestMethod.name()));
     }
 
     @Test
@@ -199,9 +204,9 @@ public class CachingHttpServletRequestWrapperTest {
         final Map<String, String[]> parameterMap = wrapper.getParameterMap();
 
         //THEN
-        assertEquals(parameterMap.keySet().size(),1);
+        assertEquals(1, parameterMap.keySet().size());
         assertTrue(parameterMap.containsKey(requestMethod.name()));
-        assertEquals(parameterMap.get(requestMethod.name()), new String[]{ "ÄäÖöÜü" });
+        assertArrayEquals(new String[]{ "ÄäÖöÜü" }, parameterMap.get(requestMethod.name()));
     }
 
     /**

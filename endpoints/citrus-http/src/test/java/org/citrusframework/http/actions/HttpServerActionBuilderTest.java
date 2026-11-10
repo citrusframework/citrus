@@ -21,14 +21,14 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HttpServerActionBuilderTest {
 
@@ -51,7 +51,7 @@ public class HttpServerActionBuilderTest {
         assertEquals(JSON_STRING_REPRESENTATION, httpMessage.getPayload(String.class).replace("\r\n", "\n"));
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethodSetup() {
         fixture = new HttpServerActionBuilder(mock(Endpoint.class));
     }
@@ -70,7 +70,7 @@ public class HttpServerActionBuilderTest {
 
     @Test
     public void isReferenceResolverAwareTestActionBuilder() {
-        Assert.assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
+        Assertions.assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
     }
 
     private record TestJsonObject(String property) {

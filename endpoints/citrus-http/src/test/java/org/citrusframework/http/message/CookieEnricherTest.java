@@ -18,15 +18,15 @@ package org.citrusframework.http.message;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.context.TestContext;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CookieEnricherTest {
 
@@ -35,7 +35,7 @@ public class CookieEnricherTest {
 
     private Cookie cookie;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         testContextMock = new TestContext();
         cookie = new Cookie("foo", "bar");
@@ -53,12 +53,12 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals(enrichedCookies.size(), 1);
+        assertEquals(1, enrichedCookies.size());
 
         final Cookie enrichedCookie = enrichedCookies.get(0);
-        assertEquals(enrichedCookie.getName(), "foo");
-        assertEquals(enrichedCookie.getValue(), "bar");
-        assertEquals(enrichedCookie.getMaxAge(), 42);
+        assertEquals("foo", enrichedCookie.getName());
+        assertEquals("bar", enrichedCookie.getValue());
+        assertEquals(42, enrichedCookie.getMaxAge());
         assertTrue(enrichedCookie.isHttpOnly());
         assertTrue(enrichedCookie.getSecure());
     }
@@ -72,7 +72,7 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals(enrichedCookies.size(), 2);
+        assertEquals(2, enrichedCookies.size());
     }
 
     @Test
@@ -87,8 +87,8 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals(enrichedCookies.get(0).getName(), "foo");
-        assertEquals(enrichedCookies.get(0).getValue(), "bar");
+        assertEquals("foo", enrichedCookies.get(0).getName());
+        assertEquals("bar", enrichedCookies.get(0).getValue());
     }
 
     @Test
@@ -103,8 +103,8 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals(enrichedCookies.get(0).getName(), "foo");
-        assertEquals(enrichedCookies.get(0).getPath(), "/path/to/foobar");
+        assertEquals("foo", enrichedCookies.get(0).getName());
+        assertEquals("/path/to/foobar", enrichedCookies.get(0).getPath());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         // THEN
-        assertEquals(enrichedCookies.get(0).getName(), "foo");
-        assertEquals(enrichedCookies.get(0).getDomain(), "localhost");
+        assertEquals("foo", enrichedCookies.get(0).getName());
+        assertEquals("localhost", enrichedCookies.get(0).getDomain());
     }
 }

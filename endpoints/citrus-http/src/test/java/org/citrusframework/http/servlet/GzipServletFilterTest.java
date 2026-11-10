@@ -37,9 +37,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.6.2
@@ -49,7 +49,7 @@ public class GzipServletFilterTest {
     private HttpServer httpServer = new HttpServer();
     private CitrusDispatcherServlet servlet;
 
-    @BeforeClass
+    @BeforeEach
     public void setUp() throws ServletException {
         servlet = new CitrusDispatcherServlet(httpServer);
 
@@ -75,7 +75,7 @@ public class GzipServletFilterTest {
         MockFilterChain filterChain = new MockFilterChain(servlet, new GzipServletFilter(), new OncePerRequestFilter() {
             @Override
             protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
-                Assert.assertEquals(FileUtils.readToString(request.getInputStream()), "Should be decompressed");
+                Assertions.assertEquals("Should be decompressed", FileUtils.readToString(request.getInputStream()));
             }
         });
         filterChain.doFilter(request, response);
@@ -99,7 +99,7 @@ public class GzipServletFilterTest {
         StreamUtils.copy(new GZIPInputStream(new ByteArrayInputStream(response.getContentAsByteArray())), unzippedStream);
         String unzipped = new String(unzippedStream.toByteArray());
 
-        Assert.assertEquals(unzipped, "Should be compressed");
+        Assertions.assertEquals("Should be compressed", unzipped);
     }
 
     @Test
@@ -116,8 +116,8 @@ public class GzipServletFilterTest {
         });
         filterChain.doFilter(request, response);
 
-        Assert.assertEquals(FileUtils.readToString(request.getInputStream()), "Should not be decompressed");
+        Assertions.assertEquals("Should not be decompressed", FileUtils.readToString(request.getInputStream()));
         String unzipped = new String(response.getContentAsByteArray());
-        Assert.assertEquals(unzipped, "Should not be compressed");
+        Assertions.assertEquals("Should not be compressed", unzipped);
     }
 }

@@ -16,19 +16,26 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class WaitJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class WaitJavaIT implements TestActionSupport {
 
     private final int serverPort = SocketUtils.findAvailableTcpPort();
 
@@ -42,37 +49,39 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport implements TestActionS
             .requestMethod(RequestMethod.GET)
             .build();
 
+    @Test
     @CitrusTest
-    public void waitHttpAsAction() {
+    public void waitHttpAsAction(@CitrusResource GherkinTestActionRunner runner) {
 
         //GIVEN
-        given(start(httpServer));
+        runner.given(start(httpServer));
 
-        then(doFinally().actions(stop(httpServer)));
+        runner.then(doFinally().actions(stop(httpServer)));
 
         //WHEN
-        when(waitFor()
+        runner.when(waitFor()
                 .execution()
                 .action(send(client)));
 
         //THEN
-        then(receive(client));
+        runner.then(receive(client));
 
         //THEN
-        then(waitFor()
+        runner.then(waitFor()
                 .execution()
                 .action(send(String.format("http://localhost:%s/test", serverPort))));
     }
 
+    @Test
     @CitrusTest
-    public void waitHttp() {
+    public void waitHttp(@CitrusResource GherkinTestActionRunner runner) {
 
         //GIVEN
-        given(start(httpServer));
+        runner.given(start(httpServer));
 
-        then(doFinally().actions(stop(httpServer)));
+        runner.then(doFinally().actions(stop(httpServer)));
 
-        then(waitFor()
+        runner.then(waitFor()
             .http()
             .url(String.format("http://localhost:%s/test", serverPort)));
     }

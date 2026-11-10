@@ -16,6 +16,8 @@
 
 package org.citrusframework.http.integration;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
@@ -24,17 +26,23 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.config.annotation.HttpClientConfig;
 import org.citrusframework.http.config.annotation.HttpServerConfig;
 import org.citrusframework.http.server.HttpServer;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.validation.xml.DomXmlMessageValidator;
 import org.citrusframework.validation.xml.XpathMessageValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.7.5
  */
-public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
+public class CustomMessageValidatorIT implements TestActionSupport {
 
     @CitrusEndpoint
     @HttpClientConfig(requestUrl = "http://localhost:7177")
@@ -47,14 +55,14 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
     @Test
     @CitrusTest
     @SuppressWarnings("unchecked")
-    public void test() {
+    public void test(@CitrusResource GherkinTestActionRunner runner) {
         this.getClass().getResource("/citrus.properties");
 
-        given(doFinally().actions(
+        runner.given(doFinally().actions(
                 stop(httpServer)
         ));
 
-        when(http().client(httpClient)
+        runner.when(http().client(httpClient)
                 .send()
                 .post("/")
                 .message()
@@ -62,7 +70,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
                 .body("<doc text=\"hello\"/>")
                 .fork(true));
 
-        then(http().server(httpServer)
+        runner.then(http().server(httpServer)
                 .receive()
                 .post("/")
                 .message()
@@ -71,7 +79,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
                 .validate(validation().xpath()
                         .expression("//doc/@text", "hello")));
 
-        then(http().server(httpServer)
+        runner.then(http().server(httpServer)
                 .send()
                 .response(HttpStatus.OK.value()));
     }
@@ -79,12 +87,12 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
     @Test
     @CitrusTest
     @SuppressWarnings("unchecked")
-    public void testFailure() {
-        then(doFinally().actions(
+    public void testFailure(@CitrusResource GherkinTestActionRunner runner) {
+        runner.then(doFinally().actions(
                 stop(httpServer)
         ));
 
-        when(http().client(httpClient)
+        runner.when(http().client(httpClient)
                 .send()
                 .post("/")
                 .message()
@@ -92,7 +100,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport implemen
                 .body("<doc text=\"hello\"/>")
                 .fork(true));
 
-        then(assertException()
+        runner.then(assertException()
             .exception(ValidationException.class)
             .when(http().server(httpServer)
                 .receive()
