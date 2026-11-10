@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.citrusframework.ws.message.SoapAttachment;
@@ -36,13 +36,13 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
+public class SoapResponseMessageCallbackTest extends AbstractUnitTest {
 
     private org.springframework.ws.soap.SoapMessage soapResponse = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
     private SoapEnvelope soapEnvelope = Mockito.mock(SoapEnvelope.class);
@@ -82,9 +82,9 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         callback.doWithMessage(soapResponse);
 
         Message responseMessage = callback.getResponse();
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
-        Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload, responseMessage.getPayload());
+        Assertions.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -112,9 +112,9 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         callback.doWithMessage(soapResponse);
 
         Message responseMessage = callback.getResponse();
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
-        Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload, responseMessage.getPayload());
+        Assertions.assertEquals("soapOperation", responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -147,10 +147,10 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         callback.doWithMessage(soapResponse);
 
         Message responseMessage = callback.getResponse();
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
-        Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(responseMessage.getHeaderData().get(0), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload, responseMessage.getPayload());
+        Assertions.assertEquals("", responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(1L, responseMessage.getHeaderData().size());
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent, responseMessage.getHeaderData().get(0));
 
     }
 
@@ -185,10 +185,10 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         callback.doWithMessage(soapResponse);
 
         Message responseMessage = callback.getResponse();
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
-        Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertEquals(responseMessage.getHeader("{http://citrusframework.org}citrus:messageId"), "123456789");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload, responseMessage.getPayload());
+        Assertions.assertEquals("soapOperation", responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals("123456789", responseMessage.getHeader("{http://citrusframework.org}citrus:messageId"));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -222,16 +222,16 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         callback.doWithMessage(soapResponse);
 
         Message responseMessage = callback.getResponse();
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
-        Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload, responseMessage.getPayload());
+        Assertions.assertEquals("soapOperation", responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
-        Assert.assertTrue(SoapMessage.class.isInstance(responseMessage));
+        Assertions.assertTrue(SoapMessage.class.isInstance(responseMessage));
 
         SoapMessage soapResponseMessage = (SoapMessage) responseMessage;
-        Assert.assertEquals(soapResponseMessage.getAttachments().get(0).getContentId(), attachment.getContentId());
-        Assert.assertEquals(soapResponseMessage.getAttachments().get(0).getContentType(), attachment.getContentType());
-        Assert.assertEquals(FileUtils.readToString(soapResponseMessage.getAttachments().get(0).getInputStream()), attachment.getContent());
+        Assertions.assertEquals(soapResponseMessage.getAttachments().get(0).getContentId(), attachment.getContentId());
+        Assertions.assertEquals(soapResponseMessage.getAttachments().get(0).getContentType(), attachment.getContentType());
+        Assertions.assertEquals(FileUtils.readToString(soapResponseMessage.getAttachments().get(0).getInputStream()), attachment.getContent());
 
     }
 }

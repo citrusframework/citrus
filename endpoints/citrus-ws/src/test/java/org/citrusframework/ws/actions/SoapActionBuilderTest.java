@@ -18,19 +18,19 @@ package org.citrusframework.ws.actions;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SoapActionBuilderTest {
 
     private SoapActionBuilder fixture;
 
-    @BeforeMethod
+    @BeforeEach
     void beforeMethod() {
         fixture = new SoapActionBuilder();
     }
@@ -38,10 +38,10 @@ public class SoapActionBuilderTest {
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("soap"));
+        Assertions.assertTrue(endpointBuilders.containsKey("soap"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("soap").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("soap").get().getClass(), SoapActionBuilder.class);
+        Assertions.assertTrue(TestActionBuilder.lookup("soap").isPresent());
+        Assertions.assertEquals(SoapActionBuilder.class, TestActionBuilder.lookup("soap").get().getClass());
     }
 
     @Test

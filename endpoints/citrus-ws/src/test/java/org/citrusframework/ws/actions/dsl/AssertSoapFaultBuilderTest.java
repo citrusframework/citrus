@@ -42,8 +42,8 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
@@ -95,16 +95,16 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
 
     }
 
@@ -138,16 +138,16 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                     })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
 
         verify(soapFaultValidator).validateSoapFault(any(org.citrusframework.ws.message.SoapFault.class), any(org.citrusframework.ws.message.SoapFault.class),
                 any(TestContext.class), any(SoapFaultValidationContext.class));
@@ -185,16 +185,16 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
 
         verify(soapFaultValidator).validateSoapFault(any(org.citrusframework.ws.message.SoapFault.class), any(org.citrusframework.ws.message.SoapFault.class),
                 any(TestContext.class), any(SoapFaultValidationContext.class));
@@ -231,16 +231,16 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
 
         verify(soapFaultValidator).validateSoapFault(any(org.citrusframework.ws.message.SoapFault.class), any(org.citrusframework.ws.message.SoapFault.class),
                 any(TestContext.class), any(SoapFaultValidationContext.class));
@@ -280,18 +280,18 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(container.getFaultDetails().size(), 1L);
-        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><message>Something went wrong</message></ErrorDetail>");
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
+        Assertions.assertEquals(1L, container.getFaultDetails().size());
+        Assertions.assertEquals("<ErrorDetail><message>Something went wrong</message></ErrorDetail>", container.getFaultDetails().get(0));
 
     }
 
@@ -331,19 +331,19 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(container.getFaultDetails().size(), 2L);
-        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><code>1001</code></ErrorDetail>");
-        Assert.assertEquals(container.getFaultDetails().get(1), "<MessageDetail><message>Something went wrong</message></MessageDetail>");
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
+        Assertions.assertEquals(2L, container.getFaultDetails().size());
+        Assertions.assertEquals("<ErrorDetail><code>1001</code></ErrorDetail>", container.getFaultDetails().get(0));
+        Assertions.assertEquals("<MessageDetail><message>Something went wrong</message></MessageDetail>", container.getFaultDetails().get(1));
 
     }
 
@@ -383,18 +383,18 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(container.getFaultDetails().size(), 1L);
-        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><message>Something went wrong</message></ErrorDetail>");
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
+        Assertions.assertEquals(1L, container.getFaultDetails().size());
+        Assertions.assertEquals("<ErrorDetail><message>Something went wrong</message></ErrorDetail>", container.getFaultDetails().get(0));
 
     }
 
@@ -432,19 +432,19 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(container.getFaultDetails().size(), 0L);
-        Assert.assertEquals(container.getFaultDetailResourcePaths().size(), 1L);
-        Assert.assertEquals(container.getFaultDetailResourcePaths().get(0), "classpath:org/citrusframework/ws/actions/dsl/soap-fault-detail.xml");
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
+        Assertions.assertEquals(0L, container.getFaultDetails().size());
+        Assertions.assertEquals(1L, container.getFaultDetailResourcePaths().size());
+        Assertions.assertEquals("classpath:org/citrusframework/ws/actions/dsl/soap-fault-detail.xml", container.getFaultDetailResourcePaths().get(0));
 
     }
 
@@ -486,19 +486,19 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(container.getFaultDetails().size(), 2L);
-        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><code>1001</code></ErrorDetail>");
-        Assert.assertEquals(container.getFaultDetails().get(1), "<MessageDetail><message>Something went wrong</message></MessageDetail>");
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
+        Assertions.assertEquals(2L, container.getFaultDetails().size());
+        Assertions.assertEquals("<ErrorDetail><code>1001</code></ErrorDetail>", container.getFaultDetails().get(0));
+        Assertions.assertEquals("<MessageDetail><message>Something went wrong</message></MessageDetail>", container.getFaultDetails().get(1));
 
     }
 
@@ -534,17 +534,17 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(container.getValidator(), soapFaultValidator);
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
+        Assertions.assertEquals(soapFaultValidator, container.getValidator());
 
         verify(soapFaultValidator).validateSoapFault(any(org.citrusframework.ws.message.SoapFault.class), any(org.citrusframework.ws.message.SoapFault.class),
                 any(TestContext.class), any(SoapFaultValidationContext.class));
@@ -581,17 +581,17 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
                         })));
 
         TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", test.getActions().get(0).getName());
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActionCount(), 1);
-        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
-        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
-        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
-        Assert.assertEquals(container.getFaultActor(), "MyActor");
+        Assertions.assertEquals(1, container.getActionCount());
+        Assertions.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assertions.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assertions.assertEquals(INTERNAL_SERVER_ERROR, container.getFaultString());
+        Assertions.assertEquals("MyActor", container.getFaultActor());
 
     }
 }

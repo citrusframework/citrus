@@ -16,10 +16,10 @@
 
 package org.citrusframework.ws.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 
 public class ReceiveSoapMessageActionParserTest extends AbstractActionParserTest<ReceiveSoapMessageAction> {
@@ -31,33 +31,33 @@ public class ReceiveSoapMessageActionParserTest extends AbstractActionParserTest
 
         // 1st action
         ReceiveSoapMessageAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("soapAttachmentValidator"));
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertEquals(action.getAttachments().get(0).getContent().trim(), "This is an attachment!");
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "MySoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "text/plain");
+        Assertions.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("soapAttachmentValidator"));
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertEquals("This is an attachment!", action.getAttachments().get(0).getContent().trim());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals("MySoapAttachment", action.getAttachments().get(0).getContentId());
+        Assertions.assertEquals("text/plain", action.getAttachments().get(0).getContentType());
 
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("mySoapAttachmentValidator"));
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNotNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "MySoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "application/xml");
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), "UTF-8");
+        Assertions.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("mySoapAttachmentValidator"));
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNotNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals("MySoapAttachment", action.getAttachments().get(0).getContentId());
+        Assertions.assertEquals("application/xml", action.getAttachments().get(0).getContentType());
+        Assertions.assertEquals("UTF-8", action.getAttachments().get(0).getCharsetName());
 
         // 3rd action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("soapAttachmentValidator"));
-        Assert.assertEquals(action.getAttachments().size(), 2L);
-        Assert.assertEquals(action.getAttachments().get(0).getContent().trim(), "This is an attachment!");
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "FirstSoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "text/plain");
-        Assert.assertNotNull(action.getAttachments().get(1).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(1).getContentId(), "SecondSoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(1).getContentType(), "application/xml");
-        Assert.assertEquals(action.getAttachments().get(1).getCharsetName(), "UTF-8");
+        Assertions.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("soapAttachmentValidator"));
+        Assertions.assertEquals(2L, action.getAttachments().size());
+        Assertions.assertEquals("This is an attachment!", action.getAttachments().get(0).getContent().trim());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals("FirstSoapAttachment", action.getAttachments().get(0).getContentId());
+        Assertions.assertEquals("text/plain", action.getAttachments().get(0).getContentType());
+        Assertions.assertNotNull(action.getAttachments().get(1).getContentResourcePath());
+        Assertions.assertEquals("SecondSoapAttachment", action.getAttachments().get(1).getContentId());
+        Assertions.assertEquals("application/xml", action.getAttachments().get(1).getContentType());
+        Assertions.assertEquals("UTF-8", action.getAttachments().get(1).getCharsetName());
     }
 }

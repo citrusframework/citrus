@@ -4,36 +4,28 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 import org.citrusframework.ws.interceptor.LoggingClientInterceptor;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(MockitoExtension.class)
 public class WebServiceEndpointConfigurationTest {
 
     @Mock
     private WebServiceTemplate webServiceTemplateMock;
 
-    private AutoCloseable mockitoContext;
-
     private WebServiceEndpointConfiguration fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
-        mockitoContext = openMocks(this);
-
         fixture = new WebServiceEndpointConfiguration();
         fixture.setWebServiceTemplate(webServiceTemplateMock);
-    }
-
-    @AfterMethod
-    public void tearDown() throws Exception {
-        mockitoContext.close();
     }
 
     @Test

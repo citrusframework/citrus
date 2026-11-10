@@ -38,10 +38,10 @@ import org.citrusframework.ws.server.WebServiceServer;
 import org.citrusframework.ws.validation.SimpleSoapFaultValidator;
 import org.citrusframework.ws.validation.SoapFaultValidator;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.ws.endpoint.builder.WebServiceEndpoints.soap;
 
@@ -55,7 +55,7 @@ public class AssertSoapFaultTest extends AbstractXmlActionTest {
 
     private final Queue<SoapMessage> responses = new ArrayBlockingQueue<>(4);
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
         EndpointAdapter endpointAdapter = new DirectEndpointAdapter(new DirectSyncEndpointConfiguration()) {
             @Override
@@ -79,7 +79,7 @@ public class AssertSoapFaultTest extends AbstractXmlActionTest {
                 .build();
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterEach
     public void cleanupEndpoints() {
         if (soapServer != null) {
             soapServer.stop();
@@ -111,52 +111,52 @@ public class AssertSoapFaultTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "AssertSoapFaultTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "soap:assert-fault");
+        Assertions.assertEquals("AssertSoapFaultTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
+        Assertions.assertEquals(AssertSoapFault.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("soap:assert-fault", result.getTestAction(0).getName());
 
         int actionIndex = 0;
 
         AssertSoapFault action = (AssertSoapFault) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("soapFaultValidator", SoapFaultValidator.class));
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1001");
-        Assert.assertNull(action.getFaultString());
-        Assert.assertEquals(action.getFaultDetails().size(), 0L);
-        Assert.assertNotNull(action.getValidationContext());
+        Assertions.assertNotNull(action.getAction());
+        Assertions.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("soapFaultValidator", SoapFaultValidator.class));
+        Assertions.assertEquals("{http://citrusframework.org/faults}FAULT-1001", action.getFaultCode());
+        Assertions.assertNull(action.getFaultString());
+        Assertions.assertEquals(0L, action.getFaultDetails().size());
+        Assertions.assertNotNull(action.getValidationContext());
 
         action = (AssertSoapFault) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("soapFaultValidator", SoapFaultValidator.class));
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1002");
-        Assert.assertEquals(action.getFaultString(), "FaultString");
-        Assert.assertEquals(action.getFaultDetails().size(), 0L);
-        Assert.assertNotNull(action.getValidationContext());
+        Assertions.assertNotNull(action.getAction());
+        Assertions.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("soapFaultValidator", SoapFaultValidator.class));
+        Assertions.assertEquals("{http://citrusframework.org/faults}FAULT-1002", action.getFaultCode());
+        Assertions.assertEquals("FaultString", action.getFaultString());
+        Assertions.assertEquals(0L, action.getFaultDetails().size());
+        Assertions.assertNotNull(action.getValidationContext());
 
         action = (AssertSoapFault) result.getTestAction(actionIndex++);
-        Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("soapFaultValidator", SoapFaultValidator.class));
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1003");
-        Assert.assertEquals(action.getFaultString(), "FaultString");
-        Assert.assertEquals(action.getFaultActor(), "FaultActor");
-        Assert.assertEquals(action.getFaultDetails().size(), 1L);
-        Assert.assertEquals(action.getFaultDetails().get(0), "<ns0:FaultDetail xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+        Assertions.assertNotNull(action.getAction());
+        Assertions.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("soapFaultValidator", SoapFaultValidator.class));
+        Assertions.assertEquals("{http://citrusframework.org/faults}FAULT-1003", action.getFaultCode());
+        Assertions.assertEquals("FaultString", action.getFaultString());
+        Assertions.assertEquals("FaultActor", action.getFaultActor());
+        Assertions.assertEquals(1L, action.getFaultDetails().size());
+        Assertions.assertEquals("<ns0:FaultDetail xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                     "<ns0:DetailId>1000</ns0:DetailId>" +
-                "</ns0:FaultDetail>");
-        Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
+                "</ns0:FaultDetail>", action.getFaultDetails().get(0));
+        Assertions.assertEquals(1L, action.getValidationContext().getValidationContexts().size());
 
         action = (AssertSoapFault) result.getTestAction(actionIndex);
-        Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("customSoapFaultValidator", SoapFaultValidator.class));
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1004");
-        Assert.assertEquals(action.getFaultString(), "FaultString");
-        Assert.assertEquals(action.getFaultDetails().size(), 0L);
-        Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1L);
-        Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "classpath:org/citrusframework/ws/actions/test-fault-detail.xml");
-        Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
+        Assertions.assertNotNull(action.getAction());
+        Assertions.assertEquals(action.getValidator(), context.getReferenceResolver().resolve("customSoapFaultValidator", SoapFaultValidator.class));
+        Assertions.assertEquals("{http://citrusframework.org/faults}FAULT-1004", action.getFaultCode());
+        Assertions.assertEquals("FaultString", action.getFaultString());
+        Assertions.assertEquals(0L, action.getFaultDetails().size());
+        Assertions.assertEquals(1L, action.getFaultDetailResourcePaths().size());
+        Assertions.assertEquals("classpath:org/citrusframework/ws/actions/test-fault-detail.xml", action.getFaultDetailResourcePaths().get(0));
+        Assertions.assertEquals(1L, action.getValidationContext().getValidationContexts().size());
     }
 
     private SoapFault createSoapFault(String faultCode) {

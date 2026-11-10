@@ -43,9 +43,9 @@ import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -65,7 +65,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
     /**
      * Setup test attachment.
      */
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         testAttachment.setContentId("attachment01");
         testAttachment.setContent("This is an attachment");
@@ -90,28 +90,28 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:receive-request");
+        Assertions.assertEquals("soap:receive-request", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), DefaultMessageValidationContext.class);
+        Assertions.assertEquals(MessageType.PLAINTEXT.name(), action.getMessageType());
+        Assertions.assertEquals(server, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(DefaultMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "Foo");
-        Assert.assertNotNull(((StaticMessageBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
+        Assertions.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
+        Assertions.assertEquals("Foo", ((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertNotNull(((StaticMessageBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
 
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -131,28 +131,28 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:receive-request");
+        Assertions.assertEquals("soap:receive-request", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assertions.assertEquals(MessageType.XML.name(), action.getMessageType());
+        Assertions.assertEquals(server, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(XmlMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertNotNull(((StaticMessageBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
+        Assertions.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertNotNull(((StaticMessageBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
 
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -173,27 +173,27 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent()));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:receive-request");
+        Assertions.assertEquals("soap:receive-request", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assertions.assertEquals(MessageType.XML.name(), action.getMessageType());
+        Assertions.assertEquals(server, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(XmlMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
 
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -223,25 +223,25 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource, StandardCharsets.UTF_8));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:receive-request");
+        Assertions.assertEquals("soap:receive-request", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assertions.assertEquals(MessageType.XML.name(), action.getMessageType());
+        Assertions.assertEquals(server, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(XmlMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
 
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), "This is an attachment");
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals("This is an attachment", action.getAttachments().get(0).getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -276,33 +276,33 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(attachment2.getContentId(), attachment2.getContentType(), attachment2.getContent()));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, test.getActions().get(0).getClass());
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:receive-request");
+        Assertions.assertEquals("soap:receive-request", action.getName());
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), server);
-        Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
+        Assertions.assertEquals(MessageType.XML.name(), action.getMessageType());
+        Assertions.assertEquals(server, action.getEndpoint());
+        Assertions.assertEquals(2, action.getValidationContexts().size());
+        Assertions.assertEquals(HeaderValidationContext.class, action.getValidationContexts().get(0).getClass());
+        Assertions.assertEquals(XmlMessageValidationContext.class, action.getValidationContexts().get(1).getClass());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
-        Assert.assertEquals(((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assertions.assertTrue(action.getMessageBuilder() instanceof StaticMessageBuilder);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", ((StaticMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()));
 
-        Assert.assertEquals(action.getAttachments().size(), 2L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), attachment1.getContent());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), attachment1.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), attachment1.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), attachment1.getCharsetName());
+        Assertions.assertEquals(2L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), attachment1.getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), attachment1.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), attachment1.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), attachment1.getCharsetName());
 
-        Assert.assertNull(action.getAttachments().get(1).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(1).getContent(), attachment2.getContent());
-        Assert.assertEquals(action.getAttachments().get(1).getContentId(), attachment2.getContentId());
-        Assert.assertEquals(action.getAttachments().get(1).getContentType(), attachment2.getContentType());
-        Assert.assertEquals(action.getAttachments().get(1).getCharsetName(), attachment2.getCharsetName());
+        Assertions.assertNull(action.getAttachments().get(1).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(1).getContent(), attachment2.getContent());
+        Assertions.assertEquals(action.getAttachments().get(1).getContentId(), attachment2.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(1).getContentType(), attachment2.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(1).getCharsetName(), attachment2.getCharsetName());
     }
 
     @Test
@@ -337,18 +337,18 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveSoapMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, test.getActions().get(1).getClass());
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:receive-request");
-        Assert.assertEquals(action.getEndpointUri(), "replyMessageEndpoint");
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assertions.assertEquals("soap:receive-request", action.getName());
+        Assertions.assertEquals("replyMessageEndpoint", action.getEndpointUri());
+        Assertions.assertEquals(MessageType.XML.name(), action.getMessageType());
 
         action = ((ReceiveSoapMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "soap:receive-request");
-        Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assertions.assertEquals("soap:receive-request", action.getName());
+        Assertions.assertEquals("fooMessageEndpoint", action.getEndpointUri());
+        Assertions.assertEquals(MessageType.XML.name(), action.getMessageType());
     }
 }

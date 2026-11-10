@@ -20,14 +20,14 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.6
  */
-public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
+public class SoapFormattingMessageProcessorTest extends AbstractUnitTest {
 
     private SoapFormattingMessageProcessor messageProcessor = new SoapFormattingMessageProcessor();
 
@@ -42,7 +42,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
 
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -58,9 +58,9 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
 
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
-        Assert.assertEquals(message.getFaultDetails().size(), 1L);
-        Assert.assertTrue(message.getFaultDetails().get(0).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertEquals(1L, message.getFaultDetails().size());
+        Assertions.assertTrue(message.getFaultDetails().get(0).contains("\n"));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT.name());
 
         messageProcessor.process(message, context);
-        Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
+        Assertions.assertEquals("This is plaintext", message.getPayload(String.class));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
 
         processor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
+        Assertions.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         MessageProcessor.Builder<?, ?> builder = MessageProcessor.lookup("soapPrettyPrint")
                 .orElse(null);
 
-        Assert.assertNotNull(builder);
-        Assert.assertEquals(builder.getClass(), SoapFormattingMessageProcessor.Builder.class);
+        Assertions.assertNotNull(builder);
+        Assertions.assertEquals(SoapFormattingMessageProcessor.Builder.class, builder.getClass());
     }
 }

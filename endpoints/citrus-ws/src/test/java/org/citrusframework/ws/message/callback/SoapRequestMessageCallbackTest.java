@@ -25,7 +25,7 @@ import javax.xml.transform.TransformerException;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessageHeaders;
@@ -41,12 +41,12 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
-public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
+public class SoapRequestMessageCallbackTest extends AbstractUnitTest {
 
     private final SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
     private final SoapBody soapBody = Mockito.mock(SoapBody.class);
@@ -69,7 +69,7 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
 
         callback.doWithMessage(soapRequest);
 
-        Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload);
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload, soapBodyResult.toString());
 
     }
 
@@ -114,7 +114,7 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
 
         callback.doWithMessage(soapRequest);
 
-        Assert.assertEquals(soapHeaderResult.toString(), soapHeaderContent);
+        Assertions.assertEquals(soapHeaderResult.toString(), soapHeaderContent);
 
     }
 
@@ -143,7 +143,7 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
 
         callback.doWithMessage(soapRequest);
 
-        Assert.assertEquals(soapHeaderResult.toString(), soapHeaderContent + "<AppInfo><appId>123456789</appId></AppInfo>");
+        Assertions.assertEquals(soapHeaderContent + "<AppInfo><appId>123456789</appId></AppInfo>", soapHeaderResult.toString());
 
     }
 
@@ -227,9 +227,9 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
         callback.doWithMessage(saajSoapRequest);
 
         Iterator it = mimeHeaders.getAllHeaders();
-        Assert.assertEquals(((MimeHeader)it.next()).getName(), "operation");
-        Assert.assertEquals(((MimeHeader)it.next()).getValue(), "123456789");
-        Assert.assertFalse(it.hasNext());
+        Assertions.assertEquals("operation", ((MimeHeader)it.next()).getName());
+        Assertions.assertEquals("123456789", ((MimeHeader)it.next()).getValue());
+        Assertions.assertFalse(it.hasNext());
 
     }
 
@@ -254,8 +254,8 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
             InputStreamSource contentStream = (InputStreamSource) invocation.getArguments()[1];
             BufferedReader reader = new BufferedReader(new InputStreamReader(contentStream.getInputStream()));
 
-            Assert.assertEquals(reader.readLine(), "This is a SOAP attachment");
-            Assert.assertEquals(reader.readLine(), "with multi-line");
+            Assertions.assertEquals("This is a SOAP attachment", reader.readLine());
+            Assertions.assertEquals("with multi-line", reader.readLine());
 
             reader.close();
             return null;

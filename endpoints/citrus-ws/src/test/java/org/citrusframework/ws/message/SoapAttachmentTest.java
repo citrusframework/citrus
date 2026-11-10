@@ -31,8 +31,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.mockito.Mockito;
 import org.springframework.ws.mime.Attachment;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -51,12 +51,12 @@ public class SoapAttachmentTest {
 
         SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
-        Assert.assertEquals(soapAttachment.getContentId(), "mail");
-        Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
-        Assert.assertEquals(soapAttachment.getContent(), "This is mail text content!");
-        Assert.assertEquals(soapAttachment.getCharsetName(), Charset.defaultCharset().displayName());
-        Assert.assertNotNull(soapAttachment.getDataHandler());
-        Assert.assertEquals(soapAttachment.getSize(), 26L);
+        Assertions.assertEquals("mail", soapAttachment.getContentId());
+        Assertions.assertEquals("text/plain", soapAttachment.getContentType());
+        Assertions.assertEquals("This is mail text content!", soapAttachment.getContent());
+        Assertions.assertEquals(soapAttachment.getCharsetName(), Charset.defaultCharset().displayName());
+        Assertions.assertNotNull(soapAttachment.getDataHandler());
+        Assertions.assertEquals(26L, soapAttachment.getSize());
 
     }
 
@@ -71,18 +71,18 @@ public class SoapAttachmentTest {
 
         SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
-        Assert.assertEquals(soapAttachment.getContentId(), "img");
-        Assert.assertEquals(soapAttachment.getContentType(), "application/octet-stream");
-        Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(StandardCharsets.UTF_8)));
-        Assert.assertEquals(soapAttachment.getCharsetName(), Charset.defaultCharset().displayName());
-        Assert.assertNotNull(soapAttachment.getDataHandler());
-        Assert.assertEquals(soapAttachment.getSize(), 25L);
+        Assertions.assertEquals("img", soapAttachment.getContentId());
+        Assertions.assertEquals("application/octet-stream", soapAttachment.getContentType());
+        Assertions.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(StandardCharsets.UTF_8)));
+        Assertions.assertEquals(soapAttachment.getCharsetName(), Charset.defaultCharset().displayName());
+        Assertions.assertNotNull(soapAttachment.getDataHandler());
+        Assertions.assertEquals(25L, soapAttachment.getSize());
 
         soapAttachment.setEncodingType(SoapAttachment.ENCODING_BASE64_BINARY);
-        Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(StandardCharsets.UTF_8)));
+        Assertions.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(StandardCharsets.UTF_8)));
 
         soapAttachment.setEncodingType(SoapAttachment.ENCODING_HEX_BINARY);
-        Assert.assertEquals(soapAttachment.getContent(), Hex.encodeHexString("This is img text content!".getBytes(StandardCharsets.UTF_8)).toUpperCase());
+        Assertions.assertEquals(soapAttachment.getContent(), Hex.encodeHexString("This is img text content!".getBytes(StandardCharsets.UTF_8)).toUpperCase());
 
     }
 
@@ -92,11 +92,11 @@ public class SoapAttachmentTest {
         soapAttachment.setContentResourcePath("classpath:org/citrusframework/ws/actions/test-attachment.xml");
         soapAttachment.setContentType("text/xml");
 
-        Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-        Assert.assertNotNull(soapAttachment.getDataHandler());
+        Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", soapAttachment.getContent().trim());
+        Assertions.assertNotNull(soapAttachment.getDataHandler());
 
         // Respect additional CR on win32 platforms
-        Assert.assertTrue(soapAttachment.getSize() == 65L || soapAttachment.getSize() == 66L);
+        Assertions.assertTrue(soapAttachment.getSize() == 65L || soapAttachment.getSize() == 66L);
     }
 
     @Test
@@ -110,8 +110,8 @@ public class SoapAttachmentTest {
         String attachmentContent = soapAttachment.getContent();
         byte[] resourceContent = Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource(imageUrl).toURI()));
 
-        Assert.assertEquals(attachmentContent, Base64.encodeBase64String(resourceContent));
-        Assert.assertEquals(soapAttachment.getSize(), resourceContent.length);
+        Assertions.assertEquals(attachmentContent, Base64.encodeBase64String(resourceContent));
+        Assertions.assertEquals(resourceContent.length, soapAttachment.getSize());
     }
 
     private record StaticTextDataSource(String content, String contentType, String charsetName,

@@ -42,10 +42,9 @@ import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.message.SoapMessageHeaders;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -63,7 +62,7 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
     /**
      * Setup test attachment.
      */
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         testAttachment.setContentId("attachment01");
         testAttachment.setContent("This is an attachment");
@@ -72,7 +71,7 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
     }
 
     @Override
-    @BeforeMethod
+    @BeforeEach
     public void prepareTest() {
         super.prepareTest();
         soapClient = Mockito.mock(WebServiceClient.class);
@@ -87,7 +86,7 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "Foo");
+            Assertions.assertEquals("Foo", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -102,33 +101,33 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                 .fork(true));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(1).getClass());
 
         SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 3L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
+        Assertions.assertEquals("Foo", messageBuilder.getMessage().getPayload(String.class));
+        Assertions.assertEquals("foo", messageBuilder.getMessage().getHeader("operation"));
+        Assertions.assertEquals(3L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(MessageType.PLAINTEXT.name(), messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE));
+        Assertions.assertEquals("additionalValue", messageBuilder.buildMessageHeaders(context).get("additional"));
+        Assertions.assertEquals("foo", messageBuilder.buildMessageHeaders(context).get("operation"));
 
-        Assert.assertFalse(action.isForkMode());
+        Assertions.assertFalse(action.isForkMode());
 
         action = ((SendSoapMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
-        Assert.assertTrue(action.isForkMode());
+        Assertions.assertTrue(action.isForkMode());
     }
 
     @Test
@@ -137,8 +136,8 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getSoapAction(), "TestService/sayHello");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertEquals("TestService/sayHello", message.getSoapAction());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -149,19 +148,19 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
 
         SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 3L);
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(SoapMessageHeaders.SOAP_ACTION), "TestService/sayHello");
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(3L, messageBuilder.getMessage().getHeaders().size());
+        Assertions.assertEquals("TestService/sayHello", messageBuilder.getMessage().getHeaders().get(SoapMessageHeaders.SOAP_ACTION));
     }
 
     @Test
@@ -170,9 +169,9 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getAttachments().size(), 1L);
-            Assert.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertEquals(1L, message.getAttachments().size());
+            Assertions.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -184,25 +183,25 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
 
         SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -211,9 +210,9 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getAttachments().size(), 1L);
-            Assert.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertEquals(1L, message.getAttachments().size());
+            Assertions.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -224,25 +223,25 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent()));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
 
         SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -251,9 +250,9 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><data><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:attachment01\"/></data></TestRequest>");
-            Assert.assertEquals(message.getAttachments().size(), 1L);
-            Assert.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
+            Assertions.assertEquals("<TestRequest><data><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:attachment01\"/></data></TestRequest>", message.getPayload(String.class));
+            Assertions.assertEquals(1L, message.getAttachments().size());
+            Assertions.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -265,27 +264,27 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent()));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
 
         SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><data>cid:attachment01</data></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><data>cid:attachment01</data></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
-        Assert.assertTrue(action.getMtomEnabled());
+        Assertions.assertTrue(action.getMtomEnabled());
 
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -293,10 +292,10 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getAttachments().size(), 2L);
-            Assert.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent() + 1);
-            Assert.assertEquals(message.getAttachments().get(1).getContent(), testAttachment.getContent() + 2);
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertEquals(2L, message.getAttachments().size());
+            Assertions.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent() + 1);
+            Assertions.assertEquals(message.getAttachments().get(1).getContent(), testAttachment.getContent() + 2);
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         when(soapClient.createProducer()).thenReturn(messageProducer);
@@ -309,30 +308,30 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment.getContentId() + 2, testAttachment.getContentType(), testAttachment.getContent() + 2));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
 
         SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
-        Assert.assertEquals(action.getAttachments().size(), 2L);
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent() + 1);
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId() + 1);
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
-        Assert.assertNull(action.getAttachments().get(1).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(1).getContent(), testAttachment.getContent() + 2);
-        Assert.assertEquals(action.getAttachments().get(1).getContentId(), testAttachment.getContentId() + 2);
-        Assert.assertEquals(action.getAttachments().get(1).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(1).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals(2L, action.getAttachments().size());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent() + 1);
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId() + 1);
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertNull(action.getAttachments().get(1).getContentResourcePath());
+        Assertions.assertEquals(action.getAttachments().get(1).getContent(), testAttachment.getContent() + 2);
+        Assertions.assertEquals(action.getAttachments().get(1).getContentId(), testAttachment.getContentId() + 2);
+        Assertions.assertEquals(action.getAttachments().get(1).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(1).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -341,9 +340,9 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getAttachments().size(), 1L);
-            Assert.assertEquals(message.getAttachments().get(0).getContent(), "someAttachmentData");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertEquals(1L, message.getAttachments().size());
+            Assertions.assertEquals("someAttachmentData", message.getAttachments().get(0).getContent());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -357,23 +356,23 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .attachment(testAttachment.getContentId(), testAttachment.getContentType(), resource));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
 
         SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
+        Assertions.assertEquals("soap:send-request", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapClient, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
 
-        Assert.assertEquals(action.getAttachments().get(0).getContent(), "someAttachmentData");
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assertions.assertEquals("someAttachmentData", action.getAttachments().get(0).getContent());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assertions.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assertions.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
 
     @Test
@@ -382,15 +381,15 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
         when(soapClient.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getAttachments().size(), 1L);
-            Assert.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
+            Assertions.assertEquals(1L, message.getAttachments().size());
+            Assertions.assertEquals(message.getAttachments().get(0).getContent(), testAttachment.getContent());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         doAnswer(invocation -> {
             SoapMessage message = (SoapMessage) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+            Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", message.getPayload(String.class));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -418,21 +417,21 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
                 .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), SendSoapMessageAction.class);
+        Assertions.assertEquals(2, test.getActionCount());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(SendSoapMessageAction.class, test.getActions().get(1).getClass());
 
         SendMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "soap:send-request");
-        Assert.assertEquals(action.getEndpointUri(), "soapClient");
+        Assertions.assertEquals("soap:send-request", action.getName());
+        Assertions.assertEquals("soapClient", action.getEndpointUri());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
-        Assert.assertTrue(messageBuilder.buildMessageHeaders(context).containsKey("operation"));
+        Assertions.assertEquals("<TestRequest><Message>Hello World!</Message></TestRequest>", messageBuilder.buildMessagePayload(context, action.getMessageType()));
+        Assertions.assertEquals(1L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertTrue(messageBuilder.buildMessageHeaders(context).containsKey("operation"));
 
         action = ((SendSoapMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "soap:send-request");
-        Assert.assertEquals(action.getEndpointUri(), "otherClient");
+        Assertions.assertEquals("soap:send-request", action.getName());
+        Assertions.assertEquals("otherClient", action.getEndpointUri());
     }
 }

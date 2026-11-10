@@ -16,8 +16,8 @@
 
 package org.citrusframework.ws.message;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SoapFaultTest {
 
@@ -25,18 +25,18 @@ public class SoapFaultTest {
     public void testToString() {
         SoapFault fault = new SoapFault();
         fault.faultCode("TEC-1000");
-        Assert.assertTrue(fault.toString().endsWith("[fault: {TEC-1000}]"));
+        Assertions.assertTrue(fault.toString().endsWith("[fault: {TEC-1000}]"));
 
         fault.faultString("Internal server error");
-        Assert.assertTrue(fault.toString().endsWith("[fault: {TEC-1000}{Internal server error}{en}]"));
+        Assertions.assertTrue(fault.toString().endsWith("[fault: {TEC-1000}{Internal server error}{en}]"));
 
         fault.faultCode("{http://citrusframework.org}TEC-1000");
-        Assert.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{en}]"));
+        Assertions.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{en}]"));
 
         fault.locale("DE");
-        Assert.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{de}]"));
+        Assertions.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{de}]"));
 
         fault.faultActor("Actor");
-        Assert.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{de}{Actor}]"));
+        Assertions.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{de}{Actor}]"));
     }
 }

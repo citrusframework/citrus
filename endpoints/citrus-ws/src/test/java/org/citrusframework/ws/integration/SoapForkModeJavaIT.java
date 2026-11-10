@@ -18,19 +18,27 @@ package org.citrusframework.ws.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class SoapForkModeJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class SoapForkModeJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void soapForkMode() {
-        variable("correlationId", "citrus:randomNumber(10)");
-        variable("messageId", "citrus:randomNumber(10)");
-        variable("user", "Christoph");
+    public void soapForkMode(@CitrusResource TestCaseRunner runner) {
+        runner.variable("correlationId", "citrus:randomNumber(10)");
+        runner.variable("messageId", "citrus:randomNumber(10)");
+        runner.variable("user", "Christoph");
 
-        given(soap().client("helloSoapClient")
+        runner.given(soap().client("helloSoapClient")
             .send()
             .message()
             .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -42,7 +50,7 @@ public class SoapForkModeJavaIT extends TestNGCitrusSpringSupport implements Tes
             .header("{http://citrusframework.org/test}Operation", "sayHello")
             .fork(true));
 
-        when(soap().server("soapRequestEndpoint")
+        runner.when(soap().server("soapRequestEndpoint")
             .receive()
             .message()
             .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -55,7 +63,7 @@ public class SoapForkModeJavaIT extends TestNGCitrusSpringSupport implements Tes
             .extract(extractor().fromHeaders()
                     .header("citrus_jms_messageId", "internal_correlation_id")));
 
-        then(soap().server("soapResponseEndpoint")
+        runner.then(soap().server("soapResponseEndpoint")
             .send()
             .message()
             .body("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -66,7 +74,7 @@ public class SoapForkModeJavaIT extends TestNGCitrusSpringSupport implements Tes
                         "</ns0:HelloResponse>")
             .header("citrus_jms_correlationId", "${internal_correlation_id}"));
 
-        then(soap().client("helloSoapClient")
+        runner.then(soap().client("helloSoapClient")
             .receive()
             .message()
             .body("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +

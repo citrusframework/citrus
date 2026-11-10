@@ -22,7 +22,8 @@ import java.util.Collections;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SimpleSoapAttachmentValidatorTest {
 
@@ -58,7 +59,7 @@ public class SimpleSoapAttachmentValidatorTest {
         validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testSimpleValidationWrongContentId() {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
@@ -74,10 +75,11 @@ public class SimpleSoapAttachmentValidatorTest {
         controlAttachment.setContent("This is a test!");
 
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
-        validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
+        Assertions.assertThrows(ValidationException.class,
+                () -> validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment)));
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Values not equal for attachment content 'soapAttachmentId', expected 'ThisisnotOK!' but was 'Thisisatest!'")
+    @Test
     public void testSimpleValidationWrongContent() {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
@@ -93,10 +95,13 @@ public class SimpleSoapAttachmentValidatorTest {
         controlAttachment.setContent("This is not OK!");
 
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
-        validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
+
+        ValidationException exception = Assertions.assertThrows(ValidationException.class,
+                () -> validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment)));
+        Assertions.assertTrue(exception.getMessage().matches("Values not equal for attachment content 'soapAttachmentId', expected 'ThisisnotOK!' but was 'Thisisatest!'"));
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Values not equal for attachment contentType, expected 'text/xml' but was 'text/plain'")
+    @Test
     public void testSimpleValidationWrongContentType() {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
@@ -112,6 +117,9 @@ public class SimpleSoapAttachmentValidatorTest {
         controlAttachment.setContent("This is a test!");
 
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
-        validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
+
+        ValidationException exception = Assertions.assertThrows(ValidationException.class,
+                () -> validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment)));
+        Assertions.assertTrue(exception.getMessage().matches("Values not equal for attachment contentType, expected 'text/xml' but was 'text/plain'"));
     }
 }

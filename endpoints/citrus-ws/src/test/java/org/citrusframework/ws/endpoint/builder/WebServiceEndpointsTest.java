@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.ws.client.WebServiceClientBuilder;
 import org.citrusframework.ws.server.WebServiceServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class WebServiceEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("soap"));
-        Assert.assertTrue(endpointBuilders.containsKey("soap.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("soap.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("soap"));
+        Assertions.assertTrue(endpointBuilders.containsKey("soap.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("soap.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("soap").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("soap").get().getClass(), SoapWebServiceEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("soap.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("soap.client").get().getClass(), WebServiceClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("soap.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("soap.server").get().getClass(), WebServiceServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("soap").isPresent());
+        Assertions.assertEquals(SoapWebServiceEndpointBuilder.class, EndpointBuilder.lookup("soap").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("soap.client").isPresent());
+        Assertions.assertEquals(WebServiceClientBuilder.class, EndpointBuilder.lookup("soap.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("soap.server").isPresent());
+        Assertions.assertEquals(WebServiceServerBuilder.class, EndpointBuilder.lookup("soap.server").get().getClass());
     }
 }
