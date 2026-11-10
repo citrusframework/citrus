@@ -26,9 +26,9 @@ import io.grpc.ServerMethodDefinition;
 import org.citrusframework.grpc.descriptor.GrpcDescriptorRegistry;
 import org.citrusframework.grpc.message.GrpcMessageCodec;
 import org.citrusframework.message.DefaultMessageQueue;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +41,7 @@ public class DynamicCallHandlerTest {
     private GrpcDescriptorRegistry descriptorRegistry;
     private GrpcMessageCodec codec;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         adapterExecutor = Executors.newSingleThreadExecutor();
@@ -52,7 +52,7 @@ public class DynamicCallHandlerTest {
         codec = new GrpcMessageCodec(descriptorRegistry);
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void tearDown() {
         scheduler.shutdownNow();
         adapterExecutor.shutdownNow();

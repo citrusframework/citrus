@@ -19,7 +19,7 @@ package org.citrusframework.grpc.descriptor;
 import java.util.List;
 
 import org.citrusframework.grpc.test.proto.helloworld.GreeterGrpc;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

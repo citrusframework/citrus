@@ -48,11 +48,11 @@ import org.citrusframework.grpc.test.proto.helloworld.HelloRequest;
 import org.citrusframework.grpc.test.proto.helloworld.UserInfo;
 import org.citrusframework.grpc.test.proto.market.Price;
 import org.citrusframework.grpc.test.proto.market.PriceSubscription;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -67,18 +67,18 @@ public class GrpcClientTest {
 
     private static final String DESCRIPTORS = "classpath:descriptors/test-protos.binpb";
 
-    private Server server;
-    private int port;
+    private static Server server;
+    private static int port;
 
-    private CountDownLatch watchStarted;
-    private CountDownLatch watchCancelled;
-    private CountDownLatch subscribeCompleted;
-    private AtomicReference<Metadata> receivedHeaders;
+    private static CountDownLatch watchStarted;
+    private static CountDownLatch watchCancelled;
+    private static CountDownLatch subscribeCompleted;
+    private static AtomicReference<Metadata> receivedHeaders;
 
     private GrpcClient client;
 
-    @BeforeClass
-    public void startServer() throws IOException {
+    @BeforeAll
+    public static void startServer() throws IOException {
         port = findAvailableTcpPort();
 
         server = ServerBuilder.forPort(port)
@@ -110,14 +110,14 @@ public class GrpcClientTest {
                 .start();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stopServer() {
+    @AfterAll
+    public static void stopServer() {
         if (server != null) {
             server.shutdownNow();
         }
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         watchStarted = new CountDownLatch(1);
         watchCancelled = new CountDownLatch(1);
@@ -130,7 +130,7 @@ public class GrpcClientTest {
         client = new GrpcClient(configuration);
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void tearDown() {
         if (client != null) {
             client.destroy();
@@ -342,7 +342,7 @@ public class GrpcClientTest {
                 .hasMessageContaining("Unsupported gRPC message selector");
     }
 
-    private ServerCallHandler<DynamicMessage, DynamicMessage> sayHelloHandler() {
+    private static ServerCallHandler<DynamicMessage, DynamicMessage> sayHelloHandler() {
         return (call, headers) -> {
             receivedHeaders.set(headers);
             Metadata responseHeaders = new Metadata();
@@ -370,7 +370,7 @@ public class GrpcClientTest {
         };
     }
 
-    private ServerCallHandler<DynamicMessage, DynamicMessage> getUserHandler() {
+    private static ServerCallHandler<DynamicMessage, DynamicMessage> getUserHandler() {
         return (call, headers) -> {
             call.sendHeaders(new Metadata());
             call.request(2);
@@ -390,7 +390,7 @@ public class GrpcClientTest {
         };
     }
 
-    private ServerCallHandler<DynamicMessage, DynamicMessage> subscribeHandler() {
+    private static ServerCallHandler<DynamicMessage, DynamicMessage> subscribeHandler() {
         return (call, headers) -> {
             call.sendHeaders(new Metadata());
             call.request(2);
@@ -422,7 +422,7 @@ public class GrpcClientTest {
         };
     }
 
-    private ServerCallHandler<DynamicMessage, DynamicMessage> watchHandler() {
+    private static ServerCallHandler<DynamicMessage, DynamicMessage> watchHandler() {
         return (call, headers) -> {
             call.sendHeaders(new Metadata());
             call.request(2);

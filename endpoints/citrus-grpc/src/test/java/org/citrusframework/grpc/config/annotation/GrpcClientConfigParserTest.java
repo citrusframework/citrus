@@ -22,7 +22,7 @@ import org.citrusframework.grpc.client.GrpcClient;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.SimpleReferenceResolver;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

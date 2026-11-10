@@ -28,9 +28,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.grpc.test.proto.helloworld.GreeterGrpc;
 import org.citrusframework.grpc.test.proto.helloworld.HelloReply;
 import org.citrusframework.grpc.test.proto.helloworld.HelloRequest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,11 +42,11 @@ public class GrpcTlsSupportTest {
     private static final String SERVER_CHAIN = "classpath:certs/server1.pem";
     private static final String SERVER_KEY = "classpath:certs/server1.key";
 
-    private int port;
-    private Server server;
+    private static int port;
+    private static Server server;
 
-    @BeforeClass
-    public void startServer() throws IOException {
+    @BeforeAll
+    public static void startServer() throws IOException {
         port = findAvailableTcpPort();
         server = Grpc.newServerBuilderForPort(port, GrpcTlsSupport.serverCredentials(SERVER_CHAIN, SERVER_KEY))
                 .addService(new GreeterGrpc.GreeterImplBase() {
@@ -60,8 +60,8 @@ public class GrpcTlsSupportTest {
                 .start();
     }
 
-    @AfterClass
-    public void stopServer() {
+    @AfterAll
+    public static void stopServer() {
         server.shutdownNow();
     }
 

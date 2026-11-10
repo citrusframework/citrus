@@ -45,10 +45,14 @@ import org.citrusframework.grpc.test.proto.helloworld.UserInfo;
 import org.citrusframework.grpc.test.proto.market.Price;
 import org.citrusframework.grpc.test.proto.market.PriceSubscription;
 import org.citrusframework.grpc.test.proto.market.PricesGrpc;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -57,8 +61,9 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 /**
  * A real grpc-java client (generated stubs) calls the Citrus simulator.
  */
-@Test
-public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GrpcServerIT implements TestActionSupport {
 
     private static final String PRICE_ZERO =
             "{ \"symbol\": \"ACME\", \"amount\": { \"currency\": \"EUR\", \"amount\": \"0\" } }";
@@ -70,7 +75,7 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
     private GreeterGrpc.GreeterBlockingStub greeter;
     private PricesGrpc.PricesBlockingStub prices;
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeEach
     public void startSimulator() {
         simulator = startSimulator(5000L, "helloworld.Greeter", "market.Prices");
         channel = ManagedChannelBuilder.forAddress("localhost", simulator.getEndpointConfiguration().getPort())
@@ -79,7 +84,7 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         prices = PricesGrpc.newBlockingStub(channel);
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void stopSimulator() {
         if (channel != null) {
             channel.shutdownNow();
@@ -89,17 +94,18 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldAnswerUnaryCall() throws Exception {
+    public void shouldAnswerUnaryCall(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         CompletableFuture<HelloReply> call = async(() -> greeter.sayHello(
                 HelloRequest.newBuilder().setName("Ada").build()));
 
-        when(grpc().server(simulator).receive()
+        runner.when(grpc().server(simulator).receive()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Ada\", \"userId\": 0 }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response()
                 .trailer("x-trailer", "42")
                 .message()
@@ -108,8 +114,9 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         assertThat(call.get(5, TimeUnit.SECONDS).getMessage()).isEqualTo("Hello Ada");
     }
 
+    @Test
     @CitrusTest
-    public void shouldAnswerUnimplementedForUnconfiguredService() {
+    public void shouldAnswerUnimplementedForUnconfiguredService(@CitrusResource GherkinTestActionRunner runner) {
         GrpcServer greeterOnly = startSimulator(5000L, "helloworld.Greeter");
         ManagedChannel greeterChannel = ManagedChannelBuilder
                 .forAddress("localhost", greeterOnly.getEndpointConfiguration().getPort())
@@ -127,8 +134,9 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldRestartSimulatorAfterStop() throws Exception {
+    public void shouldRestartSimulatorAfterStop(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         GrpcServer restartable = startSimulator(5000L, "helloworld.Greeter");
         ManagedChannel restartChannel = ManagedChannelBuilder
                 .forAddress("localhost", restartable.getEndpointConfiguration().getPort())
@@ -146,12 +154,12 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
             CompletableFuture<HelloReply> call = async(() -> restartGreeter.sayHello(
                     HelloRequest.newBuilder().setName("Ada").build()));
 
-            when(grpc().server(restartable).receive()
+            runner.when(grpc().server(restartable).receive()
                     .call("helloworld.Greeter/SayHello")
                     .message()
                     .body("{ \"name\": \"Ada\", \"userId\": 0 }"));
 
-            then(grpc().server(restartable).send()
+            runner.then(grpc().server(restartable).send()
                     .response()
                     .message()
                     .body("{ \"message\": \"Hello Ada\" }"));
@@ -163,17 +171,18 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldAnswerWithErrorStatusAndTrailers() throws Exception {
+    public void shouldAnswerWithErrorStatusAndTrailers(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         CompletableFuture<UserInfo> call = async(() -> greeter.getUser(
                 GetUserRequest.newBuilder().setId("unknown").build()));
 
-        when(grpc().server(simulator).receive()
+        runner.when(grpc().server(simulator).receive()
                 .call("helloworld.Greeter/GetUser")
                 .message()
                 .body("{ \"id\": \"unknown\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response("NOT_FOUND")
                 .statusDescription("unknown user")
                 .trailer("x-trailer", "not-found"));
@@ -186,8 +195,9 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
                 .isEqualTo("not-found");
     }
 
+    @Test
     @CitrusTest
-    public void shouldStreamMessagesAndComplete() throws Exception {
+    public void shouldStreamMessagesAndComplete(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         CompletableFuture<List<Price>> call = async(() -> {
             List<Price> received = new ArrayList<>();
             Iterator<Price> messages = prices.subscribe(PriceSubscription.newBuilder().setSymbol("ACME").build());
@@ -195,22 +205,22 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
             return received;
         });
 
-        when(grpc().server(simulator).receive()
+        runner.when(grpc().server(simulator).receive()
                 .call("market.Prices/Subscribe")
                 .message()
                 .body("{ \"symbol\": \"ACME\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .streamMessage()
                 .message()
                 .body(PRICE_ZERO));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .streamMessage()
                 .message()
                 .body(PRICE_ONE));
 
-        then(grpc().server(simulator).send().streamCompleted());
+        runner.then(grpc().server(simulator).send().streamCompleted());
 
         List<Price> received = call.get(5, TimeUnit.SECONDS);
         assertThat(received).hasSize(2);
@@ -218,8 +228,9 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         assertThat(received.get(1).getAmount().getAmount()).isEqualTo(1L);
     }
 
+    @Test
     @CitrusTest
-    public void shouldAnswerInternalWhenNoReplyIsSent() throws Exception {
+    public void shouldAnswerInternalWhenNoReplyIsSent(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         GrpcServer idleSimulator = startSimulator(300L, "helloworld.Greeter");
         ManagedChannel idleChannel = ManagedChannelBuilder
                 .forAddress("localhost", idleSimulator.getEndpointConfiguration().getPort())
@@ -230,7 +241,7 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
             CompletableFuture<HelloReply> call = async(() -> idleGreeter.sayHello(
                     HelloRequest.newBuilder().setName("Ada").build()));
 
-            when(grpc().server(idleSimulator).receive()
+            runner.when(grpc().server(idleSimulator).receive()
                     .call("helloworld.Greeter/SayHello")
                     .message()
                     .body("{ \"name\": \"Ada\", \"userId\": 0 }"));
@@ -245,8 +256,9 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldFailSimulatorSendWhenClientCancels() throws Exception {
+    public void shouldFailSimulatorSendWhenClientCancels(@CitrusResource GherkinTestActionRunner runner) throws Exception {
         AtomicReference<ClientCallStreamObserver<PriceSubscription>> callRef = new AtomicReference<>();
         CountDownLatch received = new CountDownLatch(1);
 
@@ -272,12 +284,12 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
                     }
                 });
 
-        when(grpc().server(simulator).receive()
+        runner.when(grpc().server(simulator).receive()
                 .call("market.Prices/Watch")
                 .message()
                 .body("{ \"symbol\": \"ACME\" }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .streamMessage()
                 .message()
                 .body(PRICE_ZERO));
@@ -286,7 +298,7 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
 
         callRef.get().cancel("client cancels", null);
 
-        CitrusRuntimeException failure = awaitCancelledCallFailure();
+        CitrusRuntimeException failure = awaitCancelledCallFailure(runner);
         assertThat(failure).isNotNull();
         assertThat(failure.getMessage()).contains("cancelled by the client");
     }
@@ -296,11 +308,11 @@ public class GrpcServerIT extends TestNGCitrusSpringSupport implements TestActio
      *
      * @return the failure raised for the cancelled call or {@code null} if it was not raised
      */
-    private CitrusRuntimeException awaitCancelledCallFailure() {
+    private CitrusRuntimeException awaitCancelledCallFailure(GherkinTestActionRunner runner) {
         long deadline = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < deadline) {
             try {
-                when(grpc().server(simulator).send()
+                runner.when(grpc().server(simulator).send()
                         .streamMessage()
                         .message()
                         .body(PRICE_ONE));

@@ -39,11 +39,15 @@ import org.citrusframework.grpc.test.proto.helloworld.GreeterGrpc;
 import org.citrusframework.grpc.test.proto.helloworld.HelloReply;
 import org.citrusframework.grpc.test.proto.helloworld.HelloRequest;
 import org.citrusframework.grpc.tls.GrpcTlsSupport;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
@@ -56,23 +60,24 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
  * The certificate is generated at runtime so that no private key has to be committed to the
  * repository.
  */
-@Test
-public class GrpcTlsIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GrpcTlsIT implements TestActionSupport {
 
     private static final String KEYSTORE_PASSWORD = "citrus";
 
-    private Path certificateFile;
-    private Path privateKeyFile;
-    private String certificateChain;
-    private String privateKey;
-    private String trustCertificate;
+    private static Path certificateFile;
+    private static Path privateKeyFile;
+    private static String certificateChain;
+    private static String privateKey;
+    private static String trustCertificate;
 
     private GrpcServer simulator;
     private GrpcClient client;
     private Server service;
 
-    @BeforeClass(alwaysRun = true)
-    public void setupTls() throws Exception {
+    @BeforeAll
+    public static void setupTls() throws Exception {
         Path keystore = Files.createTempDirectory("citrus-grpc-tls").resolve("tls-test.p12");
         generateKeyPair(keystore);
 
@@ -86,8 +91,8 @@ public class GrpcTlsIT extends TestNGCitrusSpringSupport implements TestActionSu
         trustCertificate = "file:" + certificateFile.toAbsolutePath();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanupTls() throws IOException {
+    @AfterAll
+    public static void cleanupTls() throws IOException {
         if (certificateFile != null) {
             Files.deleteIfExists(certificateFile);
         }
@@ -100,7 +105,7 @@ public class GrpcTlsIT extends TestNGCitrusSpringSupport implements TestActionSu
         }
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterEach
     public void stopEndpoints() {
         if (client != null) {
             client.destroy();
@@ -116,8 +121,9 @@ public class GrpcTlsIT extends TestNGCitrusSpringSupport implements TestActionSu
         }
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallTlsService() throws IOException {
+    public void shouldCallTlsService(@CitrusResource GherkinTestActionRunner runner) throws IOException {
         int port = findAvailableTcpPort(18895);
         service = Grpc.newServerBuilderForPort(port, GrpcTlsSupport.serverCredentials(certificateChain, privateKey))
                 .addService(new GreeterGrpc.GreeterImplBase() {
@@ -138,19 +144,20 @@ public class GrpcTlsIT extends TestNGCitrusSpringSupport implements TestActionSu
                 .timeout(5000L)
                 .build();
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Ada\" }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .message()
                 .body("{ \"message\": \"Hello Ada\" }"));
     }
 
+    @Test
     @CitrusTest
-    public void shouldCallTlsSimulator() {
+    public void shouldCallTlsSimulator(@CitrusResource GherkinTestActionRunner runner) {
         int port = findAvailableTcpPort(18896);
         simulator = GrpcEndpoints.grpc().server()
                 .port(port)
@@ -171,22 +178,22 @@ public class GrpcTlsIT extends TestNGCitrusSpringSupport implements TestActionSu
                 .timeout(5000L)
                 .build();
 
-        when(grpc().client(client).send()
+        runner.when(grpc().client(client).send()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Bob\" }"));
 
-        then(grpc().server(simulator).receive()
+        runner.then(grpc().server(simulator).receive()
                 .call("helloworld.Greeter/SayHello")
                 .message()
                 .body("{ \"name\": \"Bob\", \"userId\": 0 }"));
 
-        then(grpc().server(simulator).send()
+        runner.then(grpc().server(simulator).send()
                 .response()
                 .message()
                 .body("{ \"message\": \"Hello Bob\" }"));
 
-        then(grpc().client(client).receive()
+        runner.then(grpc().client(client).receive()
                 .response()
                 .message()
                 .body("{ \"message\": \"Hello Bob\" }"));

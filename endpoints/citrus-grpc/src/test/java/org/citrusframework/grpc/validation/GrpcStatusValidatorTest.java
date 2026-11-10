@@ -26,8 +26,8 @@ import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.context.ValidationStatus;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -40,7 +40,7 @@ public class GrpcStatusValidatorTest {
     private final GrpcStatusValidator validator = new GrpcStatusValidator();
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         context = new TestContext();
         context.setReferenceResolver(new SimpleReferenceResolver());

@@ -25,10 +25,10 @@ import org.citrusframework.grpc.server.GrpcServerEndpointConfiguration;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.mockito.ArgumentCaptor;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,13 +39,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GrpcServerActionBuilderTest extends AbstractTestNGUnitTest {
+public class GrpcServerActionBuilderTest extends AbstractUnitTest {
 
     private GrpcServer server;
     private Producer producer;
     private SelectiveConsumer consumer;
 
-    @BeforeMethod
+    @BeforeEach
     public void setupServer() {
         producer = mock(Producer.class);
         consumer = mock(SelectiveConsumer.class);

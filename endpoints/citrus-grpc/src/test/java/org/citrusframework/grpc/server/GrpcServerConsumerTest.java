@@ -19,8 +19,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.grpc.message.GrpcMessage;
 import org.citrusframework.grpc.message.GrpcMessageHeaders;
 import org.citrusframework.message.DefaultMessageQueue;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +32,7 @@ public class GrpcServerConsumerTest {
     private GrpcServerConsumer consumer;
     private TestContext context;
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         queue = new DefaultMessageQueue("grpcServer.inbound");
         consumer = new GrpcServerConsumer(queue, CORRELATION_KEY, 1000L);

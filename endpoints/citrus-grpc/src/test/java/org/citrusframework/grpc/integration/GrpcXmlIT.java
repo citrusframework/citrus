@@ -21,15 +21,21 @@ import org.citrusframework.grpc.client.GrpcClient;
 import org.citrusframework.grpc.endpoint.builder.GrpcEndpoints;
 import org.citrusframework.grpc.server.GrpcServer;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * Runs gRPC client and simulator from an XML test.
  */
-public class GrpcXmlIT extends TestNGCitrusSpringSupport {
+@Isolated("gRPC loader ITs share the cached Citrus Spring context and bind fixed base ports under parallel classes")
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class GrpcXmlIT {
 
     private static final int PORT = findAvailableTcpPort(18870);
 
