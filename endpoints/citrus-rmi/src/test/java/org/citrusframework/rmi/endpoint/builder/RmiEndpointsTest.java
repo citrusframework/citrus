@@ -21,23 +21,23 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.rmi.client.RmiClientBuilder;
 import org.citrusframework.rmi.server.RmiServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RmiEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("rmi.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("rmi.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("rmi.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("rmi.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("rmi.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("rmi.client").get().getClass(), RmiClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("rmi.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("rmi.server").get().getClass(), RmiServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("rmi.client").isPresent());
+        Assertions.assertEquals(RmiClientBuilder.class, EndpointBuilder.lookup("rmi.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("rmi.server").isPresent());
+        Assertions.assertEquals(RmiServerBuilder.class, EndpointBuilder.lookup("rmi.server").get().getClass());
     }
 }

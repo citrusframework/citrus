@@ -17,10 +17,10 @@
 package org.citrusframework.rmi.config.xml;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.rmi.client.RmiClient;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.rmi.registry.Registry;
 import java.util.Map;
@@ -34,30 +34,30 @@ public class RmiClientParserTest extends AbstractBeanDefinitionParserTest {
     public void testRmiEndpointParser() {
         Map<String, RmiClient> endpoints = beanDefinitionContext.getBeansOfType(RmiClient.class);
 
-        Assert.assertEquals(endpoints.size(), 3);
+        Assertions.assertEquals(3, endpoints.size());
 
         // 1st client
         RmiClient rmiClient = endpoints.get("rmiClient1");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getMethod(), "sayHello");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getPort(), Registry.REGISTRY_PORT);
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getBinding(), "helloService");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getMethod(), "sayHello");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("sayHello", rmiClient.getEndpointConfiguration().getMethod());
+        Assertions.assertEquals("localhost", rmiClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(Registry.REGISTRY_PORT, rmiClient.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("helloService", rmiClient.getEndpointConfiguration().getBinding());
+        Assertions.assertEquals("sayHello", rmiClient.getEndpointConfiguration().getMethod());
+        Assertions.assertEquals(5000L, rmiClient.getEndpointConfiguration().getTimeout());
 
         // 2nd client
         rmiClient = endpoints.get("rmiClient2");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getHost(), "127.0.0.1");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getBinding(), "newsService");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getMethod(), "getNews");
-        Assert.assertEquals(rmiClient.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter"), rmiClient.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals("127.0.0.1", rmiClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, rmiClient.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("newsService", rmiClient.getEndpointConfiguration().getBinding());
+        Assertions.assertEquals("getNews", rmiClient.getEndpointConfiguration().getMethod());
+        Assertions.assertEquals(10000L, rmiClient.getEndpointConfiguration().getTimeout());
 
         // 3rd client
         rmiClient = endpoints.get("rmiClient3");
-        Assert.assertNotNull(rmiClient.getActor());
-        Assert.assertNull(rmiClient.getEndpointConfiguration().getMethod());
-        Assert.assertEquals(rmiClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertNotNull(rmiClient.getActor());
+        Assertions.assertNull(rmiClient.getEndpointConfiguration().getMethod());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), rmiClient.getActor());
     }
 }

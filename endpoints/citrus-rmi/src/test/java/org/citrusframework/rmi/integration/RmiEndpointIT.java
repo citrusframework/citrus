@@ -18,19 +18,27 @@ package org.citrusframework.rmi.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @since 2.5
  */
-@Test(enabled = false) // unstable on local environment
-public class RmiEndpointIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class RmiEndpointIT {
 
+    @Test
+    @Disabled("unstable on local environment")
     @CitrusTestSource(type = TestLoader.SPRING, name = "RmiClientIT")
     public void testClientXml() {
     }
 
+    @Test
+    @Disabled("unstable on local environment")
     @CitrusTestSource(type = TestLoader.SPRING, name = "RmiServerIT")
     public void testServerXml() {
     }

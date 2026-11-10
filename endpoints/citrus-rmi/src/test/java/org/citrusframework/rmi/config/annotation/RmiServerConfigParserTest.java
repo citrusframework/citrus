@@ -22,22 +22,23 @@ import org.citrusframework.TestActor;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.rmi.message.RmiMessageConverter;
 import org.citrusframework.rmi.remote.HelloService;
 import org.citrusframework.rmi.remote.NewsService;
 import org.citrusframework.rmi.server.RmiServer;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class RmiServerConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class RmiServerConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "rmiServer1")
     @RmiServerConfig(binding = "helloService",
@@ -67,16 +68,14 @@ public class RmiServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.resolve("messageConverter", RmiMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
+        lenient().when(referenceResolver.resolve("messageConverter", RmiMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
-    @BeforeMethod
-    public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -85,34 +84,34 @@ public class RmiServerConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st server
-        Assert.assertNull(rmiServer1.getEndpointConfiguration().getMethod());
-        Assert.assertNull(rmiServer1.getEndpointConfiguration().getHost());
-        Assert.assertEquals(rmiServer1.getEndpointConfiguration().getPort(), Registry.REGISTRY_PORT);
-        Assert.assertEquals(rmiServer1.getEndpointConfiguration().getBinding(), "helloService");
-        Assert.assertFalse(rmiServer1.isCreateRegistry());
-        Assert.assertEquals(rmiServer1.getRemoteInterfaces().size(), 1L);
-        Assert.assertEquals(rmiServer1.getRemoteInterfaces().get(0), HelloService.class);
-        Assert.assertEquals(rmiServer1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertNull(rmiServer1.getEndpointConfiguration().getMethod());
+        Assertions.assertNull(rmiServer1.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(Registry.REGISTRY_PORT, rmiServer1.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("helloService", rmiServer1.getEndpointConfiguration().getBinding());
+        Assertions.assertFalse(rmiServer1.isCreateRegistry());
+        Assertions.assertEquals(1L, rmiServer1.getRemoteInterfaces().size());
+        Assertions.assertEquals(HelloService.class, rmiServer1.getRemoteInterfaces().get(0));
+        Assertions.assertEquals(5000L, rmiServer1.getEndpointConfiguration().getTimeout());
 
         // 2nd server
-        Assert.assertEquals(rmiServer2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(rmiServer2.getEndpointConfiguration().getHost(), "127.0.0.1");
-        Assert.assertEquals(rmiServer2.getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(rmiServer2.getEndpointConfiguration().getBinding(), "newsService");
-        Assert.assertTrue(rmiServer2.isCreateRegistry());
-        Assert.assertEquals(rmiServer2.getRemoteInterfaces().size(), 1L);
-        Assert.assertEquals(rmiServer2.getRemoteInterfaces().get(0), NewsService.class);
-        Assert.assertEquals(rmiServer2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(messageConverter, rmiServer2.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals("127.0.0.1", rmiServer2.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, rmiServer2.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("newsService", rmiServer2.getEndpointConfiguration().getBinding());
+        Assertions.assertTrue(rmiServer2.isCreateRegistry());
+        Assertions.assertEquals(1L, rmiServer2.getRemoteInterfaces().size());
+        Assertions.assertEquals(NewsService.class, rmiServer2.getRemoteInterfaces().get(0));
+        Assertions.assertEquals(10000L, rmiServer2.getEndpointConfiguration().getTimeout());
 
         // 3rd server
-        Assert.assertNotNull(rmiServer3.getActor());
-        Assert.assertEquals(rmiServer3.getRemoteInterfaces().size(), 1L);
-        Assert.assertEquals(rmiServer3.getRemoteInterfaces().get(0), HelloService.class);
-        Assert.assertEquals(rmiServer3.getActor(), testActor);
+        Assertions.assertNotNull(rmiServer3.getActor());
+        Assertions.assertEquals(1L, rmiServer3.getRemoteInterfaces().size());
+        Assertions.assertEquals(HelloService.class, rmiServer3.getRemoteInterfaces().get(0));
+        Assertions.assertEquals(testActor, rmiServer3.getActor());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("rmi.server").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("rmi.server").isPresent());
     }
 }

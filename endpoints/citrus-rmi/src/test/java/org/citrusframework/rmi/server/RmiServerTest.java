@@ -22,33 +22,34 @@ import java.rmi.registry.Registry;
 import java.util.List;
 
 import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.rmi.message.RmiMessage;
 import org.citrusframework.rmi.message.RmiMessageHeaders;
 import org.citrusframework.rmi.remote.HelloService;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.util.FileUtils;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @since 2.5
  */
-public class RmiServerTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class RmiServerTest extends AbstractUnitTest {
 
     @Mock
     private Registry registry;
@@ -56,19 +57,8 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
     @Mock
     private EndpointAdapter endpointAdapter;
 
-    private AutoCloseable mockitoContext;
-
-    @BeforeMethod
-    public void setup() {
-        mockitoContext = MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterMethod
-    public void teardown() throws Exception {
-        mockitoContext.close();
-    }
-
-    @Test(enabled = false) // unstable in local environments
+    @Test
+    @Disabled("unstable in local environments")
     public void testServiceInvocationWithArgument() throws Exception {
         RmiServer rmiServer = new RmiServer();
         rmiServer.setRemoteInterfaces(List.of(HelloService.class));
@@ -89,13 +79,13 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
             Message message = (Message) invocation.getArguments()[0];
 
             assertNotNull(message.getPayload());
-            assertEquals(message.getHeader(RmiMessageHeaders.RMI_INTERFACE), HelloService.class.getName());
-            assertEquals(message.getHeader(RmiMessageHeaders.RMI_METHOD), "sayHello");
+            assertEquals(HelloService.class.getName(), message.getHeader(RmiMessageHeaders.RMI_INTERFACE));
+            assertEquals("sayHello", message.getHeader(RmiMessageHeaders.RMI_METHOD));
 
             try {
                 assertEquals(
-                    message.getPayload(String.class).replaceAll("\\s", ""),
-                    FileUtils.readToString(Resources.create("service-invocation.xml", RmiServer.class)).replaceAll("\\s", "")
+                    FileUtils.readToString(Resources.create("service-invocation.xml", RmiServer.class)).replaceAll("\\s", ""),
+                    message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -113,7 +103,8 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
         }
     }
 
-    @Test(enabled = false) // unstable in local environments
+    @Test
+    @Disabled("unstable in local environments")
     public void testServiceInvocationWithResult() throws Exception {
         RmiServer rmiServer = new RmiServer();
         rmiServer.setRemoteInterfaces(List.of(HelloService.class));
@@ -134,13 +125,13 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
             Message message = (Message) invocation.getArguments()[0];
 
             assertNotNull(message.getPayload());
-            assertEquals(message.getHeader(RmiMessageHeaders.RMI_INTERFACE), HelloService.class.getName());
-            assertEquals(message.getHeader(RmiMessageHeaders.RMI_METHOD), "getHelloCount");
+            assertEquals(HelloService.class.getName(), message.getHeader(RmiMessageHeaders.RMI_INTERFACE));
+            assertEquals("getHelloCount", message.getHeader(RmiMessageHeaders.RMI_METHOD));
 
             try {
                 assertEquals(
-                    message.getPayload(String.class).replaceAll("\\s", ""),
-                    FileUtils.readToString(Resources.create("service-invocation-2.xml", RmiServer.class)).replaceAll("\\s", "")
+                    FileUtils.readToString(Resources.create("service-invocation-2.xml", RmiServer.class)).replaceAll("\\s", ""),
+                    message.getPayload(String.class).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 fail(e.getMessage());
@@ -152,7 +143,7 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
         rmiServer.startup();
 
         try {
-            assertEquals(((HelloService)remote[0]).getHelloCount(), 10);
+            assertEquals(10, ((HelloService)remote[0]).getHelloCount());
         } catch (Throwable throwable) {
             fail("Failed to invoke remote service", throwable);
         }

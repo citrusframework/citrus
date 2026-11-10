@@ -17,12 +17,12 @@
 package org.citrusframework.rmi.config.xml;
 
 import org.citrusframework.TestActor;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.rmi.remote.HelloService;
 import org.citrusframework.rmi.remote.NewsService;
 import org.citrusframework.rmi.server.RmiServer;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.rmi.registry.Registry;
 import java.util.Map;
@@ -36,35 +36,35 @@ public class RmiServerParserTest extends AbstractBeanDefinitionParserTest {
     public void testRmiServerParser() {
         Map<String, RmiServer> endpoints = beanDefinitionContext.getBeansOfType(RmiServer.class);
 
-        Assert.assertEquals(endpoints.size(), 3);
+        Assertions.assertEquals(3, endpoints.size());
 
         // 1st server
         RmiServer rmiServer = endpoints.get("rmiServer1");
-        Assert.assertNull(rmiServer.getEndpointConfiguration().getMethod());
-        Assert.assertNull(rmiServer.getEndpointConfiguration().getHost());
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getPort(), Registry.REGISTRY_PORT);
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getBinding(), "helloService");
-        Assert.assertFalse(rmiServer.isCreateRegistry());
-        Assert.assertEquals(rmiServer.getRemoteInterfaces().size(), 1L);
-        Assert.assertEquals(rmiServer.getRemoteInterfaces().get(0), HelloService.class);
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertNull(rmiServer.getEndpointConfiguration().getMethod());
+        Assertions.assertNull(rmiServer.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(Registry.REGISTRY_PORT, rmiServer.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("helloService", rmiServer.getEndpointConfiguration().getBinding());
+        Assertions.assertFalse(rmiServer.isCreateRegistry());
+        Assertions.assertEquals(1L, rmiServer.getRemoteInterfaces().size());
+        Assertions.assertEquals(HelloService.class, rmiServer.getRemoteInterfaces().get(0));
+        Assertions.assertEquals(5000L, rmiServer.getEndpointConfiguration().getTimeout());
 
         // 2nd server
         rmiServer = endpoints.get("rmiServer2");
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getHost(), "127.0.0.1");
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getPort(), 2099);
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getBinding(), "newsService");
-        Assert.assertTrue(rmiServer.isCreateRegistry());
-        Assert.assertEquals(rmiServer.getRemoteInterfaces().size(), 1L);
-        Assert.assertEquals(rmiServer.getRemoteInterfaces().get(0), NewsService.class);
-        Assert.assertEquals(rmiServer.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter"), rmiServer.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals("127.0.0.1", rmiServer.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2099, rmiServer.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("newsService", rmiServer.getEndpointConfiguration().getBinding());
+        Assertions.assertTrue(rmiServer.isCreateRegistry());
+        Assertions.assertEquals(1L, rmiServer.getRemoteInterfaces().size());
+        Assertions.assertEquals(NewsService.class, rmiServer.getRemoteInterfaces().get(0));
+        Assertions.assertEquals(10000L, rmiServer.getEndpointConfiguration().getTimeout());
 
         // 3rd server
         rmiServer = endpoints.get("rmiServer3");
-        Assert.assertNotNull(rmiServer.getActor());
-        Assert.assertEquals(rmiServer.getRemoteInterfaces().size(), 1L);
-        Assert.assertEquals(rmiServer.getRemoteInterfaces().get(0), HelloService.class);
-        Assert.assertEquals(rmiServer.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertNotNull(rmiServer.getActor());
+        Assertions.assertEquals(1L, rmiServer.getRemoteInterfaces().size());
+        Assertions.assertEquals(HelloService.class, rmiServer.getRemoteInterfaces().get(0));
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), rmiServer.getActor());
     }
 }
