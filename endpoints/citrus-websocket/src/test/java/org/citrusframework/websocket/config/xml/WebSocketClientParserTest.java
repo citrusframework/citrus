@@ -17,12 +17,12 @@
 package org.citrusframework.websocket.config.xml;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.websocket.client.WebSocketClientEndpointConfiguration;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.util.Map;
 
@@ -32,36 +32,36 @@ public class WebSocketClientParserTest extends AbstractBeanDefinitionParserTest 
     public void testWebSocketClientParser() {
         Map<String, WebSocketEndpoint> clients = beanDefinitionContext.getBeansOfType(WebSocketEndpoint.class);
 
-        Assert.assertEquals(clients.size(), 3);
+        Assertions.assertEquals(3, clients.size());
 
         // 1st message sender
         WebSocketEndpoint webSocketClient = clients.get("webSocketClient1");
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test");
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("ws://localhost:8080/test", webSocketClient.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(5000L, webSocketClient.getEndpointConfiguration().getTimeout());
 
         // 2nd message sender
         webSocketClient = clients.get("webSocketClient2");
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test/uri");
-        Assert.assertEquals(((WebSocketClientEndpointConfiguration)webSocketClient.getEndpointConfiguration()).getWebSocketHttpHeaders(), beanDefinitionContext.getBean("webSocketHttpHeaders"));
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getEndpointUriResolver(), beanDefinitionContext.getBean("endpointResolver"));
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("ws://localhost:8080/test/uri", webSocketClient.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(beanDefinitionContext.getBean("webSocketHttpHeaders"), ((WebSocketClientEndpointConfiguration)webSocketClient.getEndpointConfiguration()).getWebSocketHttpHeaders());
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter"), webSocketClient.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(beanDefinitionContext.getBean("endpointResolver"), webSocketClient.getEndpointConfiguration().getEndpointUriResolver());
+        Assertions.assertEquals(10000L, webSocketClient.getEndpointConfiguration().getTimeout());
 
         // 3rd message sender
         webSocketClient = clients.get("webSocketClient3");
-        Assert.assertNotNull(webSocketClient.getActor());
-        Assert.assertEquals(webSocketClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test");
-        Assert.assertEquals(webSocketClient.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assertions.assertNotNull(webSocketClient.getActor());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), webSocketClient.getActor());
+        Assertions.assertEquals("ws://localhost:8080/test", webSocketClient.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(250L, webSocketClient.getEndpointConfiguration().getPollingInterval());
     }
 
     @Test
     public void testMissingUrlOrEndpointResolver() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to missing url or endpoint resolver");
+            Assertions.fail("Missing bean creation exception due to missing url or endpoint resolver");
         } catch (BeanDefinitionParsingException e) {
-            Assert.assertTrue(e.getMessage().contains("One of the properties 'url' or 'endpoint-resolver' is required"));
+            Assertions.assertTrue(e.getMessage().contains("One of the properties 'url' or 'endpoint-resolver' is required"));
         }
     }
 }

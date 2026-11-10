@@ -19,18 +19,18 @@ package org.citrusframework.websocket.endpoint;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
 import org.citrusframework.websocket.message.WebSocketMessage;
 import org.citrusframework.websocket.server.WebSocketServerEndpointConfiguration;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.web.socket.*;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
+public class WebSocketEndpointTest extends AbstractUnitTest {
 
     private WebSocketSession session = Mockito.mock(WebSocketSession.class);
     private WebSocketSession session2 = Mockito.mock(WebSocketSession.class);
@@ -59,9 +59,9 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-            Assert.assertTrue(TextMessage.class.isInstance(request));
-            Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
-            Assert.assertTrue(request.isLast());
+            Assertions.assertTrue(TextMessage.class.isInstance(request));
+            Assertions.assertEquals(responseMessage.getPayload(String.class), ((TextMessage)request).getPayload());
+            Assertions.assertTrue(request.isLast());
             return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
@@ -69,8 +69,8 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
         handler.handleMessage(session, new TextMessage(requestBody));
 
         WebSocketMessage requestMessage = (WebSocketMessage) webSocketEndpoint.createConsumer().receive(context);
-        Assert.assertEquals(requestMessage.getPayload(), requestBody);
-        Assert.assertTrue(requestMessage.isLast());
+        Assertions.assertEquals(requestBody, requestMessage.getPayload());
+        Assertions.assertTrue(requestMessage.isLast());
 
         webSocketEndpoint.createProducer().send(responseMessage, context);
 
@@ -102,18 +102,18 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-            Assert.assertTrue(TextMessage.class.isInstance(request));
-            Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
-            Assert.assertTrue(request.isLast());
+            Assertions.assertTrue(TextMessage.class.isInstance(request));
+            Assertions.assertEquals(responseMessage.getPayload(String.class), ((TextMessage)request).getPayload());
+            Assertions.assertTrue(request.isLast());
             return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         doAnswer(invocation -> {
             org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-            Assert.assertTrue(TextMessage.class.isInstance(request));
-            Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
-            Assert.assertTrue(request.isLast());
+            Assertions.assertTrue(TextMessage.class.isInstance(request));
+            Assertions.assertEquals(responseMessage.getPayload(String.class), ((TextMessage)request).getPayload());
+            Assertions.assertTrue(request.isLast());
             return null;
         }).when(session2).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
@@ -125,8 +125,8 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
         handler.handleMessage(session, new TextMessage(requestBody));
 
         WebSocketMessage requestMessage = (WebSocketMessage) webSocketEndpoint.createConsumer().receive(context);
-        Assert.assertEquals(requestMessage.getPayload(), requestBody);
-        Assert.assertTrue(requestMessage.isLast());
+        Assertions.assertEquals(requestBody, requestMessage.getPayload());
+        Assertions.assertTrue(requestMessage.isLast());
 
         webSocketEndpoint.createProducer().send(responseMessage, context);
 
@@ -149,9 +149,9 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
 
         try {
             webSocketEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-            Assert.fail("Missing timeout exception on web socket endpoint");
+            Assertions.fail("Missing timeout exception on web socket endpoint");
         } catch (ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().contains(endpointUri));
+            Assertions.assertTrue(e.getMessage().contains(endpointUri));
         }
 
     }

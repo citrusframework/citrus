@@ -21,20 +21,21 @@ import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
 import org.citrusframework.websocket.server.WebSocketServer;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class WebSocketServerConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class WebSocketServerConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "webSocketServer1")
     @WebSocketServerConfig(autoStart=false,
@@ -54,16 +55,14 @@ public class WebSocketServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.resolve("messageConverter", WebSocketMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
+        lenient().when(referenceResolver.resolve("messageConverter", WebSocketMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
-    @BeforeMethod
-    public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -72,31 +71,31 @@ public class WebSocketServerConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message sender
-        Assert.assertEquals(webSocketServer1.getName(), "webSocketServer1");
-        Assert.assertEquals(webSocketServer1.getPort(), 8080);
-        Assert.assertFalse(webSocketServer1.isAutoStart());
-        Assert.assertEquals(webSocketServer1.getWebSockets().size(), 3);
+        Assertions.assertEquals("webSocketServer1", webSocketServer1.getName());
+        Assertions.assertEquals(8080, webSocketServer1.getPort());
+        Assertions.assertFalse(webSocketServer1.isAutoStart());
+        Assertions.assertEquals(3, webSocketServer1.getWebSockets().size());
 
         WebSocketEndpoint webSocketEndpoint = webSocketServer1.getWebSockets().get(0);
-        Assert.assertEquals(webSocketEndpoint.getName(), "websocket1");
-        Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getEndpointUri(), "/test1");
-        Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("websocket1", webSocketEndpoint.getName());
+        Assertions.assertEquals("/test1", webSocketEndpoint.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(5000L, webSocketEndpoint.getEndpointConfiguration().getTimeout());
 
         webSocketEndpoint = webSocketServer1.getWebSockets().get(1);
-        Assert.assertEquals(webSocketEndpoint.getName(), "websocket2");
-        Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getEndpointUri(), "/test2");
-        Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getMessageConverter(), messageConverter);
+        Assertions.assertEquals("websocket2", webSocketEndpoint.getName());
+        Assertions.assertEquals("/test2", webSocketEndpoint.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(messageConverter, webSocketEndpoint.getEndpointConfiguration().getMessageConverter());
 
         webSocketEndpoint = webSocketServer1.getWebSockets().get(2);
-        Assert.assertNotNull(webSocketEndpoint.getActor());
-        Assert.assertEquals(webSocketEndpoint.getActor(), testActor);
-        Assert.assertEquals(webSocketEndpoint.getName(), "websocket3");
-        Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getEndpointUri(), "/test3");
-        Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertNotNull(webSocketEndpoint.getActor());
+        Assertions.assertEquals(testActor, webSocketEndpoint.getActor());
+        Assertions.assertEquals("websocket3", webSocketEndpoint.getName());
+        Assertions.assertEquals("/test3", webSocketEndpoint.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(10000L, webSocketEndpoint.getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("websocket.server").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("websocket.server").isPresent());
     }
 }

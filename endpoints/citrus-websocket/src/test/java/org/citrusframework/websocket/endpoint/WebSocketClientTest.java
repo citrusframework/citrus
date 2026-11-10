@@ -19,17 +19,17 @@ package org.citrusframework.websocket.endpoint;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.websocket.client.WebSocketClientEndpointConfiguration;
 import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
 import org.citrusframework.websocket.message.WebSocketMessage;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.WebSocketClient;
-import org.testng.annotations.Test;
 
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
@@ -38,11 +38,11 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class WebSocketClientTest extends AbstractTestNGUnitTest {
+public class WebSocketClientTest extends AbstractUnitTest {
 
     private WebSocketClient client = Mockito.mock(WebSocketClient.class);
     private WebSocketSession session = Mockito.mock(WebSocketSession.class);
@@ -82,7 +82,7 @@ public class WebSocketClientTest extends AbstractTestNGUnitTest {
             org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
             assertTrue(request instanceof TextMessage);
-            assertEquals(((TextMessage) request).getPayload(), requestMessage.getPayload(String.class));
+            assertEquals(requestMessage.getPayload(String.class), ((TextMessage) request).getPayload());
             assertTrue(request.isLast());
             return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
@@ -90,7 +90,7 @@ public class WebSocketClientTest extends AbstractTestNGUnitTest {
         webSocketEndpoint.createProducer().send(requestMessage, context);
 
         WebSocketMessage responseMessage = (WebSocketMessage) webSocketEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-        assertEquals(responseMessage.getPayload(), responseBody);
+        assertEquals(responseBody, responseMessage.getPayload());
         assertTrue(responseMessage.isLast());
     }
 
@@ -125,14 +125,14 @@ public class WebSocketClientTest extends AbstractTestNGUnitTest {
             org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
             assertTrue(TextMessage.class.isInstance(request));
-            assertEquals(((TextMessage) request).getPayload(), requestMessage.getPayload(String.class));
+            assertEquals(requestMessage.getPayload(String.class), ((TextMessage) request).getPayload());
             assertTrue(request.isLast());
             return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         webSocketEndpoint.createProducer().send(requestMessage, context);
 
-        ActionTimeoutException actionTimeoutException = expectThrows(ActionTimeoutException.class, () -> webSocketEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout()));
+        ActionTimeoutException actionTimeoutException = assertThrows(ActionTimeoutException.class, () -> webSocketEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout()));
         assertTrue(actionTimeoutException.getMessage().contains(endpointUri));
     }
 }
