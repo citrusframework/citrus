@@ -16,7 +16,7 @@
 
 package org.citrusframework.kafka.message;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 

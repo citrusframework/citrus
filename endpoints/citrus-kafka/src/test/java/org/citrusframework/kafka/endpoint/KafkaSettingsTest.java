@@ -16,21 +16,23 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Mutates global citrus.kafka.dynamic.consumer.group System property")
 public class KafkaSettingsTest {
 
     @Test
     public void testDynamicConsumerGroupEnabledByDefault() {
-        Assert.assertTrue(KafkaSettings.isDynamicConsumerGroup());
+        Assertions.assertTrue(KafkaSettings.isDynamicConsumerGroup());
     }
 
     @Test
     public void testDynamicConsumerGroupDisabledBySystemProperty() {
         System.setProperty("citrus.kafka.dynamic.consumer.group", "false");
         try {
-            Assert.assertFalse(KafkaSettings.isDynamicConsumerGroup());
+            Assertions.assertFalse(KafkaSettings.isDynamicConsumerGroup());
         } finally {
             System.clearProperty("citrus.kafka.dynamic.consumer.group");
         }
@@ -40,7 +42,7 @@ public class KafkaSettingsTest {
     public void testDynamicConsumerGroupEnabledBySystemProperty() {
         System.setProperty("citrus.kafka.dynamic.consumer.group", "true");
         try {
-            Assert.assertTrue(KafkaSettings.isDynamicConsumerGroup());
+            Assertions.assertTrue(KafkaSettings.isDynamicConsumerGroup());
         } finally {
             System.clearProperty("citrus.kafka.dynamic.consumer.group");
         }

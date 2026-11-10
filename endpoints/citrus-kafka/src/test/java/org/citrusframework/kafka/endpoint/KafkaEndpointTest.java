@@ -19,9 +19,13 @@ package org.citrusframework.kafka.endpoint;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import java.util.stream.Stream;
+
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -88,12 +92,12 @@ public class KafkaEndpointTest {
                 .isEqualTo(kafkaProducerMock);
     }
 
-    @DataProvider
-    public static Object[][] defaultConsumerGroups() {
-        return new Object[][]{{null}, {FALSE}};
+    static Stream<Arguments> defaultConsumerGroups() {
+        return Stream.of(Arguments.of((Object) null), Arguments.of(FALSE));
     }
 
-    @Test(dataProvider = "defaultConsumerGroups")
+    @ParameterizedTest
+    @MethodSource("defaultConsumerGroups")
     public void newKafkaEndpoint_usesDefaultConsumerGroup(Boolean useRandomConsumerGroup) {
         var fixture = KafkaEndpoint.newKafkaEndpoint(
                 useRandomConsumerGroup,

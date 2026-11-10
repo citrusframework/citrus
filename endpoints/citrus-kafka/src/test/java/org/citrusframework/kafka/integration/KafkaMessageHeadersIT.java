@@ -18,12 +18,18 @@ package org.citrusframework.kafka.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test
-public class KafkaMessageHeadersIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("ITs share one embedded Kafka broker on fixed port 9092 with topics hello/test")
+public class KafkaMessageHeadersIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaMessageHeadersIT")
     public void testKafkaMessageHeaders() {}
 }

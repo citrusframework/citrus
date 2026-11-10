@@ -20,18 +20,23 @@ import java.time.Duration;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.annotations.internal.GitHubIssue;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
 import org.citrusframework.kafka.message.KafkaMessage;
 import org.citrusframework.spi.BindToRegistry;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 import static java.util.Objects.nonNull;
 import static org.citrusframework.kafka.endpoint.KafkaMessageFilter.kafkaMessageFilter;
@@ -43,8 +48,10 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByKeySelec
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory.KafkaMessageSelectorFactories.factoryWithKafkaMessageSelector;
 import static org.citrusframework.kafka.integration.KafkaEndpointJavaIT.KafkaMessageByTopicSelector.TOPIC_FILTER_KEY;
 
-@Test(singleThreaded = true)
-public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("ITs share one embedded Kafka broker on fixed port 9092 with topics hello/test")
+public class KafkaEndpointJavaIT implements TestActionSupport {
 
     @BindToRegistry
     private final KafkaEndpoint kafkaWithRandomConsumerGroupEndpoint = KafkaEndpoint.builder()
@@ -55,18 +62,18 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_headerEquals_citrus_DSL() {
+    public void findKafkaEvent_headerEquals_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_headerEquals_citrus_DSL";
 
         var key = "Name";
         var value = "Bilbo";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        then(
+        runner.then(
                 receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
@@ -81,18 +88,18 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_headerContains_citrus_DSL() {
+    public void findKafkaEvent_headerContains_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_headerContains_citrus_DSL";
 
         var key = "Name";
         var value = "Frodo";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        then(
+        runner.then(
                 receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
@@ -107,18 +114,18 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_headerStartsWith_citrus_DSL() {
+    public void findKafkaEvent_headerStartsWith_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_headerStartsWith_citrus_DSL";
 
         var key = "Name";
         var value = "Galadriel";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        then(
+        runner.then(
                 receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
@@ -139,7 +146,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_customSelector_byTopic_citrus_DSL() {
+    public void findKafkaEvent_customSelector_byTopic_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var messageKey = "important random key";
         var body = "findKafkaEvent_customSelector_byTopic_citrus_DSL";
 
@@ -152,12 +159,12 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
                         )
                 );
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).messageKey(messageKey))
         );
 
-        then(
+        runner.then(
                 receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
@@ -188,18 +195,18 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_headerEndsWith_citrus_DSL() {
+    public void findKafkaEvent_headerEndsWith_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_headerEndsWith_citrus_DSL";
 
         var key = "Name";
         var value = "Celeborn";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        then(
+        runner.then(
                 receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
@@ -220,18 +227,18 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_nothingFound_noMatch_citrus_DSL() {
+    public void findKafkaEvent_nothingFound_noMatch_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_nothingFound_noMatch_citrus_DSL";
 
         var key = "Name";
         var value = "Elrond";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        then(
+        runner.then(
                 assertException()
                     .exception(CitrusRuntimeException.class)
                     .message("@startsWith(Failed to resolve Kafka message using selector)@")
@@ -250,20 +257,20 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_nothingFound_outsideLookbackWindow_citrus_DSL() {
+    public void findKafkaEvent_nothingFound_outsideLookbackWindow_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_nothingFound_outsideLookbackWindow_citrus_DSL";
 
         var key = "Name";
         var value = "Gimli";
 
-        given(
+        runner.given(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        when(sleep().seconds(2));
+        runner.when(sleep().seconds(2));
 
-        then(
+        runner.then(
                 assertException()
                     .exception(CitrusRuntimeException.class)
                     .message("@startsWith(Failed to resolve Kafka message using selector)@")
@@ -282,22 +289,22 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_duplicateEntriesFound_citrus_DSL() {
+    public void findKafkaEvent_duplicateEntriesFound_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_duplicateEntriesFound_citrus_DSL";
 
         var key = "Name";
 
-        given(
+        runner.given(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, "Gandalf the Grey"))
         );
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, "Gandalf the White"))
         );
 
-        then(
+        runner.then(
                 assertException()
                     .exception(CitrusRuntimeException.class)
                     .message("@startsWith(More than one matching record found in topic)@")
@@ -316,18 +323,18 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_headerEquals_java_DSL() {
+    public void findKafkaEvent_headerEquals_java_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var body = "findKafkaEvent_headerEquals_java_DSL";
 
         var key = "Name";
         var value = "Gollum";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        then(
+        runner.then(
                 kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, value)
                         .body(body)
         );
@@ -335,16 +342,16 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_keyEquals_citrus_DSL() {
+    public void findKafkaEvent_keyEquals_citrus_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var messageKey = "built-in-key-selector";
         var body = "findKafkaEvent_keyEquals_citrus_DSL";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).messageKey(messageKey))
         );
 
-        then(
+        runner.then(
                 receive(kafkaWithRandomConsumerGroupEndpoint)
                         .selector(
                                 kafkaMessageFilter()
@@ -359,16 +366,16 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void findKafkaEvent_keyEquals_java_DSL() {
+    public void findKafkaEvent_keyEquals_java_DSL(@CitrusResource GherkinTestActionRunner runner) {
         var messageKey = "built-in-key-selector-java";
         var body = "findKafkaEvent_keyEquals_java_DSL";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).messageKey(messageKey))
         );
 
-        then(
+        runner.then(
                 kafkaWithRandomConsumerGroupEndpoint.findKafkaEventKeyEquals(Duration.ofSeconds(1L), messageKey)
                         .body(body)
         );
@@ -376,7 +383,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
 
     @Test
     @CitrusTest
-    public void shutdown_afterTimeout_isThreadSafe() {
+    public void shutdown_afterTimeout_isThreadSafe(@CitrusResource GherkinTestActionRunner runner) {
         KafkaEndpoint kafkaEndpoint = KafkaEndpoint.builder()
                 .randomConsumerGroup(true)
                 .topic("names")
@@ -388,12 +395,12 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
         var key = "Name";
         var value = "Aragorn";
 
-        when(
+        runner.when(
                 send(kafkaEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, value))
         );
 
-        then(
+        runner.then(
                 assertException()
                     .exception(ActionTimeoutException.class)
                     .message("Action timeout after 2000 milliseconds. Failed to receive message on endpoint: 'names'")
@@ -415,7 +422,7 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
     @Test
     @CitrusTest
     @GitHubIssue(1281)
-    public void threadSafetyOfKafkaConsumer_onParallelAccess() {
+    public void threadSafetyOfKafkaConsumer_onParallelAccess(@CitrusResource GherkinTestActionRunner runner) {
         var body = "parallel_access_thread_safety";
 
         var key = "Name";
@@ -423,17 +430,17 @@ public class KafkaEndpointJavaIT extends TestNGCitrusSpringSupport implements Te
         var brother1 = "Elladan";
         var brother2 = "Elrohir";
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, brother1))
         );
 
-        when(
+        runner.when(
                 send(kafkaWithRandomConsumerGroupEndpoint)
                         .message(new KafkaMessage(body).setHeader(key, brother2))
         );
 
-        then(
+        runner.then(
                 parallel()
                         .actions(
                                 kafkaWithRandomConsumerGroupEndpoint.findKafkaEventHeaderEquals(Duration.ofSeconds(1L), key, brother1)

@@ -18,40 +18,36 @@ package org.citrusframework.kafka.endpoint;
 
 import java.time.Duration;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
 import org.citrusframework.message.MessageSelectorBuilder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @SuppressWarnings("unchecked")
+@ExtendWith(MockitoExtension.class)
 public class KafkaMessageFilteringConsumerTest {
 
     private static final Long TIMEOUT = 10_000L;
 
     @Mock
     private TestContext testContextMock;
-
-    private AutoCloseable mockitoContext;
-
-    @BeforeMethod
-    public void beforeMethodSetup() {
-        mockitoContext = openMocks(this);
-    }
 
     @Test
     public void builder() {
@@ -78,16 +74,16 @@ public class KafkaMessageFilteringConsumerTest {
         );
     }
 
-    @DataProvider
-    public static Object[][] nullishConsumerSelector() {
-        return new Object[][]{
-                {Duration.ofSeconds(5), mock(KafkaMessageSelector.class), null},
-                {Duration.ofSeconds(5), null, Duration.ofSeconds(1)},
-                {null, mock(KafkaMessageSelector.class), Duration.ofSeconds(1)},
-        };
+    static Stream<Arguments> nullishConsumerSelector() {
+        return Stream.of(
+                Arguments.of(Duration.ofSeconds(5), mock(KafkaMessageSelector.class), null),
+                Arguments.of(Duration.ofSeconds(5), null, Duration.ofSeconds(1)),
+                Arguments.of(null, mock(KafkaMessageSelector.class), Duration.ofSeconds(1))
+        );
     }
 
-    @Test(dataProvider = "nullishConsumerSelector")
+    @ParameterizedTest
+    @MethodSource("nullishConsumerSelector")
     public void builder_requiresOneNonNullArgument_toBuildKafkaConsumerSelector(
             Duration eventLookbackWindow,
             KafkaMessageSelector<?> kafkaMessageSelector,
@@ -106,12 +102,12 @@ public class KafkaMessageFilteringConsumerTest {
                 );
     }
 
-    @DataProvider
-    public static Object[][] emptyStrings() {
-        return new Object[][]{{null}, {""}};
+    static Stream<Arguments> emptyStrings() {
+        return Stream.of(Arguments.of((Object) null), Arguments.of(""));
     }
 
-    @Test(dataProvider = "emptyStrings")
+    @ParameterizedTest
+    @MethodSource("emptyStrings")
     public void receive_throwsException_whenNoSelectorGiven(String selector) {
         var fixture = KafkaMessageFilteringConsumer.builder()
                 .build();
@@ -121,7 +117,8 @@ public class KafkaMessageFilteringConsumerTest {
                 .hasMessage("Cannot invoke filtering kafka message consumer without selectors");
     }
 
-    @Test(dataProvider = "emptyStrings")
+    @ParameterizedTest
+    @MethodSource("emptyStrings")
     public void receive_doesNotThrowException_whenNoSelectorGiven_butKafkaConsumerSelectorPresent(String selector) {
         var kafkaMessageFilterTest = mock(KafkaMessageFilter.class);
 
@@ -163,10 +160,5 @@ public class KafkaMessageFilteringConsumerTest {
                 .isNotNull()
                 .isNotEqualTo(kafkaMessageFilterMock)
                 .isNotSameAs(kafkaMessageFilterMock);
-    }
-
-    @AfterMethod
-    public void afterMethodTeardown() throws Exception {
-        mockitoContext.close();
     }
 }
