@@ -18,10 +18,10 @@ package org.citrusframework.vertx.config.xml;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.message.DefaultMessageCorrelator;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.vertx.endpoint.VertxSyncEndpoint;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -34,36 +34,36 @@ public class VertxSyncEndpointParserTest extends AbstractBeanDefinitionParserTes
     public void testVertxSyncEndpointParser() {
         Map<String, VertxSyncEndpoint> endpoints = beanDefinitionContext.getBeansOfType(VertxSyncEndpoint.class);
 
-        Assert.assertEquals(endpoints.size(), 4);
+        Assertions.assertEquals(4, endpoints.size());
 
         // 1st message receiver
         VertxSyncEndpoint vertxEndpoint = endpoints.get("vertxEndpoint1");
-        Assert.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
-        Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("vertxInstanceFactory"));
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed1");
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
+        Assertions.assertEquals(beanDefinitionContext.getBean("vertxInstanceFactory"), vertxEndpoint.getVertxInstanceFactory());
+        Assertions.assertEquals(DefaultMessageCorrelator.class, vertxEndpoint.getEndpointConfiguration().getCorrelator().getClass());
+        Assertions.assertEquals("news-feed1", vertxEndpoint.getEndpointConfiguration().getAddress());
+        Assertions.assertEquals(5000L, vertxEndpoint.getEndpointConfiguration().getTimeout());
 
         // 2nd message receiver
         vertxEndpoint = endpoints.get("vertxEndpoint2");
-        Assert.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
-        Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("specialVertxInstanceFactory"));
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getHost(), "127.0.0.1");
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getPort(), 10105);
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed2");
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
+        Assertions.assertEquals(beanDefinitionContext.getBean("specialVertxInstanceFactory"), vertxEndpoint.getVertxInstanceFactory());
+        Assertions.assertEquals(beanDefinitionContext.getBean("replyMessageCorrelator"), vertxEndpoint.getEndpointConfiguration().getCorrelator());
+        Assertions.assertEquals(beanDefinitionContext.getBean("messageConverter"), vertxEndpoint.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals("127.0.0.1", vertxEndpoint.getEndpointConfiguration().getHost());
+        Assertions.assertEquals(10105, vertxEndpoint.getEndpointConfiguration().getPort());
+        Assertions.assertEquals("news-feed2", vertxEndpoint.getEndpointConfiguration().getAddress());
+        Assertions.assertEquals(10000L, vertxEndpoint.getEndpointConfiguration().getTimeout());
 
         // 3rd message receiver
         vertxEndpoint = endpoints.get("vertxEndpoint3");
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed3");
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().isPubSubDomain(), true);
+        Assertions.assertEquals("news-feed3", vertxEndpoint.getEndpointConfiguration().getAddress());
+        Assertions.assertTrue(vertxEndpoint.getEndpointConfiguration().isPubSubDomain());
 
         // 4th message receiver
         vertxEndpoint = endpoints.get("vertxEndpoint4");
-        Assert.assertNotNull(vertxEndpoint.getActor());
-        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed4");
-        Assert.assertEquals(vertxEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assertions.assertNotNull(vertxEndpoint.getActor());
+        Assertions.assertEquals("news-feed4", vertxEndpoint.getEndpointConfiguration().getAddress());
+        Assertions.assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), vertxEndpoint.getActor());
     }
 }

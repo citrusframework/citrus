@@ -27,9 +27,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.vertx.factory.VertxInstanceFactory;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -43,7 +43,7 @@ public class VertxEndpointComponentTest {
     private VertxInstanceFactory instanceFactory = Mockito.mock(VertxInstanceFactory.class);
     private TestContext context = new TestContext();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         context.setReferenceResolver(referenceResolver);
     }
@@ -57,21 +57,21 @@ public class VertxEndpointComponentTest {
         when(referenceResolver.resolve("vertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(instanceFactory);
         Endpoint endpoint = component.createEndpoint("vertx:news", context);
 
-        Assert.assertEquals(endpoint.getClass(), VertxEndpoint.class);
+        Assertions.assertEquals(VertxEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress(), "news");
-        Assert.assertFalse(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory(), instanceFactory);
-        Assert.assertEquals(((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("news", ((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress());
+        Assertions.assertFalse(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(instanceFactory, ((VertxEndpoint) endpoint).getVertxInstanceFactory());
+        Assertions.assertEquals(5000L, ((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("eventbus:news-feed", context);
 
-        Assert.assertEquals(endpoint.getClass(), VertxEndpoint.class);
+        Assertions.assertEquals(VertxEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress(), "news-feed");
-        Assert.assertFalse(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory(), instanceFactory);
-        Assert.assertEquals(((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("news-feed", ((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress());
+        Assertions.assertFalse(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(instanceFactory, ((VertxEndpoint) endpoint).getVertxInstanceFactory());
+        Assertions.assertEquals(5000L, ((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -83,13 +83,13 @@ public class VertxEndpointComponentTest {
         when(referenceResolver.resolve("vertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(instanceFactory);
         Endpoint endpoint = component.createEndpoint("vertx:news-feed?port=10105&timeout=10000&pubSubDomain=true", context);
 
-        Assert.assertEquals(endpoint.getClass(), VertxEndpoint.class);
+        Assertions.assertEquals(VertxEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress(), "news-feed");
-        Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getPort(), 10105);
-        Assert.assertTrue(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory(), instanceFactory);
-        Assert.assertEquals(((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("news-feed", ((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress());
+        Assertions.assertEquals(10105, ((VertxEndpoint)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertTrue(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(instanceFactory, ((VertxEndpoint) endpoint).getVertxInstanceFactory());
+        Assertions.assertEquals(10000L, ((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -100,44 +100,41 @@ public class VertxEndpointComponentTest {
         when(referenceResolver.resolve("vertxFactory", VertxInstanceFactory.class)).thenReturn(instanceFactory);
         Endpoint endpoint = component.createEndpoint("vertx:news?vertxInstanceFactory=vertxFactory", context);
 
-        Assert.assertEquals(endpoint.getClass(), VertxEndpoint.class);
+        Assertions.assertEquals(VertxEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress(), "news");
-        Assert.assertFalse(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
-        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory(), instanceFactory);
-        Assert.assertEquals(((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("news", ((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress());
+        Assertions.assertFalse(((VertxEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assertions.assertEquals(instanceFactory, ((VertxEndpoint) endpoint).getVertxInstanceFactory());
+        Assertions.assertEquals(5000L, ((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testInvalidEndpointUri() {
         VertxEndpointComponent component = new VertxEndpointComponent();
 
-        try {
-            reset(referenceResolver);
-            component.createEndpoint("vertx:news?param1=&param2=value2", context);
-            Assert.fail("Missing exception due to invalid endpoint uri");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
-        }
+        reset(referenceResolver);
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> component.createEndpoint("vertx:news?param1=&param2=value2", context));
+        Assertions.assertTrue(exception.getMessage().startsWith("Unable to find parameter"), exception.getMessage());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 4L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("vertx"));
-        Assert.assertEquals(validators.get("vertx").getClass(), VertxEndpointComponent.class);
-        Assert.assertNotNull(validators.get("eventbus"));
-        Assert.assertEquals(validators.get("eventbus").getClass(), VertxEndpointComponent.class);
+        Assertions.assertEquals(4L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("vertx"));
+        Assertions.assertEquals(VertxEndpointComponent.class, validators.get("vertx").getClass());
+        Assertions.assertNotNull(validators.get("eventbus"));
+        Assertions.assertEquals(VertxEndpointComponent.class, validators.get("eventbus").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("vertx").isPresent());
-        Assert.assertTrue(EndpointComponent.lookup("eventbus").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("vertx").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("eventbus").isPresent());
     }
 }
