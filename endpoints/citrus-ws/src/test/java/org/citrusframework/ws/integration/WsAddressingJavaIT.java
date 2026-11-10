@@ -18,18 +18,26 @@ package org.citrusframework.ws.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class WsAddressingJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class WsAddressingJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void wsAddressing() {
-        variable("messageId", "123456789");
-        variable("correlationId", "CORR123456789");
+    public void wsAddressing(@CitrusResource TestCaseRunner runner) {
+        runner.variable("messageId", "123456789");
+        runner.variable("correlationId", "CORR123456789");
 
-        run(soap().client()
+        runner.run(soap().client()
             .assertFault()
             .faultString("One or more mandatory SOAP header blocks not understood")
             .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand")

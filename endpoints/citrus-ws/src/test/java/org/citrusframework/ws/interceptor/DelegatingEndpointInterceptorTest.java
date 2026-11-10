@@ -26,9 +26,9 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -52,7 +52,7 @@ public class DelegatingEndpointInterceptorTest {
 
     private CitrusRuntimeException ex = new CitrusRuntimeException();
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
         messageFactory.afterPropertiesSet();
@@ -61,7 +61,7 @@ public class DelegatingEndpointInterceptorTest {
 
     @Test
     public void testShouldIntercept() {
-        Assert.assertTrue(delegatingEndpointInterceptor.shouldIntercept(messageContext, webServiceEndpoint));
+        Assertions.assertTrue(delegatingEndpointInterceptor.shouldIntercept(messageContext, webServiceEndpoint));
     }
 
     @Test
@@ -82,9 +82,9 @@ public class DelegatingEndpointInterceptorTest {
         when(endpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).thenReturn(true);
         when(smartEndpointInterceptorMock.handleFault(messageContext, webServiceEndpoint)).thenReturn(true);
 
-        Assert.assertTrue(delegatingEndpointInterceptor.handleRequest(messageContext, webServiceEndpoint));
-        Assert.assertTrue(delegatingEndpointInterceptor.handleResponse(messageContext, webServiceEndpoint));
-        Assert.assertTrue(delegatingEndpointInterceptor.handleFault(messageContext, webServiceEndpoint));
+        Assertions.assertTrue(delegatingEndpointInterceptor.handleRequest(messageContext, webServiceEndpoint));
+        Assertions.assertTrue(delegatingEndpointInterceptor.handleResponse(messageContext, webServiceEndpoint));
+        Assertions.assertTrue(delegatingEndpointInterceptor.handleFault(messageContext, webServiceEndpoint));
         delegatingEndpointInterceptor.afterCompletion(messageContext, webServiceEndpoint, ex);
 
         verify(endpointInterceptorMock).afterCompletion(messageContext, webServiceEndpoint, ex);
@@ -119,11 +119,11 @@ public class DelegatingEndpointInterceptorTest {
         when(soapHeaderElement.getName()).thenReturn(soapHeader);
         when(soapEndpointInterceptorMock.understands(soapHeaderElement)).thenReturn(false);
 
-        Assert.assertTrue(delegatingEndpointInterceptor.handleRequest(messageContext, webServiceEndpoint));
-        Assert.assertTrue(delegatingEndpointInterceptor.handleResponse(messageContext, webServiceEndpoint));
-        Assert.assertTrue(delegatingEndpointInterceptor.handleFault(messageContext, webServiceEndpoint));
+        Assertions.assertTrue(delegatingEndpointInterceptor.handleRequest(messageContext, webServiceEndpoint));
+        Assertions.assertTrue(delegatingEndpointInterceptor.handleResponse(messageContext, webServiceEndpoint));
+        Assertions.assertTrue(delegatingEndpointInterceptor.handleFault(messageContext, webServiceEndpoint));
         delegatingEndpointInterceptor.afterCompletion(messageContext, webServiceEndpoint, ex);
-        Assert.assertTrue(delegatingEndpointInterceptor.understands(soapHeaderElement));
+        Assertions.assertTrue(delegatingEndpointInterceptor.understands(soapHeaderElement));
 
         verify(endpointInterceptorMock).afterCompletion(messageContext, webServiceEndpoint, ex);
         verify(soapEndpointInterceptorMock).afterCompletion(messageContext, webServiceEndpoint, ex);

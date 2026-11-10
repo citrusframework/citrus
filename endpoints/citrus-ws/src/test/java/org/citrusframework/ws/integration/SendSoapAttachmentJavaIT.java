@@ -19,15 +19,23 @@ package org.citrusframework.ws.integration;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.spi.Resources;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class SendSoapAttachmentJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void sendSoapAttachment() {
-        given(parallel().actions(
+    public void sendSoapAttachment(@CitrusResource TestCaseRunner runner) {
+        runner.given(parallel().actions(
                 soap().client("helloSoapClient")
                         .send()
                         .message()
@@ -58,7 +66,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                 )
         ));
 
-        then(soap().client("helloSoapClient")
+        runner.then(soap().client("helloSoapClient")
                 .receive()
                 .message()
                 .body("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -67,7 +75,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                         "</ns0:SoapMessageWithAttachmentResponse>")
                 .validate(validation().xml().schemaValidation(false)));
 
-        given(parallel().actions(
+        runner.given(parallel().actions(
                 soap().client("helloSoapClient")
                         .send()
                         .message()
@@ -98,7 +106,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport implemen
                 )
         ));
 
-        then(soap().client("helloSoapClient")
+        runner.then(soap().client("helloSoapClient")
                 .receive()
                 .message()
                 .body("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +

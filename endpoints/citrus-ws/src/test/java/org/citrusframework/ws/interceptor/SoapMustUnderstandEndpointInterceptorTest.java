@@ -23,8 +23,8 @@ import java.util.List;
 import org.mockito.Mockito;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.xml.namespace.QNameUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -38,7 +38,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         interceptor.setAcceptedHeaders(Collections.singletonList("{http://citrusframework.org/soap-mustunderstand}UserId"));
 
         SoapHeaderElement header = createHeaderMock("{http://citrusframework.org/soap-mustunderstand}UserId");
-        Assert.assertTrue(interceptor.understands(header));
+        Assertions.assertTrue(interceptor.understands(header));
 
     }
 
@@ -49,7 +49,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         interceptor.setAcceptedHeaders(Collections.singletonList("{http://citrusframework.org/soap-mustunderstand}UserId"));
 
         SoapHeaderElement header = createHeaderMock("{http://citrusframework.org/soap-mustunderstand}WrongId");
-        Assert.assertFalse(interceptor.understands(header));
+        Assertions.assertFalse(interceptor.understands(header));
 
     }
 
@@ -60,7 +60,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         interceptor.setAcceptedHeaders(Collections.singletonList("{http://citrusframework.org/soap-mustunderstand}UserId"));
 
         SoapHeaderElement header = createHeaderMock("{http://citrusframework.org/soap-wrong}UserId");
-        Assert.assertFalse(interceptor.understands(header));
+        Assertions.assertFalse(interceptor.understands(header));
 
     }
 
@@ -71,7 +71,7 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         interceptor.setAcceptedHeaders(Collections.singletonList("UserId"));
 
         SoapHeaderElement header = createHeaderMock("UserId");
-        Assert.assertTrue(interceptor.understands(header));
+        Assertions.assertTrue(interceptor.understands(header));
 
     }
 
@@ -86,10 +86,10 @@ public class SoapMustUnderstandEndpointInterceptorTest {
         headers.add("{http://citrusframework.org/tracking/soap-mustunderstand}TrackingId");
         interceptor.setAcceptedHeaders(headers);
 
-        Assert.assertTrue(interceptor.understands(createHeaderMock("{http://citrusframework.org/soap-mustunderstand}UserId")));
-        Assert.assertTrue(interceptor.understands(createHeaderMock("{http://citrusframework.org/soap-mustunderstand/operation}Operation")));
-        Assert.assertFalse(interceptor.understands(createHeaderMock("{http://citrusframework.org/soap-mustunderstand}TrackingId")));
-        Assert.assertTrue(interceptor.understands(createHeaderMock("TransactionId")));
+        Assertions.assertTrue(interceptor.understands(createHeaderMock("{http://citrusframework.org/soap-mustunderstand}UserId")));
+        Assertions.assertTrue(interceptor.understands(createHeaderMock("{http://citrusframework.org/soap-mustunderstand/operation}Operation")));
+        Assertions.assertFalse(interceptor.understands(createHeaderMock("{http://citrusframework.org/soap-mustunderstand}TrackingId")));
+        Assertions.assertTrue(interceptor.understands(createHeaderMock("TransactionId")));
     }
 
     /**

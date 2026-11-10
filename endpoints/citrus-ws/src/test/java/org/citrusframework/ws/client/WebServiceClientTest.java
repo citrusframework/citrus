@@ -18,19 +18,19 @@ package org.citrusframework.ws.client;
 
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.message.*;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.ws.message.SoapMessage;
 import org.mockito.Mockito;
 import org.springframework.ws.client.core.*;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.client.SoapFaultClientException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
-public class WebServiceClientTest extends AbstractTestNGUnitTest {
+public class WebServiceClientTest extends AbstractUnitTest {
 
     private WebServiceTemplate webServiceTemplate = Mockito.mock(WebServiceTemplate.class);
 
@@ -128,7 +128,7 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
         try {
             client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
             client.send(requestMessage, context);
-            Assert.fail("Missing exception due to soap fault");
+            Assertions.fail("Missing exception due to soap fault");
         } catch (SoapFaultClientException e) {
             verify(webServiceTemplate, atLeastOnce()).setDefaultUri("http://localhost:8080/request");
             verify(webServiceTemplate).setFaultMessageResolver(any(FaultMessageResolver.class));

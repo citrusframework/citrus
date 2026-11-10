@@ -29,7 +29,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.support.XMLUtils;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
@@ -51,16 +51,16 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
 /**
  * @since 2.0
  */
-public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
+public class SoapMessageConverterTest extends AbstractUnitTest {
 
     private final SoapMessageConverter soapMessageConverter = new SoapMessageConverter();
 
@@ -76,7 +76,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
     private final String payload = "<testMessage>Hello</testMessage>";
 
-    @BeforeMethod
+    @BeforeEach
     public void resetMocks() {
         soapMessageFactory = mock(SoapMessageFactory.class);
         soapRequest = mock(org.springframework.ws.soap.SoapMessage.class);
@@ -102,7 +102,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         soapMessageConverter.convertOutbound(testMessage, endpointConfiguration, context);
 
-        Assert.assertEquals(soapBodyResult.toString(), XML_PROCESSING_INSTRUCTION + payload);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + payload, soapBodyResult.toString());
 
     }
 
@@ -117,7 +117,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
-        Assert.assertEquals(soapBodyResult.toString(), XML_PROCESSING_INSTRUCTION + payload);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + payload, soapBodyResult.toString());
 
     }
 
@@ -153,7 +153,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
-        Assert.assertEquals(soapHeaderResult.toString(), soapHeaderContent);
+        Assertions.assertEquals(soapHeaderResult.toString(), soapHeaderContent);
     }
 
     @Test
@@ -177,7 +177,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
-        Assert.assertEquals(soapHeaderResult.toString(), soapHeaderContent + "<AppInfo><appId>123456789</appId></AppInfo>");
+        Assertions.assertEquals(soapHeaderContent + "<AppInfo><appId>123456789</appId></AppInfo>", soapHeaderResult.toString());
 
     }
 
@@ -244,9 +244,9 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         soapMessageConverter.convertOutbound(saajSoapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
         final Iterator it = mimeHeaders.getAllHeaders();
-        Assert.assertEquals(((MimeHeader)it.next()).getName(), "operation");
-        Assert.assertEquals(((MimeHeader)it.next()).getValue(), "123456789");
-        Assert.assertFalse(it.hasNext());
+        Assertions.assertEquals("operation", ((MimeHeader)it.next()).getName());
+        Assertions.assertEquals("123456789", ((MimeHeader)it.next()).getValue());
+        Assertions.assertFalse(it.hasNext());
 
     }
 
@@ -289,8 +289,8 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
             InputStreamSource contentStream = (InputStreamSource)invocation.getArguments()[1];
             BufferedReader reader = new BufferedReader(new InputStreamReader(contentStream.getInputStream()));
 
-            Assert.assertEquals(reader.readLine(), "This is a SOAP attachment");
-            Assert.assertEquals(reader.readLine(), "with multi-line");
+            Assertions.assertEquals("This is a SOAP attachment", reader.readLine());
+            Assertions.assertEquals("with multi-line", reader.readLine());
 
             reader.close();
             return null;
@@ -319,9 +319,9 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("");
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
-        Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + payload, responseMessage.getPayload());
+        Assertions.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -342,9 +342,9 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("");
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage/>");
-        Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + "<testMessage/>", responseMessage.getPayload());
+        Assertions.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -365,9 +365,9 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getAttachments()).thenReturn(new HashSet<Attachment>().iterator());
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
-        Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + payload, responseMessage.getPayload());
+        Assertions.assertEquals("soapOperation", responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -393,10 +393,10 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getAttachments()).thenReturn(new HashSet<Attachment>().iterator());
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
-        Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(responseMessage.getHeaderData().get(0), XML_PROCESSING_INSTRUCTION + soapHeaderContent);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + payload, responseMessage.getPayload());
+        Assertions.assertEquals("", responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(1L, responseMessage.getHeaderData().size());
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + soapHeaderContent, responseMessage.getHeaderData().get(0));
 
     }
 
@@ -423,10 +423,10 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getAttachments()).thenReturn(new HashSet<Attachment>().iterator());
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
-        Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertEquals(responseMessage.getHeader("{http://citrusframework.org}citrus:messageId"), "123456789");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + payload, responseMessage.getPayload());
+        Assertions.assertEquals("soapOperation", responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals("123456789", responseMessage.getHeader("{http://citrusframework.org}citrus:messageId"));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -455,17 +455,17 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
 
         final SoapMessage responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertNotNull(responseMessage);
+        Assertions.assertNotNull(responseMessage);
 
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
-        Assert.assertEquals(responseMessage.getSoapAction(), "soapOperation");
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + payload, responseMessage.getPayload());
+        Assertions.assertEquals("soapOperation", responseMessage.getSoapAction());
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
         final List<SoapAttachment> attachments = responseMessage.getAttachments();
-        Assert.assertEquals(attachments.size(), 1L);
-        Assert.assertEquals(attachments.get(0).getContentId(), attachment.getContentId());
-        Assert.assertEquals(attachments.get(0).getContentType(), attachment.getContentType());
-        Assert.assertEquals(FileUtils.readToString(attachments.get(0).getInputStream()), attachment.getContent());
+        Assertions.assertEquals(1L, attachments.size());
+        Assertions.assertEquals(attachments.get(0).getContentId(), attachment.getContentId());
+        Assertions.assertEquals(attachments.get(0).getContentType(), attachment.getContentType());
+        Assertions.assertEquals(FileUtils.readToString(attachments.get(0).getInputStream()), attachment.getContent());
 
     }
 
@@ -486,9 +486,9 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("");
 
        final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>");
-        Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>", responseMessage.getPayload());
+        Assertions.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -509,9 +509,9 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("");
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>");
-        Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>", responseMessage.getPayload());
+        Assertions.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -535,10 +535,10 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("");
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
-                "other=\"true\" xmlns:new=\"http://citruframework.org/new\"/>");
-        Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
+                "other=\"true\" xmlns:new=\"http://citruframework.org/new\"/>", responseMessage.getPayload());
+        Assertions.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -562,10 +562,10 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapResponse.getSoapAction()).thenReturn("");
 
         final Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration(), context);
-        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
-                "other=\"true\" xmlns:new=\"http://citruframework.org/new\">Hello</testMessage>");
-        Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
+                "other=\"true\" xmlns:new=\"http://citruframework.org/new\">Hello</testMessage>", responseMessage.getPayload());
+        Assertions.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
+        Assertions.assertEquals(0L, responseMessage.getHeaderData().size());
 
     }
 
@@ -578,9 +578,9 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
         endpointConfiguration.setKeepSoapEnvelope(true);
         final Message responseMessage = soapMessageConverter.convertInbound(soapMessage, endpointConfiguration, context);
-        Assert.assertEquals(responseMessage.getPayload(String.class).replaceAll("\\s", ""), (XML_PROCESSING_INSTRUCTION + getSoapRequestPayload()).replaceAll("\\s", ""));
-        Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(responseMessage.getHeaderData().get(0), XML_PROCESSING_INSTRUCTION + "<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"/>");
+        Assertions.assertEquals((XML_PROCESSING_INSTRUCTION + getSoapRequestPayload()).replaceAll("\\s", ""), responseMessage.getPayload(String.class).replaceAll("\\s", ""));
+        Assertions.assertEquals(1L, responseMessage.getHeaderData().size());
+        Assertions.assertEquals(XML_PROCESSING_INSTRUCTION + "<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"/>", responseMessage.getHeaderData().get(0));
     }
 
     @Test

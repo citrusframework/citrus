@@ -16,11 +16,11 @@
 
 package org.citrusframework.ws.config.xml;
 
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.ws.actions.SendSoapFaultAction;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SendSoapFaultActionParserTest extends AbstractActionParserTest<SendSoapFaultAction> {
 
@@ -31,33 +31,33 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
 
         // 1st action
         SendSoapFaultAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
-        Assert.assertNotNull(action.getMessageBuilder());
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
+        Assertions.assertNotNull(action.getMessageBuilder());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sendFault");
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}citrus-ns:FAULT-1000");
-        Assert.assertEquals(action.getFaultString(), "FaultString");
-        Assert.assertEquals(action.getFaultDetails().size(), 1);
-        Assert.assertTrue(action.getFaultDetails().get(0).startsWith("<ns0:FaultDetail xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">"));
-        Assert.assertNull(action.getFaultActor());
+        Assertions.assertEquals(1L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("sendFault", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals("{http://citrusframework.org/faults}citrus-ns:FAULT-1000", action.getFaultCode());
+        Assertions.assertEquals("FaultString", action.getFaultString());
+        Assertions.assertEquals(1, action.getFaultDetails().size());
+        Assertions.assertTrue(action.getFaultDetails().get(0).startsWith("<ns0:FaultDetail xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">"));
+        Assertions.assertNull(action.getFaultActor());
 
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
-        Assert.assertNotNull(action.getMessageBuilder());
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageBuilder.class);
+        Assertions.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
+        Assertions.assertNotNull(action.getMessageBuilder());
+        Assertions.assertEquals(DefaultMessageBuilder.class, action.getMessageBuilder().getClass());
 
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sendFault");
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}citrus-ns:FAULT-1001");
-        Assert.assertEquals(action.getFaultString(), "FaultString");
-        Assert.assertEquals(action.getFaultDetails().size(), 0);
-        Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1);
-        Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "classpath:org/citrusframework/ws/actions/test-fault-detail.xml");
-        Assert.assertEquals(action.getFaultActor(), "FaultActor");
+        Assertions.assertEquals(1, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("sendFault", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals("{http://citrusframework.org/faults}citrus-ns:FAULT-1001", action.getFaultCode());
+        Assertions.assertEquals("FaultString", action.getFaultString());
+        Assertions.assertEquals(0, action.getFaultDetails().size());
+        Assertions.assertEquals(1, action.getFaultDetailResourcePaths().size());
+        Assertions.assertEquals("classpath:org/citrusframework/ws/actions/test-fault-detail.xml", action.getFaultDetailResourcePaths().get(0));
+        Assertions.assertEquals("FaultActor", action.getFaultActor());
     }
 }

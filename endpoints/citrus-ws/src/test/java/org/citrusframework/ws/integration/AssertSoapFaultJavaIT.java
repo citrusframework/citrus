@@ -18,18 +18,26 @@ package org.citrusframework.ws.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class AssertSoapFaultJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void assertSoapFaultAction() {
-        variable("soapFaultCode", "TEC-1001");
-        variable("soapFaultString", "Invalid request");
+    public void assertSoapFaultAction(@CitrusResource TestCaseRunner runner) {
+        runner.variable("soapFaultCode", "TEC-1001");
+        runner.variable("soapFaultString", "Invalid request");
 
-        run(soap().client()
+        runner.run(soap().client()
             .assertFault()
             .faultString("Invalid request")
             .faultCode("{http://citrusframework.org/faults}TEC-1001")
@@ -41,7 +49,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport implements 
                         "</ns0:SoapFaultForcingRequest>")
         ));
 
-        run(soap().client()
+        runner.run(soap().client()
             .assertFault()
             .faultString("@ignore@")
             .faultCode("{http://citrusframework.org/faults}TEC-1001")
@@ -53,7 +61,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport implements 
                         "</ns0:SoapFaultForcingRequest>")
         ));
 
-        run(soap().client()
+        runner.run(soap().client()
             .assertFault()
             .faultString("${soapFaultString}")
             .faultCode("{http://citrusframework.org/faults}${soapFaultCode}")

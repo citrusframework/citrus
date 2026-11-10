@@ -22,7 +22,7 @@ import javax.xml.transform.TransformerException;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.ws.addressing.WsAddressingHeaders;
 import org.citrusframework.ws.addressing.WsAddressingMessageHeaders;
 import org.citrusframework.ws.addressing.WsAddressingVersion;
@@ -33,9 +33,9 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.reset;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * @since 2.0
  */
-public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
+public class WsAddressingMessageConverterTest extends AbstractUnitTest {
 
     private final SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
     private final SoapBody soapBody = Mockito.mock(SoapBody.class);
@@ -55,7 +55,7 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
 
     private WsAddressingMessageConverter messageConverter;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         WsAddressingHeaders wsAddressingHeaders = new WsAddressingHeaders();
         wsAddressingHeaders.setVersion(WsAddressingVersion.VERSION10);
@@ -94,8 +94,8 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
-        Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload);
-        Assert.assertEquals(soapHeaderResult.toString(), "");
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload, soapBodyResult.toString());
+        Assertions.assertEquals("", soapHeaderResult.toString());
 
         verify(soapHeader).addNamespaceDeclaration("wsa", "http://www.w3.org/2005/08/addressing");
         verify(soapHeaderElement).setText("Test");
@@ -136,8 +136,8 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
 
         messageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
 
-        Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload);
-        Assert.assertEquals(soapHeaderResult.toString(), "");
+        Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload, soapBodyResult.toString());
+        Assertions.assertEquals("", soapHeaderResult.toString());
 
         verify(soapHeader).addNamespaceDeclaration("wsa", "http://www.w3.org/2005/08/addressing");
         verify(soapHeaderElement).setText("customTo");

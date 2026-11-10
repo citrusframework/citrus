@@ -32,10 +32,9 @@ import org.citrusframework.ws.actions.SendSoapFaultAction;
 import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.citrusframework.xml.XmlTestLoader;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.ws.endpoint.builder.WebServiceEndpoints.soap;
@@ -51,21 +50,16 @@ public class SendSoapFaultTest extends AbstractXmlActionTest {
             .queue(inboundQueue)
             .build());
 
-    @BeforeClass
+    @BeforeEach
     public void setupEndpoints() {
+        ((AbstractEndpointAdapter) endpointAdapter).setTestContextFactory(testContextFactory);
+
         soapServer = soap().server()
                 .timeout(100L)
                 .endpointAdapter(endpointAdapter)
                 .autoStart(true)
                 .name("soapServer")
                 .build();
-    }
-
-    @BeforeMethod
-    @Override
-    public void prepareTest() {
-        super.prepareTest();
-        ((AbstractEndpointAdapter) endpointAdapter).setTestContextFactory(testContextFactory);
     }
 
     @Test
@@ -82,51 +76,51 @@ public class SendSoapFaultTest extends AbstractXmlActionTest {
         testLoader.load();
 
         TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "SendSoapFaultTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 4L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), ReceiveSoapMessageAction.class);
-        Assert.assertEquals(result.getTestAction(0).getName(), "soap:receive-request");
+        Assertions.assertEquals("SendSoapFaultTest", result.getName());
+        Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
+        Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals(4L, result.getActionCount());
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("soap:receive-request", result.getTestAction(0).getName());
 
-        Assert.assertEquals(result.getTestAction(1).getClass(), SendSoapFaultAction.class);
-        Assert.assertEquals(result.getTestAction(1).getName(), "soap:send-fault");
+        Assertions.assertEquals(SendSoapFaultAction.class, result.getTestAction(1).getClass());
+        Assertions.assertEquals("soap:send-fault", result.getTestAction(1).getName());
 
         int actionIndex = 0;
 
         ReceiveSoapMessageAction action = (ReceiveSoapMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getMessageBuilder().build(context, MessageType.XML.name()).getPayload(), "<TestMessage>Hello Citrus</TestMessage>");
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", action.getMessageBuilder().build(context, MessageType.XML.name()).getPayload());
 
         SendSoapFaultAction send = (SendSoapFaultAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(send.getEndpointUri(), "soapServer");
-        Assert.assertNotNull(send.getMessageBuilder());
-        Assert.assertEquals(send.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals("soapServer", send.getEndpointUri());
+        Assertions.assertNotNull(send.getMessageBuilder());
+        Assertions.assertEquals(StaticMessageBuilder.class, send.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder)send.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sendFault");
-        Assert.assertEquals(send.getFaultCode(), "{http://citrusframework.org/faults}citrus-ns:FAULT-1000");
-        Assert.assertEquals(send.getFaultString(), "FaultString");
-        Assert.assertEquals(send.getFaultDetails().size(), 1);
-        Assert.assertTrue(send.getFaultDetails().get(0).startsWith("<ns0:FaultDetail xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">"));
-        Assert.assertNull(send.getFaultActor());
+        Assertions.assertEquals(1L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("sendFault", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals("{http://citrusframework.org/faults}citrus-ns:FAULT-1000", send.getFaultCode());
+        Assertions.assertEquals("FaultString", send.getFaultString());
+        Assertions.assertEquals(1, send.getFaultDetails().size());
+        Assertions.assertTrue(send.getFaultDetails().get(0).startsWith("<ns0:FaultDetail xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">"));
+        Assertions.assertNull(send.getFaultActor());
 
         action = (ReceiveSoapMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getMessageBuilder().build(context, MessageType.XML.name()).getPayload(), "<TestMessage>Hello Citrus</TestMessage>");
+        Assertions.assertEquals("<TestMessage>Hello Citrus</TestMessage>", action.getMessageBuilder().build(context, MessageType.XML.name()).getPayload());
 
         send = (SendSoapFaultAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(send.getEndpointUri(), "soapServer");
-        Assert.assertNotNull(send.getMessageBuilder());
-        Assert.assertEquals(send.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals("soapServer", send.getEndpointUri());
+        Assertions.assertNotNull(send.getMessageBuilder());
+        Assertions.assertEquals(StaticMessageBuilder.class, send.getMessageBuilder().getClass());
 
         messageBuilder = (StaticMessageBuilder)send.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sendFault");
-        Assert.assertEquals(send.getFaultCode(), "{http://citrusframework.org/faults}citrus-ns:FAULT-1001");
-        Assert.assertEquals(send.getFaultString(), "FaultString");
-        Assert.assertEquals(send.getFaultDetails().size(), 0);
-        Assert.assertEquals(send.getFaultDetailResourcePaths().size(), 1);
-        Assert.assertEquals(send.getFaultDetailResourcePaths().get(0), "classpath:org/citrusframework/ws/actions/test-fault-detail.xml");
-        Assert.assertEquals(send.getFaultActor(), "FaultActor");
+        Assertions.assertEquals(1, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("sendFault", messageBuilder.buildMessageHeaders(context).get("operation"));
+        Assertions.assertEquals("{http://citrusframework.org/faults}citrus-ns:FAULT-1001", send.getFaultCode());
+        Assertions.assertEquals("FaultString", send.getFaultString());
+        Assertions.assertEquals(0, send.getFaultDetails().size());
+        Assertions.assertEquals(1, send.getFaultDetailResourcePaths().size());
+        Assertions.assertEquals("classpath:org/citrusframework/ws/actions/test-fault-detail.xml", send.getFaultDetailResourcePaths().get(0));
+        Assertions.assertEquals("FaultActor", send.getFaultActor());
     }
 }

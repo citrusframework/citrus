@@ -36,8 +36,8 @@ import org.citrusframework.ws.actions.SendSoapFaultAction;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -62,9 +62,9 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         when(soapServer.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapFault message = (SoapFault) invocation.getArguments()[0];
-            Assert.assertEquals(message.getFaultActor(), "faultActor");
-            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            Assertions.assertEquals("faultActor", message.getFaultActor());
+            Assertions.assertEquals(FAULT_CODE, message.getFaultCode());
+            Assertions.assertEquals(FAULT_STRING, message.getFaultString());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -76,21 +76,21 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
                         .faultString(FAULT_STRING));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapFaultAction.class, test.getActions().get(0).getClass());
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "soap:send-fault");
+        Assertions.assertEquals("soap:send-fault", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapServer);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapServer, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(action.getFaultActor(), "faultActor");
-        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
-        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
+        Assertions.assertEquals("", messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals("faultActor", action.getFaultActor());
+        Assertions.assertEquals(FAULT_CODE, action.getFaultCode());
+        Assertions.assertEquals(FAULT_STRING, action.getFaultString());
     }
 
     @Test
@@ -100,8 +100,8 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         when(soapServer.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapFault message = (SoapFault) invocation.getArguments()[0];
-            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
+            Assertions.assertEquals(FAULT_CODE, message.getFaultCode());
+            Assertions.assertEquals(FAULT_STRING, message.getFaultString());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -121,21 +121,21 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
                         .faultString(FAULT_STRING));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapFaultAction.class, test.getActions().get(0).getClass());
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "soap:send-fault");
+        Assertions.assertEquals("soap:send-fault", action.getName());
 
-        Assert.assertEquals(action.getEndpointUri(), "soapServer");
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals("soapServer", action.getEndpointUri());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertNull(action.getFaultActor());
-        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
-        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
+        Assertions.assertEquals("", messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertNull(action.getFaultActor());
+        Assertions.assertEquals(FAULT_CODE, action.getFaultCode());
+        Assertions.assertEquals(FAULT_STRING, action.getFaultString());
     }
 
     @Test
@@ -145,10 +145,10 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         when(soapServer.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapFault message = (SoapFault) invocation.getArguments()[0];
-            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-            Assert.assertEquals(message.getFaultDetails().size(), 1L);
-            Assert.assertEquals(message.getFaultDetails().get(0), ERROR_DETAIL);
+            Assertions.assertEquals(FAULT_CODE, message.getFaultCode());
+            Assertions.assertEquals(FAULT_STRING, message.getFaultString());
+            Assertions.assertEquals(1L, message.getFaultDetails().size());
+            Assertions.assertEquals(ERROR_DETAIL, message.getFaultDetails().get(0));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -164,22 +164,22 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
                         .faultString(FAULT_STRING));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapFaultAction.class, test.getActions().get(0).getClass());
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "soap:send-fault");
+        Assertions.assertEquals("soap:send-fault", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapServer);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapServer, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(action.getFaultDetails().size(), 1L);
-        Assert.assertEquals(action.getFaultDetails().get(0), ERROR_DETAIL);
-        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
-        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
+        Assertions.assertEquals("", messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(1L, action.getFaultDetails().size());
+        Assertions.assertEquals(ERROR_DETAIL, action.getFaultDetails().get(0));
+        Assertions.assertEquals(FAULT_CODE, action.getFaultCode());
+        Assertions.assertEquals(FAULT_STRING, action.getFaultString());
     }
 
     @Test
@@ -189,10 +189,10 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         when(soapServer.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapFault message = (SoapFault) invocation.getArguments()[0];
-            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-            Assert.assertEquals(message.getFaultDetails().size(), 1L);
-            Assert.assertEquals(message.getFaultDetails().get(0), "DETAIL");
+            Assertions.assertEquals(FAULT_CODE, message.getFaultCode());
+            Assertions.assertEquals(FAULT_STRING, message.getFaultString());
+            Assertions.assertEquals(1L, message.getFaultDetails().size());
+            Assertions.assertEquals("DETAIL", message.getFaultDetails().get(0));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -204,22 +204,22 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
                         .faultString(FAULT_STRING));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapFaultAction.class, test.getActions().get(0).getClass());
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "soap:send-fault");
+        Assertions.assertEquals("soap:send-fault", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapServer);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapServer, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(action.getFaultDetails().size(), 1L);
-        Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL");
-        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
-        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
+        Assertions.assertEquals("", messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(1L, action.getFaultDetails().size());
+        Assertions.assertEquals("DETAIL", action.getFaultDetails().get(0));
+        Assertions.assertEquals(FAULT_CODE, action.getFaultCode());
+        Assertions.assertEquals(FAULT_STRING, action.getFaultString());
     }
 
     @Test
@@ -229,10 +229,10 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         when(soapServer.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapFault message = (SoapFault) invocation.getArguments()[0];
-            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-            Assert.assertEquals(message.getFaultDetails().size(), 1L);
-            Assert.assertEquals(message.getFaultDetails().get(0).trim(), ERROR_DETAIL);
+            Assertions.assertEquals(FAULT_CODE, message.getFaultCode());
+            Assertions.assertEquals(FAULT_STRING, message.getFaultString());
+            Assertions.assertEquals(1L, message.getFaultDetails().size());
+            Assertions.assertEquals(ERROR_DETAIL, message.getFaultDetails().get(0).trim());
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -244,23 +244,23 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
                         .faultString(FAULT_STRING));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapFaultAction.class, test.getActions().get(0).getClass());
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "soap:send-fault");
+        Assertions.assertEquals("soap:send-fault", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapServer);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapServer, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(action.getFaultDetails().size(), 0L);
-        Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1L);
-        Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "classpath:org/citrusframework/ws/actions/dsl/soap-fault-detail.xml");
-        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
-        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
+        Assertions.assertEquals("", messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(0L, action.getFaultDetails().size());
+        Assertions.assertEquals(1L, action.getFaultDetailResourcePaths().size());
+        Assertions.assertEquals("classpath:org/citrusframework/ws/actions/dsl/soap-fault-detail.xml", action.getFaultDetailResourcePaths().get(0));
+        Assertions.assertEquals(FAULT_CODE, action.getFaultCode());
+        Assertions.assertEquals(FAULT_STRING, action.getFaultString());
     }
 
     @Test
@@ -270,11 +270,11 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         when(soapServer.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             SoapFault message = (SoapFault) invocation.getArguments()[0];
-            Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
-            Assert.assertEquals(message.getFaultString(), FAULT_STRING);
-            Assert.assertEquals(message.getFaultDetails().size(), 2L);
-            Assert.assertEquals(message.getFaultDetails().get(0), "DETAIL1");
-            Assert.assertEquals(message.getFaultDetails().get(1), "DETAIL2");
+            Assertions.assertEquals(FAULT_CODE, message.getFaultCode());
+            Assertions.assertEquals(FAULT_STRING, message.getFaultString());
+            Assertions.assertEquals(2L, message.getFaultDetails().size());
+            Assertions.assertEquals("DETAIL1", message.getFaultDetails().get(0));
+            Assertions.assertEquals("DETAIL2", message.getFaultDetails().get(1));
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -287,22 +287,22 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
                         .faultString(FAULT_STRING));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
+        Assertions.assertEquals(1, test.getActionCount());
+        Assertions.assertEquals(SendSoapFaultAction.class, test.getActions().get(0).getClass());
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "soap:send-fault");
+        Assertions.assertEquals("soap:send-fault", action.getName());
 
-        Assert.assertEquals(action.getEndpoint(), soapServer);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
+        Assertions.assertEquals(soapServer, action.getEndpoint());
+        Assertions.assertEquals(StaticMessageBuilder.class, action.getMessageBuilder().getClass());
 
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-        Assert.assertEquals(action.getFaultDetails().size(), 2L);
-        Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL1");
-        Assert.assertEquals(action.getFaultDetails().get(1), "DETAIL2");
-        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
-        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
+        Assertions.assertEquals("", messageBuilder.getMessage().getPayload());
+        Assertions.assertEquals(0L, messageBuilder.buildMessageHeaders(context).size());
+        Assertions.assertEquals(2L, action.getFaultDetails().size());
+        Assertions.assertEquals("DETAIL1", action.getFaultDetails().get(0));
+        Assertions.assertEquals("DETAIL2", action.getFaultDetails().get(1));
+        Assertions.assertEquals(FAULT_CODE, action.getFaultCode());
+        Assertions.assertEquals(FAULT_STRING, action.getFaultString());
     }
 }

@@ -18,18 +18,26 @@ package org.citrusframework.ws.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class WebServiceClientJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void soapClient() {
-        variable("messageId", "123456789");
-        variable("correlationId", "CORR123456789");
+    public void soapClient(@CitrusResource TestCaseRunner runner) {
+        runner.variable("messageId", "123456789");
+        runner.variable("correlationId", "CORR123456789");
 
-        when(send("helloSoapClient")
+        runner.when(send("helloSoapClient")
             .message()
             .body("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -40,7 +48,7 @@ public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport implements
             .header("{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Request", "HelloRequest")
             .header("{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Operation", "sayHello"));
 
-        then(receive("helloSoapClient")
+        runner.then(receive("helloSoapClient")
             .message()
             .body("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +

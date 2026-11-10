@@ -18,19 +18,27 @@ package org.citrusframework.ws.integration;
 
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.springframework.test.context.ContextConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Test
-public class WebServiceServerJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class WebServiceServerJavaIT implements TestActionSupport {
 
+    @Test
     @CitrusTest
-    public void soapServer() {
-        variable("correlationId", "citrus:randomNumber(10)");
-        variable("messageId", "citrus:randomNumber(10)");
-        variable("user", "Christoph");
+    public void soapServer(@CitrusResource TestCaseRunner runner) {
+        runner.variable("correlationId", "citrus:randomNumber(10)");
+        runner.variable("messageId", "citrus:randomNumber(10)");
+        runner.variable("user", "Christoph");
 
-        given(parallel().actions(
+        runner.given(parallel().actions(
             send("helloSoapClient")
                 .message()
                 .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -65,7 +73,7 @@ public class WebServiceServerJavaIT extends TestNGCitrusSpringSupport implements
             )
         ));
 
-        then(receive("helloSoapClient")
+        runner.then(receive("helloSoapClient")
             .message()
             .body("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +

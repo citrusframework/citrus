@@ -27,13 +27,13 @@ import org.citrusframework.message.builder.DefaultHeaderDataBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.FileResourceHeaderDataBuilder;
 import org.citrusframework.messaging.Producer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
+public class SendSoapMessageActionTest extends AbstractUnitTest {
 
     private Endpoint webServiceEndpoint = Mockito.mock(Endpoint.class);
     private Producer producer = Mockito.mock(Producer.class);
@@ -62,15 +62,15 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
             SoapMessage soapMessage = ((SoapMessage)invocation.getArguments()[0]);
-            Assert.assertTrue(soapMessage.isMtomEnabled());
-            Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Text><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:mtomText%40citrusframework.org\"/></Text></TestRequest>");
+            Assertions.assertTrue(soapMessage.isMtomEnabled());
+            Assertions.assertEquals("<TestRequest><Text><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:mtomText%40citrusframework.org\"/></Text></TestRequest>", soapMessage.getPayload(String.class));
 
-            Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, soapMessage.getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertEquals(constructedAttachment.getContentId(), "mtomText@citrusframework.org");
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
-            Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertEquals("mtomText@citrusframework.org", constructedAttachment.getContentId());
+            Assertions.assertEquals("text/xml", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -103,10 +103,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
             SoapMessage soapMessage = ((SoapMessage)invocation.getArguments()[0]);
-            Assert.assertTrue(soapMessage.isMtomEnabled());
-            Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Image>SU1BR0VfREFUQQ==</Image></TestRequest>");
+            Assertions.assertTrue(soapMessage.isMtomEnabled());
+            Assertions.assertEquals("<TestRequest><Image>SU1BR0VfREFUQQ==</Image></TestRequest>", soapMessage.getPayload(String.class));
 
-            Assert.assertEquals(soapMessage.getAttachments().size(), 0L);
+            Assertions.assertEquals(0L, soapMessage.getAttachments().size());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -139,10 +139,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
             SoapMessage soapMessage = ((SoapMessage)invocation.getArguments()[0]);
-            Assert.assertTrue(soapMessage.isMtomEnabled());
-            Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Image>494D4147455F44415441</Image></TestRequest>");
+            Assertions.assertTrue(soapMessage.isMtomEnabled());
+            Assertions.assertEquals("<TestRequest><Image>494D4147455F44415441</Image></TestRequest>", soapMessage.getPayload(String.class));
 
-            Assert.assertEquals(soapMessage.getAttachments().size(), 0L);
+            Assertions.assertEquals(0L, soapMessage.getAttachments().size());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -173,15 +173,15 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
             SoapMessage soapMessage = ((SoapMessage)invocation.getArguments()[0]);
-            Assert.assertTrue(soapMessage.isMtomEnabled());
-            Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Text>mtomText</Text></TestRequest>");
+            Assertions.assertTrue(soapMessage.isMtomEnabled());
+            Assertions.assertEquals("<TestRequest><Text>mtomText</Text></TestRequest>", soapMessage.getPayload(String.class));
 
-            Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, soapMessage.getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertEquals(constructedAttachment.getContentId(), "mtomText");
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
-            Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertEquals("mtomText", constructedAttachment.getContentId());
+            Assertions.assertEquals("text/xml", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -214,15 +214,15 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
             SoapMessage soapMessage = ((SoapMessage)invocation.getArguments()[0]);
-            Assert.assertTrue(soapMessage.isMtomEnabled());
-            Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Image>mtomImage</Image></TestRequest>");
+            Assertions.assertTrue(soapMessage.isMtomEnabled());
+            Assertions.assertEquals("<TestRequest><Image>mtomImage</Image></TestRequest>", soapMessage.getPayload(String.class));
 
-            Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, soapMessage.getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertEquals(constructedAttachment.getContentId(), "mtomImage");
-            Assert.assertEquals(constructedAttachment.getContentType(), "image/png");
-            Assert.assertEquals(constructedAttachment.getContent(), "IMAGE_DATA");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertEquals("mtomImage", constructedAttachment.getContentId());
+            Assertions.assertEquals("image/png", constructedAttachment.getContentType());
+            Assertions.assertEquals("IMAGE_DATA", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -261,9 +261,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         try {
             soapMessageAction.execute(context);
-            Assert.fail("Missing exception due to invalid attachment encoding type");
+            Assertions.fail("Missing exception due to invalid attachment encoding type");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unsupported encoding type 'md5' for SOAP attachment: cid:mtomImage - choose one of base64Binary or hexBinary");
+            Assertions.assertEquals("Unsupported encoding type 'md5' for SOAP attachment: cid:mtomImage - choose one of base64Binary or hexBinary", e.getMessage());
         }
     }
 
@@ -280,12 +280,12 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
-            Assert.assertEquals(((SoapMessage)invocation.getArguments()[0]).getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, ((SoapMessage)invocation.getArguments()[0]).getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertNull(constructedAttachment.getContentId());
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
-            Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertNull(constructedAttachment.getContentId());
+            Assertions.assertEquals("text/plain", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -315,12 +315,12 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
-            Assert.assertEquals(((SoapMessage)invocation.getArguments()[0]).getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, ((SoapMessage)invocation.getArguments()[0]).getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertEquals(constructedAttachment.getContentId(), "myAttachment");
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
-            Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-16");
+            Assertions.assertEquals("myAttachment", constructedAttachment.getContentId());
+            Assertions.assertEquals("text/xml", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-16", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -359,18 +359,18 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
-            Assert.assertEquals(((SoapMessage)invocation.getArguments()[0]).getAttachments().size(), 2L);
+            Assertions.assertEquals(2L, ((SoapMessage)invocation.getArguments()[0]).getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertEquals(constructedAttachment.getContentId(), "1stAttachment");
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
-            Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World1!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertEquals("1stAttachment", constructedAttachment.getContentId());
+            Assertions.assertEquals("text/xml", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World1!</Message></TestAttachment>", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
 
             constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(1);
-            Assert.assertEquals(constructedAttachment.getContentId(), "2ndAttachment");
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
-            Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World2!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-16");
+            Assertions.assertEquals("2ndAttachment", constructedAttachment.getContentId());
+            Assertions.assertEquals("text/xml", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World2!</Message></TestAttachment>", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-16", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -418,12 +418,12 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
-            Assert.assertEquals(((SoapMessage)invocation.getArguments()[0]).getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, ((SoapMessage)invocation.getArguments()[0]).getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertNull(constructedAttachment.getContentId());
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
-            Assert.assertEquals(constructedAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertNull(constructedAttachment.getContentId());
+            Assertions.assertEquals("text/plain", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", constructedAttachment.getContent().trim());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -452,12 +452,12 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
-            Assert.assertEquals(((SoapMessage)invocation.getArguments()[0]).getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, ((SoapMessage)invocation.getArguments()[0]).getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertNull(constructedAttachment.getContentId());
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
-            Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertNull(constructedAttachment.getContentId());
+            Assertions.assertEquals("text/plain", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", constructedAttachment.getContent());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -486,12 +486,12 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
         doAnswer(invocation -> {
-            Assert.assertEquals(((SoapMessage)invocation.getArguments()[0]).getAttachments().size(), 1L);
+            Assertions.assertEquals(1L, ((SoapMessage)invocation.getArguments()[0]).getAttachments().size());
             SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
-            Assert.assertNull(constructedAttachment.getContentId());
-            Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
-            Assert.assertEquals(constructedAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-            Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+            Assertions.assertNull(constructedAttachment.getContentId());
+            Assertions.assertEquals("text/plain", constructedAttachment.getContentType());
+            Assertions.assertEquals("<TestAttachment><Message>Hello World!</Message></TestAttachment>", constructedAttachment.getContent().trim());
+            Assertions.assertEquals("UTF-8", constructedAttachment.getCharsetName());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -519,9 +519,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             Message constructedMessage = (Message)invocation.getArguments()[0];
 
-            Assert.assertEquals(constructedMessage.getHeaderData().size(), 1L);
-            Assert.assertEquals(constructedMessage.getHeaderData().get(0),
-                    "<TestHeader><operation>soapOperation</operation></TestHeader>");
+            Assertions.assertEquals(1L, constructedMessage.getHeaderData().size());
+            Assertions.assertEquals(
+                    "<TestHeader><operation>soapOperation</operation></TestHeader>", constructedMessage.getHeaderData().get(0));
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -549,11 +549,11 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             Message constructedMessage = (Message)invocation.getArguments()[0];
 
-            Assert.assertEquals(constructedMessage.getHeaderData().size(), 2L);
-            Assert.assertEquals(constructedMessage.getHeaderData().get(0),
-                    "<TestHeader><operation>soapOperation1</operation></TestHeader>");
-            Assert.assertEquals(constructedMessage.getHeaderData().get(1),
-                    "<TestHeader><operation>soapOperation2</operation></TestHeader>");
+            Assertions.assertEquals(2L, constructedMessage.getHeaderData().size());
+            Assertions.assertEquals(
+                    "<TestHeader><operation>soapOperation1</operation></TestHeader>", constructedMessage.getHeaderData().get(0));
+            Assertions.assertEquals(
+                    "<TestHeader><operation>soapOperation2</operation></TestHeader>", constructedMessage.getHeaderData().get(1));
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -580,9 +580,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             Message constructedMessage = (Message)invocation.getArguments()[0];
 
-            Assert.assertEquals(constructedMessage.getHeaderData().size(), 1L);
-            Assert.assertEquals(constructedMessage.getHeaderData().get(0).trim(),
-                    "<TestHeader><operation>soapOperation</operation></TestHeader>");
+            Assertions.assertEquals(1L, constructedMessage.getHeaderData().size());
+            Assertions.assertEquals(
+                    "<TestHeader><operation>soapOperation</operation></TestHeader>", constructedMessage.getHeaderData().get(0).trim());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -611,9 +611,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             Message constructedMessage = (Message)invocation.getArguments()[0];
 
-            Assert.assertEquals(constructedMessage.getHeaderData().size(), 1L);
-            Assert.assertEquals(constructedMessage.getHeaderData().get(0),
-                    "<TestHeader><operation>soapOperation</operation></TestHeader>");
+            Assertions.assertEquals(1L, constructedMessage.getHeaderData().size());
+            Assertions.assertEquals(
+                    "<TestHeader><operation>soapOperation</operation></TestHeader>", constructedMessage.getHeaderData().get(0));
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -642,9 +642,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             Message constructedMessage = (Message)invocation.getArguments()[0];
 
-            Assert.assertEquals(constructedMessage.getHeaderData().size(), 1L);
-            Assert.assertEquals(constructedMessage.getHeaderData().get(0).trim(),
-                    "<TestHeader><operation>soapOperation</operation></TestHeader>");
+            Assertions.assertEquals(1L, constructedMessage.getHeaderData().size());
+            Assertions.assertEquals(
+                    "<TestHeader><operation>soapOperation</operation></TestHeader>", constructedMessage.getHeaderData().get(0).trim());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 

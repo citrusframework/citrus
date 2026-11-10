@@ -54,8 +54,8 @@ import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
@@ -88,8 +88,8 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -124,7 +124,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -140,12 +140,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -180,7 +180,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -197,12 +197,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader("Operation"));
-                Assert.assertEquals(message.getHeader("Operation"), "sayHello");
+                Assertions.assertNotNull(message.getHeader("Operation"));
+                Assertions.assertEquals("sayHello", message.getHeader("Operation"));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -242,7 +242,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -269,12 +269,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader("Operation"));
-                Assert.assertEquals(message.getHeader("Operation"), "sayHello");
+                Assertions.assertNotNull(message.getHeader("Operation"));
+                Assertions.assertEquals("sayHello", message.getHeader("Operation"));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -328,7 +328,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -346,12 +346,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -389,15 +389,15 @@ public class WebServiceEndpointTest {
         doAnswer((Answer<SoapHeaderElement>) invocation -> {
             QName headerQName = (QName)invocation.getArguments()[0];
 
-            Assert.assertEquals(headerQName.getLocalPart(), "Operation");
-            Assert.assertEquals(headerQName.getPrefix(), "citrus");
-            Assert.assertEquals(headerQName.getNamespaceURI(), "http://citrusframework.org/citrus");
+            Assertions.assertEquals("Operation", headerQName.getLocalPart());
+            Assertions.assertEquals("citrus", headerQName.getPrefix());
+            Assertions.assertEquals("http://citrusframework.org/citrus", headerQName.getNamespaceURI());
             return soapRequestHeaderEntry;
         }).when(soapResponseHeader).addHeaderElement((QName)any());
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
         verify(soapRequestHeaderEntry).setText("sayHello");
     }
@@ -416,12 +416,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -461,15 +461,15 @@ public class WebServiceEndpointTest {
         doAnswer((Answer<SoapHeaderElement>) invocation -> {
             QName headerQName = (QName)invocation.getArguments()[0];
 
-            Assert.assertEquals(headerQName.getLocalPart(), "Operation");
-            Assert.assertEquals(headerQName.getPrefix(), "citrus");
-            Assert.assertEquals(headerQName.getNamespaceURI(), "http://citrusframework.org/citrus");
+            Assertions.assertEquals("Operation", headerQName.getLocalPart());
+            Assertions.assertEquals("citrus", headerQName.getPrefix());
+            Assertions.assertEquals("http://citrusframework.org/citrus", headerQName.getNamespaceURI());
             return soapRequestHeaderEntry;
         }).when(soapResponseHeader).addHeaderElement((QName)any());
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
         verify(soapRequestHeaderEntry).setText("sayHello");
     }
@@ -488,12 +488,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -533,20 +533,20 @@ public class WebServiceEndpointTest {
         doAnswer((Answer<SoapHeaderElement>) invocation -> {
             QName headerQName = (QName)invocation.getArguments()[0];
 
-            Assert.assertEquals(headerQName.getLocalPart(), "Operation");
-            Assert.assertEquals(headerQName.getPrefix(), "");
-            Assert.assertEquals(headerQName.getNamespaceURI(), "http://citrusframework.org/citrus");
+            Assertions.assertEquals("Operation", headerQName.getLocalPart());
+            Assertions.assertEquals("", headerQName.getPrefix());
+            Assertions.assertEquals("http://citrusframework.org/citrus", headerQName.getNamespaceURI());
             return soapRequestHeaderEntry;
         }).when(soapResponseHeader).addHeaderElement((QName)any());
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
-        verify(soapRequestHeaderEntry, times(2)).setText("sayHello");
+        verify(soapRequestHeaderEntry).setText("sayHello");
     }
 
-    @Test(expectedExceptions = SoapHeaderException.class)
+    @Test
     public void testMessageProcessingMissingNamespaceUri() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
@@ -560,12 +560,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -603,17 +603,15 @@ public class WebServiceEndpointTest {
         doAnswer((Answer<SoapHeaderElement>) invocation -> {
             QName headerQName = (QName)invocation.getArguments()[0];
 
-            Assert.assertEquals(headerQName.getLocalPart(), "Operation");
-            Assert.assertEquals(headerQName.getPrefix(), "");
-            Assert.assertEquals(headerQName.getNamespaceURI(), "");
+            Assertions.assertEquals("Operation", headerQName.getLocalPart());
+            Assertions.assertEquals("", headerQName.getPrefix());
+            Assertions.assertEquals("", headerQName.getNamespaceURI());
             return soapRequestHeaderEntry;
         }).when(soapResponseHeader).addHeaderElement((QName)any());
 
-        endpoint.invoke(messageContext);
+        Assertions.assertThrows(SoapHeaderException.class, () -> endpoint.invoke(messageContext));
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
-
-        verify(soapRequestHeaderEntry).setText("sayHello");
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
     }
 
     @Test
@@ -628,19 +626,19 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertTrue(SoapMessage.class.isInstance(message));
+                Assertions.assertTrue(SoapMessage.class.isInstance(message));
 
                 SoapMessage soapMessage = (SoapMessage) message;
 
-                Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+                Assertions.assertEquals(1L, soapMessage.getAttachments().size());
 
                 Attachment attachment = soapMessage.getAttachments().get(0);
-                Assert.assertEquals(attachment.getContentId(), "myContentId");
-                Assert.assertEquals(attachment.getContentType(), "text/xml");
+                Assertions.assertEquals("myContentId", attachment.getContentId());
+                Assertions.assertEquals("text/xml", attachment.getContentType());
 
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -682,7 +680,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
     }
 
     @Test
@@ -740,7 +738,7 @@ public class WebServiceEndpointTest {
 
         verify(soapResponse).addAttachment(eq("<myAttachment>"), any(DataHandler.class));
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -758,12 +756,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -799,14 +797,14 @@ public class WebServiceEndpointTest {
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer((Answer<org.springframework.ws.soap.SoapFault>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0], "Invalid request, because of unknown error");
+            Assertions.assertEquals("Invalid request, because of unknown error", invocation.getArguments()[0]);
 
             return soapFault;
         }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -824,12 +822,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -865,13 +863,13 @@ public class WebServiceEndpointTest {
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer((Answer<org.springframework.ws.soap.SoapFault>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
+            Assertions.assertEquals("Invalid request", invocation.getArguments()[0]);
             return soapFault;
         }).when(soapBody).addClientOrSenderFault((String)any(), (Locale)any());
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -891,12 +889,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -932,7 +930,7 @@ public class WebServiceEndpointTest {
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer((Answer<org.springframework.ws.soap.SoapFault>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
+            Assertions.assertEquals("Invalid request", invocation.getArguments()[0]);
 
             return soapFault;
         }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
@@ -943,7 +941,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
+        Assertions.assertEquals("<DetailMessage><text>This request was not OK!</text></DetailMessage>", soapFaultResult.toString());
 
     }
 
@@ -964,12 +962,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -1005,7 +1003,7 @@ public class WebServiceEndpointTest {
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer((Answer<org.springframework.ws.soap.SoapFault>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
+            Assertions.assertEquals("Invalid request", invocation.getArguments()[0]);
 
             return soapFault;
         }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
@@ -1016,7 +1014,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage><Error><text>This request was not OK!</text></Error>");
+        Assertions.assertEquals("<DetailMessage><text>This request was not OK!</text></DetailMessage><Error><text>This request was not OK!</text></Error>", soapFaultResult.toString());
 
     }
 
@@ -1034,12 +1032,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -1074,7 +1072,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
         verify(soapResponse).setSoapAction("answerHello");
     }
@@ -1093,12 +1091,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -1139,17 +1137,17 @@ public class WebServiceEndpointTest {
         doAnswer((Answer<org.springframework.ws.soap.SoapFault>) invocation -> {
             QName faultQName = (QName)invocation.getArguments()[0];
 
-            Assert.assertEquals(faultQName.getLocalPart(), "TEC-1000");
-            Assert.assertEquals(faultQName.getPrefix(), "citrus");
-            Assert.assertEquals(faultQName.getNamespaceURI(), "http://citrusframework.org/citrus");
-            Assert.assertEquals(invocation.getArguments()[1], "Invalid request");
+            Assertions.assertEquals("TEC-1000", faultQName.getLocalPart());
+            Assertions.assertEquals("citrus", faultQName.getPrefix());
+            Assertions.assertEquals("http://citrusframework.org/citrus", faultQName.getNamespaceURI());
+            Assertions.assertEquals("Invalid request", invocation.getArguments()[1]);
 
             return soapFault;
         }).when(soapResponseBody).addFault((QName)any(), (String)any(), (Locale)any());
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -1167,12 +1165,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
 
-                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assertions.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assertions.assertEquals("sayHello", message.getHeader(SoapMessageHeaders.SOAP_ACTION));
 
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -1211,22 +1209,22 @@ public class WebServiceEndpointTest {
         when(soapResponse.getSoapBody()).thenReturn(soapResponseBody);
 
         doAnswer((Answer<Soap12Fault>) invocation -> {
-            Assert.assertEquals(invocation.getArguments()[0], "Invalid request");
+            Assertions.assertEquals("Invalid request", invocation.getArguments()[0]);
             return soapFault;
         }).when(soapResponseBody).addServerOrReceiverFault((String)any(), (Locale)any());
 
         doAnswer(invocation -> {
             QName faultQName = (QName)invocation.getArguments()[0];
 
-            Assert.assertEquals(faultQName.getLocalPart(), "TEC-1000");
-            Assert.assertEquals(faultQName.getPrefix(), "citrus");
-            Assert.assertEquals(faultQName.getNamespaceURI(), "http://citrusframework.org/citrus");
+            Assertions.assertEquals("TEC-1000", faultQName.getLocalPart());
+            Assertions.assertEquals("citrus", faultQName.getPrefix());
+            Assertions.assertEquals("http://citrusframework.org/citrus", faultQName.getNamespaceURI());
             return null;
         }).when(soapFault).addFaultSubcode((QName)any());
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 
@@ -1239,8 +1237,8 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assertions.assertEquals(requestMessage.getHeaders().size(), message.getHeaders().size());
+                Assertions.assertEquals(requestMessage.getPayload(), message.getPayload());
 
                 return responseMessage;
             }
@@ -1273,7 +1271,7 @@ public class WebServiceEndpointTest {
 
         endpoint.invoke(messageContext);
 
-        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        Assertions.assertEquals(responseMessage.getPayload(), soapResponsePayload.toString());
 
     }
 

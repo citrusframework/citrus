@@ -16,10 +16,10 @@
 
 package org.citrusframework.ws.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.ws.actions.SendSoapMessageAction;
 
 public class SendSoapMessageActionParserTest extends AbstractActionParserTest<SendSoapMessageAction> {
@@ -31,46 +31,46 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
 
         // 1st action
         SendSoapMessageAction action = getNextTestActionFromTest();
-        Assert.assertFalse(action.isForkMode());
-        Assert.assertFalse(action.isMtomEnabled());
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertEquals(action.getAttachments().get(0).getContent().trim(), "This is an attachment!");
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "MySoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "text/plain");
+        Assertions.assertFalse(action.isForkMode());
+        Assertions.assertFalse(action.isMtomEnabled());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertEquals("This is an attachment!", action.getAttachments().get(0).getContent().trim());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals("MySoapAttachment", action.getAttachments().get(0).getContentId());
+        Assertions.assertEquals("text/plain", action.getAttachments().get(0).getContentType());
 
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertFalse(action.isForkMode());
-        Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNotNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "MySoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "application/xml");
-        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), "UTF-8");
+        Assertions.assertFalse(action.isForkMode());
+        Assertions.assertEquals(1L, action.getAttachments().size());
+        Assertions.assertNotNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals("MySoapAttachment", action.getAttachments().get(0).getContentId());
+        Assertions.assertEquals("application/xml", action.getAttachments().get(0).getContentType());
+        Assertions.assertEquals("UTF-8", action.getAttachments().get(0).getCharsetName());
 
         // 3rd action
         action = getNextTestActionFromTest();
-        Assert.assertFalse(action.isForkMode());
-        Assert.assertEquals(action.getAttachments().size(), 2L);
-        Assert.assertEquals(action.getAttachments().get(0).getContent().trim(), "This is an attachment!");
-        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "FirstSoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "text/plain");
-        Assert.assertNotNull(action.getAttachments().get(1).getContentResourcePath());
-        Assert.assertEquals(action.getAttachments().get(1).getContentId(), "SecondSoapAttachment");
-        Assert.assertEquals(action.getAttachments().get(1).getContentType(), "application/xml");
-        Assert.assertEquals(action.getAttachments().get(1).getCharsetName(), "UTF-8");
+        Assertions.assertFalse(action.isForkMode());
+        Assertions.assertEquals(2L, action.getAttachments().size());
+        Assertions.assertEquals("This is an attachment!", action.getAttachments().get(0).getContent().trim());
+        Assertions.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assertions.assertEquals("FirstSoapAttachment", action.getAttachments().get(0).getContentId());
+        Assertions.assertEquals("text/plain", action.getAttachments().get(0).getContentType());
+        Assertions.assertNotNull(action.getAttachments().get(1).getContentResourcePath());
+        Assertions.assertEquals("SecondSoapAttachment", action.getAttachments().get(1).getContentId());
+        Assertions.assertEquals("application/xml", action.getAttachments().get(1).getContentType());
+        Assertions.assertEquals("UTF-8", action.getAttachments().get(1).getCharsetName());
 
         // 4th action
         action = getNextTestActionFromTest();
-        Assert.assertTrue(action.isForkMode());
-        Assert.assertEquals(action.getAttachments().size(), 0L);
+        Assertions.assertTrue(action.isForkMode());
+        Assertions.assertEquals(0L, action.getAttachments().size());
 
         // 5th action
         action = getNextTestActionFromTest();
 
-        Assert.assertTrue(action.isSchemaValidation());
-        Assert.assertEquals(action.getSchema(), "fooSchema");
-        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
+        Assertions.assertTrue(action.isSchemaValidation());
+        Assertions.assertEquals("fooSchema", action.getSchema());
+        Assertions.assertEquals("fooRepository", action.getSchemaRepository());
     }
 }

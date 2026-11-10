@@ -19,30 +19,32 @@ package org.citrusframework.ws.config.annotation;
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.eclipse.jetty.ee11.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
 
 import static org.citrusframework.base.annotations.CitrusAnnotations.injectEndpoints;
 import static org.citrusframework.config.annotation.AnnotationConfigParser.lookup;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.mockito.Mockito.lenient;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class WebServiceServerConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "soapServer1")
     @WebServiceServerConfig()
@@ -96,18 +98,19 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeMethod
-    public void setup() {
-        openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.resolve("securityHandler", SecurityHandler.class)).thenReturn(securityHandler);
-        when(referenceResolver.resolve("messageConverter", WebServiceMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("servletHandler", ServletHandler.class)).thenReturn(servletHandler);
-        when(referenceResolver.resolve("connector", Connector.class)).thenReturn(connector1);
-        when(referenceResolver.resolve("connector1", Connector.class)).thenReturn(connector1);
-        when(referenceResolver.resolve("connector2", Connector.class)).thenReturn(connector2);
-        when(referenceResolver.resolve(new String[]{"connector1", "connector2"}, Connector.class)).thenReturn(Arrays.asList(connector1, connector2));
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        lenient().when(referenceResolver.resolve("securityHandler", SecurityHandler.class)).thenReturn(securityHandler);
+        lenient().when(referenceResolver.resolve("messageConverter", WebServiceMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("servletHandler", ServletHandler.class)).thenReturn(servletHandler);
+        lenient().when(referenceResolver.resolve("connector", Connector.class)).thenReturn(connector1);
+        lenient().when(referenceResolver.resolve("connector1", Connector.class)).thenReturn(connector1);
+        lenient().when(referenceResolver.resolve("connector2", Connector.class)).thenReturn(connector2);
+        lenient().when(referenceResolver.resolve(new String[]{"connector1", "connector2"}, Connector.class)).thenReturn(Arrays.asList(connector1, connector2));
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
         context.setReferenceResolver(referenceResolver);
     }
@@ -117,112 +120,112 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
         injectEndpoints(this, context);
 
         // 1st server
-        assertEquals(soapServer1.getName(), "soapServer1");
+        assertEquals("soapServer1", soapServer1.getName());
         assertFalse(soapServer1.isAutoStart());
         assertFalse(soapServer1.isRunning());
-        assertEquals(soapServer1.getPort(), 8080);
+        assertEquals(8080, soapServer1.getPort());
         assertNull(soapServer1.getResourceBase());
-        assertEquals(soapServer1.getContextConfigLocation(), "classpath:org/citrusframework/ws/citrus-servlet-context.xml");
-        assertEquals(soapServer1.getContextPath(), "/");
-        assertEquals(soapServer1.getServletName(), "soapServer1-servlet");
-        assertEquals(soapServer1.getServletMappingPath(), "/*");
+        assertEquals("classpath:org/citrusframework/ws/citrus-servlet-context.xml", soapServer1.getContextConfigLocation());
+        assertEquals("/", soapServer1.getContextPath());
+        assertEquals("soapServer1-servlet", soapServer1.getServletName());
+        assertEquals("/*", soapServer1.getServletMappingPath());
         assertFalse(soapServer1.isUseRootContextAsParent());
         assertNull(soapServer1.getSecurityHandler());
-        assertEquals(soapServer1.getConnectors().length, 0);
+        assertEquals(0, soapServer1.getConnectors().length);
         assertNull(soapServer1.getConnector());
         assertFalse(soapServer1.isHandleMimeHeaders());
         assertFalse(soapServer1.isHandleAttributeHeaders());
         assertFalse(soapServer1.isKeepSoapEnvelope());
         assertNull(soapServer1.getSoapHeaderNamespace());
-        assertEquals(soapServer1.getSoapHeaderPrefix(), "");
-        assertEquals(soapServer1.getMessageFactoryName(), MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME);
+        assertEquals("", soapServer1.getSoapHeaderPrefix());
+        assertEquals(MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME, soapServer1.getMessageFactoryName());
 
         // 2nd server
-        assertEquals(soapServer2.getName(), "soapServer2");
+        assertEquals("soapServer2", soapServer2.getName());
         assertFalse(soapServer2.isAutoStart());
         assertFalse(soapServer2.isRunning());
-        assertEquals(soapServer2.getPort(), 8081);
-        assertEquals(soapServer2.getResourceBase(), "src/it/resources");
-        assertEquals(soapServer2.getContextConfigLocation(), "classpath:org/citrusframework/ws/citrus-ws-servlet.xml");
-        assertEquals(soapServer2.getContextPath(), "/citrus");
-        assertEquals(soapServer2.getServletName(), "citrus-ws");
-        assertEquals(soapServer2.getServletMappingPath(), "/foo");
+        assertEquals(8081, soapServer2.getPort());
+        assertEquals("src/it/resources", soapServer2.getResourceBase());
+        assertEquals("classpath:org/citrusframework/ws/citrus-ws-servlet.xml", soapServer2.getContextConfigLocation());
+        assertEquals("/citrus", soapServer2.getContextPath());
+        assertEquals("citrus-ws", soapServer2.getServletName());
+        assertEquals("/foo", soapServer2.getServletMappingPath());
         assertTrue(soapServer2.isUseRootContextAsParent());
         assertNull(soapServer2.getSecurityHandler());
-        assertEquals(soapServer2.getConnectors().length, 0);
+        assertEquals(0, soapServer2.getConnectors().length);
         assertNull(soapServer2.getConnector());
         assertTrue(soapServer2.isHandleMimeHeaders());
         assertTrue(soapServer2.isHandleAttributeHeaders());
         assertTrue(soapServer2.isKeepSoapEnvelope());
-        assertEquals(soapServer2.getSoapHeaderNamespace(), "http://citrusframework.org");
-        assertEquals(soapServer2.getSoapHeaderPrefix(), "CITRUS");
-        assertEquals(soapServer2.getMessageConverter(), messageConverter);
-        assertEquals(soapServer2.getMessageFactoryName(), "soap12MessageFactory");
+        assertEquals("http://citrusframework.org", soapServer2.getSoapHeaderNamespace());
+        assertEquals("CITRUS", soapServer2.getSoapHeaderPrefix());
+        assertEquals(messageConverter, soapServer2.getMessageConverter());
+        assertEquals("soap12MessageFactory", soapServer2.getMessageFactoryName());
 
         // 3rd server
-        assertEquals(soapServer3.getName(), "soapServer3");
+        assertEquals("soapServer3", soapServer3.getName());
         assertFalse(soapServer3.isAutoStart());
         assertFalse(soapServer3.isRunning());
-        assertEquals(soapServer3.getPort(), 8080);
+        assertEquals(8080, soapServer3.getPort());
         assertNull(soapServer3.getResourceBase());
-        assertEquals(soapServer3.getContextConfigLocation(), "classpath:org/citrusframework/ws/citrus-servlet-context.xml");
-        assertEquals(soapServer3.getContextPath(), "/");
-        assertEquals(soapServer3.getServletName(), "soapServer3-servlet");
-        assertEquals(soapServer3.getServletMappingPath(), "/*");
+        assertEquals("classpath:org/citrusframework/ws/citrus-servlet-context.xml", soapServer3.getContextConfigLocation());
+        assertEquals("/", soapServer3.getContextPath());
+        assertEquals("soapServer3-servlet", soapServer3.getServletName());
+        assertEquals("/*", soapServer3.getServletMappingPath());
         assertFalse(soapServer3.isUseRootContextAsParent());
         assertNull(soapServer3.getSecurityHandler());
-        assertEquals(soapServer3.getConnectors().length, 0);
+        assertEquals(0, soapServer3.getConnectors().length);
         assertNotNull(soapServer3.getConnector());
-        assertEquals(soapServer3.getConnector(), connector1);
+        assertEquals(connector1, soapServer3.getConnector());
 
         // 4th server
-        assertEquals(soapServer4.getName(), "soapServer4");
+        assertEquals("soapServer4", soapServer4.getName());
         assertFalse(soapServer4.isAutoStart());
         assertFalse(soapServer4.isRunning());
-        assertEquals(soapServer4.getPort(), 8080);
+        assertEquals(8080, soapServer4.getPort());
         assertNull(soapServer4.getResourceBase());
-        assertEquals(soapServer4.getContextConfigLocation(), "classpath:org/citrusframework/ws/citrus-servlet-context.xml");
-        assertEquals(soapServer4.getContextPath(), "/");
-        assertEquals(soapServer4.getServletName(), "soapServer4-servlet");
-        assertEquals(soapServer4.getServletMappingPath(), "/*");
+        assertEquals("classpath:org/citrusframework/ws/citrus-servlet-context.xml", soapServer4.getContextConfigLocation());
+        assertEquals("/", soapServer4.getContextPath());
+        assertEquals("soapServer4-servlet", soapServer4.getServletName());
+        assertEquals("/*", soapServer4.getServletMappingPath());
         assertFalse(soapServer4.isUseRootContextAsParent());
         assertNull(soapServer4.getSecurityHandler());
         assertNotNull(soapServer4.getConnectors());
-        assertEquals(soapServer4.getConnectors().length, 2);
+        assertEquals(2, soapServer4.getConnectors().length);
         assertNull(soapServer4.getConnector());
 
         // 5th server
-        assertEquals(soapServer5.getName(), "soapServer5");
+        assertEquals("soapServer5", soapServer5.getName());
         assertFalse(soapServer5.isAutoStart());
         assertFalse(soapServer5.isRunning());
-        assertEquals(soapServer5.getPort(), 8080);
+        assertEquals(8080, soapServer5.getPort());
         assertNull(soapServer5.getResourceBase());
-        assertEquals(soapServer5.getContextConfigLocation(), "classpath:org/citrusframework/ws/citrus-servlet-context.xml");
-        assertEquals(soapServer5.getContextPath(), "/");
-        assertEquals(soapServer5.getServletName(), "soapServer5-servlet");
-        assertEquals(soapServer5.getServletMappingPath(), "/*");
+        assertEquals("classpath:org/citrusframework/ws/citrus-servlet-context.xml", soapServer5.getContextConfigLocation());
+        assertEquals("/", soapServer5.getContextPath());
+        assertEquals("soapServer5-servlet", soapServer5.getServletName());
+        assertEquals("/*", soapServer5.getServletMappingPath());
         assertFalse(soapServer5.isUseRootContextAsParent());
         assertNotNull(soapServer5.getSecurityHandler());
-        assertEquals(soapServer5.getSecurityHandler(), securityHandler);
-        assertEquals(soapServer5.getConnectors().length, 0);
+        assertEquals(securityHandler, soapServer5.getSecurityHandler());
+        assertEquals(0, soapServer5.getConnectors().length);
         assertNull(soapServer5.getConnector());
 
         // 6th server
-        assertEquals(soapServer6.getName(), "soapServer6");
+        assertEquals("soapServer6", soapServer6.getName());
         assertFalse(soapServer6.isAutoStart());
         assertFalse(soapServer6.isRunning());
-        assertEquals(soapServer6.getPort(), 8080);
+        assertEquals(8080, soapServer6.getPort());
         assertNull(soapServer6.getResourceBase());
-        assertEquals(soapServer6.getContextConfigLocation(), "classpath:org/citrusframework/ws/citrus-servlet-context.xml");
-        assertEquals(soapServer6.getContextPath(), "/");
-        assertEquals(soapServer6.getServletName(), "soapServer6-servlet");
-        assertEquals(soapServer6.getServletMappingPath(), "/*");
+        assertEquals("classpath:org/citrusframework/ws/citrus-servlet-context.xml", soapServer6.getContextConfigLocation());
+        assertEquals("/", soapServer6.getContextPath());
+        assertEquals("soapServer6-servlet", soapServer6.getServletName());
+        assertEquals("/*", soapServer6.getServletMappingPath());
         assertFalse(soapServer6.isUseRootContextAsParent());
         assertNull(soapServer6.getSecurityHandler());
-        assertEquals(soapServer6.getConnectors().length, 0);
+        assertEquals(0, soapServer6.getConnectors().length);
         assertNull(soapServer6.getConnector());
         assertNotNull(soapServer6.getServletHandler());
-        assertEquals(soapServer6.getServletHandler(), servletHandler);
+        assertEquals(servletHandler, soapServer6.getServletHandler());
     }
 
     @Test

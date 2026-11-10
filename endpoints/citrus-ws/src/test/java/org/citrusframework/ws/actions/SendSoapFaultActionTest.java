@@ -27,8 +27,8 @@ import org.citrusframework.messaging.Producer;
 import org.citrusframework.ws.UnitTestSupport;
 import org.citrusframework.ws.message.SoapFault;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -58,12 +58,12 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
 
         doAnswer(invocation -> {
             Message sentMessage = (Message)invocation.getArguments()[0];
-            Assert.assertTrue(sentMessage instanceof SoapFault);
+            Assertions.assertTrue(sentMessage instanceof SoapFault);
 
             SoapFault soapFault = (SoapFault) sentMessage;
-            Assert.assertEquals(soapFault.getFaultCode(), "{http://citrusframework.org}ws:TEC-1000");
-            Assert.assertEquals(soapFault.getFaultString(), "Internal server error");
-            Assert.assertEquals(soapFault.getLocale(), Locale.ENGLISH);
+            Assertions.assertEquals("{http://citrusframework.org}ws:TEC-1000", soapFault.getFaultCode());
+            Assertions.assertEquals("Internal server error", soapFault.getFaultString());
+            Assertions.assertEquals(Locale.ENGLISH, soapFault.getLocale());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -91,13 +91,13 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
 
         doAnswer(invocation -> {
             Message sentMessage = (Message)invocation.getArguments()[0];
-            Assert.assertTrue(sentMessage instanceof SoapFault);
+            Assertions.assertTrue(sentMessage instanceof SoapFault);
 
             SoapFault soapFault = (SoapFault) sentMessage;
-            Assert.assertEquals(soapFault.getFaultCode(), "{http://citrusframework.org}ws:TEC-1000");
-            Assert.assertEquals(soapFault.getFaultString(), "Internal server error");
-            Assert.assertEquals(soapFault.getLocale(), Locale.ENGLISH);
-            Assert.assertEquals(soapFault.getFaultActor(), "SERVER");
+            Assertions.assertEquals("{http://citrusframework.org}ws:TEC-1000", soapFault.getFaultCode());
+            Assertions.assertEquals("Internal server error", soapFault.getFaultString());
+            Assertions.assertEquals(Locale.ENGLISH, soapFault.getLocale());
+            Assertions.assertEquals("SERVER", soapFault.getFaultActor());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -123,12 +123,12 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
 
         doAnswer(invocation -> {
             Message sentMessage = (Message)invocation.getArguments()[0];
-            Assert.assertTrue(sentMessage instanceof SoapFault);
+            Assertions.assertTrue(sentMessage instanceof SoapFault);
 
             SoapFault soapFault = (SoapFault) sentMessage;
-            Assert.assertEquals(soapFault.getFaultCode(), "{http://citrusframework.org}ws:TEC-1000");
-            Assert.assertNull(soapFault.getFaultString());
-            Assert.assertEquals(soapFault.getLocale(), Locale.ENGLISH);
+            Assertions.assertEquals("{http://citrusframework.org}ws:TEC-1000", soapFault.getFaultCode());
+            Assertions.assertNull(soapFault.getFaultString());
+            Assertions.assertEquals(Locale.ENGLISH, soapFault.getLocale());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -158,12 +158,12 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
 
         doAnswer(invocation -> {
             Message sentMessage = (Message)invocation.getArguments()[0];
-            Assert.assertTrue(sentMessage instanceof SoapFault);
+            Assertions.assertTrue(sentMessage instanceof SoapFault);
 
             SoapFault soapFault = (SoapFault) sentMessage;
-            Assert.assertEquals(soapFault.getFaultCode(), "{http://citrusframework.org}ws:TEC-1000");
-            Assert.assertEquals(soapFault.getFaultString(), "Internal server error");
-            Assert.assertEquals(soapFault.getLocale(), Locale.ENGLISH);
+            Assertions.assertEquals("{http://citrusframework.org}ws:TEC-1000", soapFault.getFaultCode());
+            Assertions.assertEquals("Internal server error", soapFault.getFaultString());
+            Assertions.assertEquals(Locale.ENGLISH, soapFault.getLocale());
             return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
@@ -189,10 +189,10 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
         try {
             sendSoapFaultAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
+            Assertions.assertEquals("Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!", e.getLocalizedMessage());
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of missing SOAP fault code");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because of missing SOAP fault code");
     }
 }
