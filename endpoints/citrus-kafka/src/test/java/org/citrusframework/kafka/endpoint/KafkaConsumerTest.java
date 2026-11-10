@@ -30,10 +30,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -48,11 +48,11 @@ import org.apache.kafka.common.header.internals.RecordHeader;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({"unchecked", "deprecation", "removal"})
-public class KafkaConsumerTest extends AbstractTestNGUnitTest {
+public class KafkaConsumerTest extends AbstractUnitTest {
 
     private final org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumerMock = mock(KafkaConsumer.class);
 
@@ -72,8 +72,8 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         when(kafkaConsumerMock.subscription()).thenReturn(emptySet());
         doAnswer(invocation -> {
             List<String> topics = invocation.getArgument(0);
-            assertEquals(topics.size(), 1L);
-            assertEquals(topics.get(0), topic);
+            assertEquals(1L, topics.size());
+            assertEquals(topic, topics.get(0));
 
             return null;
         }).when(kafkaConsumerMock).subscribe(anyList());
@@ -85,7 +85,7 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
     }
 
     @Test
@@ -104,8 +104,8 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         when(kafkaConsumerMock.subscription()).thenReturn(emptySet());
         doAnswer(invocation -> {
             List<String> topics = invocation.getArgument(0);
-            assertEquals(topics.size(), 1L);
-            assertEquals(topics.get(0), topic);
+            assertEquals(1L, topics.size());
+            assertEquals(topic, topics.get(0));
 
             return null;
         }).when(kafkaConsumerMock).subscribe(anyList());
@@ -117,7 +117,7 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
     }
 
     @Test
@@ -167,7 +167,7 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
     }
 
     @Test
@@ -195,9 +195,9 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         Message receivedMessage = endpoint.createConsumer().receive(context);
-        assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        assertEquals(controlMessage.getPayload(), receivedMessage.getPayload());
         assertNotNull(receivedMessage.getHeader("Operation"));
-        assertEquals(receivedMessage.getHeader("Operation"), "sayHello");
+        assertEquals("sayHello", receivedMessage.getHeader("Operation"));
     }
 
     @Test

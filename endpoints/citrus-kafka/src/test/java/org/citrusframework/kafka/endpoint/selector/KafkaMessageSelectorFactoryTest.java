@@ -17,8 +17,8 @@
 package org.citrusframework.kafka.endpoint.selector;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class KafkaMessageSelectorFactoryTest {
 
     private KafkaMessageSelectorFactory fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethodSetup() {
         fixture = new KafkaMessageSelectorFactory();
     }

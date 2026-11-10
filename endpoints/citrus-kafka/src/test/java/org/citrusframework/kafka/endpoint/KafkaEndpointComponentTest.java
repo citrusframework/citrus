@@ -24,9 +24,11 @@ import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Mutates global citrus.kafka.dynamic.consumer.group System property")
 public class KafkaEndpointComponentTest {
 
     private TestContext context = new TestContext();
@@ -37,11 +39,11 @@ public class KafkaEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("kafka:test", context);
 
-        Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
+        Assertions.assertEquals(KafkaEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9092");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("test", ((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic());
+        Assertions.assertEquals("localhost:9092", ((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
+        Assertions.assertEquals(5000L, ((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -50,11 +52,11 @@ public class KafkaEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("kafka:test?server=localhost:9091&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
+        Assertions.assertEquals(KafkaEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("test", ((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic());
+        Assertions.assertEquals("localhost:9091", ((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
+        Assertions.assertEquals(10000L, ((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -63,11 +65,11 @@ public class KafkaEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("kafka?topic=test&server=localhost:9091&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
+        Assertions.assertEquals(KafkaEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("test", ((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic());
+        Assertions.assertEquals("localhost:9091", ((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
+        Assertions.assertEquals(10000L, ((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -76,12 +78,12 @@ public class KafkaEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("kafka:test?bootstrapServers=localhost:9091&timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
+        Assertions.assertEquals(KafkaEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("test", ((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic());
+        Assertions.assertEquals("localhost:9091", ((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
+        Assertions.assertEquals("localhost:9091", ((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
+        Assertions.assertEquals(10000L, ((KafkaEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -90,10 +92,10 @@ public class KafkaEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("kafka:test?server", context);
 
-        Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
+        Assertions.assertEquals(KafkaEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic(), "test");
-        Assert.assertNull(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
+        Assertions.assertEquals("test", ((KafkaEndpoint)endpoint).getEndpointConfiguration().getTopic());
+        Assertions.assertNull(((KafkaEndpoint) endpoint).getEndpointConfiguration().getBootstrapServers());
     }
 
     @Test
@@ -106,9 +108,9 @@ public class KafkaEndpointComponentTest {
         String group1 = ((KafkaEndpoint) endpoint1).getEndpointConfiguration().getConsumerGroup();
         String group2 = ((KafkaEndpoint) endpoint2).getEndpointConfiguration().getConsumerGroup();
 
-        Assert.assertTrue(group1.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group1);
-        Assert.assertTrue(group2.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group2);
-        Assert.assertNotEquals(group1, group2, "Dynamic endpoints should have different consumer groups");
+        Assertions.assertTrue(group1.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group1);
+        Assertions.assertTrue(group2.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group2);
+        Assertions.assertNotEquals(group2, group1, "Dynamic endpoints should have different consumer groups");
     }
 
     @Test
@@ -117,7 +119,7 @@ public class KafkaEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("kafka:topic-1?consumerGroup=my-custom-group", context);
 
-        Assert.assertEquals(((KafkaEndpoint) endpoint).getEndpointConfiguration().getConsumerGroup(), "my-custom-group");
+        Assertions.assertEquals("my-custom-group", ((KafkaEndpoint) endpoint).getEndpointConfiguration().getConsumerGroup());
     }
 
     @Test
@@ -132,8 +134,8 @@ public class KafkaEndpointComponentTest {
             String group1 = ((KafkaEndpoint) endpoint1).getEndpointConfiguration().getConsumerGroup();
             String group2 = ((KafkaEndpoint) endpoint2).getEndpointConfiguration().getConsumerGroup();
 
-            Assert.assertEquals(group1, "citrus_kafka_group");
-            Assert.assertEquals(group2, "citrus_kafka_group");
+            Assertions.assertEquals("citrus_kafka_group", group1);
+            Assertions.assertEquals("citrus_kafka_group", group2);
         } finally {
             System.clearProperty("citrus.kafka.dynamic.consumer.group");
         }
@@ -144,26 +146,26 @@ public class KafkaEndpointComponentTest {
         KafkaEndpointComponent component = new KafkaEndpointComponent();
         try {
             component.createEndpoint("kafka:test?param1=&param2=value2", context);
-            Assert.fail("Missing exception due to invalid endpoint uri");
+            Assertions.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
+            Assertions.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
         }
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 3L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("kafka"));
-        Assert.assertEquals(validators.get("kafka").getClass(), KafkaEndpointComponent.class);
+        Assertions.assertEquals(3L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("kafka"));
+        Assertions.assertEquals(KafkaEndpointComponent.class, validators.get("kafka").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("kafka").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("kafka").isPresent());
     }
 }

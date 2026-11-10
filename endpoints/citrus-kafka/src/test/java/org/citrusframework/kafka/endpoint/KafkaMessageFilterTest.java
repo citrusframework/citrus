@@ -20,8 +20,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
 import org.citrusframework.message.MessageSelectorBuilder;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
@@ -40,7 +40,7 @@ public class KafkaMessageFilterTest {
 
     private KafkaMessageFilter fixture;
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethodSetup() {
         fixture = KafkaMessageFilter.kafkaMessageFilter().buildFilter();
     }

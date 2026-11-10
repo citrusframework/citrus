@@ -30,12 +30,12 @@ import org.citrusframework.TestActor;
 import org.citrusframework.kafka.endpoint.KafkaEndpoint;
 import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
 
@@ -50,57 +50,57 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         KafkaEndpoint kafkaEndpoint = endpoints.get("kafkaEndpoint1");
         assertNull(kafkaEndpoint.getEndpointConfiguration().getClientId());
         assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9091");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getHeaderMapper().getClass(), KafkaMessageHeaderMapper.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getMessageConverter().getClass(), KafkaMessageConverter.class);
+        assertEquals("localhost:9091", kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
+        assertEquals(KafkaMessageHeaderMapper.class, kafkaEndpoint.getEndpointConfiguration().getHeaderMapper().getClass());
+        assertEquals(KafkaMessageConverter.class, kafkaEndpoint.getEndpointConfiguration().getMessageConverter().getClass());
         assertTrue(kafkaEndpoint.getEndpointConfiguration().isAutoCommit());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getAutoCommitInterval(), 1000L);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getOffsetReset(), "earliest");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getTopic(), "test");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getPartition(), 0);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerGroup(), KAFKA_PREFIX + "group");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().size(), 0);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getProducerProperties().size(), 0);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeySerializer(), StringSerializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueSerializer(), StringSerializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), StringDeserializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueDeserializer(), StringDeserializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), false);
+        assertEquals(1000L, kafkaEndpoint.getEndpointConfiguration().getAutoCommitInterval());
+        assertEquals("earliest", kafkaEndpoint.getEndpointConfiguration().getOffsetReset());
+        assertEquals("test", kafkaEndpoint.getEndpointConfiguration().getTopic());
+        assertEquals(0, kafkaEndpoint.getEndpointConfiguration().getPartition());
+        assertEquals(5000L, kafkaEndpoint.getEndpointConfiguration().getTimeout());
+        assertEquals(KAFKA_PREFIX + "group", kafkaEndpoint.getEndpointConfiguration().getConsumerGroup());
+        assertEquals(0, kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().size());
+        assertEquals(0, kafkaEndpoint.getEndpointConfiguration().getProducerProperties().size());
+        assertEquals(StringSerializer.class, kafkaEndpoint.getEndpointConfiguration().getKeySerializer());
+        assertEquals(StringSerializer.class, kafkaEndpoint.getEndpointConfiguration().getValueSerializer());
+        assertEquals(StringDeserializer.class, kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer());
+        assertEquals(StringDeserializer.class, kafkaEndpoint.getEndpointConfiguration().getValueDeserializer());
+        assertEquals(false, kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer());
 
         // 2nd message receiver
         kafkaEndpoint = endpoints.get("kafkaEndpoint2");
         assertNotNull(kafkaEndpoint.getEndpointConfiguration().getClientId());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getClientId(), "kafkaEndpoint2");
+        assertEquals("kafkaEndpoint2", kafkaEndpoint.getEndpointConfiguration().getClientId());
         assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9092");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getHeaderMapper(), beanDefinitionContext.getBean("headerMapper"));
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
+        assertEquals("localhost:9092", kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
+        assertEquals(beanDefinitionContext.getBean("headerMapper"), kafkaEndpoint.getEndpointConfiguration().getHeaderMapper());
+        assertEquals(beanDefinitionContext.getBean("messageConverter"), kafkaEndpoint.getEndpointConfiguration().getMessageConverter());
         assertFalse(kafkaEndpoint.getEndpointConfiguration().isAutoCommit());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getAutoCommitInterval(), 500L);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getOffsetReset(), "latest");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getTopic(), "test");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getPartition(), 1);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerGroup(), "citrus_group");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeySerializer(), IntegerSerializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueSerializer(), ByteArraySerializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), IntegerDeserializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueDeserializer(), ByteArrayDeserializer.class);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), false);
+        assertEquals(500L, kafkaEndpoint.getEndpointConfiguration().getAutoCommitInterval());
+        assertEquals("latest", kafkaEndpoint.getEndpointConfiguration().getOffsetReset());
+        assertEquals("test", kafkaEndpoint.getEndpointConfiguration().getTopic());
+        assertEquals(1, kafkaEndpoint.getEndpointConfiguration().getPartition());
+        assertEquals("citrus_group", kafkaEndpoint.getEndpointConfiguration().getConsumerGroup());
+        assertEquals(10000L, kafkaEndpoint.getEndpointConfiguration().getTimeout());
+        assertEquals(IntegerSerializer.class, kafkaEndpoint.getEndpointConfiguration().getKeySerializer());
+        assertEquals(ByteArraySerializer.class, kafkaEndpoint.getEndpointConfiguration().getValueSerializer());
+        assertEquals(IntegerDeserializer.class, kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer());
+        assertEquals(ByteArrayDeserializer.class, kafkaEndpoint.getEndpointConfiguration().getValueDeserializer());
+        assertEquals(false, kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer());
 
         // 3rd message receiver
         kafkaEndpoint = endpoints.get("kafkaEndpoint3");
         assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9093");
+        assertEquals("localhost:9093", kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
         assertNull(kafkaEndpoint.getEndpointConfiguration().getTopic());
         assertNotNull(kafkaEndpoint.getActor());
-        assertEquals(kafkaEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().size(), 1);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG), true);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getProducerProperties().size(), 1);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getProducerProperties().get(ProducerConfig.MAX_REQUEST_SIZE_CONFIG), 1024);
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), false);
+        assertEquals(beanDefinitionContext.getBean("testActor", TestActor.class), kafkaEndpoint.getActor());
+        assertEquals(1, kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().size());
+        assertEquals(true, kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG));
+        assertEquals(1, kafkaEndpoint.getEndpointConfiguration().getProducerProperties().size());
+        assertEquals(1024, kafkaEndpoint.getEndpointConfiguration().getProducerProperties().get(ProducerConfig.MAX_REQUEST_SIZE_CONFIG));
+        assertEquals(false, kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer());
 
         // 4th message receiver
         kafkaEndpoint = endpoints.get("kafkaEndpoint4");
@@ -108,13 +108,13 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
             .startsWith(KAFKA_PREFIX)
             .hasSize(23)
             .containsPattern(".*[a-z]{10}$");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer(), true);
+        assertEquals(true, kafkaEndpoint.getEndpointConfiguration().useThreadSafeConsumer());
 
         // 5th message receiver (bootstrap-servers alias)
         kafkaEndpoint = endpoints.get("kafkaEndpoint5");
         assertNotNull(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getServer(), "localhost:9094");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getBootstrapServers(), "localhost:9094");
-        assertEquals(kafkaEndpoint.getEndpointConfiguration().getTopic(), "test");
+        assertEquals("localhost:9094", kafkaEndpoint.getEndpointConfiguration().getServer());
+        assertEquals("localhost:9094", kafkaEndpoint.getEndpointConfiguration().getBootstrapServers());
+        assertEquals("test", kafkaEndpoint.getEndpointConfiguration().getTopic());
     }
 }

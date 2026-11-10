@@ -20,11 +20,13 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,8 +39,8 @@ import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSe
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.ValueMatchingStrategy.STARTS_WITH;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderContains;
 import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KafkaMessageByHeaderSelectorTest {
 
@@ -176,14 +178,12 @@ public class KafkaMessageByHeaderSelectorTest {
         assertTrue(matcher.matches(record));
     }
 
-    @DataProvider
-    public static Object[][] matchingMechanism() {
-        return stream(ValueMatchingStrategy.values())
-                .map(m -> new Object[]{m})
-                .toArray(Object[][]::new);
+    static Stream<ValueMatchingStrategy> matchingMechanism() {
+        return stream(ValueMatchingStrategy.values());
     }
 
-    @Test(dataProvider = "matchingMechanism")
+    @ParameterizedTest
+    @MethodSource("matchingMechanism")
     public void matches_usingSpecifiedMechanism(ValueMatchingStrategy mechanism) {
         String headerValue = "testValue";
         String matchValue = switch (mechanism) {

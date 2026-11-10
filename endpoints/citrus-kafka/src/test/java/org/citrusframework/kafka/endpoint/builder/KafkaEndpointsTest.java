@@ -20,26 +20,26 @@ import java.util.Map;
 
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class KafkaEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("kafka"));
-        Assert.assertTrue(endpointBuilders.containsKey("kafka.sync"));
-        Assert.assertTrue(endpointBuilders.containsKey("kafka.async"));
+        Assertions.assertTrue(endpointBuilders.containsKey("kafka"));
+        Assertions.assertTrue(endpointBuilders.containsKey("kafka.sync"));
+        Assertions.assertTrue(endpointBuilders.containsKey("kafka.async"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("kafka").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("kafka").get().getClass(), KafkaEndpointsBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("kafka.sync").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("kafka.sync").get().getClass(), KafkaEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("kafka.async").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("kafka.async").get().getClass(), KafkaEndpointBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("kafka").isPresent());
+        Assertions.assertEquals(KafkaEndpointsBuilder.class, EndpointBuilder.lookup("kafka").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("kafka.sync").isPresent());
+        Assertions.assertEquals(KafkaEndpointBuilder.class, EndpointBuilder.lookup("kafka.sync").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("kafka.async").isPresent());
+        Assertions.assertEquals(KafkaEndpointBuilder.class, EndpointBuilder.lookup("kafka.async").get().getClass());
     }
 }

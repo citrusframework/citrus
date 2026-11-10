@@ -18,16 +18,23 @@ package org.citrusframework.kafka.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
-@Test(singleThreaded = true)
-public class KafkaEndpointXmlIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("ITs share one embedded Kafka broker on fixed port 9092 with topics hello/test")
+public class KafkaEndpointXmlIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointIT_singleMessage")
     public void singleKafkaMessage() {
     }
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointIT_selectiveMessage")
     public void selectiveKafkaMessage() {
     }

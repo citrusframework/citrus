@@ -30,19 +30,19 @@ import org.apache.kafka.common.utils.Time;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.message.KafkaMessage;
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.util.SocketUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class KafkaProducerTest extends AbstractTestNGUnitTest {
+public class KafkaProducerTest extends AbstractUnitTest {
 
     private final KafkaProducer kafkaProducer = Mockito.mock(KafkaProducer.class);
 
@@ -62,9 +62,9 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
         when(kafkaProducer.send(any(ProducerRecord.class))).thenAnswer((Answer<Future<RecordMetadata>>) invocation -> {
             ProducerRecord producerRecord = invocation.getArgument(0);
 
-            Assert.assertEquals(producerRecord.topic(), "default");
-            Assert.assertEquals(producerRecord.key(), 1);
-            Assert.assertEquals(producerRecord.value(), message.getPayload());
+            Assertions.assertEquals("default", producerRecord.topic());
+            Assertions.assertEquals(1, producerRecord.key());
+            Assertions.assertEquals(message.getPayload(), producerRecord.value());
 
             ProduceRequestResult result = new ProduceRequestResult(new TopicPartition("default", 0));
             result.set(0, 0, null);
@@ -94,9 +94,9 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
         when(kafkaProducer.send(any(ProducerRecord.class))).thenAnswer((Answer<Future<RecordMetadata>>) invocation -> {
             ProducerRecord producerRecord = invocation.getArgument(0);
 
-            Assert.assertEquals(producerRecord.topic(), "foo");
-            Assert.assertEquals(producerRecord.key(), 99);
-            Assert.assertEquals(producerRecord.value(), message.getPayload());
+            Assertions.assertEquals("foo", producerRecord.topic());
+            Assertions.assertEquals(99, producerRecord.key());
+            Assertions.assertEquals(message.getPayload(), producerRecord.value());
 
             ProduceRequestResult result = new ProduceRequestResult(new TopicPartition("foo", 0));
             result.set(0, 0, null);
@@ -119,21 +119,22 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
         try {
             endpoint.createProducer().send(new KafkaMessage("foo"), context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to send message to Kafka topic 'test'");
-            Assert.assertEquals(e.getCause().getClass(), java.util.concurrent.ExecutionException.class);
-            Assert.assertTrue(e.getCause().getMessage().contains("org.apache.kafka.common.errors.TimeoutException"));
+            Assertions.assertEquals("Failed to send message to Kafka topic 'test'", e.getMessage());
+            Assertions.assertEquals(java.util.concurrent.ExecutionException.class, e.getCause().getClass());
+            Assertions.assertTrue(e.getCause().getMessage().contains("org.apache.kafka.common.errors.TimeoutException"));
             return;
         }
 
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of message timeout");
+        Assertions.fail("Missing " + CitrusRuntimeException.class + " because of message timeout");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
+    @Test
     public void testSendEmptyMessage() {
         KafkaEndpoint endpoint = new KafkaEndpoint();
         endpoint.getEndpointConfiguration().setBootstrapServers("localhost:9092");
         endpoint.getEndpointConfiguration().setTopic("test");
 
-        endpoint.createProducer().send(null, context);
+        CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class, () -> endpoint.createProducer().send(null, context));
+        Assertions.assertEquals("Message is empty - unable to send empty message", e.getMessage());
     }
 }

@@ -21,10 +21,10 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.message.Message;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
@@ -35,19 +35,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.MockitoAnnotations.openMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class KafkaMessageConsumerUtilsTest {
 
     @Mock
     private TestContext testContextMock;
-
-    private AutoCloseable mockitoContext;
-
-    @BeforeMethod
-    public void beforeMethodSetup() {
-        mockitoContext = openMocks(this);
-    }
 
     @Test
     public void resolveTopic() {
@@ -115,10 +108,5 @@ public class KafkaMessageConsumerUtilsTest {
         assertThatThrownBy(() -> KafkaMessageConsumerUtils.parseConsumerRecordsToMessage(consumerRecords, kafkaEndpointConfiguration, testContextMock))
                 .isInstanceOf(CitrusRuntimeException.class)
                 .hasMessage("More than one matching record found in topic " + topic);
-    }
-
-    @AfterMethod
-    public void afterMethodTeardown() throws Exception {
-        mockitoContext.close();
     }
 }

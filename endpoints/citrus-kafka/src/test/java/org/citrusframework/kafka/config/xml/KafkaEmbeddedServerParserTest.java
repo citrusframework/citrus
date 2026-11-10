@@ -18,10 +18,10 @@ package org.citrusframework.kafka.config.xml;
 
 import java.util.Map;
 
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.kafka.embedded.EmbeddedKafkaServer;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7
@@ -32,27 +32,27 @@ public class KafkaEmbeddedServerParserTest extends AbstractBeanDefinitionParserT
     public void testEmbeddedServerParser() {
         Map<String, EmbeddedKafkaServer> server = beanDefinitionContext.getBeansOfType(EmbeddedKafkaServer.class);
 
-        Assert.assertEquals(server.size(), 2);
+        Assertions.assertEquals(2, server.size());
 
         // 1st server
         EmbeddedKafkaServer kafkaServer = server.get("kafkaServer1");
-        Assert.assertEquals(kafkaServer.getTopics(), "citrus");
-        Assert.assertEquals(kafkaServer.getPartitions(), 1);
-        Assert.assertTrue(kafkaServer.isAutoDeleteLogs());
-        Assert.assertNull(kafkaServer.getLogDirPath());
-        Assert.assertTrue(kafkaServer.getKafkaServerPort() >= 9092);
-        Assert.assertTrue(kafkaServer.getControllerPort() > 0);
-        Assert.assertEquals(kafkaServer.getBrokerProperties().size(), 0L);
+        Assertions.assertEquals("citrus", kafkaServer.getTopics());
+        Assertions.assertEquals(1, kafkaServer.getPartitions());
+        Assertions.assertTrue(kafkaServer.isAutoDeleteLogs());
+        Assertions.assertNull(kafkaServer.getLogDirPath());
+        Assertions.assertTrue(kafkaServer.getKafkaServerPort() >= 9092);
+        Assertions.assertTrue(kafkaServer.getControllerPort() > 0);
+        Assertions.assertEquals(0L, kafkaServer.getBrokerProperties().size());
 
         // 2nd server
         kafkaServer = server.get("kafkaServer2");
-        Assert.assertEquals(kafkaServer.getTopics(), "hello,foo");
-        Assert.assertEquals(kafkaServer.getPartitions(), 2);
-        Assert.assertFalse(kafkaServer.isAutoDeleteLogs());
-        Assert.assertEquals(kafkaServer.getLogDirPath(), "/path/to/logs");
-        Assert.assertEquals(kafkaServer.getKafkaServerPort(), 9091);
-        Assert.assertEquals(kafkaServer.getControllerPort(), 21181);
-        Assert.assertEquals(kafkaServer.getBrokerProperties().size(), 1L);
-        Assert.assertEquals(kafkaServer.getBrokerProperties().get("broker.id"), "1");
+        Assertions.assertEquals("hello,foo", kafkaServer.getTopics());
+        Assertions.assertEquals(2, kafkaServer.getPartitions());
+        Assertions.assertFalse(kafkaServer.isAutoDeleteLogs());
+        Assertions.assertEquals("/path/to/logs", kafkaServer.getLogDirPath());
+        Assertions.assertEquals(9091, kafkaServer.getKafkaServerPort());
+        Assertions.assertEquals(21181, kafkaServer.getControllerPort());
+        Assertions.assertEquals(1L, kafkaServer.getBrokerProperties().size());
+        Assertions.assertEquals("1", kafkaServer.getBrokerProperties().get("broker.id"));
     }
 }
