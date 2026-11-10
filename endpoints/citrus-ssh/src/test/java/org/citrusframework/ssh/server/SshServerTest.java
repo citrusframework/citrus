@@ -33,12 +33,13 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.ssh.SshCommand;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SshServerTest {
 
@@ -49,28 +50,37 @@ public class SshServerTest {
         port = findFreePort();
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeTest() {
         server = new SshServer();
         server.setPort(port);
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*user.*")
+    @Test
     public void noUser() {
-        server.start();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            server.start();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*user.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*password.*allowed-key-path.*")
+    @Test
     public void noPasswordOrKey() {
         server.setUser("roland");
-        server.start();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            server.start();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*password.*allowed-key-path.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/no/such/key\\.pem.*")
+    @Test
     public void invalidAuthKey() {
         server.setUser("roland");
         server.setAllowedKeyPath("classpath:/no/such/key.pem");
-        server.start();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            server.start();
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*/no/such/key\\.pem.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     @Test
@@ -128,18 +138,21 @@ public class SshServerTest {
             CommandFactory fact = sshd.getCommandFactory();
             Command cmd = fact.createCommand(session, "shutdown now");
             assertTrue(cmd instanceof SshCommand);
-            assertEquals(((SshCommand) cmd).getCommand(),"shutdown now");
+            assertEquals("shutdown now", ((SshCommand) cmd).getCommand());
         } finally {
             server.stop();
         }
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*Address already in use.*")
+    @Test
     public void doubleStart() throws IOException {
         prepareServer(true);
-        try (var ignored = new ServerSocket(port)) {
-            server.start();
-        }
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            try (var ignored = new ServerSocket(port)) {
+                server.start();
+            }
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*Address already in use.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     /**

@@ -6,9 +6,9 @@ import org.citrusframework.ssh.model.SshMarshaller;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SshMessageTest {
 
@@ -19,8 +19,8 @@ public class SshMessageTest {
         SshMessage message = new SshMessage(original);
 
         SshRequest request = message.getPayload(SshRequest.class);
-        assertEquals(request.getCommand(), "echo");
-        assertEquals(request.getStdin(), "wrapped");
+        assertEquals("echo", request.getCommand());
+        assertEquals("wrapped", request.getStdin());
     }
 
     @Test
@@ -35,8 +35,8 @@ public class SshMessageTest {
         assertTrue(xml.contains("in"));
 
         SshRequest request = message.getPayload(SshRequest.class);
-        assertEquals(request.getCommand(), "echo hello");
-        assertEquals(request.getStdin(), "in");
+        assertEquals("echo hello", request.getCommand());
+        assertEquals("in", request.getStdin());
     }
 
     @Test
@@ -51,8 +51,8 @@ public class SshMessageTest {
         assertTrue(xml.contains("<stdin></stdin>"));
 
         SshRequest request = message.getPayload(SshRequest.class);
-        assertEquals(request.getCommand(), "echo hello");
-        assertEquals(request.getStdin(), "");
+        assertEquals("echo hello", request.getCommand());
+        assertEquals("", request.getStdin());
     }
 
     @Test
@@ -68,9 +68,9 @@ public class SshMessageTest {
         assertTrue(xml.contains("0"));
 
         SshResponse response = message.getPayload(SshResponse.class);
-        assertEquals(response.getStdout(), "out");
-        assertEquals(response.getStderr(), "err");
-        assertEquals(response.getExit(), 0);
+        assertEquals("out", response.getStdout());
+        assertEquals("err", response.getStderr());
+        assertEquals(0, response.getExit());
     }
 
     @Test
@@ -80,8 +80,8 @@ public class SshMessageTest {
         message.command("pwd").stdin("b");
 
         SshRequest request = message.getPayload(SshRequest.class);
-        assertEquals(request.getCommand(), "pwd");
-        assertEquals(request.getStdin(), "b");
+        assertEquals("pwd", request.getCommand());
+        assertEquals("b", request.getStdin());
 
         String xml = message.getPayload(String.class);
         assertTrue(xml.contains("<ssh-request"));
@@ -96,9 +96,9 @@ public class SshMessageTest {
         message.stdout("x").stderr("y").exit(2);
 
         SshResponse response = message.getPayload(SshResponse.class);
-        assertEquals(response.getStdout(), "x");
-        assertEquals(response.getStderr(), "y");
-        assertEquals(response.getExit(), 2);
+        assertEquals("x", response.getStdout());
+        assertEquals("y", response.getStderr());
+        assertEquals(2, response.getExit());
 
         String xml = message.getPayload(String.class);
         assertTrue(xml.contains("<ssh-response"));
@@ -115,8 +115,8 @@ public class SshMessageTest {
         message.setPayload(xml);
 
         SshRequest request = message.getPayload(SshRequest.class);
-        assertEquals(request.getCommand(), "whoami");
-        assertEquals(request.getStdin(), "in");
+        assertEquals("whoami", request.getCommand());
+        assertEquals("in", request.getStdin());
     }
 
     @Test
@@ -127,9 +127,9 @@ public class SshMessageTest {
         message.setPayload(xml);
 
         SshResponse request = message.getPayload(SshResponse.class);
-        assertEquals(request.getStdout(), "out");
-        assertEquals(request.getStderr(), "err");
-        assertEquals(request.getExit(), 0);
+        assertEquals("out", request.getStdout());
+        assertEquals("err", request.getStderr());
+        assertEquals(0, request.getExit());
     }
 
     @Test
@@ -138,8 +138,8 @@ public class SshMessageTest {
         message.setPayload(42);
 
         SshRequest req = message.getRequest();
-        assertEquals(req.getCommand(), "");
-        assertEquals(req.getStdin(), "");
+        assertEquals("", req.getCommand());
+        assertEquals("", req.getStdin());
     }
 
     @Test
@@ -148,9 +148,9 @@ public class SshMessageTest {
         message.setPayload(42);
 
         SshResponse resp = message.getResponse();
-        assertEquals(resp.getStdout(), "");
-        assertEquals(resp.getStderr(), "");
-        assertEquals(resp.getExit(), 0);
+        assertEquals("", resp.getStdout());
+        assertEquals("", resp.getStderr());
+        assertEquals(0, resp.getExit());
     }
 
     @Test
@@ -181,16 +181,16 @@ public class SshMessageTest {
         assertTrue(requestXml.contains("<ssh-request"));
 
         SshRequest req = request.getPayload(SshRequest.class);
-        assertEquals(req.getCommand(), "");
-        assertEquals(req.getStdin(), "");
+        assertEquals("", req.getCommand());
+        assertEquals("", req.getStdin());
 
         assertNotNull(responseXml);
         assertTrue(responseXml.contains("<ssh-response"));
 
         SshResponse resp = response.getPayload(SshResponse.class);
-        assertEquals(resp.getStdout(), "");
-        assertEquals(resp.getStderr(), "");
-        assertEquals(resp.getExit(), 0);
+        assertEquals("", resp.getStdout());
+        assertEquals("", resp.getStderr());
+        assertEquals(0, resp.getExit());
     }
 
     @Test
@@ -199,7 +199,7 @@ public class SshMessageTest {
         message.setPayload(42);
 
         Object payload = message.getPayload();
-        assertEquals(payload, 42);
+        assertEquals(42, payload);
     }
 
     @Test
@@ -208,7 +208,7 @@ public class SshMessageTest {
         message.setPayload(42);
 
         Integer payload = message.getPayload(Integer.class);
-        assertEquals(payload, Integer.valueOf(42));
+        assertEquals(Integer.valueOf(42), payload);
     }
 
     @Test
@@ -217,8 +217,8 @@ public class SshMessageTest {
         message.setPayload(new SshRequest("echo", "Hello Citrus"));
 
         SshRequest request = message.getPayload(SshRequest.class);
-        assertEquals(request.getCommand(), "echo");
-        assertEquals(request.getStdin(), "Hello Citrus");
+        assertEquals("echo", request.getCommand());
+        assertEquals("Hello Citrus", request.getStdin());
     }
 
     @Test
@@ -227,9 +227,9 @@ public class SshMessageTest {
         message.setPayload(new SshResponse("out", "err", 0));
 
         SshResponse request = message.getPayload(SshResponse.class);
-        assertEquals(request.getStdout(), "out");
-        assertEquals(request.getStderr(), "err");
-        assertEquals(request.getExit(), 0);
+        assertEquals("out", request.getStdout());
+        assertEquals("err", request.getStderr());
+        assertEquals(0, request.getExit());
     }
 
     @Test
@@ -244,7 +244,7 @@ public class SshMessageTest {
 
         SshRequest actual = message.getPayload(SshRequest.class);
 
-        assertSame(actual, expected);
+        assertSame(expected, actual);
         Mockito.verify(custom).unmarshal(Mockito.any());
     }
 }

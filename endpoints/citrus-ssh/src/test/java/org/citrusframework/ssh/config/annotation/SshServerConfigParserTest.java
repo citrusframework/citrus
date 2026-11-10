@@ -25,17 +25,18 @@ import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.ssh.message.SshMessageConverter;
 import org.citrusframework.ssh.server.SshServer;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class SshServerConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "sshServer1")
     @SshServerConfig(autoStart = false,
@@ -69,17 +70,13 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-
-        when(referenceResolver.resolve("messageConverter", SshMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
-
-    @BeforeMethod
-    public void setMocks() {
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
+        lenient().when(referenceResolver.resolve("messageConverter", SshMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -88,45 +85,45 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st server
-        Assert.assertEquals(sshServer1.getName(), "sshServer1");
-        Assert.assertEquals(sshServer1.getPort(), 22);
-        Assert.assertFalse(sshServer1.isAutoStart());
-        Assert.assertNull(sshServer1.getAllowedKeyPath());
-        Assert.assertNull(sshServer1.getHostKeyPath());
-        Assert.assertNull(sshServer1.getUserHomePath());
-        Assert.assertNull(sshServer1.getUser());
-        Assert.assertNull(sshServer1.getPassword());
-        Assert.assertTrue(sshServer1.getEndpointAdapter() instanceof DirectEndpointAdapter);
-        Assert.assertNotNull(sshServer1.getMessageConverter());
-        Assert.assertNull(sshServer1.getActor());
+        Assertions.assertEquals("sshServer1", sshServer1.getName());
+        Assertions.assertEquals(22, sshServer1.getPort());
+        Assertions.assertFalse(sshServer1.isAutoStart());
+        Assertions.assertNull(sshServer1.getAllowedKeyPath());
+        Assertions.assertNull(sshServer1.getHostKeyPath());
+        Assertions.assertNull(sshServer1.getUserHomePath());
+        Assertions.assertNull(sshServer1.getUser());
+        Assertions.assertNull(sshServer1.getPassword());
+        Assertions.assertTrue(sshServer1.getEndpointAdapter() instanceof DirectEndpointAdapter);
+        Assertions.assertNotNull(sshServer1.getMessageConverter());
+        Assertions.assertNull(sshServer1.getActor());
 
         // 2nd server
-        Assert.assertEquals(sshServer2.getName(), "sshServer2");
-        Assert.assertEquals(sshServer2.getPort(), 10022);
-        Assert.assertFalse(sshServer2.isAutoStart());
-        Assert.assertEquals(sshServer2.getAllowedKeyPath(), "classpath:org/citrusframework/ssh/citrus_pub.pem");
-        Assert.assertEquals(sshServer2.getHostKeyPath(), "classpath:org/citrusframework/ssh/citrus.pem");
-        Assert.assertEquals(sshServer2.getUserHomePath(), "/home/user");
-        Assert.assertEquals(sshServer2.getUser(), "foo");
-        Assert.assertEquals(sshServer2.getPassword(), "bar");
-        Assert.assertTrue(sshServer2.getEndpointAdapter() instanceof DirectEndpointAdapter);
-        Assert.assertEquals(sshServer2.getMessageConverter(), messageConverter);
-        Assert.assertNull(sshServer2.getActor());
+        Assertions.assertEquals("sshServer2", sshServer2.getName());
+        Assertions.assertEquals(10022, sshServer2.getPort());
+        Assertions.assertFalse(sshServer2.isAutoStart());
+        Assertions.assertEquals("classpath:org/citrusframework/ssh/citrus_pub.pem", sshServer2.getAllowedKeyPath());
+        Assertions.assertEquals("classpath:org/citrusframework/ssh/citrus.pem", sshServer2.getHostKeyPath());
+        Assertions.assertEquals("/home/user", sshServer2.getUserHomePath());
+        Assertions.assertEquals("foo", sshServer2.getUser());
+        Assertions.assertEquals("bar", sshServer2.getPassword());
+        Assertions.assertTrue(sshServer2.getEndpointAdapter() instanceof DirectEndpointAdapter);
+        Assertions.assertEquals(messageConverter, sshServer2.getMessageConverter());
+        Assertions.assertNull(sshServer2.getActor());
 
         // 3rd server
-        Assert.assertEquals(sshServer3.getName(), "sshServer3");
-        Assert.assertEquals(sshServer3.getPort(), 22);
-        Assert.assertFalse(sshServer3.isAutoStart());
-        Assert.assertNull(sshServer3.getAllowedKeyPath());
-        Assert.assertNull(sshServer3.getHostKeyPath());
-        Assert.assertNull(sshServer3.getUser());
-        Assert.assertNull(sshServer3.getPassword());
-        Assert.assertEquals(sshServer3.getEndpointAdapter(), endpointAdapter);
-        Assert.assertEquals(sshServer3.getActor(), testActor);
+        Assertions.assertEquals("sshServer3", sshServer3.getName());
+        Assertions.assertEquals(22, sshServer3.getPort());
+        Assertions.assertFalse(sshServer3.isAutoStart());
+        Assertions.assertNull(sshServer3.getAllowedKeyPath());
+        Assertions.assertNull(sshServer3.getHostKeyPath());
+        Assertions.assertNull(sshServer3.getUser());
+        Assertions.assertNull(sshServer3.getPassword());
+        Assertions.assertEquals(endpointAdapter, sshServer3.getEndpointAdapter());
+        Assertions.assertEquals(testActor, sshServer3.getActor());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("ssh.server").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("ssh.server").isPresent());
     }
 }

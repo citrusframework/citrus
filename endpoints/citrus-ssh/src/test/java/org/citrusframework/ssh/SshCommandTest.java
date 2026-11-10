@@ -28,8 +28,8 @@ import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
 import org.citrusframework.api.xml.StringResult;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,7 +41,8 @@ import java.util.Map;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 05.09.12
@@ -56,7 +57,7 @@ public class SshCommandTest {
     private SshMarshaller marshaller;
     private ExitCallback exitCallback;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         adapter = Mockito.mock(EndpointAdapter.class);
 
@@ -85,8 +86,8 @@ public class SshCommandTest {
         prepare(input, output, error, exitCode);
         cmd.run();
 
-        assertEquals(stdout.toByteArray(),output.getBytes());
-        assertEquals(stderr.toByteArray(),error.getBytes());
+        assertArrayEquals(output.getBytes(), stdout.toByteArray());
+        assertArrayEquals(error.getBytes(), stderr.toByteArray());
     }
 
     @Test

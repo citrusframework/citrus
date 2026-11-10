@@ -23,8 +23,8 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
 import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SshEndpointComponentTest {
 
@@ -36,11 +36,11 @@ public class SshEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("ssh://localhost:2200", context);
 
-        Assert.assertEquals(endpoint.getClass(), SshClient.class);
+        Assertions.assertEquals(SshClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getPort(), 2200);
-        Assert.assertEquals(((SshClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("localhost", ((SshClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2200, ((SshClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals(5000L, ((SshClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -49,11 +49,11 @@ public class SshEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("ssh:127.0.0.1", context);
 
-        Assert.assertEquals(endpoint.getClass(), SshClient.class);
+        Assertions.assertEquals(SshClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getHost(), "127.0.0.1");
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getPort(), 2222);
-        Assert.assertEquals(((SshClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("127.0.0.1", ((SshClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2222, ((SshClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals(5000L, ((SshClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -62,30 +62,30 @@ public class SshEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("ssh://localhost:2200?timeout=10000&strictHostChecking=true&user=foo&password=12345678", context);
 
-        Assert.assertEquals(endpoint.getClass(), SshClient.class);
+        Assertions.assertEquals(SshClient.class, endpoint.getClass());
 
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getPort(), 2200);
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getUser(), "foo");
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getPassword(), "12345678");
-        Assert.assertTrue(((SshClient) endpoint).getEndpointConfiguration().isStrictHostChecking());
-        Assert.assertEquals(((SshClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("localhost", ((SshClient)endpoint).getEndpointConfiguration().getHost());
+        Assertions.assertEquals(2200, ((SshClient)endpoint).getEndpointConfiguration().getPort());
+        Assertions.assertEquals("foo", ((SshClient)endpoint).getEndpointConfiguration().getUser());
+        Assertions.assertEquals("12345678", ((SshClient)endpoint).getEndpointConfiguration().getPassword());
+        Assertions.assertTrue(((SshClient) endpoint).getEndpointConfiguration().isStrictHostChecking());
+        Assertions.assertEquals(10000L, ((SshClient) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 3L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("ssh"));
-        Assert.assertEquals(validators.get("ssh").getClass(), SshEndpointComponent.class);
+        Assertions.assertEquals(3L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("ssh"));
+        Assertions.assertEquals(SshEndpointComponent.class, validators.get("ssh").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("ssh").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("ssh").isPresent());
     }
 }

@@ -32,11 +32,11 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @since 05.09.12
@@ -77,19 +77,28 @@ public class SinglePublicKeyAuthenticatorTest {
         assertFalse(auth.authenticate("roland", pKey, null));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*org/citrusframework/ssh/private.key.*")
+    @Test
     public void invalidKeyFormat() {
-        new SinglePublicKeyAuthenticator("roland", "classpath:org/citrusframework/ssh/private.key");
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            new SinglePublicKeyAuthenticator("roland", "classpath:org/citrusframework/ssh/private.key");
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*org/citrusframework/ssh/private.key.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*blubber\\.bla.*")
+    @Test
     public void notInClasspath() {
-        new SinglePublicKeyAuthenticator("roland", "classpath:org/citrusframework/ssh/blubber.bla");
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            new SinglePublicKeyAuthenticator("roland", "classpath:org/citrusframework/ssh/blubber.bla");
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*blubber\\.bla.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/no/valid/path.*")
+    @Test
     public void invalidFilePath() {
-        new SinglePublicKeyAuthenticator("roland","/no/valid/path");
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, () -> {
+            new SinglePublicKeyAuthenticator("roland","/no/valid/path");
+        });
+        Assertions.assertTrue(thrown.getMessage().matches(".*/no/valid/path.*"), "Unexpected exception message: " + thrown.getMessage());
     }
 
     /**
@@ -111,7 +120,7 @@ public class SinglePublicKeyAuthenticatorTest {
         File temp = File.createTempFile("citrus-ssh", "pem");
         try (InputStream in = getClass().getResourceAsStream(pResource);
              FileOutputStream fos = new FileOutputStream(temp)) {
-            Assert.assertNotNull(in);
+            Assertions.assertNotNull(in);
             fos.write(in.readAllBytes());
             fos.flush();
         }
