@@ -28,19 +28,20 @@ import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.config.annotation.HttpClientConfigParser;
 import org.citrusframework.http.config.annotation.HttpServerConfigParser;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.websocket.client.WebSocketClient;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-public class WebSocketClientConfigParserTest extends AbstractTestNGUnitTest {
+@ExtendWith(MockitoExtension.class)
+public class WebSocketClientConfigParserTest extends AbstractUnitTest {
 
     @CitrusEndpoint(name = "webSocketClient1")
     @WebSocketClientConfig(requestUrl = "ws://localhost:8080/test")
@@ -68,17 +69,15 @@ public class WebSocketClientConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private TestActor testActor;
 
-    @BeforeClass
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    @BeforeEach
+    @Override
+    public void prepareTest() {
+        super.prepareTest();
 
-        when(referenceResolver.resolve("messageConverter", WebSocketMessageConverter.class)).thenReturn(messageConverter);
-        when(referenceResolver.resolve("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
-        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
-    }
+        lenient().when(referenceResolver.resolve("messageConverter", WebSocketMessageConverter.class)).thenReturn(messageConverter);
+        lenient().when(referenceResolver.resolve("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
+        lenient().when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
-    @BeforeMethod
-    public void setMocks() {
         context.setReferenceResolver(referenceResolver);
     }
 
@@ -87,42 +86,42 @@ public class WebSocketClientConfigParserTest extends AbstractTestNGUnitTest {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st message sender
-        Assert.assertEquals(webSocketClient1.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test");
-        Assert.assertEquals(webSocketClient1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("ws://localhost:8080/test", webSocketClient1.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(5000L, webSocketClient1.getEndpointConfiguration().getTimeout());
 
         // 2nd message sender
-        Assert.assertEquals(webSocketClient2.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test/uri");
-        Assert.assertEquals(webSocketClient2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(webSocketClient2.getEndpointConfiguration().getEndpointUriResolver(), endpointResolver);
-        Assert.assertEquals(webSocketClient2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("ws://localhost:8080/test/uri", webSocketClient2.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(messageConverter, webSocketClient2.getEndpointConfiguration().getMessageConverter());
+        Assertions.assertEquals(endpointResolver, webSocketClient2.getEndpointConfiguration().getEndpointUriResolver());
+        Assertions.assertEquals(10000L, webSocketClient2.getEndpointConfiguration().getTimeout());
 
         // 3rd message sender
-        Assert.assertNotNull(webSocketClient3.getActor());
-        Assert.assertEquals(webSocketClient3.getActor(), testActor);
-        Assert.assertEquals(webSocketClient3.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test");
-        Assert.assertEquals(webSocketClient3.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assertions.assertNotNull(webSocketClient3.getActor());
+        Assertions.assertEquals(testActor, webSocketClient3.getActor());
+        Assertions.assertEquals("ws://localhost:8080/test", webSocketClient3.getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(250L, webSocketClient3.getEndpointConfiguration().getPollingInterval());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, AnnotationConfigParser<?, ?>> validators = AnnotationConfigParser.lookup();
-        Assert.assertEquals(validators.size(), 6L);
-        Assert.assertNotNull(validators.get("direct.async"));
-        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("direct.sync"));
-        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
-        Assert.assertNotNull(validators.get("http.client"));
-        Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
-        Assert.assertNotNull(validators.get("http.server"));
-        Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
-        Assert.assertNotNull(validators.get("websocket.client"));
-        Assert.assertEquals(validators.get("websocket.client").getClass(), WebSocketClientConfigParser.class);
-        Assert.assertNotNull(validators.get("websocket.server"));
-        Assert.assertEquals(validators.get("websocket.server").getClass(), WebSocketServerConfigParser.class);
+        Assertions.assertEquals(6L, validators.size());
+        Assertions.assertNotNull(validators.get("direct.async"));
+        Assertions.assertEquals(DirectEndpointConfigParser.class, validators.get("direct.async").getClass());
+        Assertions.assertNotNull(validators.get("direct.sync"));
+        Assertions.assertEquals(DirectSyncEndpointConfigParser.class, validators.get("direct.sync").getClass());
+        Assertions.assertNotNull(validators.get("http.client"));
+        Assertions.assertEquals(HttpClientConfigParser.class, validators.get("http.client").getClass());
+        Assertions.assertNotNull(validators.get("http.server"));
+        Assertions.assertEquals(HttpServerConfigParser.class, validators.get("http.server").getClass());
+        Assertions.assertNotNull(validators.get("websocket.client"));
+        Assertions.assertEquals(WebSocketClientConfigParser.class, validators.get("websocket.client").getClass());
+        Assertions.assertNotNull(validators.get("websocket.server"));
+        Assertions.assertEquals(WebSocketServerConfigParser.class, validators.get("websocket.server").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(AnnotationConfigParser.lookup("websocket.client").isPresent());
+        Assertions.assertTrue(AnnotationConfigParser.lookup("websocket.client").isPresent());
     }
 }

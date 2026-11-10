@@ -17,13 +17,13 @@
 package org.citrusframework.websocket.message;
 
 import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.websocket.client.WebSocketClientEndpointConfiguration;
 import org.citrusframework.websocket.endpoint.WebSocketEndpointConfiguration;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.TextMessage;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * @since 2.3
  */
-public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
+public class WebSocketMessageConverterTest extends AbstractUnitTest {
 
     private WebSocketMessageConverter messageConverter = new WebSocketMessageConverter();
 
@@ -43,16 +43,16 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
         WebSocketMessage message = new WebSocketMessage("Hello WebSocket!");
         org.springframework.web.socket.WebSocketMessage result = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
-        Assert.assertTrue(TextMessage.class.isInstance(result));
-        Assert.assertEquals(((TextMessage) result).getPayload(), "Hello WebSocket!");
-        Assert.assertEquals(result.isLast(), true);
+        Assertions.assertTrue(TextMessage.class.isInstance(result));
+        Assertions.assertEquals("Hello WebSocket!", ((TextMessage) result).getPayload());
+        Assertions.assertEquals(true, result.isLast());
 
         message = new WebSocketMessage("Hello WebSocket - stay tuned!").last(false);
         result = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
-        Assert.assertTrue(TextMessage.class.isInstance(result));
-        Assert.assertEquals(((TextMessage) result).getPayload(), "Hello WebSocket - stay tuned!");
-        Assert.assertEquals(result.isLast(), false);
+        Assertions.assertTrue(TextMessage.class.isInstance(result));
+        Assertions.assertEquals("Hello WebSocket - stay tuned!", ((TextMessage) result).getPayload());
+        Assertions.assertEquals(false, result.isLast());
     }
 
     @Test
@@ -62,9 +62,9 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
         WebSocketMessage message = new WebSocketMessage("Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
         org.springframework.web.socket.WebSocketMessage result = messageConverter.convertOutbound(message, endpointConfiguration, context);
 
-        Assert.assertTrue(BinaryMessage.class.isInstance(result));
-        Assert.assertEquals(((BinaryMessage) result).getPayload().array(), "Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(result.isLast(), true);
+        Assertions.assertTrue(BinaryMessage.class.isInstance(result));
+        Assertions.assertArrayEquals("Hello WebSocket!".getBytes(StandardCharsets.UTF_8), ((BinaryMessage) result).getPayload().array());
+        Assertions.assertEquals(true, result.isLast());
     }
 
     @Test
@@ -74,16 +74,16 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
 
         Message internal = messageConverter.convertInbound(externalMessage, endpointConfiguration, context);
 
-        Assert.assertTrue(WebSocketMessage.class.isInstance(internal));
-        Assert.assertEquals(internal.getPayload(String.class), "Hello WebSocket!");
-        Assert.assertEquals(((WebSocketMessage) internal).isLast(), true);
+        Assertions.assertTrue(WebSocketMessage.class.isInstance(internal));
+        Assertions.assertEquals("Hello WebSocket!", internal.getPayload(String.class));
+        Assertions.assertEquals(true, ((WebSocketMessage) internal).isLast());
 
         externalMessage = new TextMessage("Hello WebSocket - stay tuned!", false);
         internal = messageConverter.convertInbound(externalMessage, endpointConfiguration, context);
 
-        Assert.assertTrue(WebSocketMessage.class.isInstance(internal));
-        Assert.assertEquals(internal.getPayload(String.class), "Hello WebSocket - stay tuned!");
-        Assert.assertEquals(((WebSocketMessage) internal).isLast(), false);
+        Assertions.assertTrue(WebSocketMessage.class.isInstance(internal));
+        Assertions.assertEquals("Hello WebSocket - stay tuned!", internal.getPayload(String.class));
+        Assertions.assertEquals(false, ((WebSocketMessage) internal).isLast());
     }
 
     @Test
@@ -93,8 +93,8 @@ public class WebSocketMessageConverterTest extends AbstractTestNGUnitTest {
 
         Message internal = messageConverter.convertInbound(externalMessage, endpointConfiguration, context);
 
-        Assert.assertTrue(WebSocketMessage.class.isInstance(internal));
-        Assert.assertEquals(internal.getPayload(ByteBuffer.class).array(), "Hello WebSocket!".getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(((WebSocketMessage) internal).isLast(), true);
+        Assertions.assertTrue(WebSocketMessage.class.isInstance(internal));
+        Assertions.assertArrayEquals("Hello WebSocket!".getBytes(StandardCharsets.UTF_8), internal.getPayload(ByteBuffer.class).array());
+        Assertions.assertEquals(true, ((WebSocketMessage) internal).isLast());
     }
 }

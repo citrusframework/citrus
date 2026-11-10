@@ -25,8 +25,8 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.endpoint.context.MessageStoreEndpointComponent;
 import org.citrusframework.http.client.HttpEndpointComponent;
 import org.citrusframework.http.client.HttpsEndpointComponent;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.3
@@ -40,17 +40,17 @@ public class WebSocketEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("ws://localhost:8088/test", context);
 
-        Assert.assertEquals(endpoint.getClass(), WebSocketEndpoint.class);
+        Assertions.assertEquals(WebSocketEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri(), "ws://localhost:8088/test");
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("ws://localhost:8088/test", ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(5000L, ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout());
 
         endpoint = component.createEndpoint("websocket://localhost:8088/test", context);
 
-        Assert.assertEquals(endpoint.getClass(), WebSocketEndpoint.class);
+        Assertions.assertEquals(WebSocketEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri(), "ws://localhost:8088/test");
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("ws://localhost:8088/test", ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(5000L, ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -59,10 +59,10 @@ public class WebSocketEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("ws:localhost:8088?timeout=10000", context);
 
-        Assert.assertEquals(endpoint.getClass(), WebSocketEndpoint.class);
+        Assertions.assertEquals(WebSocketEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri(), "ws://localhost:8088");
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+        Assertions.assertEquals("ws://localhost:8088", ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(10000L, ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
@@ -71,33 +71,33 @@ public class WebSocketEndpointComponentTest {
 
         Endpoint endpoint = component.createEndpoint("ws://localhost:8088/test?customParam=foo", context);
 
-        Assert.assertEquals(endpoint.getClass(), WebSocketEndpoint.class);
+        Assertions.assertEquals(WebSocketEndpoint.class, endpoint.getClass());
 
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri(), "ws://localhost:8088/test?customParam=foo");
-        Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assertions.assertEquals("ws://localhost:8088/test?customParam=foo", ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri());
+        Assertions.assertEquals(5000L, ((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout());
     }
 
     @Test
     public void testLookupAll() {
         Map<String, EndpointComponent> validators = EndpointComponent.lookup();
-        Assert.assertEquals(validators.size(), 6L);
-        Assert.assertNotNull(validators.get("direct"));
-        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
-        Assert.assertNotNull(validators.get("message-store"));
-        Assert.assertEquals(validators.get("message-store").getClass(), MessageStoreEndpointComponent.class);
-        Assert.assertNotNull(validators.get("http"));
-        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
-        Assert.assertNotNull(validators.get("https"));
-        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
-        Assert.assertNotNull(validators.get("websocket"));
-        Assert.assertEquals(validators.get("websocket").getClass(), WebSocketEndpointComponent.class);
-        Assert.assertNotNull(validators.get("ws"));
-        Assert.assertEquals(validators.get("ws").getClass(), WebSocketEndpointComponent.class);
+        Assertions.assertEquals(6L, validators.size());
+        Assertions.assertNotNull(validators.get("direct"));
+        Assertions.assertEquals(DirectEndpointComponent.class, validators.get("direct").getClass());
+        Assertions.assertNotNull(validators.get("message-store"));
+        Assertions.assertEquals(MessageStoreEndpointComponent.class, validators.get("message-store").getClass());
+        Assertions.assertNotNull(validators.get("http"));
+        Assertions.assertEquals(HttpEndpointComponent.class, validators.get("http").getClass());
+        Assertions.assertNotNull(validators.get("https"));
+        Assertions.assertEquals(HttpsEndpointComponent.class, validators.get("https").getClass());
+        Assertions.assertNotNull(validators.get("websocket"));
+        Assertions.assertEquals(WebSocketEndpointComponent.class, validators.get("websocket").getClass());
+        Assertions.assertNotNull(validators.get("ws"));
+        Assertions.assertEquals(WebSocketEndpointComponent.class, validators.get("ws").getClass());
     }
 
     @Test
     public void testLookupByQualifier() {
-        Assert.assertTrue(EndpointComponent.lookup("websocket").isPresent());
-        Assert.assertTrue(EndpointComponent.lookup("ws").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("websocket").isPresent());
+        Assertions.assertTrue(EndpointComponent.lookup("ws").isPresent());
     }
 }

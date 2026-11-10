@@ -21,26 +21,26 @@ import java.util.Map;
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.websocket.client.WebSocketClientBuilder;
 import org.citrusframework.websocket.server.WebSocketServerBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class WebSocketEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
         Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("websocket"));
-        Assert.assertTrue(endpointBuilders.containsKey("websocket.client"));
-        Assert.assertTrue(endpointBuilders.containsKey("websocket.server"));
+        Assertions.assertTrue(endpointBuilders.containsKey("websocket"));
+        Assertions.assertTrue(endpointBuilders.containsKey("websocket.client"));
+        Assertions.assertTrue(endpointBuilders.containsKey("websocket.server"));
     }
 
     @Test
     public void shouldLookupEndpoint() {
-        Assert.assertTrue(EndpointBuilder.lookup("websocket").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("websocket").get().getClass(), WebSocketEndpointBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("websocket.client").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("websocket.client").get().getClass(), WebSocketClientBuilder.class);
-        Assert.assertTrue(EndpointBuilder.lookup("websocket.server").isPresent());
-        Assert.assertEquals(EndpointBuilder.lookup("websocket.server").get().getClass(), WebSocketServerBuilder.class);
+        Assertions.assertTrue(EndpointBuilder.lookup("websocket").isPresent());
+        Assertions.assertEquals(WebSocketEndpointBuilder.class, EndpointBuilder.lookup("websocket").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("websocket.client").isPresent());
+        Assertions.assertEquals(WebSocketClientBuilder.class, EndpointBuilder.lookup("websocket.client").get().getClass());
+        Assertions.assertTrue(EndpointBuilder.lookup("websocket.server").isPresent());
+        Assertions.assertEquals(WebSocketServerBuilder.class, EndpointBuilder.lookup("websocket.server").get().getClass());
     }
 }
