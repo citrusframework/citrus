@@ -40,7 +40,6 @@ import org.mockito.stubbing.Answer;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -67,8 +66,6 @@ public class RmiServerTest extends AbstractUnitTest {
         rmiServer.getEndpointConfiguration().setBinding("helloService");
 
         final Remote[] remote = new Remote[1];
-
-        reset(registry, endpointAdapter);
 
         doAnswer(invocationOnMock -> {
             remote[0] = (Remote) invocationOnMock.getArguments()[1];
@@ -113,8 +110,6 @@ public class RmiServerTest extends AbstractUnitTest {
         rmiServer.getEndpointConfiguration().setBinding("helloService");
 
         final Remote[] remote = new Remote[1];
-
-        reset(registry, endpointAdapter);
 
         doAnswer(invocationOnMock -> {
             remote[0] = (Remote) invocationOnMock.getArguments()[1];

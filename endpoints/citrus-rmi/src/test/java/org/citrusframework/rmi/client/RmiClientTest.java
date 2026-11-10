@@ -60,8 +60,6 @@ public class RmiClientTest extends AbstractUnitTest {
 
         endpointConfiguration.setRegistry(registry);
 
-        reset(registry, remoteInterface);
-
         when(registry.lookup(binding)).thenReturn(remoteInterface);
         when(remoteInterface.getHelloCount()).thenReturn(100);
 
@@ -87,8 +85,6 @@ public class RmiClientTest extends AbstractUnitTest {
         Message requestMessage = RmiMessage.invocation("sayHello").argument("Christoph");
 
         endpointConfiguration.setRegistry(registry);
-
-        reset(registry, remoteInterface);
 
         when(registry.lookup(binding)).thenReturn(remoteInterface);
 
@@ -119,8 +115,6 @@ public class RmiClientTest extends AbstractUnitTest {
         Message requestMessage = RmiMessage.invocation("getHelloCount");
 
         endpointConfiguration.setRegistry(registry);
-
-        reset(registry, remoteInterface, correlator);
 
         when(registry.lookup(binding)).thenReturn(remoteInterface);
 
