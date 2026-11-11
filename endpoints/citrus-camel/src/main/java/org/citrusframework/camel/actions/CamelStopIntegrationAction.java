@@ -62,10 +62,7 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
             if (context.getVariables().containsKey(name + ":pid")) {
                 pid = context.getVariable(name + ":pid", Long.class);
             } else {
-                pid = camelCli().getAll().stream()
-                        .filter(props -> name.equals(props.get("name")) && !props.getOrDefault("pid", "").isBlank())
-                        .map(props -> Long.valueOf(props.get("pid"))).findFirst()
-                        .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing process id for Camel integration %s:pid", name)));
+                pid = findIntegrationByName(name);
             }
 
             camelCli().stop(pid);
@@ -85,6 +82,13 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
 
             logger.info("Stopped Camel integration '%s' (%s)".formatted(name, pid));
         }
+    }
+
+    private Long findIntegrationByName(String name) {
+        return camelCli().getAll().stream()
+                .filter(props -> name.equals(props.get("name")) && !props.getOrDefault("pid", "").isBlank())
+                .map(props -> Long.valueOf(props.get("pid"))).findFirst()
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Camel integration '%s' not found", name)));
     }
 
     public String getIntegrationName() {

@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.exceptions.ActionTimeoutException;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -159,6 +160,218 @@ public class CamelVerifyIntegrationActionTest extends UnitTestSupport {
                 .build();
 
         action.execute(context);
+    }
+
+    @ParameterizedTest
+    @MethodSource("commandOutputProvider")
+    public void shouldVerifyExternallyStartedIntegrationFromAsciiTable(String output) {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
+            @Override
+            public String ps(String... args) {
+                if (args.length == 1 && args[0].equals("--json")) {
+                    return "";
+                }
+                return super.ps(args);
+            }
+
+            @Override
+            public String ps() {
+                return output;
+            }
+        });
+
+        CamelVerifyIntegrationAction action = new CamelVerifyIntegrationAction.Builder()
+                .integration("my-route")
+                .maxAttempts(5)
+                .delayBetweenAttempts(100)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+    }
+
+    @ParameterizedTest
+    @MethodSource("commandJsonOutputProvider")
+    public void shouldVerifyExternallyStartedIntegrationFromJson(String output) {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
+            @Override
+            public String ps(String... args) {
+                if (args.length == 1 && args[0].equals("--json")) {
+                    return output;
+                }
+                return super.ps(args);
+            }
+
+            @Override
+            public String ps() {
+                return "";
+            }
+        });
+
+        CamelVerifyIntegrationAction action = new CamelVerifyIntegrationAction.Builder()
+                .integration("my-route")
+                .maxAttempts(5)
+                .delayBetweenAttempts(100)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+    }
+
+    static Stream<String> notFoundOutputProvider() {
+        return Stream.of(
+            "",
+            "Something completely different",
+            """
+             PID   NAME   READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
+            """,
+            """
+             PID   NAME         READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
+            11111  other-route   1/1   Running  10s      0     0         0
+            """
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("notFoundOutputProvider")
+    public void shouldFailWhenExternalIntegrationNotFound(String output) {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
+            @Override
+            public String ps(String... args) {
+                if (args.length == 1 && args[0].equals("--json")) {
+                    return "";
+                }
+                return super.ps(args);
+            }
+
+            @Override
+            public String ps() {
+                return output;
+            }
+        });
+
+        CamelVerifyIntegrationAction action = new CamelVerifyIntegrationAction.Builder()
+                .integration("my-route")
+                .maxAttempts(5)
+                .delayBetweenAttempts(100)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+    }
+
+    static Stream<String> wrongStatusOutputProvider() {
+        return Stream.of(
+            """
+             PID   NAME      READY  STATUS   AGE  TOTAL  FAIL  INFLIGHT
+            12345  my-route   0/1   Pending  10s      0     0         0
+            """
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("wrongStatusOutputProvider")
+    public void shouldTimeoutWhenExternalIntegrationInWrongStatus(String output) {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
+            @Override
+            public String ps(String... args) {
+                if (args.length == 1 && args[0].equals("--json")) {
+                    return "";
+                }
+                return super.ps(args);
+            }
+
+            @Override
+            public String ps() {
+                return output;
+            }
+        });
+
+        CamelVerifyIntegrationAction action = new CamelVerifyIntegrationAction.Builder()
+                .integration("my-route")
+                .maxAttempts(5)
+                .delayBetweenAttempts(100)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        assertThrows(ActionTimeoutException.class, () -> action.execute(context));
+    }
+
+    static Stream<String> notFoundJsonOutputProvider() {
+        return Stream.of(
+            "",
+            "Something completely different",
+            """
+            []
+            """,
+            """
+            [{"pid":11111,"name":"other-route","ready":"1/1","status":"Running","age":"25s","total":0,"fail":0,"inflight":0}]
+            """
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("notFoundJsonOutputProvider")
+    public void shouldFailWhenExternalIntegrationNotFoundJson(String output) {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
+            @Override
+            public String ps(String... args) {
+                if (args.length == 1 && args[0].equals("--json")) {
+                    return output;
+                }
+                return super.ps(args);
+            }
+
+            @Override
+            public String ps() {
+                return "";
+            }
+        });
+
+        CamelVerifyIntegrationAction action = new CamelVerifyIntegrationAction.Builder()
+                .integration("my-route")
+                .maxAttempts(5)
+                .delayBetweenAttempts(100)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+    }
+
+    static Stream<String> wrongStatusJsonOutputProvider() {
+        return Stream.of(
+            """
+            [{"pid":12345,"name":"my-route","ready":"0/1","status":"Pending","age":"25s","total":0,"fail":0,"inflight":0}]
+            """
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("wrongStatusJsonOutputProvider")
+    public void shouldTimeoutWhenExternalIntegrationInWrongStatusJson(String output) {
+        context.getReferenceResolver().bind("camelCli", new CamelCli() {
+            @Override
+            public String ps(String... args) {
+                if (args.length == 1 && args[0].equals("--json")) {
+                    return output;
+                }
+                return super.ps(args);
+            }
+
+            @Override
+            public String ps() {
+                return "";
+            }
+        });
+
+        CamelVerifyIntegrationAction action = new CamelVerifyIntegrationAction.Builder()
+                .integration("my-route")
+                .maxAttempts(5)
+                .delayBetweenAttempts(100)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
     static Stream<String> failedOutputProvider() {

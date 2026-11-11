@@ -432,6 +432,16 @@ public class CamelCli {
         return app.runAsync("cmd", fullArgs);
     }
 
+    /**
+     * Provides logs from a running Camel integration identified by its name.
+     */
+    public ProcessAndOutput log(String name, String... args) {
+        List<String> commandArgs = new ArrayList<>();
+        commandArgs.add(name);
+        commandArgs.addAll(Arrays.asList(args));
+        return app.runAsync("log", commandArgs.toArray(String[]::new));
+    }
+
     public KubernetesPlugin kubernetes() {
         return new KubernetesPlugin(app);
     }
