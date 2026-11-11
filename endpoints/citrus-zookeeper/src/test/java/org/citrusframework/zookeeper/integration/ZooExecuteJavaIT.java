@@ -36,7 +36,7 @@ import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zoo
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Isolated
+@Isolated("ITs share one ZooServer on fixed ports 21181/21182 with a cached Spring context")
 public class ZooExecuteJavaIT implements TestActionSupport {
 
     @Autowired

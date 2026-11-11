@@ -33,7 +33,7 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Isolated
+@Isolated("ITs share one ZooServer on fixed ports 21181/21182 with a cached Spring context")
 public class ZooExecuteIT {
 
     @Test
