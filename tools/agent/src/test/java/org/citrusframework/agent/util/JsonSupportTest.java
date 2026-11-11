@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.citrusframework.TestResult;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 
 public class JsonSupportTest {
@@ -36,10 +36,10 @@ public class JsonSupportTest {
 
         JsonNode tree = JsonSupport.json().readTree(json);
         JsonNode causeNode = tree.get(0).get("cause");
-        Assert.assertTrue(causeNode.isString(),
+        Assertions.assertTrue(causeNode.isString(),
                 "Expected 'cause' to be a JSON string, but was: " + causeNode.getNodeType());
-        Assert.assertEquals(causeNode.stringValue(),
-                "org.citrusframework.exceptions.CitrusRuntimeException - Something went wrong");
+        Assertions.assertEquals("org.citrusframework.exceptions.CitrusRuntimeException - Something went wrong",
+                causeNode.stringValue());
     }
 
     @Test
@@ -51,9 +51,9 @@ public class JsonSupportTest {
 
         JsonNode tree = JsonSupport.json().readTree(json);
         JsonNode durationNode = tree.get(0).get("duration");
-        Assert.assertTrue(durationNode.isNumber(),
+        Assertions.assertTrue(durationNode.isNumber(),
                 "Expected 'duration' to be a JSON number, but was: " + durationNode.getNodeType());
-        Assert.assertEquals(durationNode.intValue(), 1234);
+        Assertions.assertEquals(1234, durationNode.intValue());
     }
 
     @Test
@@ -64,8 +64,8 @@ public class JsonSupportTest {
 
         JsonNode tree = JsonSupport.json().readTree(json);
         JsonNode resultNode = tree.get(0);
-        Assert.assertEquals(resultNode.get("testName").stringValue(), "myTest");
-        Assert.assertEquals(resultNode.get("className").stringValue(), "com.example.MyTest");
-        Assert.assertEquals(resultNode.get("result").stringValue(), "SUCCESS");
+        Assertions.assertEquals("myTest", resultNode.get("testName").stringValue());
+        Assertions.assertEquals("com.example.MyTest", resultNode.get("className").stringValue());
+        Assertions.assertEquals("SUCCESS", resultNode.get("result").stringValue());
     }
 }
