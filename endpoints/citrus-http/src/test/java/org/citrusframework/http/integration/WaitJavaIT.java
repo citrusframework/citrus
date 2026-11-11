@@ -26,7 +26,6 @@ import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
-import org.citrusframework.util.SocketUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.junit.jupiter.api.Test;
@@ -37,15 +36,12 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
 public class WaitJavaIT implements TestActionSupport {
 
-    private final int serverPort = SocketUtils.findAvailableTcpPort();
-
-    private HttpServer httpServer = new HttpServerBuilder()
-            .port(serverPort)
+    private final HttpServer httpServer = new HttpServerBuilder()
+            .port(0)
             .timeout(500L)
             .build();
 
-    private HttpClient client = new HttpClientBuilder()
-            .requestUrl(String.format("http://localhost:%s/test", serverPort))
+    private final HttpClient client = new HttpClientBuilder()
             .requestMethod(RequestMethod.GET)
             .build();
 
@@ -55,6 +51,9 @@ public class WaitJavaIT implements TestActionSupport {
 
         //GIVEN
         runner.given(start(httpServer));
+
+        String serverUrl = serverUrl();
+        client.getEndpointConfiguration().setRequestUrl(serverUrl);
 
         runner.then(doFinally().actions(stop(httpServer)));
 
@@ -69,7 +68,7 @@ public class WaitJavaIT implements TestActionSupport {
         //THEN
         runner.then(waitFor()
                 .execution()
-                .action(send(String.format("http://localhost:%s/test", serverPort))));
+                .action(send(serverUrl)));
     }
 
     @Test
@@ -79,10 +78,16 @@ public class WaitJavaIT implements TestActionSupport {
         //GIVEN
         runner.given(start(httpServer));
 
+        String serverUrl = serverUrl();
+
         runner.then(doFinally().actions(stop(httpServer)));
 
         runner.then(waitFor()
             .http()
-            .url(String.format("http://localhost:%s/test", serverPort)));
+            .url(serverUrl));
+    }
+
+    private String serverUrl() {
+        return String.format("http://localhost:%s/test", httpServer.getPort());
     }
 }
