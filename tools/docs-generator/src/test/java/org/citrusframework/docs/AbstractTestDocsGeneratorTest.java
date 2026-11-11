@@ -25,11 +25,13 @@ import javax.xml.transform.TransformerException;
 
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.xml.XmlTestGenerator;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.xml.sax.SAXException;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Isolated("Generates and reads shared SampleIT.xml plus the shared target/docs output directory")
 public class AbstractTestDocsGeneratorTest {
 
     private final AbstractTestDocsGenerator abstractTestDocsGenerator = new AbstractTestDocsGenerator("", "") {
@@ -65,7 +67,7 @@ public class AbstractTestDocsGeneratorTest {
         final List<File> testFiles = abstractTestDocsGenerator.getTestFiles();
 
         //THEN
-        assertEquals(testFiles.size(), 1);
-        assertEquals(testFiles.get(0).getName(), "SampleIT.xml");
+        assertEquals(1, testFiles.size());
+        assertEquals("SampleIT.xml", testFiles.get(0).getName());
     }
 }
