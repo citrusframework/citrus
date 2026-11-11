@@ -24,14 +24,16 @@ import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.xml.XmlTestGenerator;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Generates and reads shared SampleIT.xml plus the shared target/docs output directory")
 public class HtmlTestDocsGeneratorTest {
 
-    @BeforeClass
-    public void createSampleIT() {
+    @BeforeAll
+    public static void createSampleIT() {
         TestGenerator<?> generator = new XmlTestGenerator<>()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
@@ -50,15 +52,15 @@ public class HtmlTestDocsGeneratorTest {
 
         String docContent = FileUtils.readToString(Resources.fromFileSystem(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
-        Assert.assertTrue(docContent.contains("<title>Citrus Test Documentation</title>"));
-        Assert.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
-        Assert.assertTrue(docContent.contains("<h1>Citrus Test Documentation</h1>"));
-        Assert.assertTrue(docContent.contains(">Overview</th>"));
-        Assert.assertTrue(docContent.contains("SampleIT.xml</a>"));
-        Assert.assertTrue(docContent.contains(">Nr.</th>"));
-        Assert.assertTrue(docContent.contains(">Test</th>"));
-        Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
+        Assertions.assertTrue(docContent.contains("<title>Citrus Test Documentation</title>"));
+        Assertions.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
+        Assertions.assertTrue(docContent.contains("<h1>Citrus Test Documentation</h1>"));
+        Assertions.assertTrue(docContent.contains(">Overview</th>"));
+        Assertions.assertTrue(docContent.contains("SampleIT.xml</a>"));
+        Assertions.assertTrue(docContent.contains(">Nr.</th>"));
+        Assertions.assertTrue(docContent.contains(">Test</th>"));
+        Assertions.assertTrue(docContent.contains("This is a sample test"));
+        Assertions.assertTrue(docContent.contains("src" + File.separator + "test" +
                                                         File.separator + "resources" +
                                                         File.separator + "org" +
                                                         File.separator + "citrusframework" +
@@ -70,6 +72,7 @@ public class HtmlTestDocsGeneratorTest {
     public void testCustomizedHtmlDocGeneration() throws IOException {
         HtmlTestDocsGenerator generator = HtmlTestDocsGenerator.build()
                         .withLogo("test-logo.png")
+                        .withOutputFile("CustomCitrusTests.html")
                         .withOverviewTitle("CustomOverview")
                         .withPageTitle("CustomPageTitle")
                         .useSrcDirectory("src" + File.separator + "test" + File.separator);
@@ -78,15 +81,15 @@ public class HtmlTestDocsGeneratorTest {
 
         String docContent = FileUtils.readToString(Resources.fromFileSystem(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
-        Assert.assertTrue(docContent.contains("<title>CustomPageTitle</title>"));
-        Assert.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));
-        Assert.assertTrue(docContent.contains("<h1>CustomPageTitle</h1>"));
-        Assert.assertTrue(docContent.contains(">CustomOverview</th>"));
-        Assert.assertTrue(docContent.contains("SampleIT.xml</a>"));
-        Assert.assertTrue(docContent.contains(">Nr.</th>"));
-        Assert.assertTrue(docContent.contains(">Test</th>"));
-        Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
+        Assertions.assertTrue(docContent.contains("<title>CustomPageTitle</title>"));
+        Assertions.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));
+        Assertions.assertTrue(docContent.contains("<h1>CustomPageTitle</h1>"));
+        Assertions.assertTrue(docContent.contains(">CustomOverview</th>"));
+        Assertions.assertTrue(docContent.contains("SampleIT.xml</a>"));
+        Assertions.assertTrue(docContent.contains(">Nr.</th>"));
+        Assertions.assertTrue(docContent.contains(">Test</th>"));
+        Assertions.assertTrue(docContent.contains("This is a sample test"));
+        Assertions.assertTrue(docContent.contains("src" + File.separator + "test" +
                                                         File.separator + "resources" +
                                                         File.separator + "org" +
                                                         File.separator + "citrusframework" +

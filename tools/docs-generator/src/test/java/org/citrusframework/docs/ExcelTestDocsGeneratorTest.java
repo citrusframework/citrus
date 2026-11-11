@@ -27,16 +27,18 @@ import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.xml.XmlTestGenerator;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Generates and reads shared SampleIT.xml plus the shared target/docs output directory")
 public class ExcelTestDocsGeneratorTest {
 
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @BeforeClass
-    public void createSampleIT() {
+    @BeforeAll
+    public static void createSampleIT() {
         TestGenerator<?> generator = new XmlTestGenerator<>()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
@@ -55,22 +57,22 @@ public class ExcelTestDocsGeneratorTest {
 
         String docContent = FileUtils.readToString(Resources.fromFileSystem(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
-        Assert.assertTrue(docContent.contains("<Author>Citrus Testframework</Author>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Citrus Test Documentation</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Id</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Name</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Author</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Status</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Description</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Date</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">File</Data>"));
+        Assertions.assertTrue(docContent.contains("<Author>Citrus Testframework</Author>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Citrus Test Documentation</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Id</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Name</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Author</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Status</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Description</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Date</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">File</Data>"));
 
-        Assert.assertTrue(docContent.contains(">SampleIT<"));
-        Assert.assertTrue(docContent.contains(">Christoph<"));
-        Assert.assertTrue(docContent.contains(">DRAFT<"));
-        Assert.assertTrue(docContent.contains(">This is a sample test<"));
-        Assert.assertTrue(docContent.contains(">" + dateFormat.format(new Date()) + "<"));
-        Assert.assertTrue(docContent.contains(">SampleIT.xml<"));
+        Assertions.assertTrue(docContent.contains(">SampleIT<"));
+        Assertions.assertTrue(docContent.contains(">Christoph<"));
+        Assertions.assertTrue(docContent.contains(">DRAFT<"));
+        Assertions.assertTrue(docContent.contains(">This is a sample test<"));
+        Assertions.assertTrue(docContent.contains(">" + dateFormat.format(new Date()) + "<"));
+        Assertions.assertTrue(docContent.contains(">SampleIT.xml<"));
     }
 
     @Test
@@ -87,22 +89,22 @@ public class ExcelTestDocsGeneratorTest {
 
         String docContent = FileUtils.readToString(Resources.fromFileSystem(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
-        Assert.assertTrue(docContent.contains("<Author>TestFactory</Author>"));
-        Assert.assertTrue(docContent.contains("<Company>TestCompany</Company>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">CustomPageTitle</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Id</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Name</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Autor</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Status</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Beschreibung</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Datum</Data>"));
-        Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Dateiname</Data>"));
+        Assertions.assertTrue(docContent.contains("<Author>TestFactory</Author>"));
+        Assertions.assertTrue(docContent.contains("<Company>TestCompany</Company>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">CustomPageTitle</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Id</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Name</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Autor</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Status</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Beschreibung</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Datum</Data>"));
+        Assertions.assertTrue(docContent.contains("<Data ss:Type=\"String\">Dateiname</Data>"));
 
-        Assert.assertTrue(docContent.contains(">SampleIT<"));
-        Assert.assertTrue(docContent.contains(">Christoph<"));
-        Assert.assertTrue(docContent.contains(">DRAFT<"));
-        Assert.assertTrue(docContent.contains(">This is a sample test<"));
-        Assert.assertTrue(docContent.contains(">" + dateFormat.format(new Date()) + "<"));
-        Assert.assertTrue(docContent.contains(">SampleIT.xml<"));
+        Assertions.assertTrue(docContent.contains(">SampleIT<"));
+        Assertions.assertTrue(docContent.contains(">Christoph<"));
+        Assertions.assertTrue(docContent.contains(">DRAFT<"));
+        Assertions.assertTrue(docContent.contains(">This is a sample test<"));
+        Assertions.assertTrue(docContent.contains(">" + dateFormat.format(new Date()) + "<"));
+        Assertions.assertTrue(docContent.contains(">SampleIT.xml<"));
     }
 }
