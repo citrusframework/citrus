@@ -26,7 +26,9 @@ import jakarta.jms.ConnectionFactory;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.assertj.core.api.Assertions;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DefaultConnectionFactoryCreatorTest {
 
@@ -76,16 +78,16 @@ public class DefaultConnectionFactoryCreatorTest {
         Assertions.assertThat(((ActiveMQConnectionFactory)connectionFactory).getPassword()).isEqualTo("secret");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldHandleUnsupportedTypeInformation() {
         Map<String, String> connectionSettings = new LinkedHashMap<>();
         connectionSettings.put("type", "org.unknown.Type");
-        connectionFactoryCreator.create(connectionSettings);
+        assertThrows(CitrusRuntimeException.class, () -> connectionFactoryCreator.create(connectionSettings));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void shouldHandleMissingTypeInformation() {
-        connectionFactoryCreator.create(Collections.emptyMap());
+        assertThrows(CitrusRuntimeException.class, () -> connectionFactoryCreator.create(Collections.emptyMap()));
     }
 
     @Test

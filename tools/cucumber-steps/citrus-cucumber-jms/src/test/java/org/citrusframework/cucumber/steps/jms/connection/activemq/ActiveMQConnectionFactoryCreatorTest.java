@@ -25,7 +25,7 @@ import jakarta.jms.ConnectionFactory;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.assertj.core.api.Assertions;
 import org.citrusframework.cucumber.steps.jms.connection.activemq.artemis.ActiveMQArtemisConnectionFactoryCreator;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class ActiveMQConnectionFactoryCreatorTest {
 

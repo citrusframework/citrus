@@ -25,7 +25,9 @@ import org.assertj.core.api.Assertions;
 import org.citrusframework.cucumber.steps.jms.connection.activemq.ActiveMQConnectionFactoryCreator;
 import org.citrusframework.cucumber.steps.jms.connection.activemq.artemis.ActiveMQArtemisConnectionFactoryCreator;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ConnectionFactoryCreatorTest {
 
@@ -44,14 +46,14 @@ public class ConnectionFactoryCreatorTest {
         Assertions.assertThat(creator.getClass()).isEqualTo(DefaultConnectionFactoryCreator.class);
     }
 
-    @Test(expectedExceptions = ClassNotFoundException.class)
-    public void shouldHandleUnsupportedTypeInformation() throws ClassNotFoundException {
-        ConnectionFactoryCreator.lookup("org.unknown.Type");
+    @Test
+    public void shouldHandleUnsupportedTypeInformation() {
+        assertThrows(ClassNotFoundException.class, () -> ConnectionFactoryCreator.lookup("org.unknown.Type"));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void shouldHandleMissingTypeInformation() throws ClassNotFoundException {
-        ConnectionFactoryCreator.lookup(null);
+    @Test
+    public void shouldHandleMissingTypeInformation() {
+        assertThrows(CitrusRuntimeException.class, () -> ConnectionFactoryCreator.lookup(null));
     }
 
     /**

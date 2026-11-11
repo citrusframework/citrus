@@ -41,10 +41,10 @@ import org.citrusframework.playwright.actions.StopBrowserAction;
 import org.citrusframework.playwright.actions.VerifyAction;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.model.SecretPatternRedactor;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class PlaywrightStepsTest {
 
     private Citrus citrus;
 
-    @BeforeMethod
+    @BeforeEach
     public void injectResources() {
         Mockito.reset(playwrightBrowser, page, locator);
 
@@ -101,12 +101,12 @@ public class PlaywrightStepsTest {
         steps.start();
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertEquals(testCase.getActionCount(), 1L);
-        Assert.assertTrue(testCase.getTestAction(0) instanceof PlaywrightAction);
+        Assertions.assertEquals(1L, testCase.getActionCount());
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof PlaywrightAction);
         PlaywrightAction action = (PlaywrightAction) testCase.getTestAction(0);
 
-        Assert.assertEquals(((StartBrowserAction) action).getBrowser(), playwrightBrowser);
-        Assert.assertTrue(action instanceof StartBrowserAction);
+        Assertions.assertEquals(playwrightBrowser, ((StartBrowserAction) action).getBrowser());
+        Assertions.assertTrue(action instanceof StartBrowserAction);
 
         verify(playwrightBrowser).start();
     }
@@ -117,12 +117,12 @@ public class PlaywrightStepsTest {
         steps.stop();
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertEquals(testCase.getActionCount(), 1L);
-        Assert.assertTrue(testCase.getTestAction(0) instanceof PlaywrightAction);
+        Assertions.assertEquals(1L, testCase.getActionCount());
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof PlaywrightAction);
         PlaywrightAction action = (PlaywrightAction) testCase.getTestAction(0);
 
-        Assert.assertEquals(((StopBrowserAction) action).getBrowser(), playwrightBrowser);
-        Assert.assertTrue(action instanceof StopBrowserAction);
+        Assertions.assertEquals(playwrightBrowser, ((StopBrowserAction) action).getBrowser());
+        Assertions.assertTrue(action instanceof StopBrowserAction);
 
         verify(playwrightBrowser).stop();
     }
@@ -131,9 +131,9 @@ public class PlaywrightStepsTest {
     public void testSetUnknownBrowserFails() {
         try {
             steps.setBrowser("unknownBrowser");
-            Assert.fail("Expected CitrusRuntimeException for unknown browser id");
+            Assertions.fail("Expected CitrusRuntimeException for unknown browser id");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("unknownBrowser"));
+            Assertions.assertTrue(e.getMessage().contains("unknownBrowser"));
         }
     }
 
@@ -146,7 +146,7 @@ public class PlaywrightStepsTest {
 
         steps.before();
 
-        Assert.assertEquals(steps.browser, playwrightBrowser,
+        Assertions.assertEquals(playwrightBrowser, steps.browser,
                 "with several beans present @Before must resolve the configured default browser name");
     }
 
@@ -165,9 +165,9 @@ public class PlaywrightStepsTest {
         int afterBindings = citrus.getCitrusContext().getReferenceResolver().resolveAll(
                 org.citrusframework.playwright.endpoint.PlaywrightBrowser.class).size();
 
-        Assert.assertEquals(beforeBindings, afterBindings,
+        Assertions.assertEquals(beforeBindings, afterBindings,
                 "@Before must not auto-create a default browser when any PlaywrightBrowser bean is configured");
-        Assert.assertNotNull(steps.browser,
+        Assertions.assertNotNull(steps.browser,
                 "@Before must bind an existing PlaywrightBrowser bean instead of creating a default");
     }
 
@@ -181,11 +181,11 @@ public class PlaywrightStepsTest {
 
         freshSteps.before();
 
-        Assert.assertNotNull(freshSteps.browser, "@Before must build a default browser when none is configured");
-        Assert.assertEquals(
+        Assertions.assertNotNull(freshSteps.browser, "@Before must build a default browser when none is configured");
+        Assertions.assertEquals(
+                freshSteps.browser,
                 fresh.getCitrusContext().getReferenceResolver()
                         .resolve(PlaywrightSettings.getBrowserName(), PlaywrightBrowser.class),
-                freshSteps.browser,
                 "the auto-created default must be bound under the configured browser name");
     }
 
@@ -195,12 +195,12 @@ public class PlaywrightStepsTest {
         steps.open("https://example.com/login");
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertEquals(testCase.getActionCount(), 1L);
-        Assert.assertTrue(testCase.getTestAction(0) instanceof OpenAction);
+        Assertions.assertEquals(1L, testCase.getActionCount());
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof OpenAction);
         OpenAction action = (OpenAction) testCase.getTestAction(0);
 
-        Assert.assertEquals(action.getBrowser(), playwrightBrowser);
-        Assert.assertEquals(action.getUrl(), "https://example.com/login");
+        Assertions.assertEquals(playwrightBrowser, action.getBrowser());
+        Assertions.assertEquals("https://example.com/login", action.getUrl());
 
         verify(page).navigate("https://example.com/login");
     }
@@ -211,11 +211,11 @@ public class PlaywrightStepsTest {
         steps.click("#login");
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof MouseAction);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof MouseAction);
         MouseAction action = (MouseAction) testCase.getTestAction(0);
 
-        Assert.assertEquals(action.getBrowser(), playwrightBrowser);
-        Assert.assertEquals(action.getCommand(), MouseAction.Command.CLICK);
+        Assertions.assertEquals(playwrightBrowser, action.getBrowser());
+        Assertions.assertEquals(MouseAction.Command.CLICK, action.getCommand());
 
         verify(page).locator("#login");
         verify(locator).click();
@@ -227,12 +227,12 @@ public class PlaywrightStepsTest {
         steps.fill("alice", "#username");
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof InputAction);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof InputAction);
         InputAction action = (InputAction) testCase.getTestAction(0);
 
-        Assert.assertEquals(action.getBrowser(), playwrightBrowser);
-        Assert.assertEquals(action.getCommand(), InputAction.Command.FILL);
-        Assert.assertEquals(action.getValue(), "alice");
+        Assertions.assertEquals(playwrightBrowser, action.getBrowser());
+        Assertions.assertEquals(InputAction.Command.FILL, action.getCommand());
+        Assertions.assertEquals("alice", action.getValue());
 
         verify(locator).fill("alice");
     }
@@ -242,8 +242,8 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.clear("#username");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof InputAction);
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(0)).getCommand(), InputAction.Command.CLEAR);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof InputAction);
+        Assertions.assertEquals(InputAction.Command.CLEAR, ((InputAction) runner.getTestCase().getTestAction(0)).getCommand());
         verify(locator).clear();
     }
 
@@ -252,10 +252,10 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.press("Enter", "#username");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof InputAction);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof InputAction);
         InputAction action = (InputAction) runner.getTestCase().getTestAction(0);
-        Assert.assertEquals(action.getCommand(), InputAction.Command.PRESS);
-        Assert.assertEquals(action.getValue(), "Enter");
+        Assertions.assertEquals(InputAction.Command.PRESS, action.getCommand());
+        Assertions.assertEquals("Enter", action.getValue());
 
         verify(locator).press("Enter");
     }
@@ -265,11 +265,11 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.checkInput("checks", "#remember");
 
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(0)).getCommand(), InputAction.Command.CHECK);
+        Assertions.assertEquals(InputAction.Command.CHECK, ((InputAction) runner.getTestCase().getTestAction(0)).getCommand());
         verify(locator).check();
 
         steps.checkInput("unchecks", "#remember");
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(1)).getCommand(), InputAction.Command.UNCHECK);
+        Assertions.assertEquals(InputAction.Command.UNCHECK, ((InputAction) runner.getTestCase().getTestAction(1)).getCommand());
         verify(locator).uncheck();
     }
 
@@ -278,13 +278,13 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.select("blue", "#color");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof InputAction);
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(0)).getCommand(), InputAction.Command.SELECT);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof InputAction);
+        Assertions.assertEquals(InputAction.Command.SELECT, ((InputAction) runner.getTestCase().getTestAction(0)).getCommand());
         verify(locator).selectOption(new String[]{"blue"});
 
         steps.hover("#menu");
-        Assert.assertTrue(runner.getTestCase().getTestAction(1) instanceof MouseAction);
-        Assert.assertEquals(((MouseAction) runner.getTestCase().getTestAction(1)).getCommand(), MouseAction.Command.HOVER);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(1) instanceof MouseAction);
+        Assertions.assertEquals(MouseAction.Command.HOVER, ((MouseAction) runner.getTestCase().getTestAction(1)).getCommand());
         verify(locator).hover();
     }
 
@@ -295,9 +295,9 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.shouldDisplay("#welcome");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
         VerifyAction action = (VerifyAction) runner.getTestCase().getTestAction(0);
-        Assert.assertEquals(action.getCheck(), VerifyAction.Check.VISIBLE);
+        Assertions.assertEquals(VerifyAction.Check.VISIBLE, action.getCheck());
 
         verify(locator).isVisible();
     }
@@ -309,8 +309,8 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.shouldHaveText("#welcome", "Hello");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
-        Assert.assertEquals(((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck(), VerifyAction.Check.TEXT);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
+        Assertions.assertEquals(VerifyAction.Check.TEXT, ((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck());
 
         verify(locator).textContent();
     }
@@ -324,8 +324,8 @@ public class PlaywrightStepsTest {
         steps.pageTitleShouldBe("Shop");
         steps.pageUrlShouldBe("https://example.com/shop");
 
-        Assert.assertEquals(((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck(), VerifyAction.Check.TITLE);
-        Assert.assertEquals(((VerifyAction) runner.getTestCase().getTestAction(1)).getCheck(), VerifyAction.Check.URL);
+        Assertions.assertEquals(VerifyAction.Check.TITLE, ((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck());
+        Assertions.assertEquals(VerifyAction.Check.URL, ((VerifyAction) runner.getTestCase().getTestAction(1)).getCheck());
 
         verify(page).title();
         verify(page).url();
@@ -338,12 +338,12 @@ public class PlaywrightStepsTest {
         steps.handleDialog("dismisses");
         steps.screenshot("target/shot.png");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof DialogAction);
-        Assert.assertEquals(((DialogAction) runner.getTestCase().getTestAction(0)).getCommand(), DialogAction.Command.ACCEPT);
-        Assert.assertTrue(runner.getTestCase().getTestAction(1) instanceof DialogAction);
-        Assert.assertEquals(((DialogAction) runner.getTestCase().getTestAction(1)).getCommand(), DialogAction.Command.DISMISS);
-        Assert.assertTrue(runner.getTestCase().getTestAction(2) instanceof ScreenshotAction);
-        Assert.assertEquals(((ScreenshotAction) runner.getTestCase().getTestAction(2)).getPath(), "target/shot.png");
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof DialogAction);
+        Assertions.assertEquals(DialogAction.Command.ACCEPT, ((DialogAction) runner.getTestCase().getTestAction(0)).getCommand());
+        Assertions.assertTrue(runner.getTestCase().getTestAction(1) instanceof DialogAction);
+        Assertions.assertEquals(DialogAction.Command.DISMISS, ((DialogAction) runner.getTestCase().getTestAction(1)).getCommand());
+        Assertions.assertTrue(runner.getTestCase().getTestAction(2) instanceof ScreenshotAction);
+        Assertions.assertEquals("target/shot.png", ((ScreenshotAction) runner.getTestCase().getTestAction(2)).getPath());
 
         verify(page, Mockito.times(2)).onceDialog(any());
         verify(page).screenshot(any(Page.ScreenshotOptions.class));
@@ -355,8 +355,8 @@ public class PlaywrightStepsTest {
         steps.clickTyped("xpath", "//button[@id='go']");
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof MouseAction);
-        Assert.assertEquals(((MouseAction) testCase.getTestAction(0)).getCommand(), MouseAction.Command.CLICK);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof MouseAction);
+        Assertions.assertEquals(MouseAction.Command.CLICK, ((MouseAction) testCase.getTestAction(0)).getCommand());
 
         verify(page).locator("xpath=//button[@id='go']");
         verify(locator).click();
@@ -368,8 +368,8 @@ public class PlaywrightStepsTest {
         steps.clickRoleNamed("button", "Login");
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof MouseAction);
-        Assert.assertEquals(((MouseAction) testCase.getTestAction(0)).getCommand(), MouseAction.Command.CLICK);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof MouseAction);
+        Assertions.assertEquals(MouseAction.Command.CLICK, ((MouseAction) testCase.getTestAction(0)).getCommand());
 
         verify(page).getByRole(org.mockito.ArgumentMatchers.eq(AriaRole.BUTTON), any(Page.GetByRoleOptions.class));
         verify(locator).click();
@@ -381,10 +381,10 @@ public class PlaywrightStepsTest {
         steps.fillTyped("alice", "text", "Username");
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof InputAction);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof InputAction);
         InputAction action = (InputAction) testCase.getTestAction(0);
-        Assert.assertEquals(action.getCommand(), InputAction.Command.FILL);
-        Assert.assertEquals(action.getValue(), "alice");
+        Assertions.assertEquals(InputAction.Command.FILL, action.getCommand());
+        Assertions.assertEquals("alice", action.getValue());
 
         verify(page).getByText("Username");
         verify(locator).fill("alice");
@@ -397,8 +397,8 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.shouldDisplayTyped("test-id", "welcome");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
-        Assert.assertEquals(((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck(), VerifyAction.Check.VISIBLE);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
+        Assertions.assertEquals(VerifyAction.Check.VISIBLE, ((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck());
 
         verify(page).getByTestId("welcome");
         verify(locator).isVisible();
@@ -411,8 +411,8 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         steps.shouldHaveTextTyped("xpath", "//h1", "Hello");
 
-        Assert.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
-        Assert.assertEquals(((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck(), VerifyAction.Check.TEXT);
+        Assertions.assertTrue(runner.getTestCase().getTestAction(0) instanceof VerifyAction);
+        Assertions.assertEquals(VerifyAction.Check.TEXT, ((VerifyAction) runner.getTestCase().getTestAction(0)).getCheck());
 
         verify(page).locator("xpath=//h1");
         verify(locator).textContent();
@@ -423,29 +423,29 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
 
         steps.clearTyped("xpath", "//input[@id='name']");
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(0)).getCommand(), InputAction.Command.CLEAR);
+        Assertions.assertEquals(InputAction.Command.CLEAR, ((InputAction) runner.getTestCase().getTestAction(0)).getCommand());
         verify(page).locator("xpath=//input[@id='name']");
         verify(locator).clear();
 
         steps.pressTyped("Enter", "test-id", "go");
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(1)).getCommand(), InputAction.Command.PRESS);
+        Assertions.assertEquals(InputAction.Command.PRESS, ((InputAction) runner.getTestCase().getTestAction(1)).getCommand());
         verify(page).getByTestId("go");
         verify(locator).press("Enter");
 
         steps.checkInputTyped("checks", "css", "#remember");
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(2)).getCommand(), InputAction.Command.CHECK);
+        Assertions.assertEquals(InputAction.Command.CHECK, ((InputAction) runner.getTestCase().getTestAction(2)).getCommand());
         verify(locator).check();
 
         steps.checkInputTyped("unchecks", "css", "#remember");
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(3)).getCommand(), InputAction.Command.UNCHECK);
+        Assertions.assertEquals(InputAction.Command.UNCHECK, ((InputAction) runner.getTestCase().getTestAction(3)).getCommand());
         verify(locator).uncheck();
 
         steps.selectTyped("blue", "text", "Colors");
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(4)).getCommand(), InputAction.Command.SELECT);
+        Assertions.assertEquals(InputAction.Command.SELECT, ((InputAction) runner.getTestCase().getTestAction(4)).getCommand());
         verify(page).getByText("Colors");
 
         steps.hoverTyped("role", "menu");
-        Assert.assertEquals(((MouseAction) runner.getTestCase().getTestAction(5)).getCommand(), MouseAction.Command.HOVER);
+        Assertions.assertEquals(MouseAction.Command.HOVER, ((MouseAction) runner.getTestCase().getTestAction(5)).getCommand());
     }
 
     @Test
@@ -453,17 +453,17 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
 
         steps.fillRoleNamed("alice", "textbox", "Username");
-        Assert.assertEquals(((InputAction) runner.getTestCase().getTestAction(0)).getCommand(), InputAction.Command.FILL);
+        Assertions.assertEquals(InputAction.Command.FILL, ((InputAction) runner.getTestCase().getTestAction(0)).getCommand());
         verify(page).getByRole(org.mockito.ArgumentMatchers.eq(AriaRole.TEXTBOX), any(Page.GetByRoleOptions.class));
         verify(locator).fill("alice");
 
         when(locator.isVisible()).thenReturn(true);
         steps.shouldDisplayRoleNamed("button", "Login");
-        Assert.assertEquals(((VerifyAction) runner.getTestCase().getTestAction(1)).getCheck(), VerifyAction.Check.VISIBLE);
+        Assertions.assertEquals(VerifyAction.Check.VISIBLE, ((VerifyAction) runner.getTestCase().getTestAction(1)).getCheck());
 
         when(locator.textContent()).thenReturn("Hello");
         steps.shouldHaveTextRoleNamed("heading", "Welcome", "Hello");
-        Assert.assertEquals(((VerifyAction) runner.getTestCase().getTestAction(2)).getCheck(), VerifyAction.Check.TEXT);
+        Assertions.assertEquals(VerifyAction.Check.TEXT, ((VerifyAction) runner.getTestCase().getTestAction(2)).getCheck());
     }
 
     @Test
@@ -483,13 +483,13 @@ public class PlaywrightStepsTest {
         freshSteps.before();
 
         // Two custom beans, no default: before() leaves browser unresolved.
-        Assert.assertNull(freshSteps.browser);
+        Assertions.assertNull(freshSteps.browser);
         try {
             freshSteps.click("#login");
-            Assert.fail("Expected CitrusRuntimeException naming the available browsers");
+            Assertions.fail("Expected CitrusRuntimeException naming the available browsers");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("shopBrowser"), "must name available ids: " + e.getMessage());
-            Assert.assertTrue(e.getMessage().contains("adminBrowser"), "must name available ids: " + e.getMessage());
+            Assertions.assertTrue(e.getMessage().contains("shopBrowser"), "must name available ids: " + e.getMessage());
+            Assertions.assertTrue(e.getMessage().contains("adminBrowser"), "must name available ids: " + e.getMessage());
         }
     }
 
@@ -503,9 +503,9 @@ public class PlaywrightStepsTest {
 
         try {
             freshSteps.click("#login");
-            Assert.fail("Expected CitrusRuntimeException when no browser is configured");
+            Assertions.fail("Expected CitrusRuntimeException when no browser is configured");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("No Playwright browser configured"), e.getMessage());
+            Assertions.assertTrue(e.getMessage().contains("No Playwright browser configured"), e.getMessage());
         }
     }
 
@@ -515,12 +515,12 @@ public class PlaywrightStepsTest {
         steps.pageAction(LoginPageStub.class.getName(), "submit");
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof PageObjectAction);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof PageObjectAction);
         PageObjectAction action = (PageObjectAction) testCase.getTestAction(0);
-        Assert.assertEquals(action.getPageType(), LoginPageStub.class);
-        Assert.assertEquals(action.getMethod(), "submit");
+        Assertions.assertEquals(LoginPageStub.class, action.getPageType());
+        Assertions.assertEquals("submit", action.getMethod());
 
-        Assert.assertEquals(LoginPageStub.invocations, List.of("submit"));
+        Assertions.assertEquals(List.of("submit"), LoginPageStub.invocations);
     }
 
     @Test
@@ -533,13 +533,13 @@ public class PlaywrightStepsTest {
         steps.pageActionWithArguments(LoginPageStub.class.getName(), "setUserName", dataTable);
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof PageObjectAction);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof PageObjectAction);
         PageObjectAction action = (PageObjectAction) testCase.getTestAction(0);
-        Assert.assertEquals(action.getPageType(), LoginPageStub.class);
-        Assert.assertEquals(action.getMethod(), "setUserName");
-        Assert.assertEquals(action.getArguments(), new String[]{"alice"});
+        Assertions.assertEquals(LoginPageStub.class, action.getPageType());
+        Assertions.assertEquals("setUserName", action.getMethod());
+        Assertions.assertArrayEquals(new String[]{"alice"}, action.getArguments());
 
-        Assert.assertEquals(LoginPageStub.lastUserName, "alice");
+        Assertions.assertEquals("alice", LoginPageStub.lastUserName);
     }
 
     @Test
@@ -548,12 +548,12 @@ public class PlaywrightStepsTest {
         steps.pageShouldValidate(LoginPageStub.class.getName(), LoginPageValidatorStub.class.getName());
 
         TestCase testCase = runner.getTestCase();
-        Assert.assertTrue(testCase.getTestAction(0) instanceof PageObjectAction);
+        Assertions.assertTrue(testCase.getTestAction(0) instanceof PageObjectAction);
         PageObjectAction action = (PageObjectAction) testCase.getTestAction(0);
-        Assert.assertEquals(action.getPageType(), LoginPageStub.class);
-        Assert.assertEquals(action.getValidatorType(), LoginPageValidatorStub.class);
+        Assertions.assertEquals(LoginPageStub.class, action.getPageType());
+        Assertions.assertEquals(LoginPageValidatorStub.class, action.getValidatorType());
 
-        Assert.assertTrue(LoginPageValidatorStub.validated);
+        Assertions.assertTrue(LoginPageValidatorStub.validated);
     }
 
     @Test
@@ -561,9 +561,9 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         try {
             steps.pageAction("com.example.MissingPage", "submit");
-            Assert.fail("Expected CitrusRuntimeException for unknown page type");
+            Assertions.fail("Expected CitrusRuntimeException for unknown page type");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("com.example.MissingPage"));
+            Assertions.assertTrue(e.getMessage().contains("com.example.MissingPage"));
         }
     }
 
@@ -572,9 +572,9 @@ public class PlaywrightStepsTest {
         steps.setBrowser("playwrightBrowser");
         try {
             steps.pageShouldValidate(LoginPageStub.class.getName(), LoginPageStub.class.getName());
-            Assert.fail("Expected CitrusRuntimeException for invalid validator type");
+            Assertions.fail("Expected CitrusRuntimeException for invalid validator type");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains(LoginPageStub.class.getName()));
+            Assertions.assertTrue(e.getMessage().contains(LoginPageStub.class.getName()));
         }
     }
 }
