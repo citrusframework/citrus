@@ -256,7 +256,6 @@ public class ChannelEndpointSyncConsumerTest extends AbstractUnitTest {
         }
 
         Assertions.fail("Missing " + ActionTimeoutException.class + " because no message was received");
-        verify(messagingTemplate).setReceiveTimeout(5000L);
     }
 
     @Test
