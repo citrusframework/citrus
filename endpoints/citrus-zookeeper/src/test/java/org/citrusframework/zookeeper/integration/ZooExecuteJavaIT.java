@@ -16,83 +16,91 @@
 
 package org.citrusframework.zookeeper.integration;
 
+import org.citrusframework.TestCaseRunner;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.zookeeper.client.ZooClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zookeeper;
 
 /**
  * @since 2.5
  */
-public class ZooExecuteJavaIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated
+public class ZooExecuteJavaIT implements TestActionSupport {
 
     @Autowired
     private ZooClient zooClient;
 
     @Test
     @CitrusTest(name = "Zookeeper_01_IT")
-    public void zookeeper01IT() {
-        variable("expectedConnectionState", "CONNECTED");
-        variable("randomString", "citrus:randomString(10)");
+    public void zookeeper01IT(@CitrusResource TestCaseRunner runner) {
+        runner.variable("expectedConnectionState", "CONNECTED");
+        runner.variable("randomString", "citrus:randomString(10)");
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .validate("$.responseData.state", "${expectedConnectionState}")
             .info());
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .extract(extractor().jsonPath()
                     .expression("$.responseData.path", "path"))
             .create("/${randomString}", "some test data")
             .acl("OPEN_ACL_UNSAFE")
             .mode("PERSISTENT")
-            .validateCommandResult((result, context) -> Assert.assertEquals(result.getResponseData().get("path"),
-                    context.replaceDynamicContentInString("/${randomString}"))));
+            .validateCommandResult((result, context) -> Assertions.assertEquals(
+                    context.replaceDynamicContentInString("/${randomString}"), result.getResponseData().get("path"))));
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .exists("${path}")
-            .validateCommandResult((result, context) -> Assert.assertEquals(result.getResponseData().get("version"), 0)));
+            .validateCommandResult((result, context) -> Assertions.assertEquals(0, result.getResponseData().get("version"))));
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .get("${path}")
-            .validateCommandResult((result, context) -> Assert.assertEquals(result.getResponseData().get("data"), "some test data")));
+            .validateCommandResult((result, context) -> Assertions.assertEquals("some test data", result.getResponseData().get("data"))));
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .set("${path}", "new data"));
 
-        run(zookeeper()
+        runner.run(zookeeper()
            .client(zooClient)
            .get("${path}")
-           .validateCommandResult((result, context) -> Assert.assertEquals(result.getResponseData().get("data"), "new data")));
+           .validateCommandResult((result, context) -> Assertions.assertEquals("new data", result.getResponseData().get("data"))));
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .create("/${randomString}/child1", "")
             .acl("OPEN_ACL_UNSAFE")
             .mode("PERSISTENT")
-            .validateCommandResult((result, context) -> Assert.assertEquals(result.getResponseData().get("path"),
-                    context.replaceDynamicContentInString("/${randomString}/child1"))));
+            .validateCommandResult((result, context) -> Assertions.assertEquals(
+                    context.replaceDynamicContentInString("/${randomString}/child1"), result.getResponseData().get("path"))));
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .create("/${randomString}/child2", "")
             .acl("OPEN_ACL_UNSAFE")
             .mode("PERSISTENT")
-            .validateCommandResult((result, context) -> Assert.assertEquals(result.getResponseData().get("path"),
-                    context.replaceDynamicContentInString("/${randomString}/child2"))));
+            .validateCommandResult((result, context) -> Assertions.assertEquals(
+                    context.replaceDynamicContentInString("/${randomString}/child2"), result.getResponseData().get("path"))));
 
-        run(zookeeper()
+        runner.run(zookeeper()
             .client(zooClient)
             .children("/${randomString}")
-            .validateCommandResult((result, context) -> Assert.assertEquals(result.getResponseData().get("children").toString(), "[child1, child2]")));
+            .validateCommandResult((result, context) -> Assertions.assertEquals("[child1, child2]", result.getResponseData().get("children").toString())));
     }
 }

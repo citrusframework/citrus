@@ -32,8 +32,8 @@ import org.citrusframework.zookeeper.UnitTestSupport;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
 import org.citrusframework.zookeeper.command.AbstractZooCommand;
 import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zookeeper;
 import static org.mockito.Mockito.*;
@@ -86,18 +86,18 @@ public class ZooExecuteTestActionBuilderTest extends UnitTestSupport implements 
                             .expression("$.responseData.sessionTimeout","sessionTimeout"))
                 .info()
                 .validateCommandResult((result, context) -> {
-                    Assert.assertNotNull(result);
-                    Assert.assertEquals(result.getResponseData().get("state"), ZooKeeper.States.CONNECTED.name());
-                    Assert.assertEquals(result.getResponseData().get("sessionId"), 100L);
-                    Assert.assertEquals(result.getResponseData().get("sessionPwd"), pwd.getBytes());
-                    Assert.assertEquals(result.getResponseData().get("sessionTimeout"), 200);
+                    Assertions.assertNotNull(result);
+                    Assertions.assertEquals(ZooKeeper.States.CONNECTED.name(), result.getResponseData().get("state"));
+                    Assertions.assertEquals(100L, result.getResponseData().get("sessionId"));
+                    Assertions.assertArrayEquals(pwd.getBytes(), (byte[]) result.getResponseData().get("sessionPwd"));
+                    Assertions.assertEquals(200, result.getResponseData().get("sessionTimeout"));
                 }));
 
         builder.$(zookeeper().client(new org.citrusframework.zookeeper.client.ZooClient(zookeeperClientMock))
                 .create(path, data)
                 .validateCommandResult((result, context) -> {
-                    Assert.assertNotNull(result);
-                    Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.PATH), newPath);
+                    Assertions.assertNotNull(result);
+                    Assertions.assertEquals(newPath, result.getResponseData().get(AbstractZooCommand.PATH));
                 }));
 
         builder.$(zookeeper().client(new org.citrusframework.zookeeper.client.ZooClient(zookeeperClientMock))
@@ -107,69 +107,69 @@ public class ZooExecuteTestActionBuilderTest extends UnitTestSupport implements 
         builder.$(zookeeper().client(new org.citrusframework.zookeeper.client.ZooClient(zookeeperClientMock))
                 .exists(path)
                 .validateCommandResult((result, context) -> {
-                    Assert.assertNotNull(result);
+                    Assertions.assertNotNull(result);
                     for (Object o : result.getResponseData().values()) {
-                        Assert.assertEquals(o.toString(), "1");
+                        Assertions.assertEquals("1", o.toString());
                     }
                 }));
 
         builder.$(zookeeper().client(new org.citrusframework.zookeeper.client.ZooClient(zookeeperClientMock))
                 .children(path)
                 .validateCommandResult((result, context) -> {
-                    Assert.assertNotNull(result);
-                    Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.CHILDREN), children);
+                    Assertions.assertNotNull(result);
+                    Assertions.assertEquals(children, result.getResponseData().get(AbstractZooCommand.CHILDREN));
                 }));
 
         builder.$(zookeeper().client(new org.citrusframework.zookeeper.client.ZooClient(zookeeperClientMock))
                 .get(path)
                 .validateCommandResult((result, context) -> {
-                    Assert.assertNotNull(result);
-                    Assert.assertEquals(result.getResponseData().get(AbstractZooCommand.DATA), data);
+                    Assertions.assertNotNull(result);
+                    Assertions.assertEquals(data, result.getResponseData().get(AbstractZooCommand.DATA));
                 }));
 
         builder.$(zookeeper().client(new org.citrusframework.zookeeper.client.ZooClient(zookeeperClientMock))
                 .set(path, data)
                 .validateCommandResult((result, context) -> {
-                    Assert.assertNotNull(result);
+                    Assertions.assertNotNull(result);
                     for (Object o : result.getResponseData().values()) {
-                        Assert.assertEquals(o.toString(), "1");
+                        Assertions.assertEquals("1", o.toString());
                     }
                 }));
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 7);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ZooExecuteAction.class);
-        Assert.assertEquals(test.getActiveAction().getClass(), ZooExecuteAction.class);
+        Assertions.assertEquals(7, test.getActionCount());
+        Assertions.assertEquals(ZooExecuteAction.class, test.getActions().get(0).getClass());
+        Assertions.assertEquals(ZooExecuteAction.class, test.getActiveAction().getClass());
 
         String actionName = "zookeeper-execute";
 
         ZooExecuteAction action = (ZooExecuteAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), actionName);
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.Info.class);
+        Assertions.assertEquals(actionName, action.getName());
+        Assertions.assertEquals(org.citrusframework.zookeeper.command.Info.class, action.getCommand().getClass());
 
         action = (ZooExecuteAction) test.getActions().get(1);
-        Assert.assertEquals(action.getName(), actionName);
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.Create.class);
+        Assertions.assertEquals(actionName, action.getName());
+        Assertions.assertEquals(org.citrusframework.zookeeper.command.Create.class, action.getCommand().getClass());
 
         action = (ZooExecuteAction) test.getActions().get(2);
-        Assert.assertEquals(action.getName(), actionName);
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.Delete.class);
+        Assertions.assertEquals(actionName, action.getName());
+        Assertions.assertEquals(org.citrusframework.zookeeper.command.Delete.class, action.getCommand().getClass());
 
         action = (ZooExecuteAction) test.getActions().get(3);
-        Assert.assertEquals(action.getName(), actionName);
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.Exists.class);
+        Assertions.assertEquals(actionName, action.getName());
+        Assertions.assertEquals(org.citrusframework.zookeeper.command.Exists.class, action.getCommand().getClass());
 
         action = (ZooExecuteAction) test.getActions().get(4);
-        Assert.assertEquals(action.getName(), actionName);
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.GetChildren.class);
+        Assertions.assertEquals(actionName, action.getName());
+        Assertions.assertEquals(org.citrusframework.zookeeper.command.GetChildren.class, action.getCommand().getClass());
 
         action = (ZooExecuteAction) test.getActions().get(5);
-        Assert.assertEquals(action.getName(), actionName);
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.GetData.class);
+        Assertions.assertEquals(actionName, action.getName());
+        Assertions.assertEquals(org.citrusframework.zookeeper.command.GetData.class, action.getCommand().getClass());
 
         action = (ZooExecuteAction) test.getActions().get(6);
-        Assert.assertEquals(action.getName(), actionName);
-        Assert.assertEquals(action.getCommand().getClass(), org.citrusframework.zookeeper.command.SetData.class);
+        Assertions.assertEquals(actionName, action.getName());
+        Assertions.assertEquals(org.citrusframework.zookeeper.command.SetData.class, action.getCommand().getClass());
     }
 
     private Stat prepareStatMock() {

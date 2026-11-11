@@ -18,14 +18,14 @@ package org.citrusframework.zookeeper.config.xml;
 
 import java.util.Map;
 
-import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.junit.jupiter.AbstractActionParserTest;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
 import org.citrusframework.zookeeper.client.ZooClient;
 import org.citrusframework.zookeeper.command.Create;
 import org.citrusframework.zookeeper.command.Info;
 import org.springframework.beans.factory.BeanCreationException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ZooExecuteActionParserTest extends AbstractActionParserTest<ZooExecuteAction> {
 
@@ -35,31 +35,31 @@ public class ZooExecuteActionParserTest extends AbstractActionParserTest<ZooExec
         assertActionClassAndName(ZooExecuteAction.class, "zookeeper-execute");
 
         ZooExecuteAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Info.class);
-        Assert.assertEquals(action.getZookeeperClient(), beanDefinitionContext.getBean("myZookeeperClient", ZooClient.class));
-        Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertEquals(action.getExpectedCommandResult(), "{a:\"some thing\"}");
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(Info.class, action.getCommand().getClass());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myZookeeperClient", ZooClient.class), action.getZookeeperClient());
+        Assertions.assertEquals(0, action.getCommand().getParameters().size());
+        Assertions.assertEquals("{a:\"some thing\"}", action.getExpectedCommandResult());
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getCommand());
-        Assert.assertEquals(action.getCommand().getClass(), Create.class);
-        Assert.assertEquals(action.getZookeeperClient(), beanDefinitionContext.getBean("myZookeeperClient", ZooClient.class));
-        Assert.assertEquals(action.getCommand().getParameters().size(), 4);
+        Assertions.assertNotNull(action.getCommand());
+        Assertions.assertEquals(Create.class, action.getCommand().getClass());
+        Assertions.assertEquals(beanDefinitionContext.getBean("myZookeeperClient", ZooClient.class), action.getZookeeperClient());
+        Assertions.assertEquals(4, action.getCommand().getParameters().size());
         assertParametersContainValue(action.getCommand().getParameters(), "path", "/some-path");
         assertParametersContainValue(action.getCommand().getParameters(), "mode", "PERSISTENT");
         assertParametersContainValue(action.getCommand().getParameters(), "acl", "OPEN_ACL_UNSAFE");
         assertParametersContainValue(action.getCommand().getParameters(), "data", "more data");
-        Assert.assertEquals(action.getExpectedCommandResult(), "{b:\"some thing\"}");
+        Assertions.assertEquals("{b:\"some thing\"}", action.getExpectedCommandResult());
     }
 
     private void assertParametersContainValue(Map<String, Object> parameters, String key, String value) {
-        Assert.assertTrue(parameters.containsKey(key));
-        Assert.assertEquals(parameters.get(key), value);
+        Assertions.assertTrue(parameters.containsKey(key));
+        Assertions.assertEquals(value, parameters.get(key));
     }
 
-    @Test(expectedExceptions = BeanCreationException.class)
+    @Test
     public void testZookeeperExecuteActionParserFailed() {
-        createApplicationContext("failed");
+        Assertions.assertThrows(BeanCreationException.class, () -> createApplicationContext("failed"));
     }
 }
