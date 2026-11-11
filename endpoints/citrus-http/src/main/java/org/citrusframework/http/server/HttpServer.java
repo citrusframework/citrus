@@ -41,6 +41,7 @@ import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.springframework.http.HttpStatus;
@@ -201,6 +202,7 @@ public class HttpServer extends AbstractServer {
     @Override
     protected void startup() {
         synchronized (serverLock) {
+            boolean resolvePort = false;
             if (connectors != null && connectors.length > 0) {
                 jettyServer = connectors[0].getServer();
                 jettyServer.setConnectors(connectors);
@@ -209,6 +211,7 @@ public class HttpServer extends AbstractServer {
                 jettyServer.addConnector(connector);
             } else {
                 jettyServer = new Server(port);
+                resolvePort = true;
             }
 
             final Handler.Sequence handlers = new Handler.Sequence();
@@ -271,6 +274,10 @@ public class HttpServer extends AbstractServer {
             jettyServer.setHandler(handlers);
 
             startJettyServerThrowingCitrusRuntimeException();
+
+            if (resolvePort) {
+                port = ((ServerConnector) jettyServer.getConnectors()[0]).getLocalPort();
+            }
         }
     }
 
