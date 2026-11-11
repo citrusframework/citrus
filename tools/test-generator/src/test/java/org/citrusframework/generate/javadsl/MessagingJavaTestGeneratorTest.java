@@ -23,8 +23,8 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessagingJavaTestGeneratorTest {
 
@@ -44,12 +44,12 @@ public class MessagingJavaTestGeneratorTest {
         generator.create();
 
         File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleReqResIT.java");
-        Assert.assertTrue(javaFile.exists());
+        Assertions.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("public class SampleReqResIT"));
-        Assert.assertTrue(javaContent.contains("* This is a sample test"));
-        Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+        Assertions.assertTrue(javaContent.contains("public class SampleReqResIT"));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
     }
 }

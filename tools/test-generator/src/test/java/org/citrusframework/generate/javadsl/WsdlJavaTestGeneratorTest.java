@@ -22,11 +22,11 @@ import java.util.Collections;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
-import org.citrusframework.util.FileUtils;
 import org.citrusframework.generate.util.CleanupUtils;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.util.FileUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7.4
@@ -37,8 +37,8 @@ public class WsdlJavaTestGeneratorTest {
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 
-    @AfterMethod
-    public void cleanUp(){
+    @AfterEach
+    public void cleanUp() {
         cleanupUtils.deleteFiles(testDir, Collections.singleton("BookStore*"));
     }
 
@@ -62,14 +62,14 @@ public class WsdlJavaTestGeneratorTest {
 
     private void verifyTest(String name, String requestName, String responseName) throws IOException {
         File javaFile = new File(testDir + name + FileUtils.FILE_EXTENSION_JAVA);
-        Assert.assertTrue(javaFile.exists());
+        Assertions.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("public class " + name));
-        Assert.assertTrue(javaContent.contains("* This is a sample test"));
-        Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
-        Assert.assertTrue(javaContent.contains(requestName));
-        Assert.assertTrue(javaContent.contains(responseName));
+        Assertions.assertTrue(javaContent.contains("public class " + name));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+        Assertions.assertTrue(javaContent.contains(requestName));
+        Assertions.assertTrue(javaContent.contains(responseName));
     }
 }
