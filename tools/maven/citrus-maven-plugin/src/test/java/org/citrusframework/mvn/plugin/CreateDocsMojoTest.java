@@ -22,9 +22,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class CreateDocsMojoTest {
 
     private CreateDocsMojo mojo;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         mojo = new CreateDocsMojo(excelTestDocGenerator, htmlTestDocGenerator);
         mojo.setPrompter(prompter);

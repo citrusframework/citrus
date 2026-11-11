@@ -33,10 +33,9 @@ import org.citrusframework.mvn.plugin.config.tests.SwaggerConfiguration;
 import org.citrusframework.mvn.plugin.config.tests.TestConfiguration;
 import org.citrusframework.mvn.plugin.config.tests.WsdlConfiguration;
 import org.citrusframework.mvn.plugin.config.tests.XsdConfiguration;
-import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
@@ -57,7 +56,7 @@ public class GenerateTestMojoTest {
 
     private GenerateTestMojo mojo;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         mojo = new GenerateTestMojo(xmlTestGenerator,
                                     xsdXmlTestGenerator,
