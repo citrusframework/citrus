@@ -21,6 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -34,11 +39,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.restdocs.ManualRestDocumentation;
 import org.springframework.restdocs.snippet.Snippet;
 import org.springframework.restdocs.templates.TemplateFormats;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -52,6 +52,8 @@ public class RestDocClientInterceptorTest {
 
     private RestDocClientInterceptor interceptor;
 
+    private AutoCloseable openedMocks;
+
     @Mock
     private HttpRequest request = Mockito.mock(HttpRequest.class);
     @Mock
@@ -61,13 +63,14 @@ public class RestDocClientInterceptorTest {
 
     @BeforeEach
     public void setUp(TestInfo testInfo) {
-        MockitoAnnotations.openMocks(this);
+        openedMocks = MockitoAnnotations.openMocks(this);
         this.restDocumentation.beforeTest(getClass(), testInfo.getTestMethod().orElseThrow().getName());
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws Exception {
         this.restDocumentation.afterTest();
+        openedMocks.close();
     }
 
     @Test

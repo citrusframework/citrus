@@ -20,8 +20,8 @@ import java.util.Arrays;
 
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.annotations.CitrusResource;
-import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
@@ -29,15 +29,15 @@ import org.citrusframework.report.TestListeners;
 import org.citrusframework.restdocs.http.CitrusRestDocConfigurer;
 import org.citrusframework.restdocs.http.RestDocClientInterceptor;
 import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.ManualRestDocumentation;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 
 import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsConfigurer;
 import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsInterceptor;
@@ -57,6 +57,9 @@ public class RestDocConfigurationIT implements TestActionSupport {
 
     @BeforeEach
     public void setup() {
+        // A fresh configurer per test method is required because ManualRestDocumentation starts a new
+        // documentation context for each test. The configurer stays registered on the shared
+        // TestListeners bean, which is safe while this class declares a single test method.
         CitrusRestDocConfigurer restDocConfigurer = restDocsConfigurer(new ManualRestDocumentation("target/generated-snippets"));
         RestDocClientInterceptor restDocInterceptor = restDocsInterceptor("rest-docs/{method-name}");
 

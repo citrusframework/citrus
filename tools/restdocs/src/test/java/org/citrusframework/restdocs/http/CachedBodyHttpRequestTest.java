@@ -16,12 +16,12 @@
 
 package org.citrusframework.restdocs.http;
 
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
