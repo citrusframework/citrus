@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import jakarta.servlet.http.Cookie;
-import org.assertj.core.api.Assertions;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCaseRunner;
@@ -3009,7 +3008,7 @@ class GeneratedRestApiIT {
                 .post("/api/v3/ext/pet/vaccination/status-report")
                 .message()
                 .validate((message, context) ->
-                    Assertions.assertThat(multipartMessageToMap((HttpMessage) message))
+                    assertThat(multipartMessageToMap((HttpMessage) message))
                         .containsExactlyInAnyOrderEntriesOf(Map.of(
                             "additionalData", additionalData,
                             "reqIntVal", "1",

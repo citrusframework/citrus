@@ -11,7 +11,6 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.project.MavenProject;
 import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
 import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiType;
@@ -42,8 +41,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings({"JUnitMalformedDeclaration"})
-class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {
+class TestApiGeneratorMojoUnitTest {
 
     @InjectMocks
     private TestApiGeneratorMojo fixture = new TestApiGeneratorMojo();
