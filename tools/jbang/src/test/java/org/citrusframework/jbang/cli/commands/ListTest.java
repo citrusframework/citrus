@@ -18,7 +18,7 @@ package org.citrusframework.jbang.cli.commands;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.junit.jupiter.api.Assertions;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class ListTest extends CommandTest {
 

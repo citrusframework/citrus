@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.spi.Resources;
 import org.junit.jupiter.api.Assertions;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class InspectTest extends CommandTest {
 
