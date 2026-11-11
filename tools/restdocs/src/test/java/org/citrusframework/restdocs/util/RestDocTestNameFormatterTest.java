@@ -16,8 +16,8 @@
 
 package org.citrusframework.restdocs.util;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.6
@@ -26,11 +26,11 @@ public class RestDocTestNameFormatterTest {
 
     @Test
     public void testFormat() {
-        Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), getClass().getSimpleName() + ".testName"), "testName");
-        Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), getClass().getSimpleName() + ".testNameIT"), "testNameIt");
-        Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), "someOtherName.testName"), "someOtherName.testName");
-        Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), "someOtherName.testNameIT"), "someOtherName.testNameIt");
-        Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), "testName"), "testName");
-        Assert.assertEquals(RestDocTestNameFormatter.format(getClass(), "testNameIT"), "testNameIt");
+        Assertions.assertEquals("testName", RestDocTestNameFormatter.format(getClass(), getClass().getSimpleName() + ".testName"));
+        Assertions.assertEquals("testNameIt", RestDocTestNameFormatter.format(getClass(), getClass().getSimpleName() + ".testNameIT"));
+        Assertions.assertEquals("someOtherName.testName", RestDocTestNameFormatter.format(getClass(), "someOtherName.testName"));
+        Assertions.assertEquals("someOtherName.testNameIt", RestDocTestNameFormatter.format(getClass(), "someOtherName.testNameIT"));
+        Assertions.assertEquals("testName", RestDocTestNameFormatter.format(getClass(), "testName"));
+        Assertions.assertEquals("testNameIt", RestDocTestNameFormatter.format(getClass(), "testNameIT"));
     }
 }

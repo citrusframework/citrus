@@ -18,10 +18,16 @@ package org.citrusframework.restdocs.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
-public class SoapRestDocsIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("RestDocs ITs share the Citrus Spring context and local HTTP/SOAP endpoints under parallel classes")
+public class SoapRestDocsIT {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "SoapRestDocsIT")
     public void soapRestDocsIT() {}

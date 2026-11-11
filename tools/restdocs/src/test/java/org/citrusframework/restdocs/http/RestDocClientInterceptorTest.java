@@ -19,7 +19,6 @@ package org.citrusframework.restdocs.http;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URI;
 
 import org.mockito.Mock;
@@ -35,10 +34,11 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.restdocs.ManualRestDocumentation;
 import org.springframework.restdocs.snippet.Snippet;
 import org.springframework.restdocs.templates.TemplateFormats;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -59,13 +59,13 @@ public class RestDocClientInterceptorTest {
     @Mock
     private ClientHttpRequestExecution execution = Mockito.mock(ClientHttpRequestExecution.class);
 
-    @BeforeMethod
-    public void setUp(Method method) {
+    @BeforeEach
+    public void setUp(TestInfo testInfo) {
         MockitoAnnotations.openMocks(this);
-        this.restDocumentation.beforeTest(getClass(), method.getName());
+        this.restDocumentation.beforeTest(getClass(), testInfo.getTestMethod().orElseThrow().getName());
     }
 
-    @AfterMethod
+    @AfterEach
     public void tearDown() {
         this.restDocumentation.afterTest();
     }
@@ -120,7 +120,7 @@ public class RestDocClientInterceptorTest {
     private void assertExpectedSnippetFilesExist(String identifier, String... snippets) {
         for (String snippet : snippets) {
             File snippetFile = new File (new File("target/citrus-docs/generated-snippets/" + identifier), snippet);
-            Assert.assertTrue(snippetFile.isFile(), "Snippet " + snippetFile + " not found");
+            Assertions.assertTrue(snippetFile.isFile(), "Snippet " + snippetFile + " not found");
         }
     }
 }
