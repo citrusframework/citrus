@@ -18,21 +18,26 @@ package org.citrusframework.restdocs.integration;
 
 import java.util.Arrays;
 
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.report.TestListeners;
 import org.citrusframework.restdocs.http.CitrusRestDocConfigurer;
 import org.citrusframework.restdocs.http.RestDocClientInterceptor;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.ManualRestDocumentation;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsConfigurer;
 import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsInterceptor;
@@ -40,14 +45,17 @@ import static org.citrusframework.restdocs.http.CitrusRestDocsSupport.restDocsIn
 /**
  * @since 2.6
  */
-public class RestDocConfigurationIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("RestDocs ITs share the Citrus Spring context and local HTTP/SOAP endpoints under parallel classes")
+public class RestDocConfigurationIT implements TestActionSupport {
 
     @Autowired
     private TestListeners testListeners;
 
     private HttpClient httpClient;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         CitrusRestDocConfigurer restDocConfigurer = restDocsConfigurer(new ManualRestDocumentation("target/generated-snippets"));
         RestDocClientInterceptor restDocInterceptor = restDocsInterceptor("rest-docs/{method-name}");
@@ -64,8 +72,8 @@ public class RestDocConfigurationIT extends TestNGCitrusSpringSupport implements
 
     @Test
     @CitrusTest
-    public void testRestDocs() {
-        when(http().client(httpClient)
+    public void testRestDocs(@CitrusResource GherkinTestActionRunner runner) {
+        runner.when(http().client(httpClient)
                 .send()
                 .post()
                 .message()
@@ -77,7 +85,7 @@ public class RestDocConfigurationIT extends TestNGCitrusSpringSupport implements
                 "</HelloRequest>")
                 .header("Operation", "sayHello"));
 
-        then(http().client(httpClient)
+        runner.then(http().client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
                 .message()

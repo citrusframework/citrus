@@ -18,9 +18,9 @@ package org.citrusframework.restdocs.config.xml;
 
 import org.citrusframework.restdocs.http.RestDocClientInterceptor;
 import org.citrusframework.restdocs.soap.RestDocSoapClientInterceptor;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -32,17 +32,17 @@ public class RestDocClientInterceptorParserTest extends AbstractBeanDefinitionPa
     @Test
     public void testClientInterceptorParser() {
         Map<String, RestDocClientInterceptor> interceptors = beanDefinitionContext.getBeansOfType(RestDocClientInterceptor.class);
-        Assert.assertEquals(interceptors.size(), 1);
+        Assertions.assertEquals(1, interceptors.size());
 
         // 1st interceptor
         RestDocClientInterceptor interceptor = interceptors.get("interceptor1");
-        Assert.assertNotNull(interceptor.documentationGenerator());
+        Assertions.assertNotNull(interceptor.documentationGenerator());
 
         Map<String, RestDocSoapClientInterceptor> soapInterceptors = beanDefinitionContext.getBeansOfType(RestDocSoapClientInterceptor.class);
-        Assert.assertEquals(soapInterceptors.size(), 1);
+        Assertions.assertEquals(1, soapInterceptors.size());
 
         // 2nd interceptor
         RestDocSoapClientInterceptor soapInterceptor = soapInterceptors.get("interceptor2");
-        Assert.assertNotNull(soapInterceptor.documentationGenerator());
+        Assertions.assertNotNull(soapInterceptor.documentationGenerator());
     }
 }
