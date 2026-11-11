@@ -16,7 +16,6 @@ import org.citrusframework.openapi.generator.CitrusJavaCodegen.CustomCodegenOper
 import org.citrusframework.openapi.generator.CitrusJavaCodegen.CustomCodegenParameter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.openapitools.codegen.CodegenConfigLoader;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenParameter;
@@ -26,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.citrusframework.openapi.generator.CitrusJavaCodegen.CODEGEN_NAME;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.mock;
 
 /**
  * This test validates the code generation process.
@@ -131,7 +131,7 @@ class CitrusJavaCodegenTest {
     @Test
     void testFromProperty() {
         // Mock schema
-        Schema<?> schema = Mockito.mock(Schema.class);
+        Schema<?> schema = mock(Schema.class);
 
         // Call fromProperty and verify conversion
         CodegenProperty codegenProperty = codegen.fromProperty("name", schema, true);
@@ -143,10 +143,10 @@ class CitrusJavaCodegenTest {
 
     @Test
     void testFromFormProperty() {
-        Schema<?> schema = Mockito.mock(Schema.class);
+        Schema<?> schema = mock(Schema.class);
 
         @SuppressWarnings("unchecked")
-        Set<String> imports = Mockito.mock(Set.class);
+        Set<String> imports = mock(Set.class);
 
         CodegenParameter codegenParameter = codegen.fromFormProperty("formParam", schema, imports);
         assertThat(codegenParameter)
@@ -156,10 +156,10 @@ class CitrusJavaCodegenTest {
 
     @Test
     void testFromParameter() {
-        Parameter parameter = Mockito.mock(Parameter.class);
+        Parameter parameter = mock(Parameter.class);
 
         @SuppressWarnings("unchecked")
-        Set<String> imports = Mockito.mock(Set.class);
+        Set<String> imports = mock(Set.class);
 
         CodegenParameter codegenParameter = codegen.fromParameter(parameter, imports);
         assertThat(codegenParameter)
@@ -168,7 +168,7 @@ class CitrusJavaCodegenTest {
 
     @Test
     void testFromOperation() {
-        Operation operation = Mockito.mock(Operation.class);
+        Operation operation = mock(Operation.class);
         List<Server> servers = Collections.emptyList();
 
         CodegenOperation codegenOperation = codegen.fromOperation("/path/segment1/{param1}/segment3/{param2}", "GET", operation, servers);
