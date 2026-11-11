@@ -23,8 +23,8 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MessagingXmlTestGeneratorTest {
 
@@ -44,20 +44,20 @@ public class MessagingXmlTestGeneratorTest {
         generator.create();
 
         File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleReqResIT.java");
-        Assert.assertTrue(javaFile.exists());
+        Assertions.assertTrue(javaFile.exists());
 
         File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/SampleReqResIT.xml");
-        Assert.assertTrue(xmlFile.exists());
+        Assertions.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("public class SampleReqResIT"));
-        Assert.assertTrue(javaContent.contains("* This is a sample test"));
-        Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+        Assertions.assertTrue(javaContent.contains("public class SampleReqResIT"));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
         String xmlContent = FileUtils.readToString(xmlFile);
-        Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
-        Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleReqResIT\">"));
+        Assertions.assertTrue(xmlContent.contains("<author>Christoph</author>"));
+        Assertions.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
+        Assertions.assertTrue(xmlContent.contains("<testcase name=\"SampleReqResIT\">"));
     }
 }

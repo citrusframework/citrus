@@ -23,8 +23,8 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 2.7.4
@@ -112,13 +112,13 @@ public class SwaggerJavaTestGeneratorTest {
     private void verifyTest(String name) throws IOException {
         File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/" +
                 name + FileUtils.FILE_EXTENSION_JAVA);
-        Assert.assertTrue(javaFile.exists());
+        Assertions.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("public class " + name));
-        Assert.assertTrue(javaContent.contains("* This is a sample test"));
-        Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+        Assertions.assertTrue(javaContent.contains("public class " + name));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
     }
 
     private void verifyTestWithStatus(String name, String httpStatusName) throws IOException {
@@ -128,12 +128,12 @@ public class SwaggerJavaTestGeneratorTest {
                 name + FileUtils.FILE_EXTENSION_JAVA);
         String javaContent = FileUtils.readToString(javaFile);
 
-        Assert.assertTrue(javaContent.contains(httpStatusName),
+        Assertions.assertTrue(javaContent.contains(httpStatusName),
                 "Expected generated test to contain HttpStatus." + httpStatusName +
                         " but it was not found in " + name);
 
         if (!"OK".equals(httpStatusName)) {
-            Assert.assertFalse(javaContent.contains("HttpStatus.OK"),
+            Assertions.assertFalse(javaContent.contains("HttpStatus.OK"),
                     "Generated test " + name + " should not contain HttpStatus.OK " +
                             "when the spec only defines error responses");
         }

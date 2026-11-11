@@ -18,21 +18,25 @@ package org.citrusframework.generate.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * @since 2.7
  */
 public class XsdXmlTestGeneratorTest {
 
-    @Test(dataProvider = "nameProvider")
+    @ParameterizedTest
+    @MethodSource("nameProvider")
     public void testCreateTest(String requestName, String responseName, String generatedResponseName) throws IOException {
         XsdXmlTestGenerator generator = new XsdXmlTestGenerator();
 
@@ -48,36 +52,35 @@ public class XsdXmlTestGeneratorTest {
         generator.create();
 
         File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/HelloIT.java");
-        Assert.assertTrue(javaFile.exists());
+        Assertions.assertTrue(javaFile.exists());
 
         File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/HelloIT.xml");
-        Assert.assertTrue(xmlFile.exists());
+        Assertions.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("public class HelloIT"));
-        Assert.assertTrue(javaContent.contains("* This is a sample test"));
-        Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+        Assertions.assertTrue(javaContent.contains("public class HelloIT"));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
         String xmlContent = FileUtils.readToString(xmlFile);
-        Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
-        Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"HelloIT\">"));
-        Assert.assertTrue(xmlContent.contains("<data>&lt;hel:" + requestName));
-        Assert.assertTrue(xmlContent.contains("<data>&lt;hel:" + generatedResponseName));
+        Assertions.assertTrue(xmlContent.contains("<author>Christoph</author>"));
+        Assertions.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
+        Assertions.assertTrue(xmlContent.contains("<testcase name=\"HelloIT\">"));
+        Assertions.assertTrue(xmlContent.contains("<data>&lt;hel:" + requestName));
+        Assertions.assertTrue(xmlContent.contains("<data>&lt;hel:" + generatedResponseName));
     }
 
-    @DataProvider
-    public Object[][] nameProvider() {
-        return new Object[][] {
-            new Object[] {"Hello", "HelloResponse", "HelloResponse"},
-            new Object[] {"HelloRequest", "HelloResponse", "HelloResponse"},
-            new Object[] {"HelloRequest", "", "HelloResponse"},
-            new Object[] {"HelloRequestMessage", "HelloResponseMessage", "HelloResponseMessage"},
-            new Object[] {"HelloRequestMessage", "", "HelloResponseMessage"},
-            new Object[] {"HelloReq", "HelloRes", "HelloRes"},
-            new Object[] {"HelloReq", "", "HelloRes"}
-        };
+    static Stream<Arguments> nameProvider() {
+        return Stream.of(
+            Arguments.of("Hello", "HelloResponse", "HelloResponse"),
+            Arguments.of("HelloRequest", "HelloResponse", "HelloResponse"),
+            Arguments.of("HelloRequest", "", "HelloResponse"),
+            Arguments.of("HelloRequestMessage", "HelloResponseMessage", "HelloResponseMessage"),
+            Arguments.of("HelloRequestMessage", "", "HelloResponseMessage"),
+            Arguments.of("HelloReq", "HelloRes", "HelloRes"),
+            Arguments.of("HelloReq", "", "HelloRes")
+        );
     }
 
     @Test
@@ -96,26 +99,26 @@ public class XsdXmlTestGeneratorTest {
         generator.create();
 
         File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/HelloIT.java");
-        Assert.assertTrue(javaFile.exists());
+        Assertions.assertTrue(javaFile.exists());
 
         File xmlFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "resources/org/citrusframework/HelloIT.xml");
-        Assert.assertTrue(xmlFile.exists());
+        Assertions.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(javaFile);
-        Assert.assertTrue(javaContent.contains("public class HelloIT"));
-        Assert.assertTrue(javaContent.contains("* This is a sample test"));
-        Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+        Assertions.assertTrue(javaContent.contains("public class HelloIT"));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
         String xmlContent = FileUtils.readToString(xmlFile);
-        Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
-        Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"HelloIT\">"));
-        Assert.assertTrue(xmlContent.contains("<data>&lt;hel:"));
-        Assert.assertFalse(xmlContent.contains("<receive"));
+        Assertions.assertTrue(xmlContent.contains("<author>Christoph</author>"));
+        Assertions.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
+        Assertions.assertTrue(xmlContent.contains("<testcase name=\"HelloIT\">"));
+        Assertions.assertTrue(xmlContent.contains("<data>&lt;hel:"));
+        Assertions.assertFalse(xmlContent.contains("<receive"));
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unable to find element with name 'HiRequest'.*")
+    @Test
     public void testUnknownRequest() {
         XsdXmlTestGenerator generator = new XsdXmlTestGenerator();
 
@@ -128,6 +131,7 @@ public class XsdXmlTestGeneratorTest {
         generator.withRequestMessage("HiRequest");
         generator.withResponseMessage("HiResponse");
 
-        generator.create();
+        CitrusRuntimeException thrown = Assertions.assertThrows(CitrusRuntimeException.class, generator::create);
+        Assertions.assertTrue(thrown.getMessage().matches("Unable to find element with name 'HiRequest'.*"));
     }
 }
