@@ -24,9 +24,11 @@ import java.util.List;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.spi.Resources;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
+@ResourceLock("citrus-jbang-run")
 public class RunTest extends CommandTest {
 
     @Test
@@ -97,7 +99,7 @@ public class RunTest extends CommandTest {
             main.execute("run", source.toString());
 
             List<Path> flowReports = listFlowReports(reportDirectory);
-            Assert.assertEquals(flowReports.size(), 1, "Expected one flow report after the first run");
+            Assertions.assertEquals(1, flowReports.size(), "Expected one flow report after the first run");
             Path firstFlowReport = flowReports.get(0);
 
             Path sentinel = Files.writeString(workDir.resolve("sentinel.txt"), "sentinel");
@@ -105,11 +107,11 @@ public class RunTest extends CommandTest {
             main = createCitrusJBangMain();
             main.execute("run", source.toString());
 
-            Assert.assertFalse(Files.exists(sentinel), "Expected the next run to clean up the JBang work directory");
-            Assert.assertTrue(Files.exists(firstFlowReport), "Expected the previous run's flow report to be preserved");
+            Assertions.assertFalse(Files.exists(sentinel), "Expected the next run to clean up the JBang work directory");
+            Assertions.assertTrue(Files.exists(firstFlowReport), "Expected the previous run's flow report to be preserved");
 
             List<Path> flowReportsAfterSecondRun = listFlowReports(reportDirectory);
-            Assert.assertEquals(flowReportsAfterSecondRun.size(), 2, "Expected a second flow report after the second run");
+            Assertions.assertEquals(2, flowReportsAfterSecondRun.size(), "Expected a second flow report after the second run");
         } finally {
             restoreProperty("citrus.jbang.work.dir", previousWorkDir);
             restoreProperty("citrus.jbang.report.directory", previousReportDirectory);

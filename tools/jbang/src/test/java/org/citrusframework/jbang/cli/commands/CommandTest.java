@@ -23,14 +23,14 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.jbang.cli.Printer;
 import org.citrusframework.jbang.cli.StringPrinter;
-import org.testng.annotations.BeforeMethod;
+import org.junit.jupiter.api.BeforeEach;
 
 public class CommandTest {
 
     protected final Path workingDir = Paths.get("target").toAbsolutePath();
     protected StringPrinter printer;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         printer = new StringPrinter();
     }

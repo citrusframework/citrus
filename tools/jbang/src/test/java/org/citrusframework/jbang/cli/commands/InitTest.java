@@ -20,7 +20,7 @@ import java.nio.file.Path;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.junit.jupiter.api.Assertions;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class InitTest extends CommandTest {
 
