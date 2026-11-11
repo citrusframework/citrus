@@ -16,10 +16,10 @@
 
 package org.citrusframework.restdocs.http;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
-import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.HashMap;

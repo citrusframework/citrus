@@ -16,9 +16,9 @@
 
 package org.citrusframework.restdocs.config.xml;
 
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.restdocs.http.CitrusRestDocConfigurer;
 import org.citrusframework.restdocs.soap.CitrusRestDocSoapConfigurer;
-import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

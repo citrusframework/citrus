@@ -16,15 +16,15 @@
 
 package org.citrusframework.restdocs.config.xml;
 
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.restdocs.http.CitrusRestDocConfigurer;
 import org.citrusframework.restdocs.http.RestDocClientInterceptor;
 import org.citrusframework.restdocs.soap.CitrusRestDocSoapConfigurer;
 import org.citrusframework.restdocs.soap.RestDocSoapClientInterceptor;
-import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import java.util.List;
 import java.util.Map;
@@ -62,12 +62,12 @@ public class RestDocDocumentationParserTest extends AbstractBeanDefinitionParser
         Assertions.assertNotNull(soapInterceptor.documentationGenerator());
 
         List<ClientHttpRequestInterceptor> documentation1 = beanDefinitionContext.getBean("documentation1", List.class);
-        Assertions.assertEquals(2L, documentation1.size());
+        Assertions.assertEquals(2, documentation1.size());
         Assertions.assertEquals(configurer, documentation1.get(0));
         Assertions.assertEquals(interceptor, documentation1.get(1));
 
         List<ClientInterceptor> documentation2 = beanDefinitionContext.getBean("documentation2", List.class);
-        Assertions.assertEquals(2L, documentation2.size());
+        Assertions.assertEquals(2, documentation2.size());
         Assertions.assertEquals(soapConfigurer, documentation2.get(0));
         Assertions.assertEquals(soapInterceptor, documentation2.get(1));
     }

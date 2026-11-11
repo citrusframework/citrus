@@ -24,6 +24,11 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -38,11 +43,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -57,6 +57,8 @@ public class RestDocSoapClientInterceptorTest {
     private final ManualRestDocumentation restDocumentation = new ManualRestDocumentation("target/citrus-docs/generated-snippets");
 
     private RestDocSoapClientInterceptor interceptor;
+
+    private AutoCloseable openedMocks;
 
     @Mock
     private MessageContext messageContext = Mockito.mock(MessageContext.class);
@@ -74,13 +76,14 @@ public class RestDocSoapClientInterceptorTest {
 
     @BeforeEach
     public void setUp(TestInfo testInfo) {
-        MockitoAnnotations.openMocks(this);
+        openedMocks = MockitoAnnotations.openMocks(this);
         this.restDocumentation.beforeTest(getClass(), testInfo.getTestMethod().orElseThrow().getName());
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws Exception {
         this.restDocumentation.afterTest();
+        openedMocks.close();
     }
 
     @Test
