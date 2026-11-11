@@ -110,7 +110,7 @@ public class KafkaEndpointComponentTest {
 
         Assertions.assertTrue(group1.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group1);
         Assertions.assertTrue(group2.startsWith("citrus_kafka_group_"), "Consumer group should start with 'citrus_kafka_group_' but was: " + group2);
-        Assertions.assertNotEquals(group2, group1, "Dynamic endpoints should have different consumer groups");
+        Assertions.assertNotEquals(group1, group2, "Dynamic endpoints should have different consumer groups");
     }
 
     @Test
