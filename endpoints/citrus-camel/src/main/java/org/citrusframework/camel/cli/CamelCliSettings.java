@@ -118,6 +118,11 @@ public final class CamelCliSettings {
     private static final String AUTO_SET_PROPERTIES_ENV_FALLBACK = JBANG_ENV_PREFIX + "RUN_AUTO_SET_PROPERTIES";
     private static final String AUTO_SET_PROPERTIES_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "When set to true the Camel CLI run command will skip loading plugins.", type = "java.lang.Boolean", defaultValue = "false")
+    private static final String SKIP_PLUGINS_PROPERTY = CLI_PROPERTY_PREFIX + "skip.plugins";
+    private static final String SKIP_PLUGINS_ENV = CLI_ENV_PREFIX + "SKIP_PLUGINS";
+    private static final String SKIP_PLUGINS_DEFAULT = "false";
+
     @CitrusConfigProperty(description = "Camel CLI launcher type.", defaultValue = "jbang")
     private static final String CLI_TYPE_PROPERTY = CLI_PROPERTY_PREFIX + "type";
     private static final String CLI_TYPE_ENV = CLI_ENV_PREFIX + "TYPE";
@@ -287,6 +292,14 @@ public final class CamelCliSettings {
         return Boolean.parseBoolean(Optional.ofNullable(resolve(AUTO_SET_PROPERTIES_PROPERTY, AUTO_SET_PROPERTIES_ENV,
                 AUTO_SET_PROPERTIES_PROPERTY_FALLBACK, AUTO_SET_PROPERTIES_ENV_FALLBACK))
                 .orElse(AUTO_SET_PROPERTIES_DEFAULT));
+    }
+
+    /**
+     * When set to true the Camel CLI run command will skip loading plugins.
+     */
+    public static boolean isSkipPlugins() {
+        return Boolean.parseBoolean(Optional.ofNullable(resolve(SKIP_PLUGINS_PROPERTY, SKIP_PLUGINS_ENV))
+                .orElse(SKIP_PLUGINS_DEFAULT));
     }
 
     /**

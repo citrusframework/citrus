@@ -112,5 +112,10 @@ public interface CamelIntegrationRunActionBuilder<T extends TestAction, B extend
      */
     B autoSetProperties(boolean enabled);
 
+    /**
+     * When enabled the Camel CLI run command will skip loading plugins.
+     */
+    B skipPlugins(boolean enabled);
+
     B stub(String... components);
 }

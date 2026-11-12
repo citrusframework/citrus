@@ -79,6 +79,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
     private final boolean waitForRunningState;
     private final boolean dumpIntegrationOutput;
     private final boolean autoSetProperties;
+    private final boolean skipPlugins;
 
     /**
      * Default constructor.
@@ -97,6 +98,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         this.waitForRunningState = builder.waitForRunningState;
         this.dumpIntegrationOutput = builder.dumpIntegrationOutput;
         this.autoSetProperties = builder.autoSetProperties;
+        this.skipPlugins = builder.skipPlugins;
     }
 
     @Override
@@ -141,7 +143,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
             camelCli().withSystemProperties(resolvedSystemProperties);
             camelCli().workingDir(workingDir);
 
-            ProcessAndOutput pao = camelCli().run(name, integrationToRun.getFileName().toString(), resourceFiles,
+            ProcessAndOutput pao = camelCli().run(name, integrationToRun.getFileName().toString(), resourceFiles, skipPlugins,
                     context.resolveDynamicValuesInList(args).toArray(String[]::new));
 
             verifyProcessIsAlive(pao, name);
@@ -269,6 +271,7 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         private boolean waitForRunningState = CamelCliSettings.isWaitForRunningState();
         private boolean dumpIntegrationOutput = CamelCliSettings.isDumpIntegrationOutput();
         private boolean autoSetProperties = CamelCliSettings.isAutoSetProperties();
+        private boolean skipPlugins = CamelCliSettings.isSkipPlugins();
 
         @Override
         public Builder integration(String sourceCode) {
@@ -386,6 +389,12 @@ public class CamelRunIntegrationAction extends AbstractCamelCliAction {
         @Override
         public Builder autoSetProperties(boolean enabled) {
             this.autoSetProperties = enabled;
+            return this;
+        }
+
+        @Override
+        public Builder skipPlugins(boolean enabled) {
+            this.skipPlugins = enabled;
             return this;
         }
 
