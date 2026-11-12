@@ -23,8 +23,6 @@ import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.testcontainers.containers.MongoDBContainer;
 
-import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
-
 @CitrusConfigProperties(prefix = "citrus.testcontainers.mongodb", description = "MongoDB Testcontainers settings")
 public class MongoDBSettings {
 
@@ -121,31 +119,30 @@ public class MongoDBSettings {
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = "MONGODB";
-            context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
+            context.setVariable(MongoDBTestVariables.HOST.variableName(), container.getHost());
+            context.setVariable(MongoDBTestVariables.CONTAINER_IP.variableName(), container.getHost());
+            context.setVariable(MongoDBTestVariables.CONTAINER_ID.variableName(), dockerContainerId);
+            context.setVariable(MongoDBTestVariables.CONTAINER_NAME.variableName(), dockerContainerName);
 
-            context.setVariable(getEnvVarName(containerType, "LOCAL_URL"), container.getReplicaSetUrl());
-            context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), container.getMappedPort(27017));
-            context.setVariable(getEnvVarName(containerType, "PORT"), container.getMappedPort(27017));
-            context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_URL"), container.getReplicaSetUrl());
+            context.setVariable(MongoDBTestVariables.LOCAL_URL.variableName(), container.getReplicaSetUrl());
+            context.setVariable(MongoDBTestVariables.SERVICE_PORT.variableName(), container.getMappedPort(27017));
+            context.setVariable(MongoDBTestVariables.PORT.variableName(), container.getMappedPort(27017));
+            context.setVariable(MongoDBTestVariables.SERVICE_LOCAL_URL.variableName(), container.getReplicaSetUrl());
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), container.getReplicaSetUrl());
-                context.setVariable(getEnvVarName(containerType, "URL"), container.getReplicaSetUrl());
+                context.setVariable(MongoDBTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(MongoDBTestVariables.SERVICE_URL.variableName(), container.getReplicaSetUrl());
+                context.setVariable(MongoDBTestVariables.URL.variableName(), container.getReplicaSetUrl());
             } else {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), String.format("mongodb://%s:%d/test", serviceName, container.getMappedPort(27017)));
-                context.setVariable(getEnvVarName(containerType, "URL"), String.format("mongodb://%s:%d/test", serviceName, container.getMappedPort(27017)));
+                context.setVariable(MongoDBTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(MongoDBTestVariables.SERVICE_URL.variableName(), String.format("mongodb://%s:%d/test", serviceName, container.getMappedPort(27017)));
+                context.setVariable(MongoDBTestVariables.URL.variableName(), String.format("mongodb://%s:%d/test", serviceName, container.getMappedPort(27017)));
             }
 
-            context.setVariable(getEnvVarName(containerType, "CONNECTION_STRING"), container.getConnectionString());
+            context.setVariable(MongoDBTestVariables.CONNECTION_STRING.variableName(), container.getConnectionString());
 
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_SERVICE_URL"), String.format("mongodb://%s:%d/test", serviceName, container.getMappedPort(27017)));
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_HOST"), serviceName);
+            context.setVariable(MongoDBTestVariables.KUBE_DOCK_SERVICE_URL.variableName(), String.format("mongodb://%s:%d/test", serviceName, container.getMappedPort(27017)));
+            context.setVariable(MongoDBTestVariables.KUBE_DOCK_HOST.variableName(), serviceName);
         }
     }
 }

@@ -32,6 +32,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.testcontainers.TestContainersSettings;
+import org.citrusframework.testcontainers.TestcontainersTestVariables;
 import org.citrusframework.testcontainers.WaitStrategyHelper;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
@@ -108,13 +109,13 @@ public class StartTestcontainersAction<C extends GenericContainer<?>> extends Ab
 
             if (containerName != null) {
                 String containerType = containerName.toUpperCase().replaceAll("-", "_").replaceAll("\\.", "_");
-                context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-                context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-                context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-                context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
+                context.setVariable(getEnvVarName(containerType, TestcontainersTestVariables.HOST.suffix()), container.getHost());
+                context.setVariable(getEnvVarName(containerType, TestcontainersTestVariables.CONTAINER_IP.suffix()), container.getHost());
+                context.setVariable(getEnvVarName(containerType, TestcontainersTestVariables.CONTAINER_ID.suffix()), dockerContainerId);
+                context.setVariable(getEnvVarName(containerType, TestcontainersTestVariables.CONTAINER_NAME.suffix()), dockerContainerName);
 
                 if (!container.getExposedPorts().isEmpty()) {
-                    context.setVariable(getEnvVarName(containerType, "PORT"), container.getFirstMappedPort());
+                    context.setVariable(getEnvVarName(containerType, TestcontainersTestVariables.PORT.suffix()), container.getFirstMappedPort());
                 }
             }
         }

@@ -42,4 +42,10 @@ public @interface SchemaType {
      * Declare one of association of multiple properties.
      */
     String[] oneOf() default {};
+
+    /**
+     * Enum classes implementing {@link TestVariable} that describe the test variables
+     * automatically set on the test context by this action.
+     */
+    Class<? extends TestVariable>[] testVariables() default {};
 }

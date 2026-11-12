@@ -23,8 +23,6 @@ import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
-import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
-
 @CitrusConfigProperties(prefix = "citrus.testcontainers.postgresql", description = "PostgreSQL Testcontainers settings")
 public class PostgreSQLSettings {
 
@@ -162,34 +160,33 @@ public class PostgreSQLSettings {
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = "POSTGRESQL";
-            context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
+            context.setVariable(PostgreSQLTestVariables.HOST.variableName(), container.getHost());
+            context.setVariable(PostgreSQLTestVariables.CONTAINER_IP.variableName(), container.getHost());
+            context.setVariable(PostgreSQLTestVariables.CONTAINER_ID.variableName(), dockerContainerId);
+            context.setVariable(PostgreSQLTestVariables.CONTAINER_NAME.variableName(), dockerContainerName);
 
-            context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT));
-            context.setVariable(getEnvVarName(containerType, "PORT"), container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT));
-            context.setVariable(getEnvVarName(containerType, "LOCAL_URL"), container.getJdbcUrl());
-            context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_URL"), container.getJdbcUrl());
+            context.setVariable(PostgreSQLTestVariables.SERVICE_PORT.variableName(), container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT));
+            context.setVariable(PostgreSQLTestVariables.PORT.variableName(), container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT));
+            context.setVariable(PostgreSQLTestVariables.LOCAL_URL.variableName(), container.getJdbcUrl());
+            context.setVariable(PostgreSQLTestVariables.SERVICE_LOCAL_URL.variableName(), container.getJdbcUrl());
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), container.getJdbcUrl());
-                context.setVariable(getEnvVarName(containerType, "URL"), container.getJdbcUrl());
+                context.setVariable(PostgreSQLTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(PostgreSQLTestVariables.SERVICE_URL.variableName(), container.getJdbcUrl());
+                context.setVariable(PostgreSQLTestVariables.URL.variableName(), container.getJdbcUrl());
             } else {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), container.getJdbcUrl().replace("localhost", serviceName));
-                context.setVariable(getEnvVarName(containerType, "URL"), container.getJdbcUrl().replace("localhost", serviceName));
+                context.setVariable(PostgreSQLTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(PostgreSQLTestVariables.SERVICE_URL.variableName(), container.getJdbcUrl().replace("localhost", serviceName));
+                context.setVariable(PostgreSQLTestVariables.URL.variableName(), container.getJdbcUrl().replace("localhost", serviceName));
             }
 
-            context.setVariable(getEnvVarName(containerType, "DRIVER"), container.getDriverClassName());
-            context.setVariable(getEnvVarName(containerType, "DB_NAME"), container.getDatabaseName());
-            context.setVariable(getEnvVarName(containerType, "USERNAME"), container.getUsername());
-            context.setVariable(getEnvVarName(containerType, "PASSWORD"), container.getPassword());
+            context.setVariable(PostgreSQLTestVariables.DRIVER.variableName(), container.getDriverClassName());
+            context.setVariable(PostgreSQLTestVariables.DB_NAME.variableName(), container.getDatabaseName());
+            context.setVariable(PostgreSQLTestVariables.USERNAME.variableName(), container.getUsername());
+            context.setVariable(PostgreSQLTestVariables.PASSWORD.variableName(), container.getPassword());
 
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_SERVICE_URL"), container.getJdbcUrl().replace("localhost", serviceName));
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_HOST"), serviceName);
+            context.setVariable(PostgreSQLTestVariables.KUBE_DOCK_SERVICE_URL.variableName(), container.getJdbcUrl().replace("localhost", serviceName));
+            context.setVariable(PostgreSQLTestVariables.KUBE_DOCK_HOST.variableName(), serviceName);
         }
     }
 }
