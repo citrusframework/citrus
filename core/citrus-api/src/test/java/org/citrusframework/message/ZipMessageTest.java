@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -120,6 +123,41 @@ public class ZipMessageTest {
             Assertions.assertTrue(zipFile.getEntry("/bars/").isDirectory());
             Assertions.assertNotNull(zipFile.getEntry("bars/bar.txt"));
             Assertions.assertEquals("Bar!", FileUtils.readToString(zipFile.getInputStream(new ZipEntry("bars/bar.txt"))));
+        }
+    }
+
+    @Test
+    public void testPayloadIsDeterministic() throws Exception {
+        Path sourceDir = Files.createDirectories(createTempDir().resolve("archive"));
+        Path first = Files.writeString(sourceDir.resolve("b.txt"), "Bar!");
+        Path second = Files.writeString(sourceDir.resolve("a.txt"), "Foo!");
+        Path nested = Files.createDirectories(sourceDir.resolve("dir"));
+        Files.writeString(nested.resolve("c.txt"), "SubFoo!");
+
+        long lastModified = LocalDateTime.of(2001, 2, 3, 4, 5, 6)
+                .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        Assertions.assertTrue(first.toFile().setLastModified(lastModified));
+        Assertions.assertTrue(second.toFile().setLastModified(lastModified));
+
+        ZipMessage message = new ZipMessage();
+        message.addEntry(sourceDir);
+
+        byte[] firstPayload = message.getPayload();
+        byte[] secondPayload = message.getPayload();
+
+        Assertions.assertArrayEquals(firstPayload, secondPayload);
+
+        File archive = new File(createTempDir().toFile(), "archive.zip");
+        FileUtils.writeToFile(new ByteArrayInputStream(firstPayload), archive);
+
+        try (var zipFile = new ZipFile(archive.getAbsolutePath())) {
+            Assertions.assertEquals(
+                    List.of("/archive/", "archive/a.txt", "archive/b.txt", "archive/dir/", "archive/dir/c.txt"),
+                    zipFile.stream().map(ZipEntry::getName).toList());
+
+            long entryTime = zipFile.getEntry("archive/a.txt").getTime();
+            Assertions.assertTrue(Math.abs(entryTime - lastModified) <= 2000,
+                    () -> String.format("Expected entry time %d to match source file time %d", entryTime, lastModified));
         }
     }
 
