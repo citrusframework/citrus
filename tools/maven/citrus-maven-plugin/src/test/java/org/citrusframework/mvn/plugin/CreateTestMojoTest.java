@@ -18,19 +18,32 @@ package org.citrusframework.mvn.plugin;
 
 import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.UnitFramework;
-import org.citrusframework.generate.javadsl.*;
-import org.citrusframework.generate.xml.*;
+import org.citrusframework.generate.javadsl.JavaDslTestGenerator;
+import org.citrusframework.generate.javadsl.SwaggerJavaTestGenerator;
+import org.citrusframework.generate.javadsl.WsdlJavaTestGenerator;
+import org.citrusframework.generate.javadsl.XsdJavaTestGenerator;
+import org.citrusframework.generate.xml.SwaggerXmlTestGenerator;
+import org.citrusframework.generate.xml.WsdlXmlTestGenerator;
+import org.citrusframework.generate.xml.XmlTestGenerator;
+import org.citrusframework.generate.xml.XsdXmlTestGenerator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.contains;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.nullable;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 public class CreateTestMojoTest {
@@ -49,7 +62,7 @@ public class CreateTestMojoTest {
 
     private CreateTestMojo mojo;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         mojo = new CreateTestMojo(xmlTestGenerator,
                                     xsdXmlTestGenerator,

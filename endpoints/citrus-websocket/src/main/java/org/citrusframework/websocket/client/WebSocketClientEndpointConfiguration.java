@@ -47,8 +47,8 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
     /** Web socket handler */
     private CitrusWebSocketHandler handler;
 
-    /** Web socket client implementation */
-    private WebSocketClient client = new StandardWebSocketClient();
+    /** Web socket client implementation – created lazily to avoid JVM shutdown hook issues */
+    private WebSocketClient client;
 
     /** Optional web socket http headers */
     private WebSocketHttpHeaders webSocketHttpHeaders;
@@ -79,6 +79,10 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
             try (PerMessageDeflateExtension perMessageDeflateExtension = new PerMessageDeflateExtension()) {
                 webSocketHttpHeaders.setSecWebSocketExtensions(singletonList(new StandardToWebSocketExtensionAdapter(new JakartaWebSocketExtension(perMessageDeflateExtension.getName()))));
             }        }
+
+        if (client == null) {
+            client = new StandardWebSocketClient();
+        }
 
         CompletableFuture<WebSocketSession> future = client.execute(handler, webSocketHttpHeaders, fromUriString(url).buildAndExpand().encode().toUri());
 

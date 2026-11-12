@@ -16,11 +16,11 @@
 
 package org.citrusframework.restdocs.config.xml;
 
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.restdocs.http.CitrusRestDocConfigurer;
 import org.citrusframework.restdocs.soap.CitrusRestDocSoapConfigurer;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -32,17 +32,17 @@ public class RestDocConfigurerParserTest extends AbstractBeanDefinitionParserTes
     @Test
     public void testConfigurerParser() {
         Map<String, CitrusRestDocConfigurer> configurers = beanDefinitionContext.getBeansOfType(CitrusRestDocConfigurer.class);
-        Assert.assertEquals(configurers.size(), 1);
+        Assertions.assertEquals(1, configurers.size());
 
         // 1st configurer
         CitrusRestDocConfigurer configurer = configurers.get("configurer1");
-        Assert.assertNotNull(configurer.getContextProvider());
+        Assertions.assertNotNull(configurer.getContextProvider());
 
         Map<String, CitrusRestDocSoapConfigurer> soapConfigurers = beanDefinitionContext.getBeansOfType(CitrusRestDocSoapConfigurer.class);
-        Assert.assertEquals(soapConfigurers.size(), 1);
+        Assertions.assertEquals(1, soapConfigurers.size());
 
         // 2nd configurer
         CitrusRestDocSoapConfigurer soapConfigurer = soapConfigurers.get("configurer2");
-        Assert.assertNotNull(soapConfigurer.getContextProvider());
+        Assertions.assertNotNull(soapConfigurer.getContextProvider());
     }
 }

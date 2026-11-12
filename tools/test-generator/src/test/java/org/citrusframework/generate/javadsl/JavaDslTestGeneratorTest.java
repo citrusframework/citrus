@@ -22,11 +22,11 @@ import java.io.IOException;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.generate.UnitFramework;
-import org.citrusframework.util.FileUtils;
 import org.citrusframework.generate.util.CleanupUtils;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
+import org.citrusframework.util.FileUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JavaDslTestGeneratorTest {
 
@@ -35,8 +35,8 @@ public class JavaDslTestGeneratorTest {
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 
-    @AfterMethod
-    public void cleanUp(){
+    @AfterEach
+    public void cleanUp() {
         cleanupUtils.deleteFile(testFile);
     }
 
@@ -101,20 +101,20 @@ public class JavaDslTestGeneratorTest {
         assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void create_should_fail_when_test_name_starts_with_lowercase_letter(){
+    @Test
+    public void create_should_fail_when_test_name_starts_with_lowercase_letter() {
         generatorUnderTest.withName("foo");
 
-        generatorUnderTest.create();
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> generatorUnderTest.create());
     }
 
     private String loadTestFile() throws IOException {
-        Assert.assertTrue(testFile.exists());
+        Assertions.assertTrue(testFile.exists());
         return FileUtils.readToString(testFile);
     }
 
-    private void assertContains(String haystack, String needle){
-        Assert.assertTrue(haystack.contains(needle));
+    private void assertContains(String haystack, String needle) {
+        Assertions.assertTrue(haystack.contains(needle));
     }
 
     private void checkExtension(String javaContent, String extension) {

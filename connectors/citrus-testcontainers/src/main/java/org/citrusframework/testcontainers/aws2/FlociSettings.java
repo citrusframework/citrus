@@ -34,6 +34,7 @@ import software.amazon.awssdk.regions.Region;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+
 @CitrusConfigProperties(prefix = "citrus.testcontainers.floci", description = "Floci Testcontainers settings")
 public class FlociSettings {
 
@@ -184,25 +185,25 @@ public class FlociSettings {
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = "FLOCI";
-            context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
-            context.setVariable(getEnvVarName(containerType, "REGION"), container.getRegion());
-            context.setVariable(getEnvVarName(containerType, "ACCESS_KEY"), container.getAccessKey());
-            context.setVariable(getEnvVarName(containerType, "SECRET_KEY"), container.getSecretKey());
-            context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), serviceEndpoint.getPort());
-            context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_URL"), String.format("http://localhost:%s", serviceEndpoint.getPort()));
+            context.setVariable(FlociTestVariables.HOST.variableName(), container.getHost());
+            context.setVariable(FlociTestVariables.CONTAINER_IP.variableName(), container.getHost());
+            context.setVariable(FlociTestVariables.CONTAINER_ID.variableName(), dockerContainerId);
+            context.setVariable(FlociTestVariables.CONTAINER_NAME.variableName(), dockerContainerName);
+            context.setVariable(FlociTestVariables.REGION.variableName(), container.getRegion());
+            context.setVariable(FlociTestVariables.ACCESS_KEY.variableName(), container.getAccessKey());
+            context.setVariable(FlociTestVariables.SECRET_KEY.variableName(), container.getSecretKey());
+            context.setVariable(FlociTestVariables.SERVICE_PORT.variableName(), serviceEndpoint.getPort());
+            context.setVariable(FlociTestVariables.SERVICE_LOCAL_URL.variableName(), String.format("http://localhost:%s", serviceEndpoint.getPort()));
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), String.format("http://localhost:%s", serviceEndpoint.getPort()));
+                context.setVariable(FlociTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(FlociTestVariables.SERVICE_URL.variableName(), String.format("http://localhost:%s", serviceEndpoint.getPort()));
             } else {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
+                context.setVariable(FlociTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(FlociTestVariables.SERVICE_URL.variableName(), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
             }
 
+            String containerType = "FLOCI";
             services.forEach(service -> {
                 String aws2ServiceName = service.getServiceName().toUpperCase(Locale.US);
 
@@ -216,8 +217,8 @@ public class FlociSettings {
                 context.setVariable(getEnvVarName(containerType, String.format("%s_PORT", aws2ServiceName)), serviceEndpoint.getPort());
             });
 
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_SERVICE_URL"), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_HOST"), serviceName);
+            context.setVariable(FlociTestVariables.KUBE_DOCK_SERVICE_URL.variableName(), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
+            context.setVariable(FlociTestVariables.KUBE_DOCK_HOST.variableName(), serviceName);
 
             for (Map.Entry<Object, Object> connectionProperty : getConnectionProperties(container).entrySet()) {
                 context.setVariable(connectionProperty.getKey().toString(), connectionProperty.getValue().toString());

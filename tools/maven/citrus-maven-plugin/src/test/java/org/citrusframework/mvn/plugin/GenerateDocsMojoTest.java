@@ -23,10 +23,9 @@ import org.citrusframework.mvn.plugin.config.docs.ExcelDocConfiguration;
 import org.citrusframework.mvn.plugin.config.docs.HtmlDocConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -39,7 +38,7 @@ public class GenerateDocsMojoTest {
 
     private GenerateDocsMojo mojo;
 
-    @BeforeMethod
+    @BeforeEach
     public void setup() {
         mojo = new GenerateDocsMojo(excelTestDocGenerator, htmlTestDocGenerator);
     }

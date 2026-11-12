@@ -22,9 +22,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.citrusframework.spi.Resources;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.citrusframework.jbang.cli.CitrusJBangMain.Settings.CAMEL_VERSION_DEFAULT;
 
@@ -35,52 +36,52 @@ public class YamlCodeAnalyzerTest {
         YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
         CodeAnalyzer.ScanResult scanResult = analyzer.scan(Resources.create("sample.citrus.it.yaml"));
 
-        Assert.assertEquals(scanResult.name(), "sample.citrus.it.yaml");
+        Assertions.assertEquals("sample.citrus.it.yaml", scanResult.name());
 
-        Assert.assertEquals(scanResult.modules().length, 7L);
+        Assertions.assertEquals(7, scanResult.modules().length);
         String[] foundModules = Arrays.stream(scanResult.modules()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundModules[0], "citrus-base");
-        Assert.assertEquals(foundModules[1], "citrus-camel");
-        Assert.assertEquals(foundModules[2], "citrus-http");
-        Assert.assertEquals(foundModules[3], "citrus-jbang-connector");
-        Assert.assertEquals(foundModules[4], "citrus-jms");
-        Assert.assertEquals(foundModules[5], "citrus-kafka");
-        Assert.assertEquals(foundModules[6], "citrus-testcontainers");
+        Assertions.assertEquals("citrus-base", foundModules[0]);
+        Assertions.assertEquals("citrus-camel", foundModules[1]);
+        Assertions.assertEquals("citrus-http", foundModules[2]);
+        Assertions.assertEquals("citrus-jbang-connector", foundModules[3]);
+        Assertions.assertEquals("citrus-jms", foundModules[4]);
+        Assertions.assertEquals("citrus-kafka", foundModules[5]);
+        Assertions.assertEquals("citrus-testcontainers", foundModules[6]);
 
-        Assert.assertEquals(scanResult.dependencies().length, 4L);
+        Assertions.assertEquals(4, scanResult.dependencies().length);
         String[] foundDeps = Arrays.stream(scanResult.dependencies()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundDeps[0], "org.apache.camel:camel-aws2-s3:${camel.version}");
-        Assert.assertEquals(foundDeps[1], "org.apache.camel:camel-paho-mqtt5:" + CAMEL_VERSION_DEFAULT);
-        Assert.assertEquals(foundDeps[2], "org.apache.camel:camel-test-infra-aws-v2:" + CAMEL_VERSION_DEFAULT);
-        Assert.assertEquals(foundDeps[3], "org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT);
+        Assertions.assertEquals("org.apache.camel:camel-aws2-s3:${camel.version}", foundDeps[0]);
+        Assertions.assertEquals("org.apache.camel:camel-paho-mqtt5:" + CAMEL_VERSION_DEFAULT, foundDeps[1]);
+        Assertions.assertEquals("org.apache.camel:camel-test-infra-aws-v2:" + CAMEL_VERSION_DEFAULT, foundDeps[2]);
+        Assertions.assertEquals("org.apache.camel:camel-test-infra-kafka:" + CAMEL_VERSION_DEFAULT, foundDeps[3]);
 
-        Assert.assertEquals(scanResult.actions().length, 6L);
+        Assertions.assertEquals(6, scanResult.actions().length);
         String[] foundActions = Arrays.stream(scanResult.actions()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundActions[0], "camel:cli:run");
-        Assert.assertEquals(foundActions[1], "camel:infra:run");
-        Assert.assertEquals(foundActions[2], "createEndpoint");
-        Assert.assertEquals(foundActions[3], "print");
-        Assert.assertEquals(foundActions[4], "receive");
-        Assert.assertEquals(foundActions[5], "send");
+        Assertions.assertEquals("camel:cli:run", foundActions[0]);
+        Assertions.assertEquals("camel:infra:run", foundActions[1]);
+        Assertions.assertEquals("createEndpoint", foundActions[2]);
+        Assertions.assertEquals("print", foundActions[3]);
+        Assertions.assertEquals("receive", foundActions[4]);
+        Assertions.assertEquals("send", foundActions[5]);
 
-        Assert.assertEquals(scanResult.containers().length, 1L);
-        Assert.assertEquals(scanResult.containers()[0], "iterate");
+        Assertions.assertEquals(1, scanResult.containers().length);
+        Assertions.assertEquals("iterate", scanResult.containers()[0]);
 
-        Assert.assertEquals(scanResult.endpoints().length, 5L);
+        Assertions.assertEquals(5, scanResult.endpoints().length);
         String[] foundEndpoints = Arrays.stream(scanResult.endpoints()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundEndpoints[0], "camel");
-        Assert.assertEquals(foundEndpoints[1], "direct");
-        Assert.assertEquals(foundEndpoints[2], "http");
-        Assert.assertEquals(foundEndpoints[3], "jms");
-        Assert.assertEquals(foundEndpoints[4], "kafka");
+        Assertions.assertEquals("camel", foundEndpoints[0]);
+        Assertions.assertEquals("direct", foundEndpoints[1]);
+        Assertions.assertEquals("http", foundEndpoints[2]);
+        Assertions.assertEquals("jms", foundEndpoints[3]);
+        Assertions.assertEquals("kafka", foundEndpoints[4]);
 
-        Assert.assertEquals(scanResult.functions().length, 1L);
-        Assert.assertEquals(scanResult.functions()[0], "citrus:randomNumber");
+        Assertions.assertEquals(1, scanResult.functions().length);
+        Assertions.assertEquals("citrus:randomNumber", scanResult.functions()[0]);
 
-        Assert.assertEquals(scanResult.validationMatcher().length, 2L);
+        Assertions.assertEquals(2, scanResult.validationMatcher().length);
         String[] foundValidationMatcher = Arrays.stream(scanResult.validationMatcher()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundValidationMatcher[0], "ignore");
-        Assert.assertEquals(foundValidationMatcher[1], "isNumber");
+        Assertions.assertEquals("ignore", foundValidationMatcher[0]);
+        Assertions.assertEquals("isNumber", foundValidationMatcher[1]);
     }
 
     @Test
@@ -88,28 +89,27 @@ public class YamlCodeAnalyzerTest {
         YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
         CodeAnalyzer.ScanResult scanResult = analyzer.scan(Resources.create("sample-endpoints-after-actions.citrus.it.yaml"));
 
-        Assert.assertEquals(scanResult.name(), "sample-endpoints-after-actions.citrus.it.yaml");
+        Assertions.assertEquals("sample-endpoints-after-actions.citrus.it.yaml", scanResult.name());
 
-        Assert.assertEquals(scanResult.modules().length, 7L);
+        Assertions.assertEquals(7, scanResult.modules().length);
         String[] foundModules = Arrays.stream(scanResult.modules()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundModules[0], "citrus-base");
-        Assert.assertEquals(foundModules[1], "citrus-camel");
-        Assert.assertEquals(foundModules[2], "citrus-http");
-        Assert.assertEquals(foundModules[3], "citrus-jbang-connector");
-        Assert.assertEquals(foundModules[4], "citrus-jms");
-        Assert.assertEquals(foundModules[5], "citrus-kafka");
-        Assert.assertEquals(foundModules[6], "citrus-testcontainers");
+        Assertions.assertEquals("citrus-base", foundModules[0]);
+        Assertions.assertEquals("citrus-camel", foundModules[1]);
+        Assertions.assertEquals("citrus-http", foundModules[2]);
+        Assertions.assertEquals("citrus-jbang-connector", foundModules[3]);
+        Assertions.assertEquals("citrus-jms", foundModules[4]);
+        Assertions.assertEquals("citrus-kafka", foundModules[5]);
+        Assertions.assertEquals("citrus-testcontainers", foundModules[6]);
 
-        Assert.assertEquals(scanResult.endpoints().length, 4L);
+        Assertions.assertEquals(4, scanResult.endpoints().length);
         String[] foundEndpoints = Arrays.stream(scanResult.endpoints()).sorted().toArray(String[]::new);
-        Assert.assertEquals(foundEndpoints[0], "camel");
-        Assert.assertEquals(foundEndpoints[1], "http");
-        Assert.assertEquals(foundEndpoints[2], "jms");
-        Assert.assertEquals(foundEndpoints[3], "kafka");
+        Assertions.assertEquals("camel", foundEndpoints[0]);
+        Assertions.assertEquals("http", foundEndpoints[1]);
+        Assertions.assertEquals("jms", foundEndpoints[2]);
+        Assertions.assertEquals("kafka", foundEndpoints[3]);
     }
 
-    @DataProvider(name = "multilineEndpointVariants")
-    public Object[][] multilineEndpointVariants() {
+    static Object[][] multilineEndpointVariants() {
         return new Object[][] {
                 { ">", "folded" },
                 { ">-", "folded strip" },
@@ -120,7 +120,8 @@ public class YamlCodeAnalyzerTest {
         };
     }
 
-    @Test(dataProvider = "multilineEndpointVariants")
+    @ParameterizedTest
+    @MethodSource("multilineEndpointVariants")
     public void shouldExtractCamelEndpointFromMultilineScalar(String indicator, String description) {
         YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
 
@@ -135,7 +136,7 @@ public class YamlCodeAnalyzerTest {
                 """.formatted(indicator);
 
         Set<String> components = analyzer.extractCamelEndpointComponents(code);
-        Assert.assertTrue(components.contains("paho-mqtt5"), "Failed to extract Camel endpoint with %s indicator".formatted(description));
+        Assertions.assertTrue(components.contains("paho-mqtt5"), "Failed to extract Camel endpoint with %s indicator".formatted(description));
     }
 
     @Test
@@ -152,7 +153,7 @@ public class YamlCodeAnalyzerTest {
                 """;
 
         Set<String> components = analyzer.extractCamelEndpointComponents(code);
-        Assert.assertTrue(components.contains("direct"));
+        Assertions.assertTrue(components.contains("direct"));
     }
 
     @Test
@@ -170,8 +171,8 @@ public class YamlCodeAnalyzerTest {
 
         Set<String> modules = new HashSet<>();
         Set<String> endpoints = analyzer.scanEndpoints(code, modules);
-        Assert.assertTrue(endpoints.contains("kafka"));
-        Assert.assertTrue(modules.contains("citrus-kafka"));
+        Assertions.assertTrue(endpoints.contains("kafka"));
+        Assertions.assertTrue(modules.contains("citrus-kafka"));
     }
 
     @Test
@@ -188,8 +189,8 @@ public class YamlCodeAnalyzerTest {
 
         Set<String> modules = new HashSet<>();
         Set<String> endpoints = analyzer.scanEndpoints(code, modules);
-        Assert.assertTrue(endpoints.contains("http"));
-        Assert.assertTrue(modules.contains("citrus-http"));
+        Assertions.assertTrue(endpoints.contains("http"));
+        Assertions.assertTrue(modules.contains("citrus-http"));
     }
 
     @Test
@@ -205,8 +206,8 @@ public class YamlCodeAnalyzerTest {
 
         Set<String> modules = new HashSet<>();
         Set<String> endpoints = analyzer.scanEndpoints(code, modules);
-        Assert.assertTrue(endpoints.contains("jms"));
-        Assert.assertTrue(modules.contains("citrus-jms"));
+        Assertions.assertTrue(endpoints.contains("jms"));
+        Assertions.assertTrue(modules.contains("citrus-jms"));
     }
 
     @Test
@@ -230,8 +231,8 @@ public class YamlCodeAnalyzerTest {
 
         Set<String> modules = new HashSet<>();
         Set<String> endpoints = analyzer.scanEndpoints(code, modules);
-        Assert.assertTrue(endpoints.contains("jms"));
-        Assert.assertTrue(modules.contains("citrus-jms"));
+        Assertions.assertTrue(endpoints.contains("jms"));
+        Assertions.assertTrue(modules.contains("citrus-jms"));
     }
 
     @Test
@@ -249,8 +250,8 @@ public class YamlCodeAnalyzerTest {
 
         Set<String> modules = new HashSet<>();
         Set<String> endpoints = analyzer.scanEndpoints(code, modules);
-        Assert.assertTrue(endpoints.contains("kafka"));
-        Assert.assertTrue(modules.contains("citrus-kafka"));
+        Assertions.assertTrue(endpoints.contains("kafka"));
+        Assertions.assertTrue(modules.contains("citrus-kafka"));
     }
 
     @Test
@@ -274,8 +275,8 @@ public class YamlCodeAnalyzerTest {
 
         Set<String> modules = new HashSet<>();
         Set<String> endpoints = analyzer.scanEndpoints(code, modules);
-        Assert.assertTrue(endpoints.contains("jms"));
-        Assert.assertTrue(modules.contains("citrus-jms"));
+        Assertions.assertTrue(endpoints.contains("jms"));
+        Assertions.assertTrue(modules.contains("citrus-jms"));
     }
 
     @Test
@@ -292,7 +293,7 @@ public class YamlCodeAnalyzerTest {
                 """;
 
         Set<String> components = analyzer.extractCamelEndpointComponents(code);
-        Assert.assertTrue(components.contains("seda"));
+        Assertions.assertTrue(components.contains("seda"));
     }
 
 }

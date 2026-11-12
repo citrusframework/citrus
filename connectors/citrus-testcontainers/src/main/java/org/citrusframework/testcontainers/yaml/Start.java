@@ -42,6 +42,15 @@ import org.citrusframework.testcontainers.redpanda.StartRedpandaAction;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
+import org.citrusframework.testcontainers.TestcontainersTestVariables;
+import org.citrusframework.testcontainers.aws2.FlociTestVariables;
+import org.citrusframework.testcontainers.aws2.LocalStackTestVariables;
+import org.citrusframework.testcontainers.kafka.KafkaTestVariables;
+import org.citrusframework.testcontainers.mongodb.MongoDBTestVariables;
+import org.citrusframework.testcontainers.postgresql.PostgreSQLTestVariables;
+import org.citrusframework.testcontainers.redpanda.RedpandaTestVariables;
+
 
 import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
@@ -286,6 +295,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
                 builder.withVolumeMount(mount.getFile(), mount.getMountPath()));
     }
 
+    @SchemaType(testVariables = TestcontainersTestVariables.class)
     public static class Container {
 
         private String name;
@@ -436,6 +446,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         }
     }
 
+    @SchemaType(testVariables = LocalStackTestVariables.class)
     public static class LocalStack extends Container {
 
         protected boolean autoCreateClients = LocalStackSettings.isAutoCreateClients();
@@ -539,6 +550,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     }
 
+    @SchemaType(testVariables = FlociTestVariables.class)
     public static class Floci extends Container {
 
         protected boolean autoCreateClients = FlociSettings.isAutoCreateClients();
@@ -630,6 +642,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     }
 
+    @SchemaType(testVariables = MongoDBTestVariables.class)
     public static class MongoDB extends Container {
 
         protected String version;
@@ -644,6 +657,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         }
     }
 
+    @SchemaType(testVariables = KafkaTestVariables.class)
     public static class Kafka extends Container {
 
         protected String version;
@@ -688,6 +702,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         }
     }
 
+    @SchemaType(testVariables = RedpandaTestVariables.class)
     public static class Redpanda extends Container {
 
         protected String version;
@@ -742,6 +757,7 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         }
     }
 
+    @SchemaType(testVariables = PostgreSQLTestVariables.class)
     public static class PostgreSQL extends Container {
 
         protected String version;

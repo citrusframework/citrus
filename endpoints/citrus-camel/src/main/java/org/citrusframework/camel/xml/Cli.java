@@ -168,12 +168,23 @@ public class Cli {
         @XmlAttribute(name = "auto-set-properties")
         protected boolean autoSetProperties = CamelCliSettings.isAutoSetProperties();
 
+        @XmlAttribute(name = "skip-plugins")
+        protected boolean skipPlugins = CamelCliSettings.isSkipPlugins();
+
         public boolean isAutoSetProperties() {
             return autoSetProperties;
         }
 
         public void setAutoSetProperties(boolean autoSetProperties) {
             this.autoSetProperties = autoSetProperties;
+        }
+
+        public boolean isSkipPlugins() {
+            return skipPlugins;
+        }
+
+        public void setSkipPlugins(boolean skipPlugins) {
+            this.skipPlugins = skipPlugins;
         }
 
         @XmlElement

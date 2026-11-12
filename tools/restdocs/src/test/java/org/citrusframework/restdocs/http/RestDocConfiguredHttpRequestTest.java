@@ -16,13 +16,13 @@
 
 package org.citrusframework.restdocs.http;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpRequest;
 import org.springframework.restdocs.RestDocumentationContext;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class RestDocConfiguredHttpRequestTest extends AbstractHttpRequestTest<Re
         return delegate;
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void beforeMethodSetup() {
         openedMocks = MockitoAnnotations.openMocks(this);
         configuration = new HashMap<>();
@@ -54,7 +54,7 @@ public class RestDocConfiguredHttpRequestTest extends AbstractHttpRequestTest<Re
         fixture = new RestDocConfiguredHttpRequest(delegate, restDocumentationContext, configuration);
     }
 
-    @AfterMethod
+    @AfterEach
     public void afterMethodTeardown() throws Exception {
         openedMocks.close();
     }

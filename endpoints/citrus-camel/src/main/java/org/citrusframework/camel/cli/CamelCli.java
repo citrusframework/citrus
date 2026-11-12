@@ -143,10 +143,14 @@ public class CamelCli {
     /**
      * Run given integration with CLI Camel app.
      */
-    public ProcessAndOutput run(String name, String file, List<String> resources, String... args) {
+    public ProcessAndOutput run(String name, String file, List<String> resources, boolean skipPlugins, String... args) {
         List<String> runArgs = new ArrayList<>();
         runArgs.add("--name");
         runArgs.add(name);
+
+        if (skipPlugins) {
+            runArgs.add("--skip-plugins");
+        }
 
         if (CamelCliSettings.getKameletsLocalDir() != null) {
             runArgs.add("--local-kamelet-dir");
@@ -444,6 +448,16 @@ public class CamelCli {
         fullArgs.addAll(Arrays.asList(args));
 
         return app.runAsync("cmd", fullArgs);
+    }
+
+    /**
+     * Provides logs from a running Camel integration identified by its name.
+     */
+    public ProcessAndOutput log(String name, String... args) {
+        List<String> commandArgs = new ArrayList<>();
+        commandArgs.add(name);
+        commandArgs.addAll(Arrays.asList(args));
+        return app.runAsync("log", commandArgs.toArray(String[]::new));
     }
 
     public KubernetesPlugin kubernetes() {

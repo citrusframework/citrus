@@ -18,8 +18,11 @@ package org.citrusframework.zookeeper.integration;
 
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.testng.annotations.Test;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.spring.config.CitrusSpringConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Zookeeper integration test using all supported zookeeper actions.
@@ -28,9 +31,12 @@ import org.testng.annotations.Test;
  *
  * @since 2.5
  */
-@Test
-public class ZooExecuteIT extends TestNGCitrusSpringSupport {
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+@Isolated("ITs share one ZooServer on fixed ports 21181/21182 with a cached Spring context")
+public class ZooExecuteIT {
 
+    @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "ZooExecuteIT")
     public void zookeeperTest() {}
 }

@@ -229,6 +229,25 @@ public class HttpServerTest extends AbstractUnitTest {
     }
 
     @Test
+    public void testDynamicPortResolvesBoundPort() {
+        HttpServer dynamicPortServer = new HttpServer();
+        dynamicPortServer.setPort(0);
+        dynamicPortServer.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
+        dynamicPortServer.setUseRootContextAsParent(true);
+        dynamicPortServer.setContextConfigLocation("classpath:org/citrusframework/http/HttpServerTest-http-servlet.xml");
+
+        try {
+            dynamicPortServer.startup();
+
+            assertThat(dynamicPortServer.getPort())
+                    .isPositive()
+                    .isNotEqualTo(0);
+        } finally {
+            dynamicPortServer.shutdown();
+        }
+    }
+
+    @Test
     public void testHttpResponseErrorHandlerWithPropagateStrategy() {
         TestContext context = testContextFactory.getObject();
 

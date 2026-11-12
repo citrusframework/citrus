@@ -16,6 +16,7 @@
 
 package org.citrusframework.docs;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.citrusframework.generate.TestGenerator;
@@ -23,14 +24,16 @@ import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.xml.XmlTestGenerator;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Generates and reads shared SampleIT.xml plus the shared target/docs output directory")
 public class SvgTestDocsGeneratorTest {
 
-    @BeforeClass
-    public void createSampleIT() {
+    @BeforeAll
+    public static void createSampleIT() {
         TestGenerator<?> generator = new XmlTestGenerator<>()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
@@ -47,10 +50,10 @@ public class SvgTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(Resources.fromFileSystem(HtmlTestDocsGenerator.getOutputDirectory() + "/SampleIT.svg"));
+        String docContent = FileUtils.readToString(Resources.fromFileSystem(AbstractTestDocsGenerator.getOutputDirectory() + File.separator + "SampleIT.svg"));
 
-        Assert.assertTrue(docContent.contains("<title>SampleIT</title>"));
-        Assert.assertTrue(docContent.contains("<desc>This is a sample test"));
-        Assert.assertTrue(docContent.contains("TestCase: SampleIT"));
+        Assertions.assertTrue(docContent.contains("<title>SampleIT</title>"));
+        Assertions.assertTrue(docContent.contains("<desc>This is a sample test"));
+        Assertions.assertTrue(docContent.contains("TestCase: SampleIT"));
     }
 }

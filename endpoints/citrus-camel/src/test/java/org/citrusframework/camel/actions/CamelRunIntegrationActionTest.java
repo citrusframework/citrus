@@ -175,6 +175,25 @@ public class CamelRunIntegrationActionTest {
     }
 
     @Test
+    public void shouldNotSkipPluginsByDefault() {
+        CamelRunIntegrationAction action = new CamelRunIntegrationAction.Builder()
+                .integration("test", "from('timer:tick').log('hello')")
+                .build();
+
+        assertEquals(false, getField(action, "skipPlugins"));
+    }
+
+    @Test
+    public void shouldEnableSkipPlugins() {
+        CamelRunIntegrationAction action = new CamelRunIntegrationAction.Builder()
+                .integration("test", "from('timer:tick').log('hello')")
+                .skipPlugins(true)
+                .build();
+
+        assertEquals(true, getField(action, "skipPlugins"));
+    }
+
+    @Test
     public void shouldAutoSetComponentPropertiesFromInfraServiceVariables() throws IOException {
         CamelRunIntegrationAction action = new CamelRunIntegrationAction.Builder()
                 .integration("test", "from(\"kafka:topic\").to(\"log:info\")")

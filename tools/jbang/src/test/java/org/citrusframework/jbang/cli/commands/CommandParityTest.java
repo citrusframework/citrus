@@ -20,12 +20,14 @@ import java.nio.file.Path;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.spi.Resources;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
  * CLI parity: command tree, help flags and exit codes after the CLI framework migration.
  */
+@ResourceLock("citrus-jbang-run")
 public class CommandParityTest extends CommandTest {
 
     @Test
@@ -77,8 +79,8 @@ public class CommandParityTest extends CommandTest {
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("completion");
 
-        Assert.assertFalse(printer.getOutput().isBlank(), "completion script expected on printer");
-        Assert.assertTrue(printer.getOutput().contains("citrus"), "completion script expected to mention citrus");
+        Assertions.assertFalse(printer.getOutput().isBlank(), "completion script expected on printer");
+        Assertions.assertTrue(printer.getOutput().contains("citrus"), "completion script expected to mention citrus");
     }
 
     @Test
@@ -86,7 +88,7 @@ public class CommandParityTest extends CommandTest {
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("ls", "--sort", "name");
 
-        Assert.assertTrue(printer.getOutput().contains("PID"), "ls table header expected");
+        Assertions.assertTrue(printer.getOutput().contains("PID"), "ls table header expected");
     }
 
     @Test
@@ -94,11 +96,11 @@ public class CommandParityTest extends CommandTest {
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("--version");
 
-        Assert.assertFalse(printer.getOutput().isBlank(), "version output expected");
+        Assertions.assertFalse(printer.getOutput().isBlank(), "version output expected");
 
         main.execute("-V");
 
-        Assert.assertFalse(printer.getOutput().isBlank(), "version output expected");
+        Assertions.assertFalse(printer.getOutput().isBlank(), "version output expected");
     }
 
     @Test

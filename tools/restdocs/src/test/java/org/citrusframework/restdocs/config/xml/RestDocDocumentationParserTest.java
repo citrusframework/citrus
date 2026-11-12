@@ -16,15 +16,15 @@
 
 package org.citrusframework.restdocs.config.xml;
 
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.restdocs.http.CitrusRestDocConfigurer;
 import org.citrusframework.restdocs.http.RestDocClientInterceptor;
 import org.citrusframework.restdocs.soap.CitrusRestDocSoapConfigurer;
 import org.citrusframework.restdocs.soap.RestDocSoapClientInterceptor;
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -38,37 +38,37 @@ public class RestDocDocumentationParserTest extends AbstractBeanDefinitionParser
     @SuppressWarnings("unchecked")
     public void testConfigurerParser() {
         Map<String, CitrusRestDocConfigurer> configurers = beanDefinitionContext.getBeansOfType(CitrusRestDocConfigurer.class);
-        Assert.assertEquals(configurers.size(), 1);
+        Assertions.assertEquals(1, configurers.size());
         Map<String, RestDocClientInterceptor> interceptors = beanDefinitionContext.getBeansOfType(RestDocClientInterceptor.class);
-        Assert.assertEquals(interceptors.size(), 1);
+        Assertions.assertEquals(1, interceptors.size());
 
         // 1st configurer
         CitrusRestDocConfigurer configurer = configurers.get("documentation1Configurer");
-        Assert.assertNotNull(configurer.getContextProvider());
+        Assertions.assertNotNull(configurer.getContextProvider());
         // 1st interceptor
         RestDocClientInterceptor interceptor = interceptors.get("documentation1Interceptor");
-        Assert.assertNotNull(interceptor.documentationGenerator());
+        Assertions.assertNotNull(interceptor.documentationGenerator());
 
         Map<String, CitrusRestDocSoapConfigurer> soapConfigurers = beanDefinitionContext.getBeansOfType(CitrusRestDocSoapConfigurer.class);
-        Assert.assertEquals(soapConfigurers.size(), 1);
+        Assertions.assertEquals(1, soapConfigurers.size());
         Map<String, RestDocSoapClientInterceptor> soapInterceptors = beanDefinitionContext.getBeansOfType(RestDocSoapClientInterceptor.class);
-        Assert.assertEquals(soapInterceptors.size(), 1);
+        Assertions.assertEquals(1, soapInterceptors.size());
 
         // 2nd configurer
         CitrusRestDocSoapConfigurer soapConfigurer = soapConfigurers.get("documentation2Configurer");
-        Assert.assertNotNull(soapConfigurer.getContextProvider());
+        Assertions.assertNotNull(soapConfigurer.getContextProvider());
         // 2nd interceptor
         RestDocSoapClientInterceptor soapInterceptor = soapInterceptors.get("documentation2Interceptor");
-        Assert.assertNotNull(soapInterceptor.documentationGenerator());
+        Assertions.assertNotNull(soapInterceptor.documentationGenerator());
 
         List<ClientHttpRequestInterceptor> documentation1 = beanDefinitionContext.getBean("documentation1", List.class);
-        Assert.assertEquals(documentation1.size(), 2L);
-        Assert.assertEquals(documentation1.get(0), configurer);
-        Assert.assertEquals(documentation1.get(1), interceptor);
+        Assertions.assertEquals(2, documentation1.size());
+        Assertions.assertEquals(configurer, documentation1.get(0));
+        Assertions.assertEquals(interceptor, documentation1.get(1));
 
         List<ClientInterceptor> documentation2 = beanDefinitionContext.getBean("documentation2", List.class);
-        Assert.assertEquals(documentation2.size(), 2L);
-        Assert.assertEquals(documentation2.get(0), soapConfigurer);
-        Assert.assertEquals(documentation2.get(1), soapInterceptor);
+        Assertions.assertEquals(2, documentation2.size());
+        Assertions.assertEquals(soapConfigurer, documentation2.get(0));
+        Assertions.assertEquals(soapInterceptor, documentation2.get(1));
     }
 }

@@ -16,13 +16,12 @@
 
 package org.citrusframework.zookeeper.config.xml;
 
-import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.junit.jupiter.AbstractBeanDefinitionParserTest;
 import org.citrusframework.zookeeper.client.ZooClient;
 import org.citrusframework.zookeeper.client.ZooClientConfig;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.citrusframework.zookeeper.client.ZooClientConfig.ZooKeeperClientConfigBuilder.DEFAULT_TIMEOUT;
@@ -34,7 +33,7 @@ public class ZooClientParserTest extends AbstractBeanDefinitionParserTest {
     public void testZooKeeperClientParser() {
         Map<String, ZooClient> clients = beanDefinitionContext.getBeansOfType(ZooClient.class);
 
-        Assert.assertEquals(clients.size(), 2);
+        Assertions.assertEquals(2, clients.size());
 
         // 1st client
         String clientId1 = "zookeeperClient1";
@@ -49,9 +48,9 @@ public class ZooClientParserTest extends AbstractBeanDefinitionParserTest {
 
     private void assertConfigParsed(ZooClient zookeeperClient, String expectedClientId, String expectedUrl, int expectedTimeout) {
         ZooClientConfig config = zookeeperClient.getZookeeperClientConfig();
-        Assert.assertNotNull(config);
-        Assert.assertEquals(config.getId(), expectedClientId);
-        Assert.assertEquals(config.getUrl(), expectedUrl);
-        Assert.assertEquals(config.getTimeout(), expectedTimeout);
+        Assertions.assertNotNull(config);
+        Assertions.assertEquals(expectedClientId, config.getId());
+        Assertions.assertEquals(expectedUrl, config.getUrl());
+        Assertions.assertEquals(expectedTimeout, config.getTimeout());
     }
 }

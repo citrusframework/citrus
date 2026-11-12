@@ -130,8 +130,8 @@ public class CamelCustomizedRunIntegrationAction extends AbstractCamelCliAction 
 
         Long pid = pao.getProcessId();
 
-        context.setVariable("%s:pid".formatted(_processName), pid);
-        context.setVariable("%s:process:%d".formatted(_processName, pid), pao);
+        context.setVariable("%s:%s".formatted(_processName, CamelRunTestVariables.PID.suffix()), pid);
+        context.setVariable("%s:%s:%d".formatted(_processName, CamelRunTestVariables.PROCESS.suffix(), pid), pao);
 
         logger.info("Started Camel integration '%s' (%s)".formatted(_processName, pid));
 

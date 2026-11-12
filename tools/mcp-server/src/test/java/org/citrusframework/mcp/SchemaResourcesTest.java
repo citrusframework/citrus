@@ -39,7 +39,7 @@ class SchemaResourcesTest {
 
         assertThat(result).isNotNull();
         assertThat(result.uri()).isEqualTo("citrus://schema/dsl/yaml");
-        assertThat(result.text()).startsWith("{\"$schema\" : \"http://json-schema.org/draft-07/schema#\"");
+        assertThat(result.text()).startsWith("{\"$schema\":\"http://json-schema.org/draft-07/schema#\"");
     }
 
     @Test

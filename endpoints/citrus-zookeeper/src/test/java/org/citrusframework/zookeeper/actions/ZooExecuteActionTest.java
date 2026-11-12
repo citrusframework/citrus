@@ -16,17 +16,17 @@
 
 package org.citrusframework.zookeeper.actions;
 
-import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.citrusframework.zookeeper.client.ZooClient;
 import org.citrusframework.zookeeper.command.Info;
 import org.apache.zookeeper.ZooKeeper;
 import org.mockito.Mockito;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class ZooExecuteActionTest extends AbstractTestNGUnitTest {
+public class ZooExecuteActionTest extends AbstractUnitTest {
 
     private final ZooKeeper zookeeper = Mockito.mock(ZooKeeper.class);
 

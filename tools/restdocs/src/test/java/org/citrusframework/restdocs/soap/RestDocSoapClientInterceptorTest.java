@@ -19,12 +19,16 @@ package org.citrusframework.restdocs.soap;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -39,10 +43,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -58,6 +58,8 @@ public class RestDocSoapClientInterceptorTest {
 
     private RestDocSoapClientInterceptor interceptor;
 
+    private AutoCloseable openedMocks;
+
     @Mock
     private MessageContext messageContext = Mockito.mock(MessageContext.class);
     @Mock
@@ -72,15 +74,16 @@ public class RestDocSoapClientInterceptorTest {
     private Map<String, Object> restDocConfiguration = new HashMap<>();
     private RestDocumentationContext restDocumentationContext = null;
 
-    @BeforeMethod
-    public void setUp(Method method) {
-        MockitoAnnotations.openMocks(this);
-        this.restDocumentation.beforeTest(getClass(), method.getName());
+    @BeforeEach
+    public void setUp(TestInfo testInfo) {
+        openedMocks = MockitoAnnotations.openMocks(this);
+        this.restDocumentation.beforeTest(getClass(), testInfo.getTestMethod().orElseThrow().getName());
     }
 
-    @AfterMethod
-    public void tearDown() {
+    @AfterEach
+    public void tearDown() throws Exception {
         this.restDocumentation.afterTest();
+        openedMocks.close();
     }
 
     @Test
@@ -148,7 +151,7 @@ public class RestDocSoapClientInterceptorTest {
     private void assertExpectedSnippetFilesExist(String identifier, String... snippets) {
         for (String snippet : snippets) {
             File snippetFile = new File (new File("target/citrus-docs/generated-snippets/" + identifier), snippet);
-            Assert.assertTrue(snippetFile.isFile(), "Snippet " + snippetFile + " not found");
+            Assertions.assertTrue(snippetFile.isFile(), "Snippet " + snippetFile + " not found");
         }
     }
 }

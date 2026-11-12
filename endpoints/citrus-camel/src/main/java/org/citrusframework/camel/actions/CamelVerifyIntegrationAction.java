@@ -16,6 +16,9 @@
 
 package org.citrusframework.camel.actions;
 
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.api.actions.camel.CamelIntegrationVerifyActionBuilder;
 import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.context.TestContext;
@@ -24,9 +27,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Verifies Camel integration via Camel CLI. Checks route for running/stopped state and optionally waits for a log message to be present.
@@ -90,7 +90,14 @@ public class CamelVerifyIntegrationAction extends AbstractCamelCliAction {
         String log;
         int offset = 0;
 
-        ProcessAndOutput pao = context.getVariable(name + ":process:" + pid, ProcessAndOutput.class);
+        ProcessAndOutput pao;
+        String processKey = "%s:%s:%d".formatted(name, CamelRunTestVariables.PROCESS.suffix(), pid);
+        if (context.getVariables().containsKey(processKey)) {
+            pao = context.getVariable(processKey, ProcessAndOutput.class);
+        } else {
+            pao = camelCli().log(name);
+        }
+
         for (int i = 0; i < maxAttempts; i++) {
             log = pao.getOutput();
 
@@ -124,35 +131,43 @@ public class CamelVerifyIntegrationAction extends AbstractCamelCliAction {
         INTEGRATION_STATUS_LOG.info("Waiting for Camel integration '{}' to be in state '{}'", name, phase);
 
         for (int i = 0; i < maxAttempts; i++) {
-            if (context.getVariables().containsKey(name + ":pid")) {
-                Long pid = context.getVariable(name + ":pid", Long.class);
-                if (findProcessAndVerifyStatus(pid, name, phase)) {
-                    return pid;
+            Long pid;
+            String pidKey = "%s:%s".formatted(name, CamelRunTestVariables.PID.suffix());
+            String processKeyPrefix = "%s:%s".formatted(name, CamelRunTestVariables.PROCESS.suffix());
+            if (context.getVariables().containsKey(pidKey)) {
+                pid = context.getVariable(pidKey, Long.class);
+            } else {
+                pid = findIntegrationByName(name);
+                context.setVariable(pidKey, pid);
+            }
+
+            if (findProcessAndVerifyStatus(pid, name, phase)) {
+                return pid;
+            }
+
+            String processKey = "%s:%d".formatted(processKeyPrefix, pid);
+            if (context.getVariables().containsKey(processKey)) {
+                // check if process is still alive
+                ProcessAndOutput pao = context.getVariable(processKey, ProcessAndOutput.class);
+                if (!pao.getProcess().isAlive()) {
+                    logger.info("Failed to verify Camel integration '%s' - exit code %s".formatted(name, pao.getProcess().exitValue()));
+                    logger.info(pao.getOutput());
+
+                    throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - exit code %s", name, pao.getProcess().exitValue()));
                 }
 
-                if (context.getVariables().containsKey("%s:process:%d".formatted(name, pid))) {
-                    // check if process is still alive
-                    ProcessAndOutput pao = context.getVariable(name + ":process:" + pid, ProcessAndOutput.class);
-                    if (!pao.getProcess().isAlive()) {
-                        logger.info("Failed to verify Camel integration '%s' - exit code %s".formatted(name, pao.getProcess().exitValue()));
-                        logger.info(pao.getOutput());
-
-                        throw new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - exit code %s", name, pao.getProcess().exitValue()));
+                // Check if there is a descendant process for the process saved in test context
+                List<Long> descendants = pao.getDescendants();
+                for (Long descendantPid : descendants) {
+                    // seems like there is descendant pid that should be verified
+                    if (findProcessAndVerifyStatus(descendantPid, name, phase)) {
+                        // Update pid in test context so upcoming checks can use the descendant pid
+                        context.setVariable("%s:%d".formatted(processKeyPrefix, descendantPid), pao);
+                        return descendantPid;
                     }
-
-                    // Check if there is a descendant process for the process saved in test context
-                    List<Long> descendants = pao.getDescendants();
-                    for (Long descendantPid : descendants) {
-                        // seems like there is descendant pid that should be verified
-                        if (findProcessAndVerifyStatus(descendantPid, name, phase)) {
-                            // Update pid in test context so upcoming checks can use the descendant pid
-                            context.setVariable("%s:process:%d".formatted(name, descendantPid), pao);
-                            return descendantPid;
-                        }
-                    }
-                } else {
-                    logger.warn("Missing process and output for '{}:process:{}'", name, pid);
                 }
+            } else {
+                logger.warn("Missing process and output for '{}:process:{}'", name, pid);
             }
 
             logger.info("{}{}", System.lineSeparator(), camelCli().ps());
@@ -167,7 +182,13 @@ public class CamelVerifyIntegrationAction extends AbstractCamelCliAction {
         throw new ActionTimeoutException((maxAttempts * delayBetweenAttempts),
                 new CitrusRuntimeException(String.format("Failed to verify Camel integration '%s' - " +
                         "is not in state '%s' after %d attempts", name, phase, maxAttempts)));
+    }
 
+    private Long findIntegrationByName(String name) {
+        return camelCli().getAll().stream()
+                .filter(props -> name.equals(props.get("name")) && !props.getOrDefault("pid", "").isBlank())
+                .map(props -> Long.valueOf(props.get("pid"))).findFirst()
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Camel integration '%s' not found", name)));
     }
 
     private boolean findProcessAndVerifyStatus(Long pid, String name, String phase) {
