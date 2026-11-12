@@ -33,6 +33,13 @@ import org.citrusframework.util.IsYamlPredicate;
  */
 public abstract class AbstractCamelCliAction extends AbstractTestAction {
 
+    /**
+     * Number of additional attempts to run a Camel CLI command before failing the action.
+     * The Camel CLI may fail transiently, e.g. when it reads Camel integration status information
+     * while it is being written concurrently.
+     */
+    protected static final int CLI_COMMAND_RESTARTS = 1;
+
     private final String camelVersion;
     private final String kameletsVersion;
 

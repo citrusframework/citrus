@@ -150,11 +150,23 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
             logger.info("Receive messages from Camel CLI receive command ...");
 
             String log;
-            for (int i = 0; i < maxAttempts; i++) {
+            int restarts = 0;
+            for (int i = 0; i < maxAttempts; ) {
                 if (!pao.getProcess().isAlive()) {
                     int exitValue = pao.getProcess().exitValue();
                     if (exitValue != OK_EXIT_CODE) {
-                        logger.warn("Failed to receive message via Camel CLI command:%n\t camel cmd receive %s".formatted(String.join(" ", commandArgs)));
+                        logger.warn("Failed to receive message via Camel CLI command:%n\t camel cmd receive %s%n%s"
+                                .formatted(String.join(" ", commandArgs), pao.getOutput()));
+
+                        if (restarts < CLI_COMMAND_RESTARTS) {
+                            restarts++;
+                            logger.warn("Restarting Camel CLI receive command (retry %d/%d) - hoping to recover from a transient CLI failure"
+                                    .formatted(restarts, CLI_COMMAND_RESTARTS));
+
+                            pao = camelCli().receive(commandArgs.toArray(new String[0]));
+                            continue;
+                        }
+
                         throw new CitrusRuntimeException("Error while receiving messages via Camel CLI: '%s' Exit code: %d"
                                 .formatted(pao.getOutput(), exitValue));
                     }
@@ -184,6 +196,8 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
                 if (log.contains("STACK-TRACE") && stopOnErrorStatus) {
                     throw new CitrusRuntimeException("Error while receiving messages via Camel CLI - detected error state in Camel receive operation");
                 }
+
+                i++;
 
                 logger.warn("Waiting for Camel message '{}' - retry in {} ms", integrationName, delayBetweenAttempts);
 

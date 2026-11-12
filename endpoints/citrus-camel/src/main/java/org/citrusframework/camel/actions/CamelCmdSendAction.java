@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.citrusframework.api.actions.camel.CamelCliCmdSendActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.StringUtils;
@@ -134,13 +135,37 @@ public class CamelCmdSendAction extends AbstractCamelCliAction {
             commandArgs.addAll(context.resolveDynamicValuesInList(args));
         }
 
-        ProcessAndOutput pao = camelCli().send(commandArgs.toArray(new String[0]));
+        ProcessAndOutput pao = sendCommand(commandArgs);
 
         if (reply) {
             logger.info("Received reply from Camel CLI send command:%n%s".formatted(pao.getOutput()));
         }
 
         logger.info("Successfully sent message to Camel integration via Camel CLI");
+    }
+
+    /**
+     * Runs the Camel CLI send command. Restarts the command on failure in order to recover
+     * from transient Camel CLI failures, e.g. when the Camel integration does not pick up the
+     * send action in time or when the status information of the running integration cannot be read.
+     */
+    private ProcessAndOutput sendCommand(List<String> commandArgs) {
+        int restarts = 0;
+        while (true) {
+            try {
+                return camelCli().send(commandArgs.toArray(new String[0]));
+            } catch (CitrusRuntimeException e) {
+                if (restarts >= CLI_COMMAND_RESTARTS) {
+                    throw e;
+                }
+
+                restarts++;
+                logger.warn("Failed to send message via Camel CLI command:%n\t camel cmd send %s%n%s"
+                        .formatted(String.join(" ", commandArgs), e.getMessage()));
+                logger.warn("Restarting Camel CLI send command (retry %d/%d) - hoping to recover from a transient CLI failure"
+                        .formatted(restarts, CLI_COMMAND_RESTARTS));
+            }
+        }
     }
 
     /**
