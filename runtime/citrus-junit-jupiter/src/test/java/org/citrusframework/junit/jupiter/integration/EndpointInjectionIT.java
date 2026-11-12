@@ -33,9 +33,9 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.testng.Assert;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @CitrusSupport
 public class EndpointInjectionIT implements CitrusExtension.TestListener, TestActionSupport {
@@ -56,7 +56,7 @@ public class EndpointInjectionIT implements CitrusExtension.TestListener, TestAc
 
     @Override
     public void before(CitrusContext context) {
-        Assert.assertNotNull(citrus);
+        assertNotNull(citrus);
 
         context.bind("foo", new DirectEndpointBuilder()
                 .queue("messages")
@@ -71,7 +71,7 @@ public class EndpointInjectionIT implements CitrusExtension.TestListener, TestAc
     @Test
     @CitrusTest
     public void injectEndpoint(@CitrusResource TestActionRunner $) {
-        Assertions.assertNotNull(foo);
+        assertNotNull(foo);
 
         $.run(send(directEndpoint)
                 .message()
@@ -103,6 +103,6 @@ public class EndpointInjectionIT implements CitrusExtension.TestListener, TestAc
                 .type(MessageType.PLAINTEXT)
                 .body("Hello Citrus!"));
 
-        Assertions.assertNotNull(citrus);
+        assertNotNull(citrus);
     }
 }
