@@ -32,6 +32,7 @@ import software.amazon.awssdk.regions.Region;
 
 import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
 
+
 @CitrusConfigProperties(prefix = "citrus.testcontainers.localstack", description = "LocalStack Testcontainers settings")
 public class LocalStackSettings {
 
@@ -189,25 +190,25 @@ public class LocalStackSettings {
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = "LOCALSTACK";
-            context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
-            context.setVariable(getEnvVarName(containerType, "REGION"), container.getRegion());
-            context.setVariable(getEnvVarName(containerType, "ACCESS_KEY"), container.getAccessKey());
-            context.setVariable(getEnvVarName(containerType, "SECRET_KEY"), container.getSecretKey());
-            context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), serviceEndpoint.getPort());
-            context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_URL"), String.format("http://localhost:%s", serviceEndpoint.getPort()));
+            context.setVariable(LocalStackTestVariables.HOST.variableName(), container.getHost());
+            context.setVariable(LocalStackTestVariables.CONTAINER_IP.variableName(), container.getHost());
+            context.setVariable(LocalStackTestVariables.CONTAINER_ID.variableName(), dockerContainerId);
+            context.setVariable(LocalStackTestVariables.CONTAINER_NAME.variableName(), dockerContainerName);
+            context.setVariable(LocalStackTestVariables.REGION.variableName(), container.getRegion());
+            context.setVariable(LocalStackTestVariables.ACCESS_KEY.variableName(), container.getAccessKey());
+            context.setVariable(LocalStackTestVariables.SECRET_KEY.variableName(), container.getSecretKey());
+            context.setVariable(LocalStackTestVariables.SERVICE_PORT.variableName(), serviceEndpoint.getPort());
+            context.setVariable(LocalStackTestVariables.SERVICE_LOCAL_URL.variableName(), String.format("http://localhost:%s", serviceEndpoint.getPort()));
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), String.format("http://localhost:%s", serviceEndpoint.getPort()));
+                context.setVariable(LocalStackTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(LocalStackTestVariables.SERVICE_URL.variableName(), String.format("http://localhost:%s", serviceEndpoint.getPort()));
             } else {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_URL"), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
+                context.setVariable(LocalStackTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(LocalStackTestVariables.SERVICE_URL.variableName(), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
             }
 
+            String containerType = "LOCALSTACK";
             Stream.of(container.getServices()).forEach(service -> {
                 String aws2ServiceName = service.getServiceName().toUpperCase(Locale.US);
 
@@ -221,8 +222,8 @@ public class LocalStackSettings {
                 context.setVariable(getEnvVarName(containerType, String.format("%s_PORT", aws2ServiceName)), serviceEndpoint.getPort());
             });
 
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_SERVICE_URL"), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_HOST"), serviceName);
+            context.setVariable(LocalStackTestVariables.KUBE_DOCK_SERVICE_URL.variableName(), String.format("http://%s:%s", serviceName, serviceEndpoint.getPort()));
+            context.setVariable(LocalStackTestVariables.KUBE_DOCK_HOST.variableName(), serviceName);
 
             for (Map.Entry<Object, Object> connectionProperty : getConnectionProperties(container).entrySet()) {
                 context.setVariable(connectionProperty.getKey().toString(), connectionProperty.getValue().toString());

@@ -32,12 +32,14 @@ import org.citrusframework.camel.actions.CamelKubernetesDeleteIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelKubernetesVerifyIntegrationAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
+import org.citrusframework.camel.actions.CamelRunTestVariables;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 
 import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 import static org.citrusframework.api.yaml.SchemaProperty.Kind.GROUP;
@@ -116,6 +118,7 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
         return builder;
     }
 
+    @SchemaType(testVariables = CamelRunTestVariables.class)
     public static class RunIntegration implements CamelActionBuilderWrapper<CamelRunIntegrationAction.Builder> {
 
         private final CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder();

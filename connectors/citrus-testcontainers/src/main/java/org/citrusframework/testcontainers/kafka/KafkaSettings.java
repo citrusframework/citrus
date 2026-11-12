@@ -25,8 +25,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.kafka.KafkaContainer;
 
-import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
-
 @CitrusConfigProperties(prefix = "citrus.testcontainers.kafka", description = "Kafka Testcontainers settings")
 public class KafkaSettings {
 
@@ -207,14 +205,13 @@ public class KafkaSettings {
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = "KAFKA";
-            context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
+            context.setVariable(KafkaTestVariables.HOST.variableName(), container.getHost());
+            context.setVariable(KafkaTestVariables.CONTAINER_IP.variableName(), container.getHost());
+            context.setVariable(KafkaTestVariables.CONTAINER_ID.variableName(), dockerContainerId);
+            context.setVariable(KafkaTestVariables.CONTAINER_NAME.variableName(), dockerContainerName);
 
-            context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), container.getMappedPort(KafkaSettings.KAFKA_PORT));
-            context.setVariable(getEnvVarName(containerType, "PORT"), container.getMappedPort(KafkaSettings.KAFKA_PORT));
+            context.setVariable(KafkaTestVariables.SERVICE_PORT.variableName(), container.getMappedPort(KafkaSettings.KAFKA_PORT));
+            context.setVariable(KafkaTestVariables.PORT.variableName(), container.getMappedPort(KafkaSettings.KAFKA_PORT));
 
             String bootstrapServers = switch (container) {
                 case KafkaContainer kafkaContainer -> kafkaContainer.getBootstrapServers();
@@ -223,25 +220,25 @@ public class KafkaSettings {
                 default -> "localhost:%d".formatted(container.getMappedPort(KafkaSettings.KAFKA_PORT));
             };
 
-            context.setVariable(getEnvVarName(containerType, "LOCAL_BOOTSTRAP_SERVERS"), bootstrapServers);
-            context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_BOOTSTRAP_SERVERS"), bootstrapServers);
+            context.setVariable(KafkaTestVariables.LOCAL_BOOTSTRAP_SERVERS.variableName(), bootstrapServers);
+            context.setVariable(KafkaTestVariables.SERVICE_LOCAL_BOOTSTRAP_SERVERS.variableName(), bootstrapServers);
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_BOOTSTRAP_SERVERS"), bootstrapServers);
-                context.setVariable(getEnvVarName(containerType, "BOOTSTRAP_SERVERS"), bootstrapServers);
+                context.setVariable(KafkaTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(KafkaTestVariables.SERVICE_BOOTSTRAP_SERVERS.variableName(), bootstrapServers);
+                context.setVariable(KafkaTestVariables.BOOTSTRAP_SERVERS.variableName(), bootstrapServers);
             }
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
+                context.setVariable(KafkaTestVariables.SERVICE_NAME.variableName(), serviceName);
             } else {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_BOOTSTRAP_SERVERS"), String.format("%s:%s", serviceName, container.getMappedPort(KafkaSettings.KAFKA_PORT)));
-                context.setVariable(getEnvVarName(containerType, "BOOTSTRAP_SERVERS"), String.format("%s:%s", serviceName, container.getMappedPort(KafkaSettings.KAFKA_PORT)));
+                context.setVariable(KafkaTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(KafkaTestVariables.SERVICE_BOOTSTRAP_SERVERS.variableName(), String.format("%s:%s", serviceName, container.getMappedPort(KafkaSettings.KAFKA_PORT)));
+                context.setVariable(KafkaTestVariables.BOOTSTRAP_SERVERS.variableName(), String.format("%s:%s", serviceName, container.getMappedPort(KafkaSettings.KAFKA_PORT)));
             }
 
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS"), String.format("%s:%s", serviceName, container.getMappedPort(KafkaSettings.KAFKA_PORT)));
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_HOST"), serviceName);
+            context.setVariable(KafkaTestVariables.KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS.variableName(), String.format("%s:%s", serviceName, container.getMappedPort(KafkaSettings.KAFKA_PORT)));
+            context.setVariable(KafkaTestVariables.KUBE_DOCK_HOST.variableName(), serviceName);
         }
     }
 }

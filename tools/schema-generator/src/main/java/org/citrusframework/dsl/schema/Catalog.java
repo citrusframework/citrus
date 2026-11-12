@@ -17,6 +17,7 @@
 package org.citrusframework.dsl.schema;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.citrusframework.validation.matcher.ParameterizedValidationMatcher;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
+import org.citrusframework.api.yaml.TestVariable;
 import tools.jackson.databind.JsonNode;
 
 import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
@@ -73,6 +75,7 @@ public class Catalog {
                     }
 
                     JsonNode jsonSchema = CitrusSchemaGenerator.generateSchema(item.type, module, Option.INLINE_ALL_SCHEMAS);
+                    List<TestVariableEntry> testVariables = extractTestVariables(item.type);
                     return new CatalogEntry(item.schema.kind().getCatalogKind(),
                             CitrusVersion.version(),
                             entry.getKey(),
@@ -82,7 +85,8 @@ public class Catalog {
                                     .filter(title -> !title.isEmpty())
                                     .orElse(StringUtils.convertFirstCharToUpperCase(item.name)),
                             item.schema.description(),
-                            jsonSchema);
+                            jsonSchema,
+                            testVariables);
                 })
                 .collect(Collectors.toMap(
                         item -> item.name,
@@ -253,10 +257,33 @@ public class Catalog {
         return catalog;
     }
 
+    private static List<TestVariableEntry> extractTestVariables(Class<?> type) {
+        SchemaType schemaType = type.getAnnotation(SchemaType.class);
+        if (schemaType == null || schemaType.testVariables().length == 0) {
+            return List.of();
+        }
+
+        List<TestVariableEntry> result = new ArrayList<>();
+        for (Class<? extends TestVariable> enumClass : schemaType.testVariables()) {
+            TestVariable[] constants = enumClass.getEnumConstants();
+            if (constants != null) {
+                for (TestVariable variable : constants) {
+                    result.add(new TestVariableEntry(variable.variableName(), variable.description()));
+                }
+            }
+        }
+        return result;
+    }
+
     public record CatalogItem (
         String name,
         Class<?> type,
         SchemaProperty schema
+    ){}
+
+    public record TestVariableEntry(
+        String name,
+        String description
     ){}
 
     public record CatalogEntry (
@@ -267,6 +294,13 @@ public class Catalog {
         String module,
         String title,
         String description,
-        JsonNode propertiesSchema
-    ){}
+        JsonNode propertiesSchema,
+        List<TestVariableEntry> testVariables
+    ){
+        public CatalogEntry(String kind, String version, String name, String group,
+                            String module, String title, String description,
+                            JsonNode propertiesSchema) {
+            this(kind, version, name, group, module, title, description, propertiesSchema, List.of());
+        }
+    }
 }

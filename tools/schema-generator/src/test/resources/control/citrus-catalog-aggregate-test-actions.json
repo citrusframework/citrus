@@ -1194,7 +1194,17 @@
           "$comment": "group:advanced"
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "{integrationName}:pid",
+        "description": "OS process ID of the running Camel integration."
+      },
+      {
+        "name": "{integrationName}:process",
+        "description": "Process handle reference of the running Camel integration."
+      }
+    ]
   },
   "camel:cli:stop": {
     "kind": "testAction",
@@ -30995,7 +31005,29 @@
           "description": "Wait strategy used before continuing."
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "CITRUS_TESTCONTAINERS_{containerType}_HOST",
+        "description": "Container host address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_{containerType}_CONTAINER_IP",
+        "description": "Container IP address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_{containerType}_CONTAINER_ID",
+        "description": "Docker container ID (first 12 characters)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_{containerType}_CONTAINER_NAME",
+        "description": "Docker container name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_{containerType}_PORT",
+        "description": "Mapped container port."
+      }
+    ]
   },
   "testcontainers:start:floci": {
     "kind": "testAction",
@@ -31199,7 +31231,65 @@
           "description": "Wait strategy used before continuing."
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_HOST",
+        "description": "Container host address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_CONTAINER_IP",
+        "description": "Container IP address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_CONTAINER_ID",
+        "description": "Docker container ID (first 12 characters)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_CONTAINER_NAME",
+        "description": "Docker container name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_PORT",
+        "description": "Mapped container port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_REGION",
+        "description": "AWS region."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_ACCESS_KEY",
+        "description": "AWS access key."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_SECRET_KEY",
+        "description": "AWS secret key."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_SERVICE_PORT",
+        "description": "Mapped Floci service port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_SERVICE_LOCAL_URL",
+        "description": "Floci service URL using localhost."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_SERVICE_NAME",
+        "description": "Service name of the container."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_SERVICE_URL",
+        "description": "Floci service URL."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_KUBE_DOCK_SERVICE_URL",
+        "description": "Floci service URL for KubeDock service access."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_FLOCI_KUBE_DOCK_HOST",
+        "description": "KubeDock service host name."
+      }
+    ]
   },
   "testcontainers:start:kafka": {
     "kind": "testAction",
@@ -31380,7 +31470,61 @@
           "description": "Wait strategy used before continuing."
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_HOST",
+        "description": "Container host address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_IP",
+        "description": "Container IP address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_ID",
+        "description": "Docker container ID (first 12 characters)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_CONTAINER_NAME",
+        "description": "Docker container name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_PORT",
+        "description": "Mapped container port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_SERVICE_PORT",
+        "description": "Mapped Kafka service port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_LOCAL_BOOTSTRAP_SERVERS",
+        "description": "Kafka bootstrap servers using localhost."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_SERVICE_LOCAL_BOOTSTRAP_SERVERS",
+        "description": "Kafka bootstrap servers using localhost (service variant)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_SERVICE_NAME",
+        "description": "Service name of the container."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_SERVICE_BOOTSTRAP_SERVERS",
+        "description": "Kafka bootstrap servers using the service name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_BOOTSTRAP_SERVERS",
+        "description": "Kafka bootstrap servers connection string."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS",
+        "description": "Kafka bootstrap servers for KubeDock service access."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_KAFKA_KUBE_DOCK_HOST",
+        "description": "KubeDock service host name."
+      }
+    ]
   },
   "testcontainers:start:localstack": {
     "kind": "testAction",
@@ -31590,7 +31734,65 @@
           "description": "Wait strategy used before continuing."
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_HOST",
+        "description": "Container host address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_IP",
+        "description": "Container IP address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_ID",
+        "description": "Docker container ID (first 12 characters)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_CONTAINER_NAME",
+        "description": "Docker container name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_PORT",
+        "description": "Mapped container port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_REGION",
+        "description": "AWS region."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_ACCESS_KEY",
+        "description": "AWS access key."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_SECRET_KEY",
+        "description": "AWS secret key."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_PORT",
+        "description": "Mapped LocalStack service port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_LOCAL_URL",
+        "description": "LocalStack service URL using localhost."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_NAME",
+        "description": "Service name of the container."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_SERVICE_URL",
+        "description": "LocalStack service URL."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_KUBE_DOCK_SERVICE_URL",
+        "description": "LocalStack service URL for KubeDock service access."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_LOCALSTACK_KUBE_DOCK_HOST",
+        "description": "KubeDock service host name."
+      }
+    ]
   },
   "testcontainers:start:mongodb": {
     "kind": "testAction",
@@ -31751,7 +31953,65 @@
           "description": "Wait strategy used before continuing."
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_HOST",
+        "description": "Container host address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_CONTAINER_IP",
+        "description": "Container IP address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_CONTAINER_ID",
+        "description": "Docker container ID (first 12 characters)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_CONTAINER_NAME",
+        "description": "Docker container name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_PORT",
+        "description": "Mapped container port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_LOCAL_URL",
+        "description": "MongoDB replica set URL using localhost."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_SERVICE_PORT",
+        "description": "Mapped MongoDB service port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_SERVICE_LOCAL_URL",
+        "description": "MongoDB replica set URL using localhost (service variant)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_SERVICE_NAME",
+        "description": "Service name of the container."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_SERVICE_URL",
+        "description": "MongoDB connection URL using the service name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_URL",
+        "description": "MongoDB connection URL."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_CONNECTION_STRING",
+        "description": "MongoDB connection string."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_KUBE_DOCK_SERVICE_URL",
+        "description": "MongoDB connection URL for KubeDock service access."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_MONGODB_KUBE_DOCK_HOST",
+        "description": "KubeDock service host name."
+      }
+    ]
   },
   "testcontainers:start:postgresql": {
     "kind": "testAction",
@@ -31950,7 +32210,77 @@
           "description": "Wait strategy used before continuing."
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_HOST",
+        "description": "Container host address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_CONTAINER_IP",
+        "description": "Container IP address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_CONTAINER_ID",
+        "description": "Docker container ID (first 12 characters)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_CONTAINER_NAME",
+        "description": "Docker container name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_PORT",
+        "description": "Mapped container port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_PORT",
+        "description": "Mapped PostgreSQL service port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_LOCAL_URL",
+        "description": "JDBC connection URL using localhost."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_LOCAL_URL",
+        "description": "JDBC connection URL using localhost (service variant)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_NAME",
+        "description": "Service name of the container."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_SERVICE_URL",
+        "description": "JDBC connection URL using the service name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_URL",
+        "description": "JDBC connection URL."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_DRIVER",
+        "description": "JDBC driver class name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_DB_NAME",
+        "description": "Database name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_USERNAME",
+        "description": "Database username."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_PASSWORD",
+        "description": "Database password."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_KUBE_DOCK_SERVICE_URL",
+        "description": "JDBC connection URL for KubeDock service access."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_POSTGRESQL_KUBE_DOCK_HOST",
+        "description": "KubeDock service host name."
+      }
+    ]
   },
   "testcontainers:start:redpanda": {
     "kind": "testAction",
@@ -32131,7 +32461,69 @@
           "description": "Wait strategy used before continuing."
         }
       },
-      "additionalProperties": false    }
+      "additionalProperties": false    },
+    "testVariables": [
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_HOST",
+        "description": "Container host address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_CONTAINER_IP",
+        "description": "Container IP address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_CONTAINER_ID",
+        "description": "Docker container ID (first 12 characters)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_CONTAINER_NAME",
+        "description": "Docker container name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_PORT",
+        "description": "Mapped container port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_LOCAL_BOOTSTRAP_SERVERS",
+        "description": "Redpanda bootstrap servers using localhost."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_PORT",
+        "description": "Mapped Redpanda service port."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_LOCAL_BOOTSTRAP_SERVERS",
+        "description": "Redpanda bootstrap servers using localhost (service variant)."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_ADMIN_ADDRESS",
+        "description": "Redpanda admin API address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_SCHEMA_REGISTRY_ADDRESS",
+        "description": "Redpanda schema registry address."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_NAME",
+        "description": "Service name of the container."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_SERVICE_BOOTSTRAP_SERVERS",
+        "description": "Redpanda bootstrap servers using the service name."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_BOOTSTRAP_SERVERS",
+        "description": "Redpanda bootstrap servers connection string."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS",
+        "description": "Redpanda bootstrap servers for KubeDock service access."
+      },
+      {
+        "name": "CITRUS_TESTCONTAINERS_REDPANDA_KUBE_DOCK_HOST",
+        "description": "KubeDock service host name."
+      }
+    ]
   },
   "testcontainers:stop": {
     "kind": "testAction",

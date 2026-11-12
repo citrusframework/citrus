@@ -91,7 +91,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelCliAction {
         int offset = 0;
 
         ProcessAndOutput pao;
-        String processKey = "%s:process:%d".formatted(name, pid);
+        String processKey = "%s:%s:%d".formatted(name, CamelRunTestVariables.PROCESS.suffix(), pid);
         if (context.getVariables().containsKey(processKey)) {
             pao = context.getVariable(processKey, ProcessAndOutput.class);
         } else {
@@ -132,20 +132,23 @@ public class CamelVerifyIntegrationAction extends AbstractCamelCliAction {
 
         for (int i = 0; i < maxAttempts; i++) {
             Long pid;
-            if (context.getVariables().containsKey(name + ":pid")) {
-                pid = context.getVariable(name + ":pid", Long.class);
+            String pidKey = "%s:%s".formatted(name, CamelRunTestVariables.PID.suffix());
+            String processKeyPrefix = "%s:%s".formatted(name, CamelRunTestVariables.PROCESS.suffix());
+            if (context.getVariables().containsKey(pidKey)) {
+                pid = context.getVariable(pidKey, Long.class);
             } else {
                 pid = findIntegrationByName(name);
-                context.setVariable(name + ":pid", pid);
+                context.setVariable(pidKey, pid);
             }
 
             if (findProcessAndVerifyStatus(pid, name, phase)) {
                 return pid;
             }
 
-            if (context.getVariables().containsKey("%s:process:%d".formatted(name, pid))) {
+            String processKey = "%s:%d".formatted(processKeyPrefix, pid);
+            if (context.getVariables().containsKey(processKey)) {
                 // check if process is still alive
-                ProcessAndOutput pao = context.getVariable(name + ":process:" + pid, ProcessAndOutput.class);
+                ProcessAndOutput pao = context.getVariable(processKey, ProcessAndOutput.class);
                 if (!pao.getProcess().isAlive()) {
                     logger.info("Failed to verify Camel integration '%s' - exit code %s".formatted(name, pao.getProcess().exitValue()));
                     logger.info(pao.getOutput());
@@ -159,7 +162,7 @@ public class CamelVerifyIntegrationAction extends AbstractCamelCliAction {
                     // seems like there is descendant pid that should be verified
                     if (findProcessAndVerifyStatus(descendantPid, name, phase)) {
                         // Update pid in test context so upcoming checks can use the descendant pid
-                        context.setVariable("%s:process:%d".formatted(name, descendantPid), pao);
+                        context.setVariable("%s:%d".formatted(processKeyPrefix, descendantPid), pao);
                         return descendantPid;
                     }
                 }

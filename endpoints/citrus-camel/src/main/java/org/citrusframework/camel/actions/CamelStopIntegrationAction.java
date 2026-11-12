@@ -59,17 +59,20 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
             logger.info("Stopping Camel integration '%s' ...".formatted(name));
 
             Long pid;
-            if (context.getVariables().containsKey(name + ":pid")) {
-                pid = context.getVariable(name + ":pid", Long.class);
+            String pidKey = "%s:%s".formatted(name, CamelRunTestVariables.PID.suffix());
+            String processKeyPrefix = "%s:%s".formatted(name, CamelRunTestVariables.PROCESS.suffix());
+            if (context.getVariables().containsKey(pidKey)) {
+                pid = context.getVariable(pidKey, Long.class);
             } else {
                 pid = findIntegrationByName(name);
             }
 
             camelCli().stop(pid);
 
-            if (context.getVariables().containsKey("%s:process:%d".formatted(name, pid))) {
+            String processKey = "%s:%d".formatted(processKeyPrefix, pid);
+            if (context.getVariables().containsKey(processKey)) {
                 // check if process is still alive
-                ProcessAndOutput pao = context.getVariable(name + ":process:" + pid, ProcessAndOutput.class);
+                ProcessAndOutput pao = context.getVariable(processKey, ProcessAndOutput.class);
                 if (pao.getProcess().isAlive()) {
                     // Check if there is a descendant process to be stopped
                     List<Long> descendants = pao.getDescendants();

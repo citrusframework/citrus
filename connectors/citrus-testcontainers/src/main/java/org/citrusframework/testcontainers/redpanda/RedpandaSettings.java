@@ -23,8 +23,6 @@ import org.citrusframework.kubernetes.KubernetesSupport;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.testcontainers.redpanda.RedpandaContainer;
 
-import static org.citrusframework.testcontainers.TestcontainersHelper.getEnvVarName;
-
 @CitrusConfigProperties(prefix = "citrus.testcontainers.redpanda", description = "Redpanda Testcontainers settings")
 public class RedpandaSettings {
 
@@ -122,32 +120,31 @@ public class RedpandaSettings {
                 dockerContainerName = dockerContainerName.substring(1);
             }
 
-            String containerType = "REDPANDA";
-            context.setVariable(getEnvVarName(containerType, "HOST"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_IP"), container.getHost());
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_ID"), dockerContainerId);
-            context.setVariable(getEnvVarName(containerType, "CONTAINER_NAME"), dockerContainerName);
+            context.setVariable(RedpandaTestVariables.HOST.variableName(), container.getHost());
+            context.setVariable(RedpandaTestVariables.CONTAINER_IP.variableName(), container.getHost());
+            context.setVariable(RedpandaTestVariables.CONTAINER_ID.variableName(), dockerContainerId);
+            context.setVariable(RedpandaTestVariables.CONTAINER_NAME.variableName(), dockerContainerName);
 
-            context.setVariable(getEnvVarName(containerType, "LOCAL_BOOTSTRAP_SERVERS"), container.getBootstrapServers());
-            context.setVariable(getEnvVarName(containerType, "SERVICE_PORT"), container.getMappedPort(RedpandaSettings.REDPANDA_PORT));
-            context.setVariable(getEnvVarName(containerType, "PORT"), container.getMappedPort(RedpandaSettings.REDPANDA_PORT));
-            context.setVariable(getEnvVarName(containerType, "SERVICE_LOCAL_BOOTSTRAP_SERVERS"), container.getBootstrapServers());
+            context.setVariable(RedpandaTestVariables.LOCAL_BOOTSTRAP_SERVERS.variableName(), container.getBootstrapServers());
+            context.setVariable(RedpandaTestVariables.SERVICE_PORT.variableName(), container.getMappedPort(RedpandaSettings.REDPANDA_PORT));
+            context.setVariable(RedpandaTestVariables.PORT.variableName(), container.getMappedPort(RedpandaSettings.REDPANDA_PORT));
+            context.setVariable(RedpandaTestVariables.SERVICE_LOCAL_BOOTSTRAP_SERVERS.variableName(), container.getBootstrapServers());
 
-            context.setVariable(getEnvVarName(containerType, "ADMIN_ADDRESS"), container.getAdminAddress());
-            context.setVariable(getEnvVarName(containerType, "SCHEMA_REGISTRY_ADDRESS"), container.getSchemaRegistryAddress());
+            context.setVariable(RedpandaTestVariables.ADMIN_ADDRESS.variableName(), container.getAdminAddress());
+            context.setVariable(RedpandaTestVariables.SCHEMA_REGISTRY_ADDRESS.variableName(), container.getSchemaRegistryAddress());
 
             if (!KubernetesSupport.isConnected(context) || !TestContainersSettings.isKubedockEnabled()) {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_BOOTSTRAP_SERVERS"), container.getBootstrapServers());
-                context.setVariable(getEnvVarName(containerType, "BOOTSTRAP_SERVERS"), container.getBootstrapServers());
+                context.setVariable(RedpandaTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(RedpandaTestVariables.SERVICE_BOOTSTRAP_SERVERS.variableName(), container.getBootstrapServers());
+                context.setVariable(RedpandaTestVariables.BOOTSTRAP_SERVERS.variableName(), container.getBootstrapServers());
             } else {
-                context.setVariable(getEnvVarName(containerType, "SERVICE_NAME"), serviceName);
-                context.setVariable(getEnvVarName(containerType, "SERVICE_BOOTSTRAP_SERVERS"), String.format("%s:%s", serviceName, container.getMappedPort(RedpandaSettings.REDPANDA_PORT)));
-                context.setVariable(getEnvVarName(containerType, "BOOTSTRAP_SERVERS"), String.format("%s:%s", serviceName, container.getMappedPort(RedpandaSettings.REDPANDA_PORT)));
+                context.setVariable(RedpandaTestVariables.SERVICE_NAME.variableName(), serviceName);
+                context.setVariable(RedpandaTestVariables.SERVICE_BOOTSTRAP_SERVERS.variableName(), String.format("%s:%s", serviceName, container.getMappedPort(RedpandaSettings.REDPANDA_PORT)));
+                context.setVariable(RedpandaTestVariables.BOOTSTRAP_SERVERS.variableName(), String.format("%s:%s", serviceName, container.getMappedPort(RedpandaSettings.REDPANDA_PORT)));
             }
 
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS"), String.format("%s:%s", serviceName, container.getMappedPort(RedpandaSettings.REDPANDA_PORT)));
-            context.setVariable(getEnvVarName(containerType, "KUBE_DOCK_HOST"), serviceName);
+            context.setVariable(RedpandaTestVariables.KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS.variableName(), String.format("%s:%s", serviceName, container.getMappedPort(RedpandaSettings.REDPANDA_PORT)));
+            context.setVariable(RedpandaTestVariables.KUBE_DOCK_HOST.variableName(), serviceName);
         }
     }
 }
