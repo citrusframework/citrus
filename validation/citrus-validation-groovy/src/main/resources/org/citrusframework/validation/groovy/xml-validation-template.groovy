@@ -2,7 +2,7 @@ import org.citrusframework.*
 import org.citrusframework.variable.*
 import org.citrusframework.context.TestContext
 import org.citrusframework.validation.script.GroovyScriptExecutor
-import groovy.util.XmlSlurper
+import groovy.xml.XmlSlurper
 import org.citrusframework.message.Message
 
 public class ValidationScript implements GroovyScriptExecutor{

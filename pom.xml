@@ -162,7 +162,7 @@
     <gib.disable>true</gib.disable>
 
     <maven.version>3.9.16</maven.version>
-    <maven.compiler.version>3.14.1</maven.compiler.version>
+    <maven.compiler.version>3.16.0</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -172,21 +172,21 @@
     <maven.changes.plugin.version>2.12.1</maven.changes.plugin.version>
     <maven.clean.plugin.version>3.5.0</maven.clean.plugin.version>
     <maven.dependency.plugin.version>3.11.0</maven.dependency.plugin.version>
-    <maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
+    <maven.deploy.plugin.version>3.2.0</maven.deploy.plugin.version>
     <maven.failsafe.plugin.version>3.5.6</maven.failsafe.plugin.version>
     <maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
-    <maven.helper.plugin.version>3.6.2</maven.helper.plugin.version>
-    <maven.install.plugin.version>3.1.4</maven.install.plugin.version>
+    <maven.helper.plugin.version>3.8.0</maven.helper.plugin.version>
+    <maven.install.plugin.version>3.2.0</maven.install.plugin.version>
     <maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
     <maven.javadoc.plugin.version>3.12.0</maven.javadoc.plugin.version>
     <maven.plugin.plugin.version>3.16.0</maven.plugin.plugin.version>
-    <maven.plugin.annotations.version>3.15.2</maven.plugin.annotations.version>
-    <maven.plugin.testing.harness.version>3.3.0</maven.plugin.testing.harness.version>
+    <maven.plugin.annotations.version>3.16.0</maven.plugin.annotations.version>
+    <maven.plugin.testing.harness.version>3.5.1</maven.plugin.testing.harness.version>
     <maven.release.plugin.version>3.3.1</maven.release.plugin.version>
     <maven.resource.plugin.version>3.5.0</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
-    <maven.shade.plugin.version>3.6.0</maven.shade.plugin.version>
-    <maven.sonatype.central.plugin.version>0.11.0</maven.sonatype.central.plugin.version>
+    <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>
+    <maven.sonatype.central.plugin.version>0.12.0</maven.sonatype.central.plugin.version>
     <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
     <maven.surefire.plugin.version>3.5.6</maven.surefire.plugin.version>
     <maven.war.plugin.version>3.5.1</maven.war.plugin.version>
@@ -194,9 +194,9 @@
     <apache.rat.plugin.version>0.18</apache.rat.plugin.version>
 
     <asciidoctor.maven.plugin.version>3.2.0</asciidoctor.maven.plugin.version>
-    <exec.maven.plugin.version>3.6.4</exec.maven.plugin.version>
-    <jaxb.maven.plugin.version>4.2.0</jaxb.maven.plugin.version>
-    <protobuf-maven-plugin.version>5.1.11</protobuf-maven-plugin.version>
+    <exec.maven.plugin.version>3.7.0</exec.maven.plugin.version>
+    <jaxb.maven.plugin.version>4.3.0</jaxb.maven.plugin.version>
+    <protobuf-maven-plugin.version>5.1.12</protobuf-maven-plugin.version>
 
     <apache.artemis.version>2.57.0</apache.artemis.version>
     <angus-activation.version>2.0.3</angus-activation.version>
@@ -207,32 +207,32 @@
     <ascii-table-version>1.13.0</ascii-table-version>
     <assertj.version>3.27.7</assertj.version>
     <awaitility.version>4.3.0</awaitility.version>
-    <aws-java-sdk2.version>2.55.11</aws-java-sdk2.version>
-    <bouncycastle.version>1.86</bouncycastle.version>
-    <byte.buddy.version>1.18.14</byte.buddy.version>
+    <aws-java-sdk2.version>2.57.11</aws-java-sdk2.version>
+    <bouncycastle.version>1.87</bouncycastle.version>
+    <byte.buddy.version>1.18.16</byte.buddy.version>
     <commons.dbcp2.version>2.14.0</commons.dbcp2.version>
     <commons.cli.version>1.11.0</commons.cli.version>
     <commons.codec.version>1.23.0</commons.codec.version>
     <commons.io.version>2.22.0</commons.io.version>
-    <commons.lang.version>3.21.0</commons.lang.version>
+    <commons.lang.version>3.22.0</commons.lang.version>
     <commons.logging.version>1.4.0</commons.logging.version>
     <commons.net.version>3.13.0</commons.net.version>
     <cucumber.version>8.0.4</cucumber.version>
     <docker-java.version>3.7.1</docker-java.version>
     <dropwizard.metrics.version>4.2.40</dropwizard.metrics.version>
-    <floci.version>2.16.1</floci.version>
+    <floci.version>2.17.0</floci.version>
     <ftpserver.version>1.2.1</ftpserver.version>
-    <groovy.version>3.0.25</groovy.version>
-    <greenmail.version>2.1.14</greenmail.version>
-    <grpc.version>1.84.0</grpc.version>
+    <groovy.version>5.1.2</groovy.version>
+    <greenmail.version>2.1.15</greenmail.version>
+    <grpc.version>1.85.1</grpc.version>
     <!-- use the jre flavour of guava - the android flavour does not contain the full api -->
-    <guava.version>33.7.2-jre</guava.version>
+    <guava.version>33.8.0-jre</guava.version>
     <hamcrest.version>3.0</hamcrest.version>
-    <httpclient.version>5.6.4</httpclient.version>
+    <httpclient.version>5.6.5</httpclient.version>
     <hsqldb.version>2.7.4</hsqldb.version>
-    <jackson.version>3.2.3</jackson.version>
-    <jackson-databind-nullable.version>0.2.12</jackson-databind-nullable.version>
-    <jackson2.version>2.22.3</jackson2.version>
+    <jackson.version>3.2.4</jackson.version>
+    <jackson-databind-nullable.version>0.2.13</jackson-databind-nullable.version>
+    <jackson2.version>2.22.4</jackson2.version>
     <jackson2.annotations.version>2.22</jackson2.annotations.version>
     <jakarta-activation.version>2.1.4</jakarta-activation.version>
     <jakarta-activation-api.version>2.1.4</jakarta-activation-api.version>
@@ -248,39 +248,39 @@
     <javapoet.version>1.13.0</javapoet.version>
     <javassist.version>3.33.0-GA</javassist.version>
     <jaxb.version>4.0.9</jaxb.version>
-    <jetty.version>12.1.14</jetty.version>
+    <jetty.version>12.1.15</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
     <jsonschema-generator.version>5.0.0</jsonschema-generator.version>
     <json-path.version>3.0.0</json-path.version>
     <json-patch.version>1.13</json-patch.version>
-    <json-schema-validator.version>3.0.8</json-schema-validator.version>
-    <json-smart.version>2.6.0</json-smart.version>
+    <json-schema-validator.version>3.0.9</json-schema-validator.version>
+    <json-smart.version>2.6.1</json-smart.version>
     <jtidy.version>r938</jtidy.version>
     <junit.jupiter.version>6.1.3</junit.jupiter.version>
     <junit.version>4.13.2</junit.version>
     <junixsocket.version>2.11.1</junixsocket.version>
-    <k8s.client.version>7.9.0</k8s.client.version>
+    <k8s.client.version>8.0.0</k8s.client.version>
     <kafka.version>4.4.0</kafka.version>
-    <knative-client.version>7.9.0</knative-client.version>
+    <knative-client.version>8.0.0</knative-client.version>
     <!--
       Kotlin runtime used by the Square Wire schema parser. Newer than the version shipped with
       Wire itself but binary compatible - kotlin-reflect is required by Wire's schema encoder.
     -->
     <kotlin.version>2.3.20</kotlin.version>
-    <log4j2.version>2.25.5</log4j2.version>
+    <log4j2.version>2.26.1</log4j2.version>
     <mockito.version>5.24.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
-    <netty.version>4.2.19.Final</netty.version>
-    <okhttp.version>5.5.0</okhttp.version>
+    <netty.version>4.2.20.Final</netty.version>
+    <okhttp.version>5.5.1</okhttp.version>
     <openapi-request-validator.version>3.0.0</openapi-request-validator.version>
     <!--
       com.atlassian.oai:openapi-request-validator-core is not compatible with com.networknt:json-schema-validator 3.x.
       This version is shaded and relocated into citrus-openapi-validator-shaded, see https://github.com/atlassian/openapi-request-validator/issues/21.
     -->
     <openapi-request-validator.json-schema-validator.version>2.0.8</openapi-request-validator.json-schema-validator.version>
-    <org.openapitools.version>7.26.0</org.openapitools.version>
-    <aesh.version>3.18.2</aesh.version>
+    <org.openapitools.version>7.27.0</org.openapitools.version>
+    <aesh.version>3.19.1</aesh.version>
     <postgresql.version>42.7.14</postgresql.version>
     <!--
       The version below is used for the protobuf-java runtime as well as for the protoc binary
@@ -289,21 +289,22 @@
       the transitive protobuf version of io.grpc:grpc-protobuf for the whole build.
     -->
     <protobuf.version>4.36.2</protobuf.version>
-    <quarkus.platform.version>3.40.1</quarkus.platform.version>
-    <quarkus.mcp-server.version>2.0.2</quarkus.mcp-server.version>
+    <quarkus.platform.version>3.40.1.2</quarkus.platform.version>
+    <quarkus.mcp-server.version>2.0.4</quarkus.mcp-server.version>
+    <quarkus.vertx.version>4.5.35</quarkus.vertx.version>
     <saaj.version>3.0.6</saaj.version>
-    <selenium.version>4.51.0</selenium.version>
-    <playwright.version>1.63.0</playwright.version>
+    <selenium.version>4.52.0</selenium.version>
+    <playwright.version>1.65.0</playwright.version>
     <slf4j.version>2.0.20</slf4j.version>
     <snappy.version>1.1.10.12</snappy.version>
     <snakeyaml.version>2.7</snakeyaml.version>
-    <spring.version>7.0.9</spring.version>
-    <spring.boot.version>4.1.1</spring.boot.version>
-    <spring.ws.version>5.0.2</spring.ws.version>
-    <spring.integration.version>7.1.0</spring.integration.version>
-    <spring.graphql.version>2.0.5</spring.graphql.version>
-    <spring.restdocs.version>4.0.1</spring.restdocs.version>
-    <sshd.version>2.20.0</sshd.version>
+    <spring.version>7.0.10</spring.version>
+    <spring.boot.version>4.1.2</spring.boot.version>
+    <spring.ws.version>5.0.3</spring.ws.version>
+    <spring.integration.version>7.1.2</spring.integration.version>
+    <spring.graphql.version>2.0.6</spring.graphql.version>
+    <spring.restdocs.version>4.0.2</spring.restdocs.version>
+    <sshd.version>2.20.1</sshd.version>
     <swagger.version>2.2.37</swagger.version>
     <swagger.parser.version>2.1.48</swagger.parser.version>
     <system-stubs.version>2.1.8</system-stubs.version>
@@ -311,15 +312,15 @@
     <testng.version>7.12.0</testng.version>
     <testng.engine.version>1.1.0</testng.engine.version>
     <!-- bound to https://mvnrepository.com/artifact/io.fabric8/kubernetes-httpclient-vertx/${k8s.client.version} -->
-    <vertx.version>4.5.35</vertx.version>
-    <wire.version>7.1.0</wire.version>
+    <vertx.version>5.2.3</vertx.version>
+    <wire.version>7.2.1</wire.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>5.0.0</xbean-spring.version>
     <xmlbeans.version>5.2.1</xmlbeans.version>
     <xmlbeans-xpath.version>2.6.0</xmlbeans-xpath.version>
     <xerces.version>2.12.2</xerces.version>
     <xstream.version>1.4.21</xstream.version>
-    <zookeeper.version>3.9.6</zookeeper.version>
+    <zookeeper.version>3.9.7</zookeeper.version>
 
     <skipTests>false</skipTests>
     <skip.integration.tests>${skipTests}</skip.integration.tests>
@@ -410,22 +411,22 @@
 
       <!-- Groovy -->
       <dependency>
-        <groupId>org.codehaus.groovy</groupId>
+        <groupId>org.apache.groovy</groupId>
         <artifactId>groovy</artifactId>
         <version>${groovy.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.groovy</groupId>
+        <groupId>org.apache.groovy</groupId>
         <artifactId>groovy-xml</artifactId>
         <version>${groovy.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.groovy</groupId>
+        <groupId>org.apache.groovy</groupId>
         <artifactId>groovy-json</artifactId>
         <version>${groovy.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.groovy</groupId>
+        <groupId>org.apache.groovy</groupId>
         <artifactId>groovy-jsr223</artifactId>
         <version>${groovy.version}</version>
       </dependency>
@@ -1043,6 +1044,21 @@
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-web</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web-client</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web-common</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-auth-common</artifactId>
         <version>${vertx.version}</version>
       </dependency>
       <dependency>

@@ -26,7 +26,6 @@ import org.citrusframework.vertx.endpoint.VertxEndpointConfiguration;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,9 +59,10 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
             logger.debug("Creating new Vert.x instance ...");
         }
 
-        VertxOptions vertxOptions = new VertxOptions();
-        vertxOptions.setClusterManager(new HazelcastClusterManager());
-        Vertx.clusteredVertx(vertxOptions, asyncLoadingHandler);
+        Vertx.builder()
+                .withClusterManager(new HazelcastClusterManager())
+                .buildClustered()
+                .onComplete(asyncLoadingHandler);
 
         // Wait for full loading
         int maxAttempts = 25;
