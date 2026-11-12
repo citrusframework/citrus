@@ -80,6 +80,13 @@
       "defaultValue": "classpath:org/citrusframework/base/report/junit-test-failed.xml"
     },
     {
+      "name": "citrus.junit.report.skipped.template",
+      "type": "java.lang.String",
+      "description": "Path to the JUnit skipped test template file",
+      "sourceType": "org.citrusframework.base.report.JUnitReporterSettings",
+      "defaultValue": "classpath:org/citrusframework/base/report/junit-test-skipped.xml"
+    },
+    {
       "name": "citrus.junit.report.directory",
       "type": "java.lang.String",
       "description": "Target directory for JUnit report output",

@@ -124,7 +124,29 @@ public class JUnitReporterTest {
                         <?xml version="1.0" encoding="UTF-8"?>
                         <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="0.100" tests="2" errors="0" skipped="1" failures="0">
                             <testcase name="fooTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.100"/>
-                            <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.000"/>
+                            <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.000">
+                              <skipped/>
+                            </testcase>
+                        </testsuite>""",
+                normalizeLineEndings(reportFile));
+    }
+
+    @Test
+    public void testGenerateTestResultsWithCustomSkippedTemplate() throws Exception {
+        JUnitReporter customReporter = new JUnitReporter();
+        customReporter.setSkippedTemplate("classpath:org/citrusframework/base/report/junit-test-skipped-custom.xml");
+
+        TestResults testResults = new TestResults();
+        testResults.addResult(skipped("barTest", JUnitReporterTest.class.getName()));
+        customReporter.generate(testResults);
+
+        String reportFile = readToString(new File(customReporter.getReportDirectory() + File.separator + customReporter.getOutputDirectory() + File.separator + format(customReporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
+
+        assertEquals(
+                """
+                        <?xml version="1.0" encoding="UTF-8"?>
+                        <testsuite name="org.citrusframework.base.report.JUnitReporterTest" time="0.000" tests="1" errors="0" skipped="1" failures="0">
+                            <testcase name="barTest" classname="org.citrusframework.base.report.JUnitReporterTest" time="0.000"><skipped message="not executed"/></testcase>
                         </testsuite>""",
                 normalizeLineEndings(reportFile));
     }
