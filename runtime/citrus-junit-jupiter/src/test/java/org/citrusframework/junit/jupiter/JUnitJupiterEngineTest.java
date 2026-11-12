@@ -25,8 +25,9 @@ import org.citrusframework.api.main.TestEngine;
 import org.citrusframework.api.main.TestRunConfiguration;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 2.7.4
@@ -34,7 +35,7 @@ import org.testng.annotations.Test;
 public class JUnitJupiterEngineTest {
 
     @Test
-    public void testRunPackage() {
+    void testRunPackage() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setIncludes(new String[] { ".*Test" });
         configuration.setPackages(Collections.singletonList(SampleJUnitJupiterTest.class.getPackage().getName()));
@@ -43,7 +44,7 @@ public class JUnitJupiterEngineTest {
     }
 
     @Test
-    public void testRunClass() {
+    void testRunClass() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setTestSources(Collections.singletonList(new TestSource(SampleJUnitJupiterTest.class)));
 
@@ -51,7 +52,7 @@ public class JUnitJupiterEngineTest {
     }
 
     @Test
-    public void testRunMethod() {
+    void testRunMethod() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setTestSources(Collections.singletonList(TestClass.fromString(SampleJUnitJupiterTest.class.getName() + "#sampleTest()")));
 
@@ -59,7 +60,7 @@ public class JUnitJupiterEngineTest {
     }
 
     @Test
-    public void testRunNoMatch() {
+    void testRunNoMatch() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setIncludes(new String[] { ".*Foo" });
         configuration.setPackages(Collections.singletonList(SampleJUnitJupiterTest.class.getPackage().getName()));
@@ -68,10 +69,10 @@ public class JUnitJupiterEngineTest {
     }
 
     @Test
-    public void shouldResolveJUnitEngine() {
+    void shouldResolveJUnitEngine() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setEngine("junit-jupiter");
-        Assert.assertEquals(TestEngine.lookup(configuration).getClass(), JUnitJupiterEngine.class);
+        assertEquals(JUnitJupiterEngine.class, TestEngine.lookup(configuration).getClass());
     }
 
     private void runTestEngine(TestRunConfiguration configuration, long passed) {
@@ -81,8 +82,8 @@ public class JUnitJupiterEngineTest {
             public void testPlanExecutionFinished(TestPlan testPlan) {
                 super.testPlanExecutionFinished(testPlan);
 
-                Assert.assertEquals(getSummary().getTestsSucceededCount(), passed);
-                Assert.assertEquals(getSummary().getTestsFoundCount(), passed);
+                assertEquals(passed, getSummary().getTestsSucceededCount());
+                assertEquals(passed, getSummary().getTestsFoundCount());
             }
         });
         engine.run();
