@@ -37,7 +37,6 @@ import com.github.victools.jsonschema.generator.TypeContext;
 import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.dsl.schema.Catalog;
 import org.citrusframework.dsl.schema.Test;
-import org.citrusframework.message.MessagePayloadUtils;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import tools.jackson.databind.JsonNode;
@@ -75,8 +74,8 @@ public class CitrusSchemaGenerator {
             }
 
             JsonNode agentConfiguration = generateSchema(CitrusAgentConfiguration.class, Option.INLINE_ALL_SCHEMAS);
-            writeFile(workingDir, "citrus-agent-configuration.json", agentConfiguration.toPrettyString());
-            writeFile(versionWorkingDir, "citrus-agent-configuration.json", agentConfiguration.toPrettyString());
+            writeFile(workingDir, "citrus-agent-configuration.json", agentConfiguration.toString());
+            writeFile(versionWorkingDir, "citrus-agent-configuration.json", agentConfiguration.toString());
 
             String index = FileUtils.readToString(Resources.fromClasspath("templates/index.json")).replaceAll("@version@", version);
             writeFile(workingDir, "index.json", index);
@@ -84,36 +83,36 @@ public class CitrusSchemaGenerator {
 
             Catalog catalog = new Catalog();
             JsonNode jsonSchema = generateSchema(Test.class, catalog, new CitrusModule());
-            writeFile(workingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
-            writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toPrettyString() + "\n");
+            writeFile(workingDir, "citrus-testcase.json", jsonSchema.toString());
+            writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toString());
 
             String xsdSchema = FileUtils.readToString(Resources.fromClasspath("org/citrusframework/schema/xml/testcase/citrus-testcase.xsd"));
             writeFile(workingDir, "citrus-testcase.xsd", xsdSchema);
             writeFile(versionWorkingDir, "citrus-testcase.xsd", xsdSchema);
 
-            String actionCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getTestActionCatalog()));
-            writeFile(workingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog + "\n");
-            writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog + "\n");
+            String actionCatalog = JsonSupport.json().writeValueAsString(catalog.getTestActionCatalog());
+            writeFile(workingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog);
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog);
 
-            String containerCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getTestContainerCatalog()));
-            writeFile(workingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog + "\n");
-            writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog + "\n");
+            String containerCatalog = JsonSupport.json().writeValueAsString(catalog.getTestContainerCatalog());
+            writeFile(workingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog);
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog);
 
-            String endpointCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getEndpointCatalog()));
-            writeFile(workingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog + "\n");
-            writeFile(versionWorkingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog + "\n");
+            String endpointCatalog = JsonSupport.json().writeValueAsString(catalog.getEndpointCatalog());
+            writeFile(workingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog);
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog);
 
-            String functionsCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getFunctionsCatalog()));
-            writeFile(workingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog + "\n");
-            writeFile(versionWorkingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog + "\n");
+            String functionsCatalog = JsonSupport.json().writeValueAsString(catalog.getFunctionsCatalog());
+            writeFile(workingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog);
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog);
 
-            String validationMatcherCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getValidationMatcherCatalog()));
-            writeFile(workingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
-            writeFile(versionWorkingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog + "\n");
+            String validationMatcherCatalog = JsonSupport.json().writeValueAsString(catalog.getValidationMatcherCatalog());
+            writeFile(workingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog);
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog);
 
-            String infraServiceCatalog = MessagePayloadUtils.prettyPrintJson(JsonSupport.json().writeValueAsString(catalog.getInfraServiceCatalog()));
-            writeFile(workingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog + "\n");
-            writeFile(versionWorkingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog + "\n");
+            String infraServiceCatalog = JsonSupport.json().writeValueAsString(catalog.getInfraServiceCatalog());
+            writeFile(workingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog);
+            writeFile(versionWorkingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog);
         } catch (IOException e) {
             throw new RuntimeException("Failed to generate Citrus DSL schema", e);
         }
