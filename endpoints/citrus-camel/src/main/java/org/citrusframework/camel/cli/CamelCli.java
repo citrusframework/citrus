@@ -136,10 +136,14 @@ public class CamelCli {
     /**
      * Run given integration with CLI Camel app.
      */
-    public ProcessAndOutput run(String name, String file, List<String> resources, String... args) {
+    public ProcessAndOutput run(String name, String file, List<String> resources, boolean skipPlugins, String... args) {
         List<String> runArgs = new ArrayList<>();
         runArgs.add("--name");
         runArgs.add(name);
+
+        if (skipPlugins) {
+            runArgs.add("--skip-plugins");
+        }
 
         if (CamelCliSettings.getKameletsLocalDir() != null) {
             runArgs.add("--local-kamelet-dir");

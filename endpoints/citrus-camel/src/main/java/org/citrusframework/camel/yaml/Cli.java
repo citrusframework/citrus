@@ -155,6 +155,11 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
             builder.autoSetProperties(enabled);
         }
 
+        @SchemaProperty(advanced = true, description = "When enabled the Camel CLI run command will skip loading plugins.", defaultValue = "false")
+        public void setSkipPlugins(boolean enabled) {
+            builder.skipPlugins(enabled);
+        }
+
         @SchemaProperty(description = "The Camel integration.")
         public void setIntegration(Integration integration) {
             builder.integrationName(integration.name);

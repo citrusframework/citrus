@@ -205,6 +205,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             builder.waitForRunningState(cli.getRun().isWaitForRunningState());
             builder.dumpIntegrationOutput(cli.getRun().isDumpIntegrationOutput());
             builder.autoSetProperties(cli.getRun().isAutoSetProperties());
+            builder.skipPlugins(cli.getRun().isSkipPlugins());
 
             if (cli.getRun().getArgLine() != null) {
                 builder.withArgs(cli.getRun().getArgLine().split(" "));
