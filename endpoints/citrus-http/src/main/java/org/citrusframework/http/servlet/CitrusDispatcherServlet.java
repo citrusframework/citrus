@@ -167,7 +167,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     private List<HandlerInterceptor> adaptInterceptors(List<Object> interceptors, ApplicationContext context) {
         List<HandlerInterceptor> handlerInterceptors = new ArrayList<>();
 
-        if (context.containsBean(LOGGING_INTERCEPTOR_BEAN_NAME)) {
+        if (containsLocalBean(context, LOGGING_INTERCEPTOR_BEAN_NAME)) {
             LoggingHandlerInterceptor loggingInterceptor = context.getBean(LOGGING_INTERCEPTOR_BEAN_NAME, LoggingHandlerInterceptor.class);
             handlerInterceptors.add(loggingInterceptor);
         }
