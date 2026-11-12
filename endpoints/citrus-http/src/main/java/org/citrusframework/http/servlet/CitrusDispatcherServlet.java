@@ -30,6 +30,7 @@ import org.citrusframework.http.server.HttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.util.AntPathMatcher;
@@ -90,7 +91,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
      * @param context
      */
     protected void configureHandlerInterceptor(ApplicationContext context) {
-        if (context.containsBean(HANDLER_INTERCEPTOR_BEAN_NAME)) {
+        if (containsLocalBean(context, HANDLER_INTERCEPTOR_BEAN_NAME)) {
             DelegatingHandlerInterceptor handlerInterceptor = context.getBean(HANDLER_INTERCEPTOR_BEAN_NAME, DelegatingHandlerInterceptor.class);
             handlerInterceptor.setInterceptors(adaptInterceptors(httpServer.getInterceptors(), context));
         }
@@ -102,7 +103,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
      * @param context
      */
     protected void configureMessageController(ApplicationContext context) {
-        if (context.containsBean(MESSAGE_CONTROLLER_BEAN_NAME)) {
+        if (containsLocalBean(context, MESSAGE_CONTROLLER_BEAN_NAME)) {
             HttpMessageController messageController = context.getBean(MESSAGE_CONTROLLER_BEAN_NAME, HttpMessageController.class);
             EndpointAdapter endpointAdapter = httpServer.getEndpointAdapter();
 
@@ -129,13 +130,30 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
      * @param context
      */
     protected void configureMessageConverter(ApplicationContext context) {
-        if (context.containsBean(MESSAGE_CONVERTER_BEAN_NAME)) {
+        if (containsLocalBean(context, MESSAGE_CONVERTER_BEAN_NAME)) {
             HttpMessageConverter messageConverter = context.getBean(MESSAGE_CONVERTER_BEAN_NAME, HttpMessageConverter.class);
 
             if (messageConverter instanceof DelegatingHttpEntityMessageConverter delegatingHttpEntityMessageConverter) {
                 delegatingHttpEntityMessageConverter.setBinaryMediaTypes(httpServer.getBinaryMediaTypes());
             }
         }
+    }
+
+    /**
+     * Checks if the given bean is defined in the application context itself and not in an
+     * ancestor context. Beans from a parent context must not be reconfigured for a single
+     * servlet, because that parent is shared with other servers and contexts.
+     *
+     * @param context
+     * @param beanName
+     * @return
+     */
+    private static boolean containsLocalBean(ApplicationContext context, String beanName) {
+        if (context instanceof ConfigurableApplicationContext configurableContext) {
+            return configurableContext.getBeanFactory().containsLocalBean(beanName);
+        }
+
+        return context.containsBean(beanName);
     }
 
     /**
