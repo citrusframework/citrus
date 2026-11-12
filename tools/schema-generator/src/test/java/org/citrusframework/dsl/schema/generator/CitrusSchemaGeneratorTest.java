@@ -35,9 +35,9 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.context.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonTextMessageValidator;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 
 public class CitrusSchemaGeneratorTest {
@@ -65,7 +65,7 @@ public class CitrusSchemaGeneratorTest {
     private final TestContext context = TestContextFactory.newInstance().getObject();
     private SimpleJsonSchema testCaseSchema;
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
         context.setVariable("citrus.version", CitrusVersion.version());
         context.setVariable("camel.version", new DefaultCamelCatalog().getCatalogVersion());
@@ -78,17 +78,17 @@ public class CitrusSchemaGeneratorTest {
 
     @Test
     public void verifyIndexJson() throws IOException {
-        verifyGeneratedFile("index.json", context);
+        verifyGeneratedFile("index.json");
     }
 
     @Test
     public void verifyAgentConfigurationJson() throws IOException {
-        verifyGeneratedFile("citrus-agent-configuration.json", context);
+        verifyGeneratedFile("citrus-agent-configuration.json");
     }
 
     @Test
     public void verifyAggregateEndpointsJson() throws IOException {
-        verifyGeneratedFile("citrus-catalog-aggregate-endpoints.json", context);
+        verifyGeneratedFile("citrus-catalog-aggregate-endpoints.json");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class CitrusSchemaGeneratorTest {
 
     @Test
     public void verifyAggregateFunctionsJson() throws IOException {
-        verifyGeneratedFile("citrus-catalog-aggregate-functions.json", context);
+        verifyGeneratedFile("citrus-catalog-aggregate-functions.json");
     }
 
     @Test
@@ -108,7 +108,7 @@ public class CitrusSchemaGeneratorTest {
 
     @Test
     public void verifyAggregateInfraServicesJson() throws IOException {
-        verifyGeneratedFile("citrus-catalog-aggregate-infra-services.json", context);
+        verifyGeneratedFile("citrus-catalog-aggregate-infra-services.json");
     }
 
     @Test
@@ -118,7 +118,7 @@ public class CitrusSchemaGeneratorTest {
 
     @Test
     public void verifyAggregateTestActionsJson() throws IOException {
-        verifyGeneratedFile("citrus-catalog-aggregate-test-actions.json", context);
+        verifyGeneratedFile("citrus-catalog-aggregate-test-actions.json");
     }
 
     @Test
@@ -128,7 +128,7 @@ public class CitrusSchemaGeneratorTest {
 
     @Test
     public void verifyAggregateTestContainersJson() throws IOException {
-        verifyGeneratedFile("citrus-catalog-aggregate-test-containers.json", context);
+        verifyGeneratedFile("citrus-catalog-aggregate-test-containers.json");
     }
 
     @Test
@@ -138,7 +138,7 @@ public class CitrusSchemaGeneratorTest {
 
     @Test
     public void verifyAggregateValidationMatcherJson() throws IOException {
-        verifyGeneratedFile("citrus-catalog-aggregate-validation-matcher.json", context);
+        verifyGeneratedFile("citrus-catalog-aggregate-validation-matcher.json");
     }
 
     @Test
@@ -177,7 +177,7 @@ public class CitrusSchemaGeneratorTest {
     @Test
     public void verifyNoGenericTestActionReferences() throws IOException {
         String schema = FileUtils.readToString(Resources.create("target/schema/citrus/citrus-testcase.json"));
-        Assert.assertFalse(schema.contains("TestActionBuilder_"),
+        Assertions.assertFalse(schema.contains("TestActionBuilder_"),
                 "Test case schema must not reference the open generic TestActionBuilder definition");
     }
 
@@ -192,10 +192,10 @@ public class CitrusSchemaGeneratorTest {
                 .sorted()
                 .toList();
 
-        Assert.assertTrue(missing.isEmpty(), "Runtime YAML test actions missing from citrus-testcase.json: " + missing);
+        Assertions.assertTrue(missing.isEmpty(), "Runtime YAML test actions missing from citrus-testcase.json: " + missing);
     }
 
-    private void verifyGeneratedFile(String fileName, TestContext context) throws IOException {
+    private void verifyGeneratedFile(String fileName) throws IOException {
         Message generated = new DefaultMessage(FileUtils.readToString(Resources.create("target/schema/citrus/" + fileName)));
         Message control = new DefaultMessage(FileUtils.readToString(Resources.create("control/" + fileName)));
         validator.validateMessage(generated, control, context, new JsonMessageValidationContext());
@@ -219,7 +219,7 @@ public class CitrusSchemaGeneratorTest {
             }
         }
 
-        Assert.assertTrue(missing.isEmpty(), "Missing descriptions in %s: %s".formatted(fileName, missing));
+        Assertions.assertTrue(missing.isEmpty(), "Missing descriptions in %s: %s".formatted(fileName, missing));
     }
 
     /**
@@ -244,12 +244,12 @@ public class CitrusSchemaGeneratorTest {
     }
 
     private void assertInvalidTestCase(String testCase) {
-        Assert.assertFalse(validateTestCase(testCase).isEmpty(), "Expected test case to be rejected: " + testCase);
+        Assertions.assertFalse(validateTestCase(testCase).isEmpty(), "Expected test case to be rejected: " + testCase);
     }
 
     private void assertValidTestCase(String testCase) {
         List<Error> errors = validateTestCase(testCase);
-        Assert.assertTrue(errors.isEmpty(), "Expected test case to be accepted: " + errors);
+        Assertions.assertTrue(errors.isEmpty(), "Expected test case to be accepted: " + errors);
     }
 
     private List<Error> validateTestCase(String testCase) {
