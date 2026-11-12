@@ -87,6 +87,13 @@ public class CamelCli {
     }
 
     /**
+     * Constructor using the given process launcher as it is. Visible for testing.
+     */
+    CamelCli(ProcessLauncher app) {
+        this.app = app;
+    }
+
+    /**
      * Static entrance method to retrieve instance of Camel CLI.
      */
     public static CamelCli camel() {
@@ -417,8 +424,15 @@ public class CamelCli {
                     .formatted(pao.getOutput(), exitValue));
         }
 
-        if (pao.getOutput().contains("Send timeout")) {
-            throw new CitrusRuntimeException("Send timeout while sending message via Camel CLI");
+        String output = pao.getOutput();
+        if (output.contains("Send timeout")) {
+            throw new CamelCliTransientException("Send timeout while sending message via Camel CLI");
+        }
+
+        if (output.contains("matches 0 running Camel integrations")) {
+            // the Camel CLI did not find the running integration - may happen when reading the integration status concurrently
+            throw new CamelCliTransientException("Error while sending message via Camel CLI - no running Camel integration found: '%s'"
+                    .formatted(output.trim()));
         }
 
         return pao;

@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.api.actions.camel.CamelCliCmdSendActionBuilder;
+import org.citrusframework.camel.cli.CamelCliTransientException;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.StringUtils;
@@ -145,25 +145,26 @@ public class CamelCmdSendAction extends AbstractCamelCliAction {
     }
 
     /**
-     * Runs the Camel CLI send command. Restarts the command on failure in order to recover
-     * from transient Camel CLI failures, e.g. when the Camel integration does not pick up the
-     * send action in time or when the status information of the running integration cannot be read.
+     * Runs the Camel CLI send command. Restarts the command on transient Camel CLI failures, e.g. when the
+     * Camel integration does not pick up the send action in time or when the status information of the running
+     * integration cannot be read. Other failures are not retried.
+     * <p>
+     * Note: a send timeout may also be reported when the Camel integration processes the send action slower than
+     * the timeout. In that case the restart delivers the message a second time.
      */
     private ProcessAndOutput sendCommand(List<String> commandArgs) {
         int restarts = 0;
         while (true) {
             try {
                 return camelCli().send(commandArgs.toArray(new String[0]));
-            } catch (CitrusRuntimeException e) {
+            } catch (CamelCliTransientException e) {
                 if (restarts >= CLI_COMMAND_RESTARTS) {
                     throw e;
                 }
 
                 restarts++;
-                logger.warn("Failed to send message via Camel CLI command:%n\t camel cmd send %s%n%s"
-                        .formatted(String.join(" ", commandArgs), e.getMessage()));
-                logger.warn("Restarting Camel CLI send command (retry %d/%d) - hoping to recover from a transient CLI failure"
-                        .formatted(restarts, CLI_COMMAND_RESTARTS));
+                logger.warn("Failed to send message via Camel CLI command - restarting command (retry %d/%d):%n\t camel cmd send %s%n%s"
+                        .formatted(restarts, CLI_COMMAND_RESTARTS, String.join(" ", commandArgs), e.getMessage()));
             }
         }
     }

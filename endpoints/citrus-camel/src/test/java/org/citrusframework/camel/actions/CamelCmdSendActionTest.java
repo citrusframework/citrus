@@ -18,6 +18,7 @@ package org.citrusframework.camel.actions;
 
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.cli.CamelCli;
+import org.citrusframework.camel.cli.CamelCliTransientException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.junit.jupiter.api.Assertions;
@@ -80,7 +81,7 @@ public class CamelCmdSendActionTest extends UnitTestSupport {
     @Test
     public void shouldRestartSendCommandOnTransientCliFailure() {
         when(camelCli.send(any(String[].class)))
-                .thenThrow(new CitrusRuntimeException("Send timeout while sending message via Camel CLI"))
+                .thenThrow(new CamelCliTransientException("Send timeout while sending message via Camel CLI"))
                 .thenReturn(pao);
 
         when(pao.getOutput()).thenReturn("Reply received - Hello");
@@ -102,7 +103,7 @@ public class CamelCmdSendActionTest extends UnitTestSupport {
     @Test
     public void shouldFailWhenSendCommandFailsRepeatedly() {
         when(camelCli.send(any(String[].class)))
-                .thenThrow(new CitrusRuntimeException("Send timeout while sending message via Camel CLI"));
+                .thenThrow(new CamelCliTransientException("Send timeout while sending message via Camel CLI"));
 
         context.getReferenceResolver().bind("camelCli", camelCli);
 
@@ -115,5 +116,23 @@ public class CamelCmdSendActionTest extends UnitTestSupport {
         CitrusRuntimeException error = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
         Assertions.assertTrue(error.getMessage().contains("Send timeout"));
         verify(camelCli, times(2)).send(any(String[].class));
+    }
+
+    @Test
+    public void shouldNotRestartSendCommandOnPermanentCliFailure() {
+        when(camelCli.send(any(String[].class)))
+                .thenThrow(new CitrusRuntimeException("Error while sending message via Camel CLI: 'Unknown option' Exit code: 2"));
+
+        context.getReferenceResolver().bind("camelCli", camelCli);
+
+        CamelCmdSendAction action = new CamelCmdSendAction.Builder()
+                .integration("my-route")
+                .body("Hello")
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        CitrusRuntimeException error = Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        Assertions.assertTrue(error.getMessage().contains("Exit code: 2"));
+        verify(camelCli, times(1)).send(any(String[].class));
     }
 }
