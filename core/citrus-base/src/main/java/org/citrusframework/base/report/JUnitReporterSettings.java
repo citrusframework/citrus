@@ -42,6 +42,11 @@ public class JUnitReporterSettings {
     private static final String REPORT_FAILED_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_FAILED_TEMPLATE";
     private static final String REPORT_FAILED_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-test-failed.xml";
 
+    @CitrusConfigProperty(description = "Path to the JUnit skipped test template file", defaultValue = "classpath:org/citrusframework/base/report/junit-test-skipped.xml")
+    private static final String REPORT_SKIPPED_TEMPLATE_PROPERTY = "citrus.junit.report.skipped.template";
+    private static final String REPORT_SKIPPED_TEMPLATE_ENV = "CITRUS_JUNIT_REPORT_SKIPPED_TEMPLATE";
+    private static final String REPORT_SKIPPED_TEMPLATE_DEFAULT = "classpath:org/citrusframework/base/report/junit-test-skipped.xml";
+
     @CitrusConfigProperty(description = "Target directory for JUnit report output", defaultValue = "junitreports")
     private static final String REPORT_DIRECTORY_PROPERTY = "citrus.junit.report.directory";
     private static final String REPORT_DIRECTORY_ENV = "CITRUS_JUNIT_REPORT_DIRECTORY";
@@ -86,6 +91,15 @@ public class JUnitReporterSettings {
     public static String getFailedTemplate() {
         return System.getProperty(REPORT_FAILED_TEMPLATE_PROPERTY,  System.getenv(REPORT_FAILED_TEMPLATE_ENV) != null ?
                 System.getenv(REPORT_FAILED_TEMPLATE_ENV) : REPORT_FAILED_TEMPLATE_DEFAULT);
+    }
+
+    /**
+     * Get default skipped template file.
+     * @return the path to the template file.
+     */
+    public static String getSkippedTemplate() {
+        return System.getProperty(REPORT_SKIPPED_TEMPLATE_PROPERTY,  System.getenv(REPORT_SKIPPED_TEMPLATE_ENV) != null ?
+                System.getenv(REPORT_SKIPPED_TEMPLATE_ENV) : REPORT_SKIPPED_TEMPLATE_DEFAULT);
     }
 
     /**

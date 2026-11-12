@@ -72,6 +72,9 @@ public class JUnitReporter extends AbstractTestReporter {
     /** Test result template */
     private String failedTemplate = JUnitReporterSettings.getFailedTemplate();
 
+    /** Skipped test result template */
+    private String skippedTemplate = JUnitReporterSettings.getSkippedTemplate();
+
     /** Enables/disables report generation */
     private boolean enabled = JUnitReporterSettings.isReportEnabled();
 
@@ -139,6 +142,10 @@ public class JUnitReporter extends AbstractTestReporter {
                 reportDetails.append(System.lineSeparator())
                         .append("    ")
                         .append(PropertyUtils.replacePropertiesInString(templates.getFailedTemplate(), detailProps));
+            } else if (result.isSkipped()) {
+                reportDetails.append(System.lineSeparator())
+                        .append("    ")
+                        .append(PropertyUtils.replacePropertiesInString(templates.getSkippedTemplate(), detailProps));
             } else {
                 reportDetails.append(System.lineSeparator())
                         .append("    ")
@@ -183,6 +190,7 @@ public class JUnitReporter extends AbstractTestReporter {
         private String reportTemplateContent;
         private String successTemplateContent;
         private String failedTemplateContent;
+        private String skippedTemplateContent;
 
         /**
          * Gets the reportTemplateContent.
@@ -215,6 +223,17 @@ public class JUnitReporter extends AbstractTestReporter {
             }
 
             return failedTemplateContent;
+        }
+
+        /**
+         * Gets the skippedTemplateContent.
+         */
+        public String getSkippedTemplate() throws IOException {
+            if (skippedTemplateContent == null) {
+                skippedTemplateContent = FileUtils.readToString(FileUtils.getFileResource(skippedTemplate)).trim();
+            }
+
+            return skippedTemplateContent;
         }
     }
 
@@ -305,6 +324,20 @@ public class JUnitReporter extends AbstractTestReporter {
      */
     public void setFailedTemplate(String failedTemplate) {
         this.failedTemplate = failedTemplate;
+    }
+
+    /**
+     * Gets the skippedTemplate.
+     */
+    public String getSkippedTemplate() {
+        return skippedTemplate;
+    }
+
+    /**
+     * Sets the skippedTemplate.
+     */
+    public void setSkippedTemplate(String skippedTemplate) {
+        this.skippedTemplate = skippedTemplate;
     }
 
     /**

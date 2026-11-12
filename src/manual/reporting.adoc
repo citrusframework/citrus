@@ -207,6 +207,9 @@ The JUnit XML report settings control the output of JUnit-compatible test result
 
 | citrus.junit.report.failed.template
 | Template file for failed test results
+
+| citrus.junit.report.skipped.template
+| Template file for skipped test results
 |===
 
 .Environment variables
@@ -233,6 +236,9 @@ The JUnit XML report settings control the output of JUnit-compatible test result
 
 | CITRUS_JUNIT_REPORT_FAILED_TEMPLATE
 | Template file for failed test results
+
+| CITRUS_JUNIT_REPORT_SKIPPED_TEMPLATE
+| Template file for skipped test results
 |===
 
 [[summary-report-settings]]
