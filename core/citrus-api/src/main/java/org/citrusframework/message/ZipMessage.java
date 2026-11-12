@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -141,7 +143,7 @@ public class ZipMessage extends DefaultMessage {
         if (entry.isDirectory()) {
             logger.debug("Adding directory to zip: {}", name);
 
-            zos.putNextEntry(new ZipEntry(name.endsWith("/") ? name : name + "/"));
+            zos.putNextEntry(createZipEntry(name.endsWith("/") ? name : name + "/", entry));
             for (Entry child : entry.getEntries()) {
                 if (!StringUtils.hasText(path)) {
                     addToZip(entry.getName(), child, zos);
@@ -153,10 +155,20 @@ public class ZipMessage extends DefaultMessage {
         } else {
             logger.debug("Adding file to zip: {}", name);
 
-            zos.putNextEntry(new ZipEntry(name));
+            zos.putNextEntry(createZipEntry(name, entry));
             zos.write(entry.getContent());
             zos.closeEntry();
         }
+    }
+
+    /**
+     * Creates a zip entry with a deterministic modification time. The entry time must not depend on the
+     * current time, otherwise repeated serialization of the same message produces different bytes.
+     */
+    private ZipEntry createZipEntry(String name, Entry entry) {
+        ZipEntry zipEntry = new ZipEntry(name);
+        zipEntry.setTime(entry.getLastModified());
+        return zipEntry;
     }
 
     /**
@@ -172,6 +184,9 @@ public class ZipMessage extends DefaultMessage {
         /** Binary content of this entry - empty for directories */
         private byte[] content;
 
+        /** Modification time of this entry - zero for entries created without a file */
+        private long lastModified;
+
         /**
          * Constructor initializing name.
          * @param name
@@ -186,9 +201,12 @@ public class ZipMessage extends DefaultMessage {
 
         public Entry(String name, File file) throws IOException {
             this(name);
+            this.lastModified = file.lastModified();
 
             if (file.isDirectory()) {
-                for (File child : Optional.ofNullable(file.listFiles()).orElseGet(() -> new File[] {})) {
+                File[] children = Optional.ofNullable(file.listFiles()).orElseGet(() -> new File[] {});
+                Arrays.sort(children, Comparator.comparing(File::getName));
+                for (File child : children) {
                     entries.add(new Entry(child));
                 }
             } else {
@@ -240,6 +258,15 @@ public class ZipMessage extends DefaultMessage {
          */
         public byte[] getContent() {
             return content;
+        }
+
+        /**
+         * Gets the modification time used when this entry is written to the zip archive.
+         *
+         * @return modification time in milliseconds since the epoch, zero for entries created without a file
+         */
+        public long getLastModified() {
+            return lastModified;
         }
 
         /**
