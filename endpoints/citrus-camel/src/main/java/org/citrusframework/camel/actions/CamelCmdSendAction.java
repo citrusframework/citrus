@@ -153,18 +153,19 @@ public class CamelCmdSendAction extends AbstractCamelCliAction {
      * the timeout. In that case the restart delivers the message a second time.
      */
     private ProcessAndOutput sendCommand(List<String> commandArgs) {
+        int maxRestarts = getCommandRestarts();
         int restarts = 0;
         while (true) {
             try {
                 return camelCli().send(commandArgs.toArray(new String[0]));
             } catch (CamelCliTransientException e) {
-                if (restarts >= CLI_COMMAND_RESTARTS) {
+                if (restarts >= maxRestarts) {
                     throw e;
                 }
 
                 restarts++;
                 logger.warn("Failed to send message via Camel CLI command - restarting command (retry %d/%d):%n\t camel cmd send %s%n%s"
-                        .formatted(restarts, CLI_COMMAND_RESTARTS, String.join(" ", commandArgs), e.getMessage()));
+                        .formatted(restarts, maxRestarts, String.join(" ", commandArgs), e.getMessage()));
             }
         }
     }

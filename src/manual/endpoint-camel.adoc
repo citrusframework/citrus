@@ -1947,6 +1947,12 @@ Settings use the `citrus.camel.cli.*` prefix. The older `citrus.camel.jbang.*` p
 | citrus.camel.cli.run.auto.set.properties
 | When set to true, the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run. (default="true")
 
+| citrus.camel.cli.command.restarts
+| Number of times a Camel CLI `cmd send` or `cmd receive` command is restarted after a transient Camel CLI failure, e.g. a send timeout or a receive command that did not find the running integration. Set to 0 to disable the restart. (default="1")
+
+| citrus.camel.cli.receive.restart.grace.period
+| Grace period in milliseconds added to the time window of a restarted `cmd receive` command, so that messages received before the restart are not skipped. Covers the Camel CLI startup time. (default="10000")
+
 | citrus.camel.cli.trust.url
 | Comma-separated list of trust URLs for JBang. (default="https://github.com/apache/camel/")
 
@@ -1997,6 +2003,12 @@ Settings use the `citrus.camel.cli.*` prefix. The older `citrus.camel.jbang.*` p
 
 | CITRUS_CAMEL_CLI_RUN_AUTO_SET_PROPERTIES
 | When set to true, the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.
+
+| CITRUS_CAMEL_CLI_COMMAND_RESTARTS
+| Number of times a Camel CLI `cmd send` or `cmd receive` command is restarted after a transient Camel CLI failure.
+
+| CITRUS_CAMEL_CLI_RECEIVE_RESTART_GRACE_PERIOD
+| Grace period in milliseconds added to the time window of a restarted `cmd receive` command.
 
 |===
 
