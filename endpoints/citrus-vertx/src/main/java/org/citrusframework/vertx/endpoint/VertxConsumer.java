@@ -16,7 +16,6 @@
 
 package org.citrusframework.vertx.endpoint;
 
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageConsumer;
 import org.citrusframework.context.TestContext;
@@ -62,7 +61,8 @@ public class VertxConsumer extends AbstractMessageConsumer {
         }
 
         VertxSingleMessageHandler vertxMessageHandler = new VertxSingleMessageHandler();
-        MessageConsumer<Object> vertxConsumer = vertx.eventBus().consumer(endpointConfiguration.getAddress(), vertxMessageHandler);
+        MessageConsumer<Object> vertxConsumer = vertx.eventBus().consumer(endpointConfiguration.getAddress());
+        vertxConsumer.handler(vertxMessageHandler::handle);
 
         try {
             long timeLeft = timeout;
@@ -102,11 +102,10 @@ public class VertxConsumer extends AbstractMessageConsumer {
      * Simple Vert.x message handler stores first message received on event bus and ignores all further messages
      * until subscription is unregistered automatically.
      */
-    private class VertxSingleMessageHandler implements Handler<io.vertx.core.eventbus.Message<Object>> {
-        private io.vertx.core.eventbus.Message message;
+    private class VertxSingleMessageHandler {
+        private io.vertx.core.eventbus.Message<Object> message;
 
-        @Override
-        public void handle(io.vertx.core.eventbus.Message event) {
+        public void handle(io.vertx.core.eventbus.Message<Object> event) {
             if (message == null) {
                 this.message = event;
             } else {
@@ -119,7 +118,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
          * Gets the vert.x message received on event bus.
          * @return
          */
-        public io.vertx.core.eventbus.Message getMessage() {
+        public io.vertx.core.eventbus.Message<Object> getMessage() {
             return message;
         }
     }

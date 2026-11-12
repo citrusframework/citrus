@@ -70,11 +70,13 @@ public class VertxSyncEndpointTest extends AbstractUnitTest {
         when(asyncResult.result()).thenReturn(messageMock);
 
         when(vertx.eventBus()).thenReturn(eventBus);
-        doAnswer((Answer<EventBus>) invocation -> {
-            Handler<AsyncResult> handler = (Handler<AsyncResult>) invocation.getArguments()[3];
+        Future future = Mockito.mock(Future.class);
+        when(eventBus.request(eq(eventBusAddress), eq(requestMessage.getPayload()), any(DeliveryOptions.class))).thenReturn(future);
+        doAnswer((Answer<Future>) invocation -> {
+            Handler<AsyncResult> handler = (Handler<AsyncResult>) invocation.getArguments()[0];
             handler.handle(asyncResult);
-            return eventBus;
-        }).when(eventBus).request(eq(eventBusAddress), eq(requestMessage.getPayload()), any(DeliveryOptions.class), any(Handler.class));
+            return future;
+        }).when(future).onComplete(any(Handler.class));
 
         when(messageMock.body()).thenReturn("Hello from Vertx!");
         when(messageMock.address()).thenReturn(eventBusAddress);
@@ -107,12 +109,12 @@ public class VertxSyncEndpointTest extends AbstractUnitTest {
         when(messageMock.replyAddress()).thenReturn("replyAddress");
 
         when(vertx.eventBus()).thenReturn(eventBus);
+        when(eventBus.consumer(eventBusAddress)).thenReturn(messageConsumer);
         doAnswer((Answer<MessageConsumer<?>>) invocation -> {
-            Handler<io.vertx.core.eventbus.Message<?>> handler = (Handler<io.vertx.core.eventbus.Message<?>>) invocation.getArguments()[1];
+            Handler<io.vertx.core.eventbus.Message<?>> handler = (Handler<io.vertx.core.eventbus.Message<?>>) invocation.getArguments()[0];
             handler.handle(messageMock);
-
             return messageConsumer;
-        }).when(eventBus).consumer(eq(eventBusAddress), any(Handler.class));
+        }).when(messageConsumer).handler(any(Handler.class));
 
         when(eventBus.send("replyAddress", replyMessage.getPayload())).thenReturn(eventBus);
 
@@ -142,7 +144,8 @@ public class VertxSyncEndpointTest extends AbstractUnitTest {
         reset(vertx, eventBus, messageListeners);
 
         when(vertx.eventBus()).thenReturn(eventBus);
-        when(eventBus.request(eq(eventBusAddress), eq(requestMessage.getPayload()), any(DeliveryOptions.class), any(Handler.class))).thenReturn(eventBus);
+        Future future = Mockito.mock(Future.class);
+        when(eventBus.request(eq(eventBusAddress), eq(requestMessage.getPayload()), any(DeliveryOptions.class))).thenReturn(future);
 
         when(messageListeners.isEmpty()).thenReturn(false);
         vertxEndpoint.createProducer().send(requestMessage, context);

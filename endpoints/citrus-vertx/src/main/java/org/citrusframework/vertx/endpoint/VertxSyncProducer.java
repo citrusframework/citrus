@@ -74,8 +74,8 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setSendTimeout(endpointConfiguration.getTimeout());
-        vertx.eventBus().request(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions,
-            event -> {
+        vertx.eventBus().request(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions)
+            .onComplete(event -> {
                 logger.debug("Received synchronous response on Vert.x event bus reply address");
 
                 Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event.result(), endpointConfiguration, context);

@@ -28,6 +28,36 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!--
+        Quarkus 3.x is built on Vert.x 4.x while the parent POM manages Vert.x 5.x
+        (for fabric8 kubernetes-client 8.x). Override the parent's management here
+        so the Quarkus build uses the Vert.x version it was compiled against.
+      -->
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-core</artifactId>
+        <version>${quarkus.vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web</artifactId>
+        <version>${quarkus.vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web-client</artifactId>
+        <version>${quarkus.vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web-common</artifactId>
+        <version>${quarkus.vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-auth-common</artifactId>
+        <version>${quarkus.vertx.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

@@ -110,12 +110,12 @@ public class VertxEndpointTest extends AbstractUnitTest {
         when(messageMock.replyAddress()).thenReturn("replyAddress");
 
         when(vertx.eventBus()).thenReturn(eventBus);
+        when(eventBus.consumer(eventBusAddress)).thenReturn(messageConsumer);
         doAnswer((Answer<MessageConsumer>) invocation -> {
-            Handler handler = (Handler) invocation.getArguments()[1];
+            Handler handler = (Handler) invocation.getArguments()[0];
             handler.handle(messageMock);
-
             return messageConsumer;
-        }).when(eventBus).consumer(eq(eventBusAddress), any(Handler.class));
+        }).when(messageConsumer).handler(any(Handler.class));
 
         Message receivedMessage = vertxEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
         Assertions.assertEquals("Hello from Vertx!", receivedMessage.getPayload());

@@ -46,10 +46,13 @@ public abstract class AbstractMarshallingHelloService implements HelloService {
                     .copyHeaders(request.getHeaders())
                     .build();
 
+            Message<HelloResponse> helloResponse = sayHello(helloRequest);
             StringResult result = new StringResult();
-            helloMarshaller.marshal(sayHello(helloRequest).getPayload(), result);
+            helloMarshaller.marshal(helloResponse.getPayload(), result);
 
-            return MessageBuilder.withPayload(result.toString()).copyHeaders(request.getHeaders()).build();
+            return MessageBuilder.withPayload(result.toString())
+                    .copyHeaders(helloResponse.getHeaders())
+                    .build();
 
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed due to IO error", e);

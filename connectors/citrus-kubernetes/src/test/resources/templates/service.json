@@ -22,10 +22,7 @@
         "protocol": "TCP",
         "port": 8080,
         "nodePort": "@ignore@",
-        "targetPort": {
-          "intVal": 8080,
-          "value": 8080
-        }
+        "targetPort": 8080
       }
     ],
     "type": "NodePort"

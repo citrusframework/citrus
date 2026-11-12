@@ -31,7 +31,7 @@ public class HelloServiceImpl extends AbstractMarshallingHelloService {
         response.setText("Hello " + request.getPayload().getUser());
 
         MessageBuilder<HelloResponse> builder = MessageBuilder.withPayload(response);
-        builder.setHeader("CorrelationId", request.getHeaders().get("CorrelationId"));
+        builder.setHeader("CorrelationId", request.getPayload().getCorrelationId());
         builder.setHeader("Operation", "sayHello");
         builder.setHeader("Type", "response");
 

@@ -16,20 +16,20 @@
 
 package org.citrusframework.jms.integration.service;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 
+import org.citrusframework.api.xml.Marshaller;
+import org.citrusframework.api.xml.StringResult;
+import org.citrusframework.api.xml.Unmarshaller;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jms.integration.service.model.HelloRequest;
 import org.citrusframework.jms.integration.service.model.HelloResponse;
 import org.citrusframework.jms.integration.service.model.ResponseHeader;
-import org.citrusframework.api.xml.Marshaller;
-import org.citrusframework.api.xml.StringResult;
-import org.citrusframework.api.xml.Unmarshaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
@@ -101,7 +101,9 @@ public class HelloSoapServiceImpl {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             webServiceResponse.writeTo(bos);
 
-            return MessageBuilder.withPayload(new String(bos.toByteArray())).build();
+            return MessageBuilder.withPayload(new String(bos.toByteArray()))
+                    .setHeader("SOAPJMS_soapAction", "sayHello")
+                    .build();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed due to IO error", e);
         } catch (Exception e) {
