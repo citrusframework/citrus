@@ -16,8 +16,8 @@
 
 package org.citrusframework.config.metadata;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -72,23 +72,23 @@ public class CitrusConfigMetadataProcessorTest {
                 """;
 
         String metadata = compileAndReadMetadata(source);
-        Assert.assertNotNull(metadata, "Metadata file should be generated");
+        Assertions.assertNotNull(metadata, "Metadata file should be generated");
 
-        Assert.assertTrue(metadata.contains("\"citrus.test\""), "Should contain group name");
-        Assert.assertTrue(metadata.contains("test.TestSettings"), "Should contain source type");
-        Assert.assertTrue(metadata.contains("Test settings"), "Should contain group description");
+        Assertions.assertTrue(metadata.contains("\"citrus.test\""), "Should contain group name");
+        Assertions.assertTrue(metadata.contains("test.TestSettings"), "Should contain source type");
+        Assertions.assertTrue(metadata.contains("Test settings"), "Should contain group description");
 
-        Assert.assertTrue(metadata.contains("\"citrus.test.feature.enabled\""), "Should contain boolean property");
-        Assert.assertTrue(metadata.contains("\"java.lang.Boolean\""), "Should contain Boolean type");
-        Assert.assertTrue(metadata.contains("true"), "Should contain boolean default value");
+        Assertions.assertTrue(metadata.contains("\"citrus.test.feature.enabled\""), "Should contain boolean property");
+        Assertions.assertTrue(metadata.contains("\"java.lang.Boolean\""), "Should contain Boolean type");
+        Assertions.assertTrue(metadata.contains("true"), "Should contain boolean default value");
 
-        Assert.assertTrue(metadata.contains("\"citrus.test.name\""), "Should contain string property");
-        Assert.assertTrue(metadata.contains("\"default\""), "Should contain string default value");
+        Assertions.assertTrue(metadata.contains("\"citrus.test.name\""), "Should contain string property");
+        Assertions.assertTrue(metadata.contains("\"default\""), "Should contain string default value");
 
-        Assert.assertTrue(metadata.contains("\"citrus.test.timeout\""), "Should contain long property");
-        Assert.assertTrue(metadata.contains("5000"), "Should contain numeric default value");
+        Assertions.assertTrue(metadata.contains("\"citrus.test.timeout\""), "Should contain long property");
+        Assertions.assertTrue(metadata.contains("5000"), "Should contain numeric default value");
 
-        Assert.assertFalse(metadata.contains("CITRUS_TEST_TIMEOUT"), "Should not contain env var constant");
+        Assertions.assertFalse(metadata.contains("CITRUS_TEST_TIMEOUT"), "Should not contain env var constant");
     }
 
     @Test
@@ -112,10 +112,10 @@ public class CitrusConfigMetadataProcessorTest {
                 """;
 
         String metadata = compileAndReadMetadata("test.OldSettings", source);
-        Assert.assertNotNull(metadata);
+        Assertions.assertNotNull(metadata);
 
-        Assert.assertTrue(metadata.contains("\"deprecation\""), "Should contain deprecation");
-        Assert.assertTrue(metadata.contains("citrus.new.property"), "Should contain replacement");
+        Assertions.assertTrue(metadata.contains("\"deprecation\""), "Should contain deprecation");
+        Assertions.assertTrue(metadata.contains("citrus.new.property"), "Should contain replacement");
     }
 
     @Test
@@ -133,7 +133,7 @@ public class CitrusConfigMetadataProcessorTest {
 
         String metadata = compileAndReadMetadata("test.EmptySettings", source);
         // No properties annotated, so no metadata file should be generated
-        Assert.assertNull(metadata, "Should not generate metadata when no properties are annotated");
+        Assertions.assertNull(metadata, "Should not generate metadata when no properties are annotated");
     }
 
     private String compileAndReadMetadata(String source) throws IOException {
@@ -165,7 +165,7 @@ public class CitrusConfigMetadataProcessorTest {
         if (!success) {
             StringBuilder errors = new StringBuilder("Compilation failed:\n");
             diagnostics.getDiagnostics().forEach(d -> errors.append(d).append('\n'));
-            Assert.fail(errors.toString());
+            Assertions.fail(errors.toString());
         }
 
         File metadataFile = new File(outputDir.toFile(),

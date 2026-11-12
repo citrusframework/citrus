@@ -19,6 +19,13 @@
       <artifactId>citrus-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- Test -->
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -29,6 +36,29 @@
         <configuration>
           <proc>none</proc>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit-platform</artifactId>
+            <version>${maven.surefire.plugin.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit-platform</artifactId>
+            <version>${maven.failsafe.plugin.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!-- Do not deploy this module to Maven central -->
