@@ -24,8 +24,8 @@ import org.citrusframework.api.main.TestEngine;
 import org.citrusframework.api.main.TestRunConfiguration;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @since 2.7
@@ -64,7 +64,7 @@ public class JUnit4TestEngineTest {
         configuration.setEngine("junit4");
         TestEngine engine = TestEngine.lookup(configuration);
 
-        Assert.assertEquals(engine.getClass(), JUnit4TestEngine.class);
+        Assert.assertEquals(JUnit4TestEngine.class, engine.getClass());
     }
 
     private void runTestEngine(TestRunConfiguration configuration, long failure, long passed) {
@@ -72,8 +72,8 @@ public class JUnit4TestEngineTest {
         engine.addRunListener(new RunListener() {
             @Override
             public void testRunFinished(Result result) {
-                Assert.assertEquals(result.getFailureCount(), failure);
-                Assert.assertEquals(result.getRunCount(), passed);
+                Assert.assertEquals(failure, result.getFailureCount());
+                Assert.assertEquals(passed, result.getRunCount());
             }
         });
         engine.run();
