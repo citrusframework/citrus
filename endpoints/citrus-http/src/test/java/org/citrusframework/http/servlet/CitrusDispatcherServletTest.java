@@ -21,9 +21,11 @@ import java.util.List;
 
 import org.citrusframework.base.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.base.endpoint.adapter.TimeoutProducingEndpointAdapter;
+import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.controller.HttpMessageController;
 import org.citrusframework.http.interceptor.DelegatingHandlerInterceptor;
 import org.citrusframework.http.interceptor.LoggingHandlerInterceptor;
+import org.citrusframework.http.message.DelegatingHttpEntityMessageConverter;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.junit.jupiter.AbstractUnitTest;
@@ -64,6 +66,32 @@ public class CitrusDispatcherServletTest extends AbstractUnitTest {
 
         servlet.initStrategies(applicationContext);
 
+    }
+
+    @Test
+    public void testParentContextBeansAreNotConfigured() {
+        DelegatingHandlerInterceptor parentHandlerInterceptor = new DelegatingHandlerInterceptor();
+        HttpMessageController parentMessageController = new HttpMessageController();
+        DelegatingHttpEntityMessageConverter parentMessageConverter = Mockito.mock(DelegatingHttpEntityMessageConverter.class);
+        HttpEndpointConfiguration initialEndpointConfiguration = parentMessageController.getEndpointConfiguration();
+
+        // Parent context beans are shared with other servers, so the servlet must leave them untouched.
+        GenericApplicationContext parentContext = new GenericApplicationContext();
+        parentContext.registerBean("citrusHandlerInterceptor", DelegatingHandlerInterceptor.class, () -> parentHandlerInterceptor);
+        parentContext.registerBean("citrusLoggingInterceptor", LoggingHandlerInterceptor.class);
+        parentContext.registerBean("citrusHttpMessageController", HttpMessageController.class, () -> parentMessageController);
+        parentContext.registerBean("citrusHttpMessageConverter", DelegatingHttpEntityMessageConverter.class, () -> parentMessageConverter);
+        parentContext.refresh();
+
+        GenericApplicationContext servletContext = new GenericApplicationContext();
+        servletContext.setParent(parentContext);
+        servletContext.refresh();
+
+        servlet.initStrategies(servletContext);
+
+        Assertions.assertTrue(parentHandlerInterceptor.getInterceptors().isEmpty());
+        Assertions.assertSame(initialEndpointConfiguration, parentMessageController.getEndpointConfiguration());
+        Mockito.verifyNoInteractions(parentMessageConverter);
     }
 
     @Test
