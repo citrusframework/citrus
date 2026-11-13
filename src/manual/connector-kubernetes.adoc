@@ -75,7 +75,7 @@ public KubernetesClient k8sClient() {
                 .url("http://localhost:8843")
                 .version("v1")
                 .username("user")
-                .password("s!cr!t")
+                .password("changeit")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
                 .jsonMapper("jsonMapper")
@@ -93,7 +93,7 @@ public KubernetesClient k8sClient() {
                 .url("http://localhost:8843")
                 .version("v1")
                 .username("user")
-                .password("s!cr!t")
+                .password("changeit")
                 .namespace("user_namespace")
                 .messageConverter(messageConverter)
                 .jsonMapper("jsonMapper")
@@ -109,7 +109,7 @@ public KubernetesClient k8sClient() {
               url="http://localhost:8843"
               version="v1"
               username="user"
-              password="s!cr!t"
+              password="changeit"
               namespace="user_namespace"
               message-converter="messageConverter"
               json-mapper="jsonMapper"/>

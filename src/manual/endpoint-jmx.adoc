@@ -80,7 +80,7 @@ public JmxClient jmxClient() {
     return new JmxClientBuilder()
         .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
         .username("user")
-        .password("s!cr!t")
+        .password("changeit")
         .autoReconnect(true)
         .delayOnReconnect(5000L)
         .build();
@@ -95,7 +95,7 @@ public JmxClient jmxClient() {
     return new JmxClientBuilder()
         .serverUrl("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi")
         .username("user")
-        .password("s!cr!t")
+        .password("changeit")
         .autoReconnect(true)
         .delayOnReconnect(5000L)
         .build();
@@ -120,7 +120,7 @@ public JmxClient jmxClient() {
     <citrus-jmx:client id="jmxClient"
           server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
           username="user"
-          password="s!cr!t"
+          password="changeit"
           auto-reconnect="true"
           delay-on-reconnect="5000"/>
 </beans>

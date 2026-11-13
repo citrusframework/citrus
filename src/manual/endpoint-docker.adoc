@@ -82,7 +82,7 @@ public DockerClient dockerClient() {
             .url("tcp://localhost:2376")
             .version("1.20")
             .username("user")
-            .password("s!cr!t")
+            .password("changeit")
             .email("user@foo.bar")
             .registry("https://index.docker.io/v1/")
             .certPath("/path/to/some/cert/directory")
@@ -100,7 +100,7 @@ public DockerClient dockerClient() {
             .url("tcp://localhost:2376")
             .version("1.20")
             .username("user")
-            .password("s!cr!t")
+            .password("changeit")
             .email("user@foo.bar")
             .registry("https://index.docker.io/v1/")
             .certPath("/path/to/some/cert/directory")
@@ -116,7 +116,7 @@ public DockerClient dockerClient() {
             url="tcp://localhost:2376"
             version="1.20"
             username="user"
-            password="s!cr!t"
+            password="changeit"
             email="user@foo.bar"
             registry="https://index.docker.io/v1/"
             cert-path="/path/to/some/cert/directory"

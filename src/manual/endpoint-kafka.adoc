@@ -295,7 +295,7 @@ private Map<String, Object> getConsumerProps() {
   <entry key="retries" value="10" value-type="java.lang.Integer"/>
   <entry key="max.request.size" value="1024" value-type="java.lang.Integer"/>
   <entry key="ssl.keystore.location" value="/path/to/keystore.jks"/>
-  <entry key="ssl.kestore.password" value="secr3t"/>
+  <entry key="ssl.kestore.password" value="changeit"/>
 </util:map>
 
 <util:map id="consumerProps">
@@ -303,7 +303,7 @@ private Map<String, Object> getConsumerProps() {
   <entry key="session.timeout.ms" value="10000" value-type="java.lang.Integer"/>
   <entry key="enable.auto.commit" value="true" value-type="java.lang.Boolean"/>
   <entry key="ssl.truststore.location" value="/path/to/truststore.jks"/>
-  <entry key="ssl.truststore.password" value="secr3t"/>
+  <entry key="ssl.truststore.password" value="changeit"/>
 </util:map>
 
 ----

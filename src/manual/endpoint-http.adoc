@@ -568,7 +568,7 @@ http().server("httpServer")
     .body("<testRequestMessage>" +
             "<text>Hello HttpServer</text>" +
           "</testRequestMessage>")
-    .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
+    .header("Authorization", "Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==")
     .header("X-CustomHeaderId", "${custom_header_id}")
     .extract(extract().fromHeaders()
                 .header("X-MessageId", "message_id"));
@@ -592,7 +592,7 @@ http().server("httpServer")
   <http:POST path="/test">
     <http:headers content-type="application/xml" accept="application/xml, */*">
       <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
-      <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
+      <http:header name="Authorization" value="Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA=="/>
     </http:headers>
     <http:body>
     <http:data>
@@ -977,11 +977,11 @@ Form urlencoded form data content could look like this:
 .Form urlencoded data
 [source,plaintext]
 ----
-password=s%21cr%21t&username=foo
+password=changeit&username=foo
 ----
 
-As you can see the form data is automatically encoded. In the example above we transmit two form controls *password* and
-*username* with respective values *s$cr$t* and *foo* . In case we would validate this form data in Citrus we are able to
+As you can see the form data uses URL encoding. In the example above we transmit two form controls *password* and
+*username* with respective values *changeit* and *foo* . In case we would validate this form data in Citrus we are able to
 do this with plaintext message validation.
 
 .Java
@@ -990,7 +990,7 @@ do this with plaintext message validation.
 receive("httpServer")
     .message()
     .type(MessageType.PLAINTEXT)
-    .body("password=s%21cr%21t&username=${username}")
+    .body("password=changeit&username=${username}")
     .header(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.POST.name())
     .header(HttpMessageHeaders.HTTP_REQUEST_URI, "/form-test")
     .header(HttpMessageHeaders.HTTP_CONTENT_TYPE, "application/x-www-form-urlencoded");
@@ -1007,7 +1007,7 @@ send("httpServer")
   <message type="plaintext">
     <data>
       <![CDATA[
-        password=s%21cr%21t&username=${username}
+        password=changeit&username=${username}
       ]]>
     </data>
   </message>
@@ -1243,7 +1243,7 @@ http().client("httpClient")
     .send()
     .get()
     .message()
-    .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==");
+    .header("Authorization", "Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==");
 ----
 
 .XML
@@ -1252,7 +1252,7 @@ http().client("httpClient")
 <http:send-request client="httpClient">
   <http:GET>
     <http:headers>
-      <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
+      <http:header name="Authorization" value="Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA=="/>
     </http:headers>
   </http:GET>
 </http:send-request>
@@ -1367,7 +1367,7 @@ POST /test HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 Accept-Charset: iso-8859-1, us-ascii, utf-8
-Authorization: Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==
+Authorization: Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==
 User-Agent: Jakarta Commons-HttpClient/3.1
 Host: localhost:8080
 Content-Length: 175
