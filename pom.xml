@@ -185,7 +185,6 @@
     <maven.release.plugin.version>3.3.1</maven.release.plugin.version>
     <maven.resource.plugin.version>3.5.0</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
-    <maven.shade.plugin.version>3.6.2</maven.shade.plugin.version>
     <maven.sonatype.central.plugin.version>0.12.0</maven.sonatype.central.plugin.version>
     <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
     <maven.surefire.plugin.version>3.5.6</maven.surefire.plugin.version>
@@ -273,12 +272,6 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.2.20.Final</netty.version>
     <okhttp.version>5.5.1</okhttp.version>
-    <openapi-request-validator.version>3.0.0</openapi-request-validator.version>
-    <!--
-      com.atlassian.oai:openapi-request-validator-core is not compatible with com.networknt:json-schema-validator 3.x.
-      This version is shaded and relocated into citrus-openapi-validator-shaded, see https://github.com/atlassian/openapi-request-validator/issues/21.
-    -->
-    <openapi-request-validator.json-schema-validator.version>2.0.8</openapi-request-validator.json-schema-validator.version>
     <org.openapitools.version>7.27.0</org.openapitools.version>
     <aesh.version>3.19.1</aesh.version>
     <postgresql.version>42.7.14</postgresql.version>
@@ -307,6 +300,7 @@
     <sshd.version>2.20.1</sshd.version>
     <swagger.version>2.2.37</swagger.version>
     <swagger.parser.version>2.1.48</swagger.parser.version>
+    <swagger-request-validator.version>2.46.1</swagger-request-validator.version>
     <system-stubs.version>2.1.8</system-stubs.version>
     <testcontainers.version>2.0.5</testcontainers.version>
     <testng.version>7.12.0</testng.version>
@@ -816,8 +810,8 @@
 
       <dependency>
         <groupId>com.atlassian.oai</groupId>
-        <artifactId>openapi-request-validator-core</artifactId>
-        <version>${openapi-request-validator.version}</version>
+        <artifactId>swagger-request-validator-core</artifactId>
+        <version>${swagger-request-validator.version}</version>
         <exclusions>
           <!--
             force com.sun.mail:mailapi to v2 major.
@@ -840,7 +834,7 @@
         <artifactId>swagger-parser</artifactId>
         <version>${swagger.parser.version}</version>
         <exclusions>
-          <!-- same as for com.atlassian.oai:openapi-request-validator-core above -->
+          <!-- same as for com.atlassian.oai:swagger-request-validator-core above -->
           <exclusion>
             <groupId>com.sun.mail</groupId>
             <artifactId>mailapi</artifactId>
@@ -1808,11 +1802,6 @@
           <configuration>
             <downloadSources>true</downloadSources>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>${maven.shade.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

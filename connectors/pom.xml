@@ -15,7 +15,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>citrus-openapi-validator-shaded</module>
     <module>citrus-openapi</module>
     <module>citrus-docker</module>
     <module>citrus-kubernetes</module>
