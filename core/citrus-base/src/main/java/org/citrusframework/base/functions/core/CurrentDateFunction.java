@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static org.citrusframework.base.functions.core.DateFunctionHelper.applyDateOffset;
+import static org.citrusframework.base.functions.core.DateFunctionHelper.getDateFormatter;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
@@ -54,9 +55,7 @@ public class CurrentDateFunction implements ParameterizedFunction<CurrentDateFun
             date = applyDateOffset(date, params.getOffset());
         }
 
-        DateTimeFormatter formatter = hasText(params.getDateFormat())
-                ? DateTimeFormatter.ofPattern(params.getDateFormat())
-                : DateTimeFormatter.ofPattern(DateFunctionHelper.getDefaultDateFormat().toPattern());
+        DateTimeFormatter formatter = getDateFormatter(params.getDateFormat(), context);
 
         try {
             return date.format(formatter);

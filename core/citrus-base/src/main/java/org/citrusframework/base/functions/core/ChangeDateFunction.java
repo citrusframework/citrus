@@ -34,6 +34,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.List;
 
 import static org.citrusframework.base.functions.core.DateFunctionHelper.applyDateOffset;
+import static org.citrusframework.base.functions.core.DateFunctionHelper.getDateFormatter;
 import static org.citrusframework.util.StringUtils.hasText;
 
 /**
@@ -49,9 +50,7 @@ public class ChangeDateFunction implements ParameterizedFunction<ChangeDateFunct
 
     @Override
     public String execute(Parameters params, TestContext context) {
-        DateTimeFormatter dateFormat = hasText(params.getDateFormat())
-                ? DateTimeFormatter.ofPattern(params.getDateFormat())
-                : DateTimeFormatter.ofPattern(DateFunctionHelper.getDefaultDateFormat().toPattern());
+        DateTimeFormatter dateFormat = getDateFormatter(params.getDateFormat(), context);
 
         OffsetDateTime date;
 

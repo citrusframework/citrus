@@ -120,6 +120,13 @@
       "defaultValue": "XML"
     },
     {
+      "name": "citrus.default.date.format",
+      "type": "java.lang.String",
+      "description": "Default date format used by date functions when no explicit format is given.",
+      "sourceType": "org.citrusframework.CitrusSettings",
+      "defaultValue": "dd.MM.yyyy"
+    },
+    {
       "name": "citrus.http.message.builder.force.citrus.header.update.enabled",
       "type": "java.lang.Boolean",
       "description": "Enable forced Citrus header update in HTTP message builder.",

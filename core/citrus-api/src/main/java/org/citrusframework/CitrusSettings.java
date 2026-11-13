@@ -274,6 +274,14 @@ public final class CitrusSettings {
     public static final String DEFAULT_MESSAGE_TYPE = getDefaultMessageType();
 
     /**
+     * Default date format used by date functions such as currentDate() and changeDate() when no explicit format is given
+     */
+    @CitrusConfigProperty(description = "Default date format used by date functions when no explicit format is given.", defaultValue = "dd.MM.yyyy")
+    public static final String DEFAULT_DATE_FORMAT_PROPERTY = "citrus.default.date.format";
+    public static final String DEFAULT_DATE_FORMAT_ENV = "CITRUS_DEFAULT_DATE_FORMAT";
+    public static final String DEFAULT_DATE_FORMAT_DEFAULT = "dd.MM.yyyy";
+
+    /**
      * Flag to allow deactivation of the http message builder citrus header update. See <a href="https://github.com/citrusframework/citrus/issues/1143">ISSUE-1143</a> for details.
      */
     @CitrusConfigProperty(description = "Enable forced Citrus header update in HTTP message builder.", type = "java.lang.Boolean", defaultValue = "true")
@@ -735,6 +743,16 @@ public final class CitrusSettings {
                 DEFAULT_MESSAGE_TYPE_PROPERTY,
                 DEFAULT_MESSAGE_TYPE_ENV,
                 DEFAULT_MESSAGE_TYPE_DEFAULT);
+    }
+
+    /**
+     * Gets the default date format used by date functions when no explicit format is given.
+     */
+    public static String getDefaultDateFormat() {
+        return getPropertyEnvOrDefault(
+                DEFAULT_DATE_FORMAT_PROPERTY,
+                DEFAULT_DATE_FORMAT_ENV,
+                DEFAULT_DATE_FORMAT_DEFAULT);
     }
 
     /**
