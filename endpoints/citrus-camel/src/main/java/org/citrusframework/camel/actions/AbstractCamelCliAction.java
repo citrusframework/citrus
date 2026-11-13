@@ -20,6 +20,7 @@ import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.api.actions.camel.CamelCliActionBuilderBase;
 import org.citrusframework.camel.cli.CamelCli;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.camel.cli.CamelCliTestActor;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ReferenceResolver;
@@ -148,5 +149,14 @@ public abstract class AbstractCamelCliAction extends AbstractTestAction {
          * Subclasses need to implement to create the
          */
         protected abstract T doBuild();
+    }
+
+    /**
+     * Number of additional attempts to run a Camel CLI command before failing the action.
+     * The Camel CLI may fail transiently, e.g. when it reads Camel integration status information
+     * while it is being written concurrently. Configurable via {@link CamelCliSettings#getCommandRestarts()}.
+     */
+    protected int getCommandRestarts() {
+        return CamelCliSettings.getCommandRestarts();
     }
 }

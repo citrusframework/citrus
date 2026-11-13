@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.api.actions.camel.CamelCliCmdSendActionBuilder;
+import org.citrusframework.camel.cli.CamelCliTransientException;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.spi.Resource;
@@ -134,13 +135,39 @@ public class CamelCmdSendAction extends AbstractCamelCliAction {
             commandArgs.addAll(context.resolveDynamicValuesInList(args));
         }
 
-        ProcessAndOutput pao = camelCli().send(commandArgs.toArray(new String[0]));
+        ProcessAndOutput pao = sendCommand(commandArgs);
 
         if (reply) {
             logger.info("Received reply from Camel CLI send command:%n%s".formatted(pao.getOutput()));
         }
 
         logger.info("Successfully sent message to Camel integration via Camel CLI");
+    }
+
+    /**
+     * Runs the Camel CLI send command. Restarts the command on transient Camel CLI failures, e.g. when the
+     * Camel integration does not pick up the send action in time or when the status information of the running
+     * integration cannot be read. Other failures are not retried.
+     * <p>
+     * Note: a send timeout may also be reported when the Camel integration processes the send action slower than
+     * the timeout. In that case the restart delivers the message a second time.
+     */
+    private ProcessAndOutput sendCommand(List<String> commandArgs) {
+        int maxRestarts = getCommandRestarts();
+        int restarts = 0;
+        while (true) {
+            try {
+                return camelCli().send(commandArgs.toArray(new String[0]));
+            } catch (CamelCliTransientException e) {
+                if (restarts >= maxRestarts) {
+                    throw e;
+                }
+
+                restarts++;
+                logger.warn("Failed to send message via Camel CLI command - restarting command (retry %d/%d):%n\t camel cmd send %s%n%s"
+                        .formatted(restarts, maxRestarts, String.join(" ", commandArgs), e.getMessage()));
+            }
+        }
     }
 
     /**
