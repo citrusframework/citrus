@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 
+import static org.citrusframework.CitrusSettings.DEFAULT_DATE_FORMAT_PROPERTY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ChangeDateFunctionTest extends UnitTestSupport {
@@ -52,6 +53,35 @@ public class ChangeDateFunctionTest extends UnitTestSupport {
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         Assertions.assertEquals(String.format("%1$td.%1$tm.%1$tY", calendar),
                 fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1d'"), context));
+    }
+
+    @Test
+    public void testDefaultDateFormatVariable() {
+        context.setVariable(DEFAULT_DATE_FORMAT_PROPERTY, "yyyy-MM-dd HH:mm:ss");
+
+        Calendar calendar = dateTimeBaseCalendar();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.HOUR, -1);
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+1d-1h'"), context));
+
+        calendar = defaultBaseCalendar();
+        calendar.add(Calendar.MONTH, 1);
+        Assertions.assertEquals(String.format("%1$td.%1$tm.%1$tY", calendar),
+                fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE + "', '+1M', 'dd.MM.yyyy'"), context));
+    }
+
+    @Test
+    public void testDefaultDateFormatSystemProperty() {
+        System.setProperty(DEFAULT_DATE_FORMAT_PROPERTY, "yyyy-MM-dd HH:mm:ss");
+        try {
+            Calendar calendar = dateTimeBaseCalendar();
+            calendar.add(Calendar.MINUTE, 10);
+            Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", calendar),
+                    fixture.execute(FunctionParameterHelper.getParameterList("'" + BASE_DATE_TIME + "', '+10m'"), context));
+        } finally {
+            System.clearProperty(DEFAULT_DATE_FORMAT_PROPERTY);
+        }
     }
 
     @Test
