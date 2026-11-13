@@ -3976,7 +3976,7 @@ Be aware of setting the header as HTTP mime header using the correct prefix and 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-.header("citrus_http_Authorization", "Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==")
+.header("citrus_http_Authorization", "Basic <base64-encoded-credentials>")
 ----
 
 .XML
@@ -3984,7 +3984,7 @@ Be aware of setting the header as HTTP mime header using the correct prefix and 
 ----
 <headers>
   <header name="citrus_http_Authorization"
-          value="Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==" />
+          value="Basic <base64-encoded-credentials>" />
 </headers>
 ----
 
@@ -3993,14 +3993,14 @@ Be aware of setting the header as HTTP mime header using the correct prefix and 
 ----
 headers:
   - name: citrus_http_Authorization
-    value: "Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA=="
+    value: "Basic <base64-encoded-credentials>"
 ----
 
 .Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
 <header>
-    <element name="citrus_http_Authorization" value="Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA=="/>
+    <element name="citrus_http_Authorization" value="Basic <base64-encoded-credentials>"/>
 </header>
 ----
 

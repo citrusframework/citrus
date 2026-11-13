@@ -568,7 +568,7 @@ http().server("httpServer")
     .body("<testRequestMessage>" +
             "<text>Hello HttpServer</text>" +
           "</testRequestMessage>")
-    .header("Authorization", "Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==")
+    .header("Authorization", "Basic <base64-encoded-credentials>")
     .header("X-CustomHeaderId", "${custom_header_id}")
     .extract(extract().fromHeaders()
                 .header("X-MessageId", "message_id"));
@@ -592,7 +592,7 @@ http().server("httpServer")
   <http:POST path="/test">
     <http:headers content-type="application/xml" accept="application/xml, */*">
       <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
-      <http:header name="Authorization" value="Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA=="/>
+      <http:header name="Authorization" value="Basic <base64-encoded-credentials>"/>
     </http:headers>
     <http:body>
     <http:data>
@@ -1243,7 +1243,7 @@ http().client("httpClient")
     .send()
     .get()
     .message()
-    .header("Authorization", "Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==");
+    .header("Authorization", "Basic <base64-encoded-credentials>");
 ----
 
 .XML
@@ -1252,7 +1252,7 @@ http().client("httpClient")
 <http:send-request client="httpClient">
   <http:GET>
     <http:headers>
-      <http:header name="Authorization" value="Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA=="/>
+      <http:header name="Authorization" value="Basic <base64-encoded-credentials>"/>
     </http:headers>
   </http:GET>
 </http:send-request>
@@ -1367,7 +1367,7 @@ POST /test HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 Accept-Charset: iso-8859-1, us-ascii, utf-8
-Authorization: Basic Y2l0cnVzVXNlcjpjaGFuZ2VpdA==
+Authorization: Basic <base64-encoded-credentials>
 User-Agent: Jakarta Commons-HttpClient/3.1
 Host: localhost:8080
 Content-Length: 175
