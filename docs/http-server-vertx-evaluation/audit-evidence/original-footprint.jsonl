@@ -1,0 +1,10 @@
+{"engine":"jetty","port":18101,"boundPort":18101,"startupMs":796.5,"threads":21,"heapUsedBytes":18079176,"requests":500,"p50Ms":0.737,"p95Ms":1.119,"javaVersion":"21.0.12.1"}
+{"engine":"jetty","port":18101,"boundPort":18101,"startupMs":675.7,"threads":21,"heapUsedBytes":18110008,"requests":500,"p50Ms":0.762,"p95Ms":1.129,"javaVersion":"21.0.12.1"}
+{"engine":"jetty","port":18101,"boundPort":18101,"startupMs":667.4,"threads":21,"heapUsedBytes":18111864,"requests":500,"p50Ms":0.722,"p95Ms":1.104,"javaVersion":"21.0.12.1"}
+{"engine":"jetty","port":18101,"boundPort":18101,"startupMs":676.6,"threads":21,"heapUsedBytes":18072400,"requests":500,"p50Ms":0.729,"p95Ms":1.193,"javaVersion":"21.0.12.1"}
+{"engine":"jetty","port":18101,"boundPort":18101,"startupMs":670.4,"threads":21,"heapUsedBytes":18104928,"requests":500,"p50Ms":0.734,"p95Ms":1.068,"javaVersion":"21.0.12.1"}
+{"engine":"vertx","port":18102,"boundPort":18102,"startupMs":365.3,"threads":37,"heapUsedBytes":16497888,"requests":500,"p50Ms":0.606,"p95Ms":0.913,"javaVersion":"21.0.12.1"}
+{"engine":"vertx","port":18102,"boundPort":18102,"startupMs":344.0,"threads":37,"heapUsedBytes":16632728,"requests":500,"p50Ms":0.609,"p95Ms":0.898,"javaVersion":"21.0.12.1"}
+{"engine":"vertx","port":18102,"boundPort":18102,"startupMs":346.9,"threads":37,"heapUsedBytes":16743056,"requests":500,"p50Ms":0.608,"p95Ms":0.918,"javaVersion":"21.0.12.1"}
+{"engine":"vertx","port":18102,"boundPort":18102,"startupMs":348.1,"threads":37,"heapUsedBytes":16792480,"requests":500,"p50Ms":0.602,"p95Ms":0.929,"javaVersion":"21.0.12.1"}
+{"engine":"vertx","port":18102,"boundPort":18102,"startupMs":344.1,"threads":37,"heapUsedBytes":16677368,"requests":500,"p50Ms":0.598,"p95Ms":0.926,"javaVersion":"21.0.12.1"}

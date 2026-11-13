@@ -1,0 +1,226 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file:/Users/asuruceanu/.m2/wrapper/dists/apache-maven-3.9.8-bin/77ob9fsoslr05hv92g6n8167dn/apache-maven-3.9.8/lib/jansi-2.4.1.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/Users/asuruceanu/.m2/wrapper/dists/apache-maven-3.9.8-bin/77ob9fsoslr05hv92g6n8167dn/apache-maven-3.9.8/lib/guava-33.2.1-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] gitflow-incremental-builder is disabled.
+[INFO] 
+[INFO] -------------------< org.citrusframework:citrus-ws >--------------------
+[INFO] Building Citrus :: Endpoints :: SOAP WebServices 5.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jaxb2:4.1.0:xjc (default) @ citrus-ws ---
+[INFO] No changes detected in schema or binding files - skipping JAXB generation.
+[INFO] 
+[INFO] --- clean:3.5.0:clean (remove-duplicate-code) @ citrus-ws ---
+[INFO] Deleting /Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/generated-sources/jaxb/org/citrusframework/model/testcase/core (includes = [*.java], excludes = [])
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ citrus-ws ---
+[INFO] Copying 19 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ citrus-ws ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ citrus-ws ---
+[INFO] Copying 77 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ citrus-ws ---
+[INFO] Recompiling the module because of added or removed source files.
+[INFO] Compiling 86 source files with javac [debug release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ citrus-ws ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.citrusframework.ws.vertx.VertxSoapMessageExchangeTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.598 s -- in org.citrusframework.ws.vertx.VertxSoapMessageExchangeTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ citrus-ws ---
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ citrus-ws ---
+[INFO] 
+[INFO] --- javadoc:3.12.0:jar (attach-javadocs) @ citrus-ws ---
+[INFO] Building jar: /Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/citrus-ws-5.1.0-SNAPSHOT-javadoc.jar
+[INFO] 
+[INFO] --- failsafe:3.5.6:integration-test (integration-tests) @ citrus-ws ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.citrusframework.ws.vertx.VertxSoapIT
+2026-10-14 22:34:34.160  INFO 7924 --- [           main] g.config.xml.SchemaRepositoryParser : Found schema repository bean definition parser class org.citrusframework.xml.config.xml.XsdSchemaRepositoryParser from resource META-INF/citrus/schema-repository/parser/xml
+2026-10-14 22:34:34.164  INFO 7924 --- [           main] work.spring.config.xml.SchemaParser : Found schema bean definition parser class org.citrusframework.xml.config.xml.WsdlSchemaParser from resource META-INF/citrus/schema/parser/wsdl
+2026-10-14 22:34:34.168  INFO 7924 --- [           main] work.spring.config.xml.SchemaParser : Found schema bean definition parser class org.citrusframework.xml.config.xml.XsdSchemaParser from resource META-INF/citrus/schema/parser/xsd
+2026-10-14 22:34:34.334  WARN 7924 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusSpringConfig' of type [org.citrusframework.spring.config.CitrusSpringConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [citrusComponentInitializer] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-10-14 22:34:34.337  WARN 7924 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusReferenceResolver' of type [org.citrusframework.spring.context.SpringBeanReferenceResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [citrusComponentInitializer]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-10-14 22:34:34.458  WARN 7924 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalDTD property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+2026-10-14 22:34:34.458  WARN 7924 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalSchema property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+Retrieving schema at 'SampleMessage.xsd', relative to '/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleServiceWithImports.wsdl'.
+Retrieving schema at 'SampleTypes.xsd', relative to 'file:/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleMessage.xsd'.
+Retrieving schema at 'SampleMessageResponse.xsd', relative to '/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleServiceWithImports.wsdl'.
+Retrieving schema at 'SampleTypes.xsd', relative to 'file:/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleMessageResponse.xsd'.
+Retrieving schema at 'SampleMessage.xsd', relative to '/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleServiceWithImportsNamespaceDiff.wsdl'.
+Retrieving schema at 'SampleTypes.xsd', relative to 'file:/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleMessage.xsd'.
+Retrieving schema at 'SampleMessageResponse.xsd', relative to '/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleServiceWithImportsNamespaceDiff.wsdl'.
+Retrieving schema at 'SampleTypes.xsd', relative to 'file:/Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-ws/target/test-classes/org/citrusframework/schema/SampleMessageResponse.xsd'.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.apache.activemq.artemis.nativo.jlibaio.LibaioContext in an unnamed module (file:/Users/asuruceanu/.m2/repository/org/apache/activemq/activemq-artemis-native/2.0.0/activemq-artemis-native-2.0.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-10-14 22:34:34.633  WARN 7924 --- [           main] apache.activemq.artemis.core.server : AMQ222018: AIO was not located on this platform, it will fall back to using pure Java NIO. If your platform is Linux, install LibAIO to enable the AIO journal
+2026-10-14 22:34:34.633  WARN 7924 --- [           main] apache.activemq.artemis.core.server : AMQ222269: Please use a fixed value for "journal-pool-files". Default changed per https://issues.apache.org/jira/browse/ARTEMIS-1628
+2026-10-14 22:34:35.035  INFO 7924 --- [           main] vlet.CitrusMessageDispatcherServlet : Initializing Servlet 'helloSoapServer-servlet'
+2026-10-14 22:34:35.115  INFO 7924 --- [           main] vlet.CitrusMessageDispatcherServlet : Completed initialization in 80 ms
+2026-10-14 22:34:35.119  INFO 7924 --- [           main] ramework.ws.server.WebServiceServer : Started server: helloSoapServer
+2026-10-14 22:34:35.130  INFO 7924 --- [           main] vlet.CitrusMessageDispatcherServlet : Initializing Servlet 'echoSoapServer-servlet'
+2026-10-14 22:34:35.145  INFO 7924 --- [           main] vlet.CitrusMessageDispatcherServlet : Completed initialization in 14 ms
+2026-10-14 22:34:35.145  INFO 7924 --- [           main] ramework.ws.server.WebServiceServer : Started server: echoSoapServer
+2026-10-14 22:34:35.150  INFO 7924 --- [           main] vlet.CitrusMessageDispatcherServlet : Initializing Servlet 'echoSoap12Server-servlet'
+2026-10-14 22:34:35.163  INFO 7924 --- [           main] vlet.CitrusMessageDispatcherServlet : Completed initialization in 13 ms
+2026-10-14 22:34:35.163  INFO 7924 --- [           main] ramework.ws.server.WebServiceServer : Started server: echoSoap12Server
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter :        .__  __                       
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter : _/ ___\|  \   __\_  __ \  |  \/  ___/
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter : \  \___|  ||  |  |  | \/  |  /\___ \ 
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter :  \___  >__||__|  |__|  |____//____  >
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter :      \/                           \/
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter : C I T R U S  T E S T S  5.1.0-SNAPSHOT
+2026-10-14 22:34:35.174  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.175  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+2026-10-14 22:34:35.175  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.221  WARN 7924 --- [           main] dns.DnsServerAddressStreamProviders : Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+2026-10-14 22:34:35.251  INFO 7924 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxSoap
+2026-10-14 22:34:35.454  WARN 7924 --- [p-exchange-g1-2] mework.ws.server.WebServiceEndpoint : No SOAP response for calling client
+2026-10-14 22:34:35.474  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.474  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.474  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxSoapIT.soap11RoundtripUsesCitrusActions (org.citrusframework.ws.vertx)
+2026-10-14 22:34:35.474  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.474  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.496  INFO 7924 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ b7a33f66-f12b-4b45-ac61-fd173ad91788
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ <?xml version="1.0" encoding="UTF-8"?>
+    │ <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    │   <SOAP-ENV:Header/>
+    │ 
+    │       <SOAP-ENV:Body>
+    │     <greet xmlns="urn:test">hello</greet>
+    │   </SOAP-ENV:Body>
+    │ </SOAP-ENV:Envelope>
+    └────────────────────────────────────────────────────────
+
+2026-10-14 22:34:35.512  INFO 7924 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 4eed6bb4-7826-43b6-9ce1-5df78fdd3bdb
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ <?xml version="1.0" encoding="UTF-8"?>
+    │ <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    │   <SOAP-ENV:Header/>
+    │ 
+    │       <SOAP-ENV:Body>
+    │     <greetResponse xmlns="urn:test">world</greetResponse>
+    │   </SOAP-ENV:Body>
+    │ </SOAP-ENV:Envelope>
+    └────────────────────────────────────────────────────────
+
+2026-10-14 22:34:35.513  WARN 7924 --- [           main] sage.converter.SoapMessageConverter : Unable to get complete set of http request headers
+2026-10-14 22:34:35.513  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ✔ soap:send-request
+2026-10-14 22:34:35.518  INFO 7924 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'WebServiceClient' (timeout: 5000ms)
+2026-10-14 22:34:35.532  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ✔ soap:receive-response
+2026-10-14 22:34:35.543  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.543  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.543  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxSoapIT.soap11RoundtripUsesCitrusActions
+2026-10-14 22:34:35.543  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.543  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.544  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.544  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.545  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxSoapIT.soap12RoundtripUsesCitrusActions (org.citrusframework.ws.vertx)
+2026-10-14 22:34:35.545  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.545  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.549  INFO 7924 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 67db4409-2827-4789-91cb-3fc948dd3612
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ <?xml version="1.0" encoding="UTF-8"?>
+    │ <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+    │   <env:Header/>
+    │ 
+    │       <env:Body>
+    │     <greet xmlns="urn:test">hello</greet>
+    │   </env:Body>
+    │ </env:Envelope>
+    └────────────────────────────────────────────────────────
+
+2026-10-14 22:34:35.557  INFO 7924 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 4c7c642f-5eca-4e30-91d3-bc410b375a18
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ <?xml version="1.0" encoding="UTF-8"?>
+    │ <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+    │   <env:Header/>
+    │ 
+    │       <env:Body>
+    │     <greetResponse xmlns="urn:test">world</greetResponse>
+    │   </env:Body>
+    │ </env:Envelope>
+    └────────────────────────────────────────────────────────
+
+2026-10-14 22:34:35.558  WARN 7924 --- [           main] sage.converter.SoapMessageConverter : Unable to get complete set of http request headers
+2026-10-14 22:34:35.558  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ✔ soap:send-request
+2026-10-14 22:34:35.558  INFO 7924 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'WebServiceClient' (timeout: 5000ms)
+2026-10-14 22:34:35.560  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ✔ soap:receive-response
+2026-10-14 22:34:35.561  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.561  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.561  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxSoapIT.soap12RoundtripUsesCitrusActions
+2026-10-14 22:34:35.561  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 22:34:35.561  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.580  INFO 7924 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxSoap
+2026-10-14 22:34:35.586  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.588  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.588  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ✔ CITRUS TEST RESULTS
+2026-10-14 22:34:35.589  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.589  INFO 7924 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS (  68ms) VertxSoapIT.soap11RoundtripUsesCitrusActions
+2026-10-14 22:34:35.589  INFO 7924 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS (  16ms) VertxSoapIT.soap12RoundtripUsesCitrusActions
+2026-10-14 22:34:35.589  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.589  INFO 7924 --- [           main] rusframework.report.LoggingReporter :   TOTAL:    2
+2026-10-14 22:34:35.589  INFO 7924 --- [           main] rusframework.report.LoggingReporter :   PASSED:   2 (100.0%)
+2026-10-14 22:34:35.589  INFO 7924 --- [           main] rusframework.report.LoggingReporter :   FAILED:   0 (0.0%)
+2026-10-14 22:34:35.590  INFO 7924 --- [           main] rusframework.report.LoggingReporter :   TIME:     84 ms
+2026-10-14 22:34:35.590  INFO 7924 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 22:34:35.590  INFO 7924 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.021 s -- in org.citrusframework.ws.vertx.VertxSoapIT
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.6:verify (integration-tests) @ citrus-ws ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.013 s
+[INFO] Finished at: 2026-10-14T22:34:35+03:00
+[INFO] ------------------------------------------------------------------------
+EXIT=0

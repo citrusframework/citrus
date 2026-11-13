@@ -1,0 +1,42 @@
+AUDIT java=21.0.12.1
+[2m2026-10-14 09:31:28.904[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mttp.servlet.CitrusDispatcherServlet[m [2m:[m Initializing Servlet 'auditJetty-servlet'
+[2m2026-10-14 09:31:29.347[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mttp.servlet.CitrusDispatcherServlet[m [2m:[m Completed initialization in 442 ms
+[2m2026-10-14 09:31:29.353[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mrusframework.http.server.HttpServer[m [2m:[m Started server: auditJetty
+AUDIT protocol jetty=HTTP_1_1
+[2m2026-10-14 09:31:29.513[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mrusframework.http.server.HttpServer[m [2m:[m Stopped server: auditJetty
+[2m2026-10-14 09:31:29.569[m [33m WARN[m [35m66674[m [2m---[m [2m[           main][m [36mdns.DnsServerAddressStreamProviders[m [2m:[m Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+[2m2026-10-14 09:31:29.622[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditProtocol
+AUDIT protocol vertx=HTTP_2
+[2m2026-10-14 09:31:29.710[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditProtocol
+[2m2026-10-14 09:31:29.713[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditStoppedWorkers
+[2m2026-10-14 09:31:29.721[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditStoppedWorkers
+AUDIT workers after stop=[auditStoppedWorkers-exchange-1:WAITING]
+[2m2026-10-14 09:31:29.724[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditRepeatedStart
+[2m2026-10-14 09:31:29.726[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditRepeatedStart
+[2m2026-10-14 09:31:29.729[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditRepeatedStart
+AUDIT repeated start firstPort=51043 secondPort=51044 first listener accepts connection after stop+destroy=true
+[2m2026-10-14 09:31:29.735[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditBodyLimit
+AUDIT bodyLimit no rejection after 8 bytes with limit 4 while body incomplete=true
+AUDIT bodyLimit response after end=HTTP/1.1 413 Request Entity Too Large
+[2m2026-10-14 09:31:30.447[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditBodyLimit
+[2m2026-10-14 09:31:30.452[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditOutbound
+Exception in thread "auditOutbound-exchange-1" java.lang.NumberFormatException: For input string: "bad"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at java.base/java.lang.Integer.parseInt(Integer.java:778)
+	at org.citrusframework.http.message.HttpMessage.getStatusCode(HttpMessage.java:424)
+	at org.citrusframework.http.vertx.VertxHttpMessageMapper.toResponsePlan(VertxHttpMessageMapper.java:138)
+	at org.citrusframework.http.vertx.VertxHttpServer.handleExchange(VertxHttpServer.java:331)
+	at org.citrusframework.http.vertx.VertxHttpServer$GenerationHandler.lambda$handle$3(VertxHttpServer.java:478)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+AUDIT outbound invalid status causes client timeout=true
+[2m2026-10-14 09:31:32.464[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditOutbound
+[2m2026-10-14 09:31:32.470[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditConfig
+AUDIT configured charset=ISO-8859-1 active charset=UTF-8
+[2m2026-10-14 09:31:32.474[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditConfig
+AUDIT cookie=[token=value]
+[2m2026-10-14 09:31:32.480[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Started server: auditFraming
+AUDIT framing=HTTP/1.1 200 OK | Transfer-Encoding: chunked | Content-Type: text/plain;charset=UTF-8 | Content-Length: 4 | connection: close |  | 4 | pong | 0 |  | 
+[2m2026-10-14 09:31:32.488[m [32m INFO[m [35m66674[m [2m---[m [2m[           main][m [36mramework.http.vertx.VertxHttpServer[m [2m:[m Stopped server: auditFraming

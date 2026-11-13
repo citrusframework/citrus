@@ -1,0 +1,477 @@
+[INFO] Scanning for projects...
+[INFO] gitflow-incremental-builder is disabled.
+[INFO] 
+[INFO] ------------------< org.citrusframework:citrus-http >-------------------
+[INFO] Building Citrus :: Endpoints :: HTTP 5.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.6.1:tree (default-cli) @ citrus-http ---
+[INFO] org.citrusframework:citrus-http:jar:5.1.0-SNAPSHOT
+[INFO] +- org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:compile
+[INFO] |  +- org.citrusframework:citrus-api:jar:5.1.0-SNAPSHOT:compile
+[INFO] |  |  +- jakarta.annotation:jakarta.annotation-api:jar:3.0.0:compile (version managed from 3.0.0)
+[INFO] |  |  +- (commons-codec:commons-codec:jar:1.22.1:compile - version managed from 1.22.1; omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.20.0:compile (version managed from 3.20.0)
+[INFO] |  +- commons-codec:commons-codec:jar:1.22.1:compile (version managed from 1.22.1)
+[INFO] |  +- com.github.mifmif:generex:jar:1.0.2:compile
+[INFO] |  |  \- dk.brics.automaton:automaton:jar:1.11-8:compile
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-spring:jar:5.1.0-SNAPSHOT:provided
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:provided - omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:provided - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- org.springframework:spring-beans:jar:7.0.9:compile (version managed from 7.0.9)
+[INFO] |  |  \- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- org.springframework:spring-context:jar:7.0.9:compile (version managed from 7.0.9)
+[INFO] |  |  +- (org.springframework:spring-aop:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-beans:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-expression:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  \- (io.micrometer:micrometer-observation:jar:1.16.7:compile - omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-test:jar:7.0.9:provided - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:provided - version managed from 4.0.5; omitted for duplicate)
+[INFO] |  +- xerces:xercesImpl:jar:2.12.2:provided (version managed from 2.12.2)
+[INFO] |  |  \- xml-apis:xml-apis:jar:1.4.01:provided
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:provided - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-xml:jar:5.1.0-SNAPSHOT:provided
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:provided - omitted for duplicate)
+[INFO] |  +- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:provided - version managed from 4.0.5; omitted for duplicate)
+[INFO] |  +- org.glassfish.jaxb:jaxb-runtime:jar:4.0.9:provided (version managed from 4.0.9)
+[INFO] |  |  \- org.glassfish.jaxb:jaxb-core:jar:4.0.9:provided
+[INFO] |  |     +- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:provided - version managed from 4.0.5; omitted for duplicate)
+[INFO] |  |     +- (jakarta.activation:jakarta.activation-api:jar:2.1.4:provided - version managed from 2.1.4; omitted for duplicate)
+[INFO] |  |     +- (org.eclipse.angus:angus-activation:jar:2.0.3:provided - version managed from 2.0.3; omitted for duplicate)
+[INFO] |  |     +- org.glassfish.jaxb:txw2:jar:4.0.9:provided
+[INFO] |  |     \- com.sun.istack:istack-commons-runtime:jar:4.1.2:provided
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:provided - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-yaml:jar:5.1.0-SNAPSHOT:provided
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:provided - omitted for duplicate)
+[INFO] |  +- org.yaml:snakeyaml:jar:2.6:provided (version managed from 2.6)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:provided - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- tools.jackson.core:jackson-core:jar:3.2.3:compile
+[INFO] +- tools.jackson.core:jackson-databind:jar:3.2.3:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.22:compile (version managed from 2.22)
+[INFO] |  \- (tools.jackson.core:jackson-core:jar:3.2.3:compile - version managed from 3.2.3; omitted for duplicate)
+[INFO] +- org.springframework:spring-core:jar:7.0.9:compile
+[INFO] |  +- commons-logging:commons-logging:jar:1.4.0:provided (version managed from 1.3.5; scope managed from compile)
+[INFO] |  \- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] +- org.springframework:spring-web:jar:7.0.9:compile
+[INFO] |  +- (org.springframework:spring-beans:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  \- io.micrometer:micrometer-observation:jar:1.16.7:compile (scope not updated to compile)
+[INFO] |     +- (org.jspecify:jspecify:jar:1.0.1:compile - omitted for conflict with 1.0.0)
+[INFO] |     \- io.micrometer:micrometer-commons:jar:1.16.7:compile (scope not updated to compile)
+[INFO] |        \- (org.jspecify:jspecify:jar:1.0.1:compile - omitted for conflict with 1.0.0)
+[INFO] +- org.springframework:spring-webmvc:jar:7.0.9:compile
+[INFO] |  +- org.springframework:spring-aop:jar:7.0.9:compile (version managed from 7.0.9; scope not updated to compile)
+[INFO] |  |  +- (org.springframework:spring-beans:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  \- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-beans:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-context:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- org.springframework:spring-expression:jar:7.0.9:compile (version managed from 7.0.9)
+[INFO] |  |  \- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  \- (org.springframework:spring-web:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] +- org.springframework.integration:spring-integration-http:jar:7.1.0:compile
+[INFO] |  +- org.springframework.integration:spring-integration-core:jar:7.1.0:compile (version managed from 7.1.0; scope not updated to compile)
+[INFO] |  |  +- (org.springframework:spring-aop:jar:7.0.9:compile - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-context:jar:7.0.9:compile - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  |  +- org.springframework:spring-messaging:jar:7.0.9:compile (version managed from 7.0.8; scope not updated to compile)
+[INFO] |  |  |  +- (org.springframework:spring-beans:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  |  \- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- org.springframework:spring-tx:jar:7.0.9:compile (version managed from 7.0.8; scope not updated to compile)
+[INFO] |  |  |  +- (org.springframework:spring-beans:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  |  \- (org.springframework:spring-core:jar:7.0.9:compile - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- io.projectreactor:reactor-core:jar:3.8.6:compile
+[INFO] |  |  |  +- org.reactivestreams:reactive-streams:jar:1.0.4:compile
+[INFO] |  |  |  \- (org.jspecify:jspecify:jar:1.0.0:compile - omitted for duplicate)
+[INFO] |  |  \- (io.micrometer:micrometer-observation:jar:1.17.0:compile - omitted for conflict with 1.16.7)
+[INFO] |  \- (org.springframework:spring-webmvc:jar:7.0.9:compile - version managed from 7.0.8; omitted for duplicate)
+[INFO] +- org.apache.httpcomponents.client5:httpclient5:jar:5.6.3:compile
+[INFO] |  +- org.apache.httpcomponents.core5:httpcore5:jar:5.4.3:compile
+[INFO] |  +- org.apache.httpcomponents.core5:httpcore5-h2:jar:5.4.3:compile
+[INFO] |  |  \- (org.apache.httpcomponents.core5:httpcore5:jar:5.4.3:compile - omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 1.7.36; omitted for duplicate)
+[INFO] +- org.eclipse.jetty:jetty-server:jar:12.1.11:compile
+[INFO] |  +- org.eclipse.jetty:jetty-http:jar:12.1.11:compile
+[INFO] |  |  +- (org.eclipse.jetty:jetty-io:jar:12.1.11:compile - version managed from 12.1.11; omitted for duplicate)
+[INFO] |  |  +- org.eclipse.jetty:jetty-util:jar:12.1.11:compile (version managed from 12.1.11)
+[INFO] |  |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  +- org.eclipse.jetty:jetty-io:jar:12.1.11:compile (version managed from 12.1.11)
+[INFO] |  |  +- (org.eclipse.jetty:jetty-util:jar:12.1.11:compile - version managed from 12.1.11; omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.17; omitted for duplicate)
+[INFO] +- org.eclipse.jetty.ee11:jetty-ee11-servlet:jar:12.1.11:compile
+[INFO] |  +- (jakarta.servlet:jakarta.servlet-api:jar:6.1.0:compile - version managed from 6.1.0; omitted for duplicate)
+[INFO] |  +- org.eclipse.jetty:jetty-security:jar:12.1.11:compile
+[INFO] |  |  +- (org.eclipse.jetty:jetty-server:jar:12.1.11:compile - version managed from 12.1.11; omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  +- (org.eclipse.jetty:jetty-server:jar:12.1.11:compile - version managed from 12.1.11; omitted for duplicate)
+[INFO] |  +- org.eclipse.jetty:jetty-session:jar:12.1.11:compile
+[INFO] |  |  +- (org.eclipse.jetty:jetty-server:jar:12.1.11:compile - version managed from 12.1.11; omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:compile - version managed from 2.0.17; omitted for duplicate)
+[INFO] +- jakarta.servlet:jakarta.servlet-api:jar:6.1.0:compile
+[INFO] +- io.vertx:vertx-core:jar:4.5.31:test
+[INFO] |  +- io.netty:netty-common:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  +- io.netty:netty-buffer:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  |  \- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  +- io.netty:netty-transport:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  \- (io.netty:netty-resolver:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  +- io.netty:netty-handler:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-resolver:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-transport-native-unix-common:jar:4.2.16.Final:test
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  \- io.netty:netty-codec-base:jar:4.2.16.Final:test
+[INFO] |  |     +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |     +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |     \- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  +- io.netty:netty-handler-proxy:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-codec-socks:jar:4.2.16.Final:test (version managed from 4.2.16.Final)
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec-http:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  \- (io.netty:netty-handler:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  +- io.netty:netty-codec-http:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-codec-compression:jar:4.2.16.Final:test
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  \- (io.netty:netty-handler:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  +- io.netty:netty-codec-http2:jar:4.1.136.Final:test
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-codec:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-codec-compression:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  |  +- io.netty:netty-codec-protobuf:jar:4.2.16.Final:test
+[INFO] |  |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  |  \- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  |  \- io.netty:netty-codec-marshalling:jar:4.2.16.Final:test
+[INFO] |  |  |     +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |     +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |     +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |     \- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-handler:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  \- (io.netty:netty-codec-http:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  +- io.netty:netty-resolver:jar:4.2.16.Final:test (version managed from 4.1.136.Final)
+[INFO] |  |  \- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  +- io.netty:netty-resolver-dns:jar:4.1.136.Final:test
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-resolver:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-codec-dns:jar:4.1.136.Final:test
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-codec:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  |  \- (io.netty:netty-handler:jar:4.2.16.Final:test - version managed from 4.1.136.Final; omitted for duplicate)
+[INFO] |  +- com.fasterxml.jackson.core:jackson-core:jar:2.22.3:test (version managed from 2.21.5)
+[INFO] |  \- io.netty:netty-tcnative-classes:jar:2.0.78.Final:test
+[INFO] +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:compile
+[INFO] |  \- jakarta.activation:jakarta.activation-api:jar:2.1.4:compile (version managed from 2.1.4)
+[INFO] +- org.apache.artemis:artemis-jakarta-server:jar:2.55.0:test
+[INFO] |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  +- org.apache.artemis:artemis-core-client:jar:2.55.0:test
+[INFO] |  |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  +- org.jgroups:jgroups:jar:5.3.13.Final:test
+[INFO] |  |  +- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.2.16.Final:test (version managed from 4.1.135.Final)
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport-native-unix-common:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-transport-classes-epoll:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-transport-classes-epoll:jar:4.2.16.Final:test (version managed from 4.1.135.Final)
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-transport-native-unix-common:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-transport-native-kqueue:jar:osx-x86_64:4.2.16.Final:test (version managed from 4.1.135.Final)
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport-native-unix-common:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-transport-classes-kqueue:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-transport-classes-kqueue:jar:4.2.16.Final:test (version managed from 4.1.135.Final)
+[INFO] |  |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-transport-native-unix-common:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec-http:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-handler:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-handler-proxy:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec-socks:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-resolver:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  \- de.dentrassi.crypto:pem-keystore:jar:3.0.0:test
+[INFO] |  |     \- com.hierynomus:asn-one:jar:0.6.0:test
+[INFO] |  |        \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 1.7.13; omitted for duplicate)
+[INFO] |  +- org.apache.artemis:artemis-jakarta-client:jar:2.55.0:test
+[INFO] |  |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-core-client:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- org.apache.artemis:artemis-selector:jar:2.55.0:test
+[INFO] |  |  |  +- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  \- (jakarta.jms:jakarta.jms-api:jar:3.1.0:test - version managed from 3.1.0; omitted for duplicate)
+[INFO] |  +- org.apache.artemis:artemis-server:jar:2.55.0:test
+[INFO] |  |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  +- com.github.ben-manes.caffeine:caffeine:jar:3.2.4:test
+[INFO] |  |  |  \- (org.jspecify:jspecify:jar:1.0.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-selector:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-journal:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- org.apache.artemis:artemis-jdbc-store:jar:2.55.0:test
+[INFO] |  |  |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  |  +- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  |  +- (org.apache.artemis:artemis-journal:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  |  +- (org.apache.artemis:artemis-core-client:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  |  +- (commons-beanutils:commons-beanutils:jar:1.11.0:test - omitted for duplicate)
+[INFO] |  |  |  \- org.apache.commons:commons-dbcp2:jar:2.14.0:test (version managed from 2.14.0)
+[INFO] |  |  |     +- org.apache.commons:commons-pool2:jar:2.13.0:test
+[INFO] |  |  |     +- (commons-logging:commons-logging:jar:1.4.0:provided - version managed from 1.3.5; scope managed from compile; omitted for duplicate)
+[INFO] |  |  |     \- (jakarta.transaction:jakarta.transaction-api:jar:1.3.3:test - omitted for conflict with 2.0.1)
+[INFO] |  |  +- (org.apache.artemis:artemis-core-client:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- org.apache.artemis:artemis-lockmanager-api:jar:2.55.0:test
+[INFO] |  |  |  \- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- org.jctools:jctools-core:jar:4.0.6:test
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec-http:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- io.netty:netty-codec-haproxy:jar:4.2.16.Final:test (version managed from 4.1.135.Final)
+[INFO] |  |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.2.16.Final; omitted for duplicate)
+[INFO] |  |  |  \- (io.netty:netty-codec-base:jar:4.2.16.Final:test - omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-handler:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport-classes-epoll:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport-native-kqueue:jar:osx-x86_64:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport-classes-kqueue:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-codec:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- commons-beanutils:commons-beanutils:jar:1.11.0:test
+[INFO] |  |  |  +- (commons-logging:commons-logging:jar:1.4.0:provided - version managed from 1.3.5; scope managed from compile; omitted for duplicate)
+[INFO] |  |  |  \- (commons-collections:commons-collections:jar:3.2.2:test - omitted for duplicate)
+[INFO] |  |  +- org.snakeyaml:snakeyaml-engine:jar:3.0.1:test
+[INFO] |  |  +- (org.apache.commons:commons-lang3:jar:3.20.0:test - version managed from 3.20.0; omitted for duplicate)
+[INFO] |  |  +- org.apache.commons:commons-configuration2:jar:2.15.1:test
+[INFO] |  |  |  +- (org.apache.commons:commons-lang3:jar:3.20.0:test - version managed from 3.20.0; omitted for duplicate)
+[INFO] |  |  |  +- org.apache.commons:commons-text:jar:1.15.0:test
+[INFO] |  |  |  |  \- (org.apache.commons:commons-lang3:jar:3.20.0:test - version managed from 3.20.0; omitted for duplicate)
+[INFO] |  |  |  +- (commons-logging:commons-logging:jar:1.4.0:provided - version managed from 1.3.6; scope managed from compile; omitted for duplicate)
+[INFO] |  |  |  \- commons-io:commons-io:jar:2.22.0:test (version managed from 2.22.0)
+[INFO] |  |  +- commons-collections:commons-collections:jar:3.2.2:test
+[INFO] |  |  +- io.micrometer:micrometer-core:jar:1.17.0:test
+[INFO] |  |  |  +- (org.jspecify:jspecify:jar:1.0.0:test - omitted for duplicate)
+[INFO] |  |  |  +- (io.micrometer:micrometer-commons:jar:1.17.0:test - omitted for conflict with 1.16.7)
+[INFO] |  |  |  \- (io.micrometer:micrometer-observation:jar:1.17.0:test - omitted for conflict with 1.16.7)
+[INFO] |  |  \- com.nimbusds:nimbus-jose-jwt:jar:10.9.1:test
+[INFO] |  +- org.apache.artemis:artemis-journal:jar:2.55.0:test
+[INFO] |  |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.jctools:jctools-core:jar:4.0.6:test - omitted for duplicate)
+[INFO] |  |  +- org.apache.activemq:activemq-artemis-native:jar:2.0.0:test
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  \- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  +- org.apache.artemis:artemis-commons:jar:2.55.0:test
+[INFO] |  |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-buffer:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-common:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  +- (io.netty:netty-transport:jar:4.2.16.Final:test - version managed from 4.1.135.Final; omitted for duplicate)
+[INFO] |  |  \- (commons-beanutils:commons-beanutils:jar:1.11.0:test - omitted for duplicate)
+[INFO] |  +- org.apache.artemis:artemis-jakarta-service-extensions:jar:2.55.0:test
+[INFO] |  |  +- (org.apache.artemis:artemis-core-client:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-jakarta-client:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.apache.artemis:artemis-commons:jar:2.55.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] |  |  +- (jakarta.transaction:jakarta.transaction-api:jar:2.0.1:test - omitted for duplicate)
+[INFO] |  |  \- (org.jgroups:jgroups:jar:5.3.13.Final:test - omitted for duplicate)
+[INFO] |  +- jakarta.jms:jakarta.jms-api:jar:3.1.0:test (version managed from 3.1.0)
+[INFO] |  \- jakarta.transaction:jakarta.transaction-api:jar:2.0.1:test
+[INFO] +- org.apache.xbean:xbean-spring:jar:4.31:test
+[INFO] |  \- (commons-logging:commons-logging:jar:1.4.0:provided - version managed from 1.0.3; scope managed from compile; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-test-support:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- (org.testng:testng:jar:7.12.0:test - version managed from 7.12.0; omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-context:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-testng:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- (org.testng:testng:jar:7.12.0:test - version managed from 7.12.0; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-spring-integration:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework.integration:spring-integration-core:jar:7.1.0:test - version managed from 7.1.0; omitted for duplicate)
+[INFO] |  +- org.springframework.ws:spring-xml:jar:5.0.2:test (version managed from 5.0.2)
+[INFO] |  |  +- (com.sun.xml.messaging.saaj:saaj-impl:jar:3.0.6:test - version managed from 3.0.5; omitted for duplicate)
+[INFO] |  |  +- (jakarta.activation:jakarta.activation-api:jar:2.1.4:test - version managed from 2.1.4; omitted for duplicate)
+[INFO] |  |  +- jakarta.xml.soap:jakarta.xml.soap-api:jar:3.0.2:test (version managed from 3.0.2)
+[INFO] |  |  |  \- (jakarta.activation:jakarta.activation-api:jar:2.1.4:test - version managed from 2.1.3; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-beans:jar:7.0.9:test - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  |  \- (org.springframework:spring-context:jar:7.0.9:test - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  +- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:test - version managed from 4.0.5; omitted for duplicate)
+[INFO] |  +- (org.glassfish.jaxb:jaxb-runtime:jar:4.0.9:test - version managed from 4.0.9; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-jms:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- org.springframework:spring-jms:jar:7.0.9:test (version managed from 7.0.9)
+[INFO] |  |  +- (org.springframework:spring-beans:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-messaging:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-tx:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  \- (io.micrometer:micrometer-observation:jar:1.16.7:test - omitted for duplicate)
+[INFO] |  +- (jakarta.jms:jakarta.jms-api:jar:3.1.0:test - version managed from 3.1.0; omitted for duplicate)
+[INFO] |  +- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:test - version managed from 4.0.5; omitted for duplicate)
+[INFO] |  +- com.sun.xml.messaging.saaj:saaj-impl:jar:3.0.6:test (version managed from 3.0.6)
+[INFO] |  |  +- (jakarta.xml.soap:jakarta.xml.soap-api:jar:3.0.2:test - version managed from 3.0.2; omitted for duplicate)
+[INFO] |  |  +- org.jvnet.staxex:stax-ex:jar:2.1.0:test
+[INFO] |  |  |  \- (jakarta.activation:jakarta.activation-api:jar:2.1.4:test - version managed from 2.1.0; omitted for duplicate)
+[INFO] |  |  +- (jakarta.activation:jakarta.activation-api:jar:2.1.4:test - version managed from 2.1.4; omitted for duplicate)
+[INFO] |  |  \- org.eclipse.angus:angus-activation:jar:2.0.3:provided (version managed from 2.0.3)
+[INFO] |  |     \- (jakarta.activation:jakarta.activation-api:jar:2.1.4:provided - version managed from 2.1.4; omitted for duplicate)
+[INFO] |  +- org.springframework.ws:spring-ws-core:jar:5.0.2:test (version managed from 5.0.2)
+[INFO] |  |  +- (org.springframework.ws:spring-xml:jar:5.0.2:test - version managed from 5.0.2; omitted for duplicate)
+[INFO] |  |  +- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:test - version managed from 4.0.5; omitted for duplicate)
+[INFO] |  |  +- (jakarta.xml.soap:jakarta.xml.soap-api:jar:3.0.2:test - version managed from 3.0.2; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-aop:jar:7.0.9:test - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-beans:jar:7.0.9:test - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  |  +- org.springframework:spring-oxm:jar:7.0.9:test (version managed from 7.0.8)
+[INFO] |  |  |  +- (org.springframework:spring-beans:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  |  +- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  |  |  \- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:test - version managed from 3.0.1; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-web:jar:7.0.9:test - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  |  +- (org.springframework:spring-webmvc:jar:7.0.9:test - version managed from 7.0.8; omitted for duplicate)
+[INFO] |  |  \- (org.glassfish.jaxb:jaxb-runtime:jar:4.0.9:test - version managed from 4.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-webmvc:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-groovy:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- org.codehaus.groovy:groovy:jar:3.0.25:test (version managed from 3.0.25)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-validation-xml:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (org.springframework.ws:spring-xml:jar:5.0.2:test - version managed from 5.0.2; omitted for duplicate)
+[INFO] |  +- (jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:test - version managed from 4.0.5; omitted for duplicate)
+[INFO] |  +- (org.glassfish.jaxb:jaxb-runtime:jar:4.0.9:test - version managed from 4.0.9; omitted for duplicate)
+[INFO] |  +- (xerces:xercesImpl:jar:2.12.2:test - version managed from 2.12.2; omitted for duplicate)
+[INFO] |  +- wsdl4j:wsdl4j:jar:1.6.3:test (version managed from 1.6.3)
+[INFO] |  +- net.sf.jtidy:jtidy:jar:r938:test (version managed from r938)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-validation-json:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] |  +- (com.fasterxml.jackson.core:jackson-annotations:jar:2.22:test - version managed from 2.22; omitted for duplicate)
+[INFO] |  +- (tools.jackson.core:jackson-core:jar:3.2.3:test - version managed from 3.2.3; omitted for duplicate)
+[INFO] |  +- (tools.jackson.core:jackson-databind:jar:3.2.3:test - version managed from 3.2.3; omitted for duplicate)
+[INFO] |  +- net.minidev:json-smart:jar:2.6.0:test (version managed from 2.6.0)
+[INFO] |  |  \- net.minidev:accessors-smart:jar:2.6.0:test
+[INFO] |  |     \- org.ow2.asm:asm:jar:9.7.1:test
+[INFO] |  +- com.jayway.jsonpath:json-path:jar:3.0.0:test (version managed from 3.0.0)
+[INFO] |  |  +- (net.minidev:json-smart:jar:2.6.0:test - version managed from 2.6.0; omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  +- com.networknt:json-schema-validator:jar:3.0.4:test (version managed from 3.0.4)
+[INFO] |  |  +- com.ethlo.time:itu:jar:1.14.0:test
+[INFO] |  |  +- (tools.jackson.core:jackson-databind:jar:3.2.3:test - version managed from 3.1.1; omitted for duplicate)
+[INFO] |  |  +- tools.jackson.dataformat:jackson-dataformat-yaml:jar:3.2.3:test (version managed from 3.1.1)
+[INFO] |  |  |  +- (tools.jackson.core:jackson-core:jar:3.2.3:test - version managed from 3.2.3; omitted for duplicate)
+[INFO] |  |  |  +- (tools.jackson.core:jackson-databind:jar:3.2.3:test - version managed from 3.2.3; omitted for duplicate)
+[INFO] |  |  |  \- (org.snakeyaml:snakeyaml-engine:jar:3.0.1:test - omitted for duplicate)
+[INFO] |  |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-validation-text:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-validation-binary:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.citrusframework:citrus-validation-hamcrest:jar:5.1.0-SNAPSHOT:test
+[INFO] |  +- (org.citrusframework:citrus-base:jar:5.1.0-SNAPSHOT:test - omitted for duplicate)
+[INFO] |  +- org.hamcrest:hamcrest:jar:3.0:test (version managed from 3.0)
+[INFO] |  +- org.hamcrest:hamcrest-core:jar:3.0:test (version managed from 3.0)
+[INFO] |  |  \- (org.hamcrest:hamcrest:jar:3.0:test - version managed from 3.0; omitted for duplicate)
+[INFO] |  +- org.hamcrest:hamcrest-library:jar:3.0:test (version managed from 3.0)
+[INFO] |  |  \- (org.hamcrest:hamcrest-core:jar:3.0:test - version managed from 3.0; omitted for duplicate)
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.slf4j:slf4j-api:jar:2.0.18:compile
+[INFO] +- org.assertj:assertj-core:jar:3.27.7:test
+[INFO] |  \- net.bytebuddy:byte-buddy:jar:1.18.11:test (version managed from 1.18.3)
+[INFO] +- org.springframework:spring-test:jar:7.0.9:test (scope not updated to provided)
+[INFO] |  \- (org.springframework:spring-core:jar:7.0.9:test - version managed from 7.0.9; omitted for duplicate)
+[INFO] +- org.testng:testng:jar:7.12.0:test (scope not updated to test)
+[INFO] |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.16; omitted for duplicate)
+[INFO] |  +- org.jcommander:jcommander:jar:1.83:test
+[INFO] |  \- org.webjars:jquery:jar:3.7.1:test
+[INFO] +- org.junit.jupiter:junit-jupiter-api:jar:6.1.2:test
+[INFO] |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  +- org.junit.platform:junit-platform-commons:jar:6.1.2:test (version managed from 6.1.2)
+[INFO] |  |  +- (org.apiguardian:apiguardian-api:jar:1.1.2:test - omitted for duplicate)
+[INFO] |  |  \- (org.jspecify:jspecify:jar:1.0.0:test - omitted for duplicate)
+[INFO] |  +- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  \- (org.jspecify:jspecify:jar:1.0.0:test - omitted for duplicate)
+[INFO] +- org.junit.jupiter:junit-jupiter-engine:jar:6.1.2:test
+[INFO] |  +- org.junit.platform:junit-platform-engine:jar:6.1.2:test (version managed from 6.1.2)
+[INFO] |  |  +- (org.opentest4j:opentest4j:jar:1.3.0:test - omitted for duplicate)
+[INFO] |  |  +- (org.junit.platform:junit-platform-commons:jar:6.1.2:test - version managed from 6.1.2; omitted for duplicate)
+[INFO] |  |  +- (org.apiguardian:apiguardian-api:jar:1.1.2:test - omitted for duplicate)
+[INFO] |  |  \- (org.jspecify:jspecify:jar:1.0.0:test - omitted for duplicate)
+[INFO] |  +- (org.junit.jupiter:junit-jupiter-api:jar:6.1.2:test - version managed from 6.1.2; omitted for duplicate)
+[INFO] |  +- (org.apiguardian:apiguardian-api:jar:1.1.2:test - omitted for duplicate)
+[INFO] |  \- (org.jspecify:jspecify:jar:1.0.0:test - omitted for duplicate)
+[INFO] +- org.apache.logging.log4j:log4j-slf4j2-impl:jar:2.25.5:test
+[INFO] |  +- org.apache.logging.log4j:log4j-api:jar:2.25.5:test (version managed from 2.25.5)
+[INFO] |  +- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.17; omitted for duplicate)
+[INFO] |  \- org.apache.logging.log4j:log4j-core:jar:2.25.5:test (version managed from 2.25.5)
+[INFO] |     \- (org.apache.logging.log4j:log4j-api:jar:2.25.5:test - version managed from 2.25.5; omitted for duplicate)
+[INFO] +- org.slf4j:jcl-over-slf4j:jar:2.0.18:test
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.slf4j:jul-to-slf4j:jar:2.0.18:test
+[INFO] |  \- (org.slf4j:slf4j-api:jar:2.0.18:test - version managed from 2.0.18; omitted for duplicate)
+[INFO] +- org.mockito:mockito-core:jar:5.23.0:test
+[INFO] |  +- (net.bytebuddy:byte-buddy:jar:1.18.11:test - version managed from 1.17.7; omitted for duplicate)
+[INFO] |  +- net.bytebuddy:byte-buddy-agent:jar:1.18.11:test (version managed from 1.17.7)
+[INFO] |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] \- org.mockito:mockito-junit-jupiter:jar:5.23.0:test
+[INFO]    +- (org.mockito:mockito-core:jar:5.23.0:test - version managed from 5.23.0; scope managed from compile; omitted for duplicate)
+[INFO]    \- (org.junit.jupiter:junit-jupiter-api:jar:6.1.2:test - version managed from 5.13.4; omitted for duplicate)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.128 s
+[INFO] Finished at: 2026-10-14T10:47:54+03:00
+[INFO] ------------------------------------------------------------------------
