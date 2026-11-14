@@ -14,7 +14,7 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-name: main
+name: ci
 
 on:
   pull_request:
@@ -46,6 +46,7 @@ concurrency:
 # runners also keep the tests that bind fixed ports from colliding.
 jobs:
   compile:
+    name: compile
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -85,8 +86,13 @@ jobs:
       - name: Install Citrus
         # On a pull request, build only the modules this branch touched plus
         # everything downstream of them (and their upstream, untested).
-        # Pushes to main always build in full.
-        run: ./mvnw --no-transfer-progress install -DskipTests ${MAVEN_PROFILES:+"$MAVEN_PROFILES"}
+        # Pushes to main always build in full. Javadoc and source jars are
+        # release artifacts that no CI job uses; javadoc alone took two thirds
+        # of this step.
+        run: >-
+          ./mvnw --no-transfer-progress install -DskipTests
+          -Dmaven.javadoc.skip=true -Dmaven.source.skip=true
+          ${MAVEN_PROFILES:+"$MAVEN_PROFILES"}
         env:
           MAVEN_PROFILES: ${{ github.event_name == 'pull_request' && '-Pgib' || '' }}
       - name: Show modules selected by the incremental build
@@ -119,7 +125,7 @@ jobs:
   test:
     needs: compile
     if: fromJSON(needs.compile.outputs.matrix).include[0] != null
-    name: test (${{ matrix.shard }})
+    name: test · ${{ matrix.shard }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -175,8 +181,12 @@ jobs:
       - name: Test ${{ matrix.shard }}
         # No --also-make: upstream modules come from the artifacts installed
         # by `compile`. --fail-at-end keeps testing the rest of the shard after
-        # a failure so the report collects all of them.
-        run: ./mvnw --no-transfer-progress --fail-at-end verify -Pplaywright-runtimes -pl "${{ matrix.modules }}"
+        # a failure so the report collects all of them. Javadoc and source
+        # jars are skipped as in `compile`.
+        run: >-
+          ./mvnw --no-transfer-progress --fail-at-end verify
+          -Dmaven.javadoc.skip=true -Dmaven.source.skip=true
+          -Pplaywright-runtimes -pl "${{ matrix.modules }}"
       - name: Upload test reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v6
@@ -191,6 +201,7 @@ jobs:
           retention-days: 7
 
   report:
+    name: test report
     needs: test
     if: ${{ !cancelled() && needs.test.result != 'skipped' }}
     runs-on: ubuntu-latest
@@ -200,6 +211,9 @@ jobs:
       pull-requests: write
       actions: read
     steps:
+      - name: Checkout code
+        # The test reporter lists the tracked files to link failures to sources.
+        uses: actions/checkout@v6
       - name: Download test reports
         uses: actions/download-artifact@v7
         with:
@@ -209,7 +223,7 @@ jobs:
       - name: Test Report
         uses: dorny/test-reporter@v3
         with:
-          name: Maven Tests
+          name: test results
           # Only surefire's own TEST-*.xml schema (emitted for JUnit and
           # TestNG providers alike). TestNG-native testng-results.xml and
           # failsafe-summary.xml use different schemas and must stay out:
@@ -227,9 +241,10 @@ jobs:
           list-tests: 'failed'
           max-annotations: '10'
 
-  # Single status for branch protection. It keeps the name of the former
-  # one-job build, so the required check still means "compiled and tested".
+  # Single status for branch protection: `build` is the required check on main,
+  # so this name must not change. It keeps meaning "compiled and tested".
   build:
+    name: build
     needs: [compile, test]
     if: always()
     runs-on: ubuntu-latest

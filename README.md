@@ -2,7 +2,7 @@ Citrus Integration Testing ![Logo][1]
 ==============
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.citrusframework/citrus/badge.svg?style=flat-square)](https://central.sonatype.com/search?q=g%253Aorg.citrusframework)
-[![build](https://github.com/citrusframework/citrus/workflows/build/badge.svg?branch=main)](https://github.com/citrusframework/citrus/actions) 
+[![build](https://github.com/citrusframework/citrus/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/citrusframework/citrus/actions/workflows/build.yml) 
 [![Javadocs](http://javadoc.io/badge/org.citrusframework/citrus-core.svg)](http://javadoc.io/doc/org.citrusframework/citrus-core)
 [![Licensed under Apache License version 2.0](https://img.shields.io/github/license/openshift/origin.svg?maxAge=2592000)](https://www.apache.org/licenses/LICENSE-2.0")
 [![Chat on Zulip](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://citrusframework.zulipchat.com)
