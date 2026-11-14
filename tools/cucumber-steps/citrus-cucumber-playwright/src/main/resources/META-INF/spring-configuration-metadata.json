@@ -26,7 +26,7 @@
       "type": "java.lang.Boolean",
       "description": "Run the browser in headless mode.",
       "sourceType": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings",
-      "defaultValue": "true"
+      "defaultValue": true
     },
     {
       "name": "citrus.playwright.base.url",
@@ -39,7 +39,7 @@
       "type": "java.lang.Long",
       "description": "Default action timeout in milliseconds.",
       "sourceType": "org.citrusframework.cucumber.steps.playwright.PlaywrightSettings",
-      "defaultValue": "30000"
+      "defaultValue": 30000
     }
   ],
   "hints": []

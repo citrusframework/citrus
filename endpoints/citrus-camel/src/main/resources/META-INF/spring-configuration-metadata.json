@@ -181,6 +181,20 @@
       "defaultValue": true
     },
     {
+      "name": "citrus.camel.cli.run.auto.set.properties",
+      "type": "java.lang.Boolean",
+      "description": "When set to true the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": true
+    },
+    {
+      "name": "citrus.camel.cli.skip.plugins",
+      "type": "java.lang.Boolean",
+      "description": "When set to true the Camel CLI run command will skip loading plugins.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": false
+    },
+    {
       "name": "citrus.camel.cli.type",
       "type": "java.lang.String",
       "description": "Camel CLI launcher type.",
