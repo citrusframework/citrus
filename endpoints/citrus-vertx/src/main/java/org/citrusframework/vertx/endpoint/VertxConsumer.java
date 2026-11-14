@@ -16,9 +16,14 @@
 
 package org.citrusframework.vertx.endpoint;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageConsumer;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.AbstractMessageConsumer;
@@ -65,7 +70,10 @@ public class VertxConsumer extends AbstractMessageConsumer {
         vertxConsumer.handler(vertxMessageHandler::handle);
 
         try {
-            long timeLeft = timeout;
+            long registrationStart = System.currentTimeMillis();
+            awaitRegistration(vertxConsumer, timeout);
+            long timeLeft = timeout - (System.currentTimeMillis() - registrationStart);
+
             Message message = endpointConfiguration.getMessageConverter().convertInbound(vertxMessageHandler.getMessage(), endpointConfiguration, context);
 
             while (message == null && timeLeft > 0) {
@@ -95,6 +103,28 @@ public class VertxConsumer extends AbstractMessageConsumer {
             return message;
         } finally {
             vertxConsumer.unregister();
+        }
+    }
+
+    /**
+     * Waits until the consumer registration has been propagated on the event bus. In clustered mode the registration
+     * completes asynchronously, and messages published before that point are not delivered to this consumer.
+     */
+    private void awaitRegistration(MessageConsumer<Object> vertxConsumer, long timeout) {
+        try {
+            vertxConsumer.completion()
+                    .toCompletionStage()
+                    .toCompletableFuture()
+                    .get(Math.max(timeout, 1L), TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            throw new MessageTimeoutException(timeout, endpointConfiguration.getAddress());
+        } catch (ExecutionException e) {
+            throw new CitrusRuntimeException(String.format("Failed to register consumer on Vert.x event bus address '%s'",
+                    endpointConfiguration.getAddress()), e.getCause());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new CitrusRuntimeException(String.format("Interrupted while registering consumer on Vert.x event bus address '%s'",
+                    endpointConfiguration.getAddress()), e);
         }
     }
 

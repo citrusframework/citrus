@@ -21,20 +21,40 @@
         <message>Test: Send Vert.x message on event bus</message>
       </echo>
 
-      <send endpoint="vertxNewsEndpoint" fork="true">
-        <message type="plaintext">
-          <data>News from Citrus! Today is citrus:currentDate()</data>
-        </message>
-      </send>
+      <!--
+        The endpoint publishes (pub/sub), so only consumers registered at publish time get the message.
+        Start the shared clustered Vert.x instance up front, so that its startup time does not overlap
+        with the consumer registration below.
+      -->
+      <assert exception="org.citrusframework.exceptions.MessageTimeoutException">
+        <when>
+          <receive endpoint="vertxNewsEndpoint" timeout="100">
+            <message type="plaintext"/>
+          </receive>
+        </when>
+      </assert>
 
-      <receive endpoint="vertxNewsEndpoint">
-        <message type="plaintext">
-          <data>News from Citrus! Today is citrus:currentDate()</data>
-        </message>
-        <header>
-          <element name="citrus_vertx_address" value="news"/>
-        </header>
-      </receive>
+      <parallel>
+        <receive endpoint="vertxNewsEndpoint" timeout="5000">
+          <message type="plaintext">
+            <data>News from Citrus! Today is citrus:currentDate()</data>
+          </message>
+          <header>
+            <element name="citrus_vertx_address" value="news"/>
+          </header>
+        </receive>
+
+        <sequential>
+          <!-- Give the consumer time to register on the event bus before publishing -->
+          <sleep milliseconds="500"/>
+
+          <send endpoint="vertxNewsEndpoint">
+            <message type="plaintext">
+              <data>News from Citrus! Today is citrus:currentDate()</data>
+            </message>
+          </send>
+        </sequential>
+      </parallel>
 
     </actions>
   </testcase>

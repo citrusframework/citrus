@@ -110,6 +110,7 @@ public class VertxSyncEndpointTest extends AbstractUnitTest {
 
         when(vertx.eventBus()).thenReturn(eventBus);
         when(eventBus.consumer(eventBusAddress)).thenReturn(messageConsumer);
+        when(messageConsumer.completion()).thenReturn(Future.succeededFuture());
         doAnswer((Answer<MessageConsumer<?>>) invocation -> {
             Handler<io.vertx.core.eventbus.Message<?>> handler = (Handler<io.vertx.core.eventbus.Message<?>>) invocation.getArguments()[0];
             handler.handle(messageMock);
