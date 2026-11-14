@@ -19,6 +19,10 @@ package org.citrusframework.testng;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+/**
+ * @deprecated use {@link org.citrusframework.support.UnitTestConfig} instead
+ */
+@Deprecated(forRemoval = true)
 @Configuration
 @Import(UnitTestConfigImportSelector.class)
 public class UnitTestConfig {
