@@ -35,7 +35,9 @@ public class YamlCodeAnalyzer implements CodeAnalyzer {
 
     private static final Pattern CAMEL_ENDPOINT_PATTERN = Pattern.compile("^\\s+endpoint:\\s+\"?'?camel:([^\\s:?]+)\"?'?.*$", Pattern.MULTILINE);
 
-    private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile("^\\s+service:\\s*\"?'?([a-zA-Z][a-zA-Z0-9._-]*)\"?'?\\s*$", Pattern.MULTILINE);
+    // Only match service: when it appears as a child of run: (i.e. in a camel infra run block)
+    private static final Pattern CAMEL_INFRA_SERVICE_PATTERN = Pattern.compile(
+            "\\brun:.*\\n(?:[ \\t]+\\w+:.*\\n)*?[ \\t]+service:\\s*\"?'?([a-zA-Z][a-zA-Z0-9._-]*)\"?'?");
 
     private static final Pattern CREATE_ENDPOINT_TYPE_PATTERN = Pattern.compile("createEndpoint:[^-]*?type:\\s*\"?'?([a-zA-Z][a-zA-Z0-9]*)\"?'?", Pattern.DOTALL);
     private static final Pattern CREATE_ENDPOINT_URI_PATTERN = Pattern.compile("createEndpoint:[^-]*?uri:\\s*\"?'?([a-zA-Z][a-zA-Z0-9]*):", Pattern.DOTALL);
