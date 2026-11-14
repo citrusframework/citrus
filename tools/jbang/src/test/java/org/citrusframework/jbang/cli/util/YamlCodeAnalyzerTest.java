@@ -296,4 +296,77 @@ public class YamlCodeAnalyzerTest {
         Assertions.assertTrue(components.contains("seda"));
     }
 
+    @Test
+    public void shouldNotDetectServiceOutsideRunBlock() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - knative:
+                      createTrigger:
+                        service: my-service
+                        channel: my-channel
+                """;
+
+        Set<String> serviceNames = analyzer.extractCamelInfraServiceNames(code);
+        Assertions.assertTrue(serviceNames.isEmpty(),
+                "service: outside run: block should not be detected, but found: " + serviceNames);
+    }
+
+    @Test
+    public void shouldDetectServiceInRunBlock() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - camel:
+                      infra:
+                        run:
+                          service: kafka
+                          autoRemove: true
+                """;
+
+        Set<String> serviceNames = analyzer.extractCamelInfraServiceNames(code);
+        Assertions.assertTrue(serviceNames.contains("kafka"));
+    }
+
+    @Test
+    public void shouldDetectServiceInRunBlockWithInterveningKeys() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - camel:
+                      infra:
+                        run:
+                          autoRemove: true
+                          service: aws
+                          implementation: sqs
+                """;
+
+        Set<String> serviceNames = analyzer.extractCamelInfraServiceNames(code);
+        Assertions.assertTrue(serviceNames.contains("aws"));
+    }
+
+    @Test
+    public void shouldNotDetectServiceFromJbangRunBlock() {
+        YamlCodeAnalyzer analyzer = new YamlCodeAnalyzer();
+
+        String code = """
+                actions:
+                  - camel:
+                      jbang:
+                        run:
+                          integration:
+                            file: "path/to/integration.yaml"
+                  - knative:
+                      createTrigger:
+                        service: my-service
+                """;
+
+        Set<String> serviceNames = analyzer.extractCamelInfraServiceNames(code);
+        Assertions.assertTrue(serviceNames.isEmpty(),
+                "service: in non-infra context should not be detected, but found: " + serviceNames);
+    }
+
 }
