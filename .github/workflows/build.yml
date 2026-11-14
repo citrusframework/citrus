@@ -34,18 +34,23 @@ on:
       - 'LICENSE'
       - 'NOTICE'
 
+concurrency:
+  # A new push to a pull request supersedes the running build; main keeps every run.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# The build compiles and installs the reactor once, then runs the tests in
+# parallel shards on separate runners. Modules depend on each other, so a shard
+# cannot build on its own: it takes the Citrus SNAPSHOTs installed by `compile`
+# from a workflow artifact and only runs `verify` on its own modules. Separate
+# runners also keep the tests that bind fixed ports from colliding.
 jobs:
-  build:
+  compile:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      checks: write
-      pull-requests: write
-      actions: read
-    env:
-      # Browsers come from the playwright-runtimes profile only, so a missing
-      # runtime surfaces as skipped tests instead of an implicit full download.
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+    outputs:
+      matrix: ${{ steps.shards.outputs.matrix }}
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -66,46 +71,176 @@ jobs:
         uses: actions/cache@v5
         with:
           # Third-party dependencies only: the key hashes the poms, so it cannot
-          # tell when cached Citrus SNAPSHOTs went stale against main.
+          # tell when cached Citrus SNAPSHOTs went stale against main. Only this
+          # job saves the cache; the test shards restore it.
+          path: |
+            ~/.m2
+            !~/.m2/repository/org/citrusframework
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Info
+        run: |
+          java -version
+          ./mvnw -version
+      - name: Install Citrus
+        # On a pull request, build only the modules this branch touched plus
+        # everything downstream of them (and their upstream, untested).
+        # Pushes to main always build in full.
+        run: ./mvnw --no-transfer-progress install -DskipTests ${MAVEN_PROFILES:+"$MAVEN_PROFILES"}
+        env:
+          MAVEN_PROFILES: ${{ github.event_name == 'pull_request' && '-Pgib' || '' }}
+      - name: Show modules selected by the incremental build
+        if: github.event_name == 'pull_request'
+        run: cat target/gib-impacted-modules.log || echo "no impacted-modules log (full build)"
+      - name: Compute test shards
+        id: shards
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            matrix=$(python3 -I .github/scripts/test-shards.py target/gib-impacted-modules.log)
+          else
+            matrix=$(python3 -I .github/scripts/test-shards.py)
+          fi
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+      - name: Package installed Citrus artifacts
+        run: |
+          # The incremental build may select nothing at all.
+          mkdir -p ~/.m2/repository/org/citrusframework
+          tar -C ~/.m2/repository -cf citrus-artifacts.tar org/citrusframework
+          ls -lh citrus-artifacts.tar
+      - name: Upload installed Citrus artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: citrus-artifacts
+          path: citrus-artifacts.tar
+          # Jars are already compressed.
+          compression-level: 0
+          retention-days: 1
+
+  test:
+    needs: compile
+    if: fromJSON(needs.compile.outputs.matrix).include[0] != null
+    name: test (${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.compile.outputs.matrix) }}
+    env:
+      # Browsers come from the playwright-runtimes profile only, so a missing
+      # runtime surfaces as skipped tests instead of an implicit full download.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Restore Maven cache
+        uses: actions/cache/restore@v5
+        with:
           path: |
             ~/.m2
             !~/.m2/repository/org/citrusframework
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Cache Playwright browsers
+        if: contains(matrix.modules, 'citrus-playwright')
         uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('pom.xml') }}
           restore-keys: ${{ runner.os }}-playwright
-      - name: Info
+      - name: Download installed Citrus artifacts
+        uses: actions/download-artifact@v7
+        with:
+          name: citrus-artifacts
+      - name: Unpack installed Citrus artifacts
         run: |
-          java -version
-          ./mvnw -version
-      - name: Build Citrus
+          mkdir -p ~/.m2/repository
+          tar -C ~/.m2/repository -xf citrus-artifacts.tar
+          rm citrus-artifacts.tar
+      - name: Install JBang
         run: |
-          echo "Install JBang via SDKMAN"
-
-          curl -s "https://get.sdkman.io" | bash 
-          source "/home/runner/.sdkman/bin/sdkman-init.sh"
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
           sdk install jbang
-          
+          echo "$HOME/.sdkman/candidates/jbang/current/bin" >> "$GITHUB_PATH"
+
           jbang --version
           jbang jdk install 21 "$JAVA_HOME_21_X64"
-          
-          # On a pull request, build only the modules this branch touched plus
-          # everything downstream of them. Pushes to main always build in full.
-          # --fail-at-end keeps building unaffected modules after a test
-          # failure so the test report below collects all failures, not just
-          # the first failing module.
-          ./mvnw --no-transfer-progress --fail-at-end install -P${MAVEN_PROFILES}
-        env:
-          MAVEN_PROFILES: ${{ github.event_name == 'pull_request' && 'playwright-runtimes,gib' || 'playwright-runtimes' }}
-
-      - name: Show modules selected by the incremental build
-        if: always() && github.event_name == 'pull_request'
-        run: cat target/gib-impacted-modules.log || echo "no impacted-modules log (full build or nothing selected)"
-
-      - name: Publish test report
+      - name: Test ${{ matrix.shard }}
+        # No --also-make: upstream modules come from the artifacts installed
+        # by `compile`. --fail-at-end keeps testing the rest of the shard after
+        # a failure so the report collects all of them.
+        run: ./mvnw --no-transfer-progress --fail-at-end verify -Pplaywright-runtimes -pl "${{ matrix.modules }}"
+      - name: Upload test reports
         if: ${{ !cancelled() }}
-        uses: ./.github/actions/test-report
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-reports-${{ matrix.shard }}
+          path: |
+            **/target/surefire-reports/*.xml
+            **/target/surefire-reports/*.txt
+            **/target/failsafe-reports/*.xml
+            **/target/failsafe-reports/*.txt
+          if-no-files-found: ignore
+          retention-days: 7
+
+  report:
+    needs: test
+    if: ${{ !cancelled() && needs.test.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+      actions: read
+    steps:
+      - name: Download test reports
+        uses: actions/download-artifact@v7
+        with:
+          pattern: test-reports-*
+          # One folder per shard, so equally named report files cannot overwrite each other.
+          path: test-reports
+      - name: Test Report
+        uses: dorny/test-reporter@v3
+        with:
+          name: Maven Tests
+          # Only surefire's own TEST-*.xml schema (emitted for JUnit and
+          # TestNG providers alike). TestNG-native testng-results.xml and
+          # failsafe-summary.xml use different schemas and must stay out:
+          # dorny requires every matched file to share one format.
+          path: 'test-reports/**/surefire-reports/TEST-*.xml,test-reports/**/failsafe-reports/TEST-*.xml'
+          reporter: java-junit
+          # Build status comes from the `build` job below, so the report itself
+          # stays informational. This also keeps fork PRs (read-only token,
+          # cannot create check runs) from failing here when tests pass.
+          fail-on-error: 'false'
+          fail-on-empty: 'false'
+          # Citrus has thousands of tests: only expand failures to stay
+          # under the 64k summary limit. Counts still show totals.
+          list-suites: 'failed'
+          list-tests: 'failed'
+          max-annotations: '10'
+
+  # Single status for branch protection. It keeps the name of the former
+  # one-job build, so the required check still means "compiled and tested".
+  build:
+    needs: [compile, test]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Check build result
+        run: |
+          echo "compile: ${{ needs.compile.result }}, test: ${{ needs.test.result }}"
+          [ "${{ needs.compile.result }}" = "success" ] || exit 1
+          # `skipped` means the incremental build selected no module with tests.
+          case "${{ needs.test.result }}" in
+            success|skipped) ;;
+            *) exit 1 ;;
+          esac
