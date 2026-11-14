@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.TimeZone;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.citrusframework.CitrusSettings.DEFAULT_DATE_FORMAT_PROPERTY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CurrentDateFunctionTest extends UnitTestSupport {
@@ -145,5 +146,31 @@ public class CurrentDateFunctionTest extends UnitTestSupport {
     @SuppressWarnings("unchecked")
     public void testNoParameters() {
         Assertions.assertEquals(String.format("%1$td.%1$tm.%1$tY", Calendar.getInstance()), fixture.execute(Collections.EMPTY_LIST, context));
+    }
+
+    @Test
+    public void testDefaultDateFormatVariable() {
+        context.setVariable(DEFAULT_DATE_FORMAT_PROPERTY, "yyyy-MM-dd");
+
+        Calendar calendar = Calendar.getInstance();
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td", calendar), fixture.execute(Collections.emptyList(), context));
+
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td", calendar), fixture.execute(FunctionParameterHelper.getParameterList("'', '+1d'"), context));
+
+        Assertions.assertEquals(String.format("%1$tY/%1$tm", Calendar.getInstance()), fixture.execute(FunctionParameterHelper.getParameterList("'yyyy/MM'"), context));
+    }
+
+    @Test
+    public void testDefaultDateFormatSystemProperty() {
+        System.setProperty(DEFAULT_DATE_FORMAT_PROPERTY, "yyyy-MM-dd");
+        try {
+            Assertions.assertEquals(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()), fixture.execute(Collections.emptyList(), context));
+
+            context.setVariable(DEFAULT_DATE_FORMAT_PROPERTY, "MM/yyyy");
+            Assertions.assertEquals(String.format("%1$tm/%1$tY", Calendar.getInstance()), fixture.execute(Collections.emptyList(), context));
+        } finally {
+            System.clearProperty(DEFAULT_DATE_FORMAT_PROPERTY);
+        }
     }
 }

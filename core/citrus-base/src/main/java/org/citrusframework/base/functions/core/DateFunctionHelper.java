@@ -16,11 +16,16 @@
 
 package org.citrusframework.base.functions.core;
 
-import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.context.TestContext;
+
 import static java.lang.Integer.parseInt;
+import static org.citrusframework.CitrusSettings.DEFAULT_DATE_FORMAT_PROPERTY;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Abstract date value handling function provides base date value manipulation helpers.
@@ -77,9 +82,29 @@ public final class DateFunctionHelper {
     }
 
     /**
-     * Provides default date format.
+     * Provides the date formatter for the given date format pattern.
+     * Falls back to the default date format when no explicit date format pattern is given.
      */
-    static SimpleDateFormat getDefaultDateFormat() {
-        return new SimpleDateFormat("dd.MM.yyyy");
+    static DateTimeFormatter getDateFormatter(String dateFormat, TestContext context) {
+        if (hasText(dateFormat)) {
+            return DateTimeFormatter.ofPattern(dateFormat);
+        }
+
+        return DateTimeFormatter.ofPattern(getDefaultDateFormat(context));
+    }
+
+    /**
+     * Provides default date format. Test variable {@link CitrusSettings#DEFAULT_DATE_FORMAT_PROPERTY} takes precedence
+     * over the date format set via system property or environment variable.
+     */
+    static String getDefaultDateFormat(TestContext context) {
+        if (context.getVariables().containsKey(DEFAULT_DATE_FORMAT_PROPERTY)) {
+            String dateFormat = context.getVariable(DEFAULT_DATE_FORMAT_PROPERTY);
+            if (hasText(dateFormat)) {
+                return dateFormat;
+            }
+        }
+
+        return CitrusSettings.getDefaultDateFormat();
     }
 }

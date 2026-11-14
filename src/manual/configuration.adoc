@@ -31,6 +31,9 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 | citrus.default.message.type
 | Default message type for validating payloads (default="XML")
 
+| citrus.default.date.format
+| Default date format used by date functions such as `citrus:currentDate()` and `citrus:changeDate()` when no explicit format is given (default="dd.MM.yyyy")
+
 | citrus.test.name.variable
 | Default test name variable that is automatically created for each test (default="citrus.test.name")
 
@@ -127,6 +130,9 @@ Same properties are settable via environment variables.
 
 | CITRUS_DEFAULT_MESSAGE_TYPE
 | Default message type for validating payloads (default="XML")
+
+| CITRUS_DEFAULT_DATE_FORMAT
+| Default date format used by date functions such as `citrus:currentDate()` and `citrus:changeDate()` when no explicit format is given (default="dd.MM.yyyy")
 
 | CITRUS_TEST_NAME_VARIABLE
 | Default test name variable that is automatically created for each test (default="citrus.test.name")

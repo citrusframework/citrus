@@ -689,6 +689,89 @@ Function output:
 2009-09-01 11:00:00
 ----
 
+When no date format parameter is given the function uses the default date format `dd.MM.yyyy`. You can change this default
+date format with the system property `citrus.default.date.format` or the environment variable `CITRUS_DEFAULT_DATE_FORMAT`.
+The setting applies to both date functions `citrus:currentDate()` and `citrus:changeDate()`.
+
+.citrus-application.properties
+[source,properties]
+----
+citrus.default.date.format=yyyy-MM-dd'T'HH:mm:ss
+----
+
+You can also set the default date format with a test variable named `citrus.default.date.format`. The test variable
+takes precedence over the system property and environment variable settings, so you can change the default date format
+for a single test or for all tests using a <<global-variables,global variable>>.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void defaultDateFormatTest() {
+    variable("citrus.default.date.format", "yyyy-MM-dd'T'HH:mm:ss");
+    variable("date", "citrus:currentDate()");
+
+    then(echo().message("Today is: ${date}"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DefaultDateFormatTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+  <variables>
+    <variable name="citrus.default.date.format" value="yyyy-MM-dd'T'HH:mm:ss" />
+    <variable name="date" value="citrus:currentDate()" />
+  </variables>
+  <actions>
+    <echo>
+      <message>Today is: ${date}</message>
+    </echo>
+  </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DefaultDateFormatTest
+variables:
+  - name: "citrus.default.date.format"
+    value: "yyyy-MM-dd'T'HH:mm:ss"
+  - name: date
+    value: "citrus:currentDate()"
+actions:
+  - echo:
+      message: "Today is: ${date}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <testcase name="DefaultDateFormatTest">
+        <variables>
+            <variable name="citrus.default.date.format" value="yyyy-MM-dd'T'HH:mm:ss" />
+            <variable name="date" value="citrus:currentDate()" />
+        </variables>
+        <actions>
+            <echo>
+                <message>Today is: ${date}</message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+NOTE: Test variables are created in the order of declaration. Make sure to declare the `citrus.default.date.format` variable
+before any other variable that uses a date function.
+
 [[functions-uppercase]]
 == upperCase()
 
@@ -1039,7 +1122,7 @@ Function output:
 13.04.2013
 ----
 
-As you can see the change date function works on static date values or dynamic variable values or functions like *citrus:currentDate()* . By default the change date function requires a date format such as the current date function ('dd.MM.yyyy'). You can also define a custom date format:
+As you can see the change date function works on static date values or dynamic variable values or functions like *citrus:currentDate()* . By default the change date function requires a date format such as the current date function ('dd.MM.yyyy'). The default date format is customizable with the `citrus.default.date.format` setting as described in <<functions-current-date,currentDate()>>. You can also define a custom date format:
 
 [source,xml]
 ----
