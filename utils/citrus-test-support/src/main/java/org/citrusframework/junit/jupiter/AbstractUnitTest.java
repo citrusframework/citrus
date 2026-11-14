@@ -18,7 +18,7 @@ package org.citrusframework.junit.jupiter;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.testng.UnitTestConfig;
+import org.citrusframework.support.UnitTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
