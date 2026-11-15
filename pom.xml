@@ -301,6 +301,9 @@
     <swagger.version>2.2.37</swagger.version>
     <swagger.parser.version>2.1.48</swagger.parser.version>
     <swagger-request-validator.version>2.46.1</swagger-request-validator.version>
+    <!-- Default Surefire/Failsafe test provider. Modules that run TestNG or JUnit4
+         (runtime/citrus-testng, runtime/citrus-junit) override this property. -->
+    <surefire.provider>surefire-junit-platform</surefire.provider>
     <system-stubs.version>2.1.8</system-stubs.version>
     <testcontainers.version>2.0.5</testcontainers.version>
     <testng.version>7.12.0</testng.version>
@@ -1704,7 +1707,7 @@
           <dependencies>
             <dependency>
               <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-junit-platform</artifactId>
+              <artifactId>${surefire.provider}</artifactId>
               <version>${maven.surefire.plugin.version}</version>
             </dependency>
           </dependencies>
@@ -1730,7 +1733,7 @@
           <dependencies>
             <dependency>
               <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-junit-platform</artifactId>
+              <artifactId>${surefire.provider}</artifactId>
               <version>${maven.surefire.plugin.version}</version>
             </dependency>
           </dependencies>

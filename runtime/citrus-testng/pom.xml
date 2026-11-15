@@ -13,6 +13,11 @@
   <name>Citrus :: Runtime :: TestNG</name>
   <description>Citrus TestNG framework integration</description>
 
+  <!-- Runs on the TestNG provider while the rest of the build uses the JUnit Platform -->
+  <properties>
+    <surefire.provider>surefire-testng</surefire.provider>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.citrusframework</groupId>
@@ -56,17 +61,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-testng</artifactId>
-            <version>${maven.surefire.plugin.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <executions>
           <execution>
@@ -96,13 +90,6 @@
         <configuration>
           <excludedGroups>org.citrusframework.testng.ShouldFailGroup</excludedGroups>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-testng</artifactId>
-            <version>${maven.surefire.plugin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
