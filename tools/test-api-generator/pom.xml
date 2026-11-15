@@ -45,13 +45,6 @@
             <exclude>*IT.java</exclude>
           </excludes>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit-platform</artifactId>
-            <version>${maven.surefire.plugin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
 
       <plugin>
@@ -63,13 +56,6 @@
             <include>*IT.java</include>
           </includes>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit-platform</artifactId>
-            <version>${maven.surefire.plugin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
