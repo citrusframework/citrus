@@ -18,7 +18,6 @@ package org.citrusframework.testng;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.support.UnitTestConfig;
 import org.citrusframework.util.ObjectHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -30,7 +29,7 @@ import org.testng.annotations.BeforeSuite;
  * a test context and injected function registry as well as global variables.
  *
  */
-@ContextConfiguration(classes = UnitTestConfig.class)
+@ContextConfiguration(classes = org.citrusframework.support.UnitTestConfig.class)
 public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {
 
     /** Test context */
