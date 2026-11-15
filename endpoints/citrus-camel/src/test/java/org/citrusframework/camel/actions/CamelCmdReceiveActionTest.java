@@ -16,11 +16,14 @@
 
 package org.citrusframework.camel.actions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.citrusframework.camel.UnitTestSupport;
 import org.citrusframework.camel.cli.CamelCli;
 import org.citrusframework.exceptions.ActionTimeoutException;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
 import org.citrusframework.message.Message;
 import org.mockito.Mock;
@@ -30,6 +33,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -299,4 +305,228 @@ public class CamelCmdReceiveActionTest extends UnitTestSupport {
         Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
     }
 
+    @Test
+    public void shouldRestartReceiveCommandOnTransientCliFailure() {
+        String failureOutput = """
+        Starting to receive messages from existing Camel: my-route (pid: 12345)
+        Waiting for messages ...
+        java.lang.NullPointerException: Cannot read the array length because "grepPatterns" is null
+        at org.apache.camel.dsl.jbang.core.commands.action.CamelReceiveAction.isValidGrep(CamelReceiveAction.java:846)
+        """;
+
+        String output = """
+        Starting to receive messages from existing Camel: my-route (pid: 12345)
+        Received Message: (1)
+          Endpoint  jms://queue:foo
+          Message   (DefaultMessage)
+          Body      (String) (bytes: 5)
+          Hello
+        """;
+
+        Process failedProcess = mock(Process.class);
+        lenient().when(failedProcess.isAlive()).thenReturn(false);
+        lenient().when(failedProcess.exitValue()).thenReturn(1);
+
+        ProcessAndOutput failed = mock(ProcessAndOutput.class);
+        lenient().when(failed.getProcess()).thenReturn(failedProcess);
+        lenient().when(failed.getOutput()).thenReturn(failureOutput);
+
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(process.exitValue()).thenReturn(0);
+        lenient().when(pao.getOutput()).thenReturn(output);
+
+        when(camelCli.receive(any(String[].class))).thenReturn(failed, pao);
+
+        context.getReferenceResolver().bind("camelCli", camelCli);
+
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .maxAttempts(3)
+                .delayBetweenAttempts(0L)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+
+        verify(camelCli, times(2)).receive(any(String[].class));
+    }
+
+    @Test
+    public void shouldFailWhenReceiveCommandFailsRepeatedly() {
+        String failureOutput = """
+        Starting to receive messages from existing Camel: my-route (pid: 12345)
+        Waiting for messages ...
+        java.lang.NullPointerException
+        """;
+
+        Process failedProcess = mock(Process.class);
+        lenient().when(failedProcess.isAlive()).thenReturn(false);
+        lenient().when(failedProcess.exitValue()).thenReturn(1);
+
+        ProcessAndOutput failed = mock(ProcessAndOutput.class);
+        lenient().when(failed.getProcess()).thenReturn(failedProcess);
+        lenient().when(failed.getOutput()).thenReturn(failureOutput);
+
+        when(camelCli.receive(any(String[].class))).thenReturn(failed);
+
+        context.getReferenceResolver().bind("camelCli", camelCli);
+
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .maxAttempts(3)
+                .delayBetweenAttempts(0L)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        Assertions.assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+
+        verify(camelCli, times(2)).receive(any(String[].class));
+    }
+
+    @Test
+    public void shouldReceiveMessagesSinceActionStartOnRestartWithTailZero() {
+        List<String[]> commands = new ArrayList<>();
+        ProcessAndOutput failed = failedReceive();
+
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(pao.getOutput()).thenReturn(RECEIVED_OUTPUT);
+
+        when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
+            commands.add((String[]) invocation.getRawArguments()[0]);
+            return commands.size() == 1 ? failed : pao;
+        });
+
+        context.getReferenceResolver().bind("camelCli", camelCli);
+
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .grep("Hello")
+                .maxAttempts(3)
+                .delayBetweenAttempts(0L)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+
+        Assertions.assertEquals(2, commands.size());
+        Assertions.assertArrayEquals(new String[] {
+                "my-route", "--endpoint", "jms:queue:foo", "--grep", "Hello", "--tail", "0", "--logging-color=false"
+        }, commands.get(0));
+
+        List<String> restartCommand = List.of(commands.get(1));
+        Assertions.assertEquals(List.of("my-route", "--endpoint", "jms:queue:foo", "--grep", "Hello", "--tail", "-1", "--since"),
+                restartCommand.subList(0, 8));
+        Assertions.assertTrue(Long.parseLong(restartCommand.get(8)) >= 10L);
+        Assertions.assertEquals("--logging-color=false", restartCommand.get(9));
+    }
+
+    @Test
+    public void shouldKeepArgumentsOnRestartWithTail() {
+        List<String[]> commands = new ArrayList<>();
+        ProcessAndOutput failed = failedReceive();
+
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(pao.getOutput()).thenReturn(RECEIVED_OUTPUT);
+
+        when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
+            commands.add((String[]) invocation.getRawArguments()[0]);
+            return commands.size() == 1 ? failed : pao;
+        });
+
+        context.getReferenceResolver().bind("camelCli", camelCli);
+
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .tail(1)
+                .maxAttempts(3)
+                .delayBetweenAttempts(0L)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+
+        Assertions.assertEquals(2, commands.size());
+        Assertions.assertArrayEquals(commands.get(0), commands.get(1));
+    }
+
+    @Test
+    public void shouldRestartReceiveCommandWhenIntegrationNotFound() {
+        List<String[]> commands = new ArrayList<>();
+        Process notFoundProcess = mock(Process.class);
+        lenient().when(notFoundProcess.isAlive()).thenReturn(true);
+
+        ProcessAndOutput notFound = mock(ProcessAndOutput.class);
+        lenient().when(notFound.getProcess()).thenReturn(notFoundProcess);
+        lenient().when(notFound.getOutput()).thenReturn("Waiting for messages ...\n");
+
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(pao.getOutput()).thenReturn(RECEIVED_OUTPUT);
+
+        when(camelCli.receive(any(String[].class))).thenAnswer(invocation -> {
+            commands.add((String[]) invocation.getRawArguments()[0]);
+            return commands.size() == 1 ? notFound : pao;
+        });
+
+        context.getReferenceResolver().bind("camelCli", camelCli);
+
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .maxAttempts(3)
+                .delayBetweenAttempts(0L)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        action.execute(context);
+
+        Assertions.assertEquals(2, commands.size());
+        Assertions.assertArrayEquals(commands.get(0), commands.get(1));
+        verify(notFoundProcess).destroy();
+    }
+
+    @Test
+    public void shouldTimeoutWhenIntegrationNotFoundAfterRestart() {
+        lenient().when(process.isAlive()).thenReturn(true);
+        lenient().when(pao.getOutput()).thenReturn("Waiting for messages ...\n");
+
+        when(camelCli.receive(any(String[].class))).thenReturn(pao);
+
+        context.getReferenceResolver().bind("camelCli", camelCli);
+
+        CamelCmdReceiveAction action = new CamelCmdReceiveAction.Builder()
+                .integration("my-route")
+                .endpoint("jms:queue:foo")
+                .maxAttempts(3)
+                .delayBetweenAttempts(0L)
+                .withReferenceResolver(context.getReferenceResolver())
+                .build();
+
+        Assertions.assertThrows(ActionTimeoutException.class, () -> action.execute(context));
+
+        verify(camelCli, times(2)).receive(any(String[].class));
+    }
+
+    private static final String RECEIVED_OUTPUT = """
+        Starting to receive messages from existing Camel: my-route (pid: 12345)
+        Received Message: (1)
+          Endpoint  jms://queue:foo
+          Message   (DefaultMessage)
+          Body      (String) (bytes: 5)
+          Hello
+        """;
+
+    private static ProcessAndOutput failedReceive() {
+        Process failedProcess = mock(Process.class);
+        lenient().when(failedProcess.isAlive()).thenReturn(false);
+        lenient().when(failedProcess.exitValue()).thenReturn(1);
+
+        ProcessAndOutput failed = mock(ProcessAndOutput.class);
+        lenient().when(failed.getProcess()).thenReturn(failedProcess);
+        lenient().when(failed.getOutput()).thenReturn("java.lang.NullPointerException");
+        return failed;
+    }
 }

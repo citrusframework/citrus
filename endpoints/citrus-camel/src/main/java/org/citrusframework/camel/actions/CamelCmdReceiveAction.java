@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import org.citrusframework.api.actions.camel.CamelCliCmdReceiveActionBuilder;
 import org.citrusframework.camel.CamelSettings;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -146,15 +147,29 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
 
         ProcessAndOutput pao = null;
         try {
+            long startTime = System.currentTimeMillis();
             pao = camelCli().receive(commandArgs.toArray(new String[0]));
             logger.info("Receive messages from Camel CLI receive command ...");
 
             String log;
-            for (int i = 0; i < maxAttempts; i++) {
+            int maxRestarts = getCommandRestarts();
+            int restarts = 0;
+            for (int i = 0; i < maxAttempts; ) {
                 if (!pao.getProcess().isAlive()) {
                     int exitValue = pao.getProcess().exitValue();
                     if (exitValue != OK_EXIT_CODE) {
-                        logger.warn("Failed to receive message via Camel CLI command:%n\t camel cmd receive %s".formatted(String.join(" ", commandArgs)));
+                        logger.warn("Failed to receive message via Camel CLI command:%n\t camel cmd receive %s%n%s"
+                                .formatted(String.join(" ", commandArgs), pao.getOutput()));
+
+                        if (restarts < maxRestarts) {
+                            restarts++;
+                            logger.warn("Restarting Camel CLI receive command (retry %d/%d) - hoping to recover from a transient CLI failure"
+                                    .formatted(restarts, maxRestarts));
+
+                            pao = camelCli().receive(restartArgs(commandArgs, startTime));
+                            continue;
+                        }
+
                         throw new CitrusRuntimeException("Error while receiving messages via Camel CLI: '%s' Exit code: %d"
                                 .formatted(pao.getOutput(), exitValue));
                     }
@@ -185,6 +200,18 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
                     throw new CitrusRuntimeException("Error while receiving messages via Camel CLI - detected error state in Camel receive operation");
                 }
 
+                if (restarts < maxRestarts && isIntegrationNotFound(log)) {
+                    restarts++;
+                    logger.warn("Camel CLI receive command did not find running Camel integration '%s' - restarting command (retry %d/%d)"
+                            .formatted(integrationName, restarts, maxRestarts));
+
+                    pao.getProcess().destroy();
+                    pao = camelCli().receive(commandArgs.toArray(new String[0]));
+                    continue;
+                }
+
+                i++;
+
                 logger.warn("Waiting for Camel message '{}' - retry in {} ms", integrationName, delayBetweenAttempts);
 
                 try {
@@ -202,6 +229,40 @@ public class CamelCmdReceiveAction extends AbstractCamelCliAction {
                 pao.getProcess().destroy();
             }
         }
+    }
+
+    /**
+     * Builds the command arguments for a restart of the Camel CLI receive command. When the command is configured to
+     * receive only new messages (tail 0) the message that has been received in the meantime would be skipped by the
+     * restarted command. In this case the restart reads all messages received since the action has been started.
+     * The time window includes a grace period, because the Camel CLI computes the window on its own startup
+     * (see {@link CamelCliSettings#getReceiveRestartGracePeriod()}).
+     */
+    private String[] restartArgs(List<String> commandArgs, long startTime) {
+        List<String> restartArgs = new ArrayList<>(commandArgs);
+
+        boolean hasSince = commandArgs.stream().anyMatch(it -> it.equals("--since") || it.startsWith("--since="));
+        if (tail == 0 && !hasSince) {
+            int tailIndex = restartArgs.indexOf("--tail");
+            long sinceSeconds = (System.currentTimeMillis() - startTime + CamelCliSettings.getReceiveRestartGracePeriod() + 999) / 1000;
+
+            restartArgs.set(tailIndex + 1, "-1");
+            restartArgs.add(tailIndex + 2, "--since");
+            restartArgs.add(tailIndex + 3, String.valueOf(sinceSeconds));
+        }
+
+        return restartArgs.toArray(new String[0]);
+    }
+
+    /**
+     * Checks the Camel CLI receive command output for the situation where the command did not find the running
+     * Camel integration on startup. The Camel CLI then never enables the message receiving on the integration and keeps
+     * waiting for messages that never arrive.
+     */
+    private boolean isIntegrationNotFound(String log) {
+        return StringUtils.hasText(integrationName)
+                && log.contains("Waiting for messages")
+                && !log.contains("Starting to receive messages from existing Camel");
     }
 
     private void storeMessageFromLog(String log, TestContext context) {

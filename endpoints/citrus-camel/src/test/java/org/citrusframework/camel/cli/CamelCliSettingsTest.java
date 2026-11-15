@@ -29,6 +29,8 @@ public class CamelCliSettingsTest {
     public void cleanup() {
         System.clearProperty("citrus.camel.cli.type");
         System.clearProperty("citrus.camel.cli.launcher.jar.path");
+        System.clearProperty("citrus.camel.cli.command.restarts");
+        System.clearProperty("citrus.camel.cli.receive.restart.grace.period");
     }
 
     @Test
@@ -81,5 +83,30 @@ public class CamelCliSettingsTest {
         } finally {
             System.clearProperty("camel.launcher.jar");
         }
+    }
+
+    @Test
+    public void shouldDefaultCommandRestarts() {
+        Assertions.assertEquals(1, CamelCliSettings.getCommandRestarts());
+    }
+
+    @Test
+    public void shouldReadCommandRestartsFromSystemProperty() {
+        System.setProperty("citrus.camel.cli.command.restarts", "3");
+        Assertions.assertEquals(3, CamelCliSettings.getCommandRestarts());
+
+        System.setProperty("citrus.camel.cli.command.restarts", "-1");
+        Assertions.assertEquals(0, CamelCliSettings.getCommandRestarts());
+    }
+
+    @Test
+    public void shouldDefaultReceiveRestartGracePeriod() {
+        Assertions.assertEquals(10000L, CamelCliSettings.getReceiveRestartGracePeriod());
+    }
+
+    @Test
+    public void shouldReadReceiveRestartGracePeriodFromSystemProperty() {
+        System.setProperty("citrus.camel.cli.receive.restart.grace.period", "2500");
+        Assertions.assertEquals(2500L, CamelCliSettings.getReceiveRestartGracePeriod());
     }
 }

@@ -123,6 +123,16 @@ public final class CamelCliSettings {
     private static final String SKIP_PLUGINS_ENV = CLI_ENV_PREFIX + "SKIP_PLUGINS";
     private static final String SKIP_PLUGINS_DEFAULT = "false";
 
+    @CitrusConfigProperty(description = "Number of times a Camel CLI send or receive command is restarted after a transient Camel CLI failure. Set to 0 to disable the restart.", type = "java.lang.Integer", defaultValue = "1")
+    private static final String COMMAND_RESTARTS_PROPERTY = CLI_PROPERTY_PREFIX + "command.restarts";
+    private static final String COMMAND_RESTARTS_ENV = CLI_ENV_PREFIX + "COMMAND_RESTARTS";
+    private static final String COMMAND_RESTARTS_DEFAULT = "1";
+
+    @CitrusConfigProperty(description = "Grace period in milliseconds added to the receive time window of a restarted Camel CLI receive command. Covers the Camel CLI startup time.", type = "java.lang.Long", defaultValue = "10000")
+    private static final String RECEIVE_RESTART_GRACE_PERIOD_PROPERTY = CLI_PROPERTY_PREFIX + "receive.restart.grace.period";
+    private static final String RECEIVE_RESTART_GRACE_PERIOD_ENV = CLI_ENV_PREFIX + "RECEIVE_RESTART_GRACE_PERIOD";
+    private static final String RECEIVE_RESTART_GRACE_PERIOD_DEFAULT = "10000";
+
     @CitrusConfigProperty(description = "Camel CLI launcher type.", defaultValue = "jbang")
     private static final String CLI_TYPE_PROPERTY = CLI_PROPERTY_PREFIX + "type";
     private static final String CLI_TYPE_ENV = CLI_ENV_PREFIX + "TYPE";
@@ -300,6 +310,22 @@ public final class CamelCliSettings {
     public static boolean isSkipPlugins() {
         return Boolean.parseBoolean(Optional.ofNullable(resolve(SKIP_PLUGINS_PROPERTY, SKIP_PLUGINS_ENV))
                 .orElse(SKIP_PLUGINS_DEFAULT));
+    }
+
+    /**
+     * Number of times a Camel CLI send or receive command is restarted after a transient Camel CLI failure.
+     */
+    public static int getCommandRestarts() {
+        return Math.max(0, Integer.parseInt(Optional.ofNullable(resolve(COMMAND_RESTARTS_PROPERTY, COMMAND_RESTARTS_ENV))
+                .orElse(COMMAND_RESTARTS_DEFAULT).trim()));
+    }
+
+    /**
+     * Grace period in milliseconds added to the receive time window of a restarted Camel CLI receive command.
+     */
+    public static long getReceiveRestartGracePeriod() {
+        return Math.max(0L, Long.parseLong(Optional.ofNullable(resolve(RECEIVE_RESTART_GRACE_PERIOD_PROPERTY, RECEIVE_RESTART_GRACE_PERIOD_ENV))
+                .orElse(RECEIVE_RESTART_GRACE_PERIOD_DEFAULT).trim()));
     }
 
     /**
