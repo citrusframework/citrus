@@ -347,6 +347,11 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
             return entries.computeIfAbsent(name, ReportEntry::new);
         }
 
+        /**
+         * Replace the report entry with the given name by a new empty entry.
+         * @deprecated no longer used by the reporter, which creates a new report entry for each test run on test start.
+         */
+        @Deprecated(since = "5.3.0")
         public void reset(String name) {
             entries.put(name, new ReportEntry(name));
         }
