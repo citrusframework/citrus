@@ -16,17 +16,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit-platform</artifactId>
-            <version>${maven.surefire.plugin.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <!-- Integration tests share one Spring application context with stateful endpoints, so run them sequentially -->
@@ -34,13 +23,6 @@
             <junit.jupiter.execution.parallel.enabled>false</junit.jupiter.execution.parallel.enabled>
           </systemPropertyVariables>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit-platform</artifactId>
-            <version>${maven.failsafe.plugin.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
