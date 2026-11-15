@@ -57,6 +57,10 @@ public class ScpClientConfigParser implements AnnotationConfigParser<ScpClientCo
             builder.privateKeyPassword(context.replaceDynamicContentInString(annotation.privateKeyPassword()));
         }
 
+        if (StringUtils.hasText(annotation.preferredAuthentications())) {
+            builder.preferredAuthentications(context.replaceDynamicContentInString(annotation.preferredAuthentications()));
+        }
+
         if (StringUtils.hasText(annotation.correlator())) {
             builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }

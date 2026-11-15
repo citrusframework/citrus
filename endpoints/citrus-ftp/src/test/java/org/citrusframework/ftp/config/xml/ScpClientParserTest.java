@@ -48,6 +48,7 @@ public class ScpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assertions.assertNull(scpClient.getEndpointConfiguration().getPrivateKeyPassword());
         Assertions.assertFalse(scpClient.getEndpointConfiguration().isStrictHostChecking());
         Assertions.assertNull(scpClient.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals("publickey,password,keyboard-interactive", scpClient.getEndpointConfiguration().getPreferredAuthentications());
         Assertions.assertEquals(5000L, scpClient.getEndpointConfiguration().getTimeout());
         Assertions.assertEquals(ErrorHandlingStrategy.PROPAGATE, scpClient.getEndpointConfiguration().getErrorHandlingStrategy());
 
@@ -61,6 +62,7 @@ public class ScpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assertions.assertEquals("consol", scpClient.getEndpointConfiguration().getPassword());
         Assertions.assertEquals("classpath:org/citrusframework/scp/citrus.priv", scpClient.getEndpointConfiguration().getPrivateKeyPath());
         Assertions.assertEquals("consol", scpClient.getEndpointConfiguration().getPrivateKeyPassword());
+        Assertions.assertEquals("password,publickey", scpClient.getEndpointConfiguration().getPreferredAuthentications());
         Assertions.assertEquals(10000L, scpClient.getEndpointConfiguration().getTimeout());
         Assertions.assertEquals(ErrorHandlingStrategy.THROWS_EXCEPTION, scpClient.getEndpointConfiguration().getErrorHandlingStrategy());
 

@@ -50,6 +50,7 @@ public class ScpClientConfigParserTest extends AbstractUnitTest {
             password="consol",
             privateKeyPath="classpath:org/citrusframework/scp/citrus.priv",
             privateKeyPassword="consol",
+            preferredAuthentications="password,publickey",
             timeout=10000L)
     private ScpClient scpClient2;
 
@@ -99,6 +100,7 @@ public class ScpClientConfigParserTest extends AbstractUnitTest {
         Assertions.assertNull(scpClient1.getEndpointConfiguration().getPrivateKeyPassword());
         Assertions.assertFalse(scpClient1.getEndpointConfiguration().isStrictHostChecking());
         Assertions.assertNull(scpClient1.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals("publickey,password,keyboard-interactive", scpClient1.getEndpointConfiguration().getPreferredAuthentications());
 
         // 2nd scp client
         Assertions.assertEquals("localhost", scpClient2.getEndpointConfiguration().getHost());
@@ -109,6 +111,7 @@ public class ScpClientConfigParserTest extends AbstractUnitTest {
         Assertions.assertEquals("consol", scpClient2.getEndpointConfiguration().getPassword());
         Assertions.assertEquals("classpath:org/citrusframework/scp/citrus.priv", scpClient2.getEndpointConfiguration().getPrivateKeyPath());
         Assertions.assertEquals("consol", scpClient2.getEndpointConfiguration().getPrivateKeyPassword());
+        Assertions.assertEquals("password,publickey", scpClient2.getEndpointConfiguration().getPreferredAuthentications());
         Assertions.assertEquals(10000L, scpClient2.getEndpointConfiguration().getTimeout());
 
         // 3rd scp client

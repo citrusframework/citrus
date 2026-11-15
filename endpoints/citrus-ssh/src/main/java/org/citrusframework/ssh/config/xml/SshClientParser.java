@@ -43,6 +43,7 @@ public class SshClientParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("private-key-password"), "privateKeyPassword");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("strict-host-checking"), "strictHostChecking");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("known-hosts-path"), "knownHosts");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("preferred-authentications"), "preferredAuthentications");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("command-timeout"), "commandTimeout");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("connection-timeout"), "connectionTimeout");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("user"), "user");

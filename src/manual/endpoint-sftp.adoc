@@ -1346,6 +1346,9 @@ NOTE: Citrus provides a customized SCP configuration schema for the Spring XML a
 Simply include the `citrus-scp` namespace in the configuration XML files as seen in the example above.
 
 The configuration above describes a Citrus scp client. The scp-client connects to the server using the user credentials and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.
+Just like the SFTP client, the SCP client tries the authentication methods in the following order by default: `publickey,password,keyboard-interactive`.
+You're able to configure the order with the `preferred-authentications` attribute in XML or the
+`preferredAuthentications` method in Java (e.g. `.preferredAuthentications("password,publickey")`).
 
 [[scp-client-store]]
 === Store files

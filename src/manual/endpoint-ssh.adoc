@@ -104,9 +104,41 @@ user:: User used for connecting to the SSH server (e.g. user="roland")
 password:: Password used for password based authentication. Might be combined with "private-key-path" in which case both authentication mechanism are tried (e.g. password=&quot;ps!st)
 strict-host-checking:: Whether the host key should be verified by looking it up in a 'known_hosts' file. Default is false (e.g. strict-host-checking="true")
 known-hosts-path:: Path to a known hosts file. If prefixed with 'classpath:' this file is looked up as a resource in the classpath (e.g. known-hosts-path="/etc/ssh/known_hosts")
+preferred-authentications:: Ordered list of authentication methods the client tries when connecting to the server. Default is "publickey,password,keyboard-interactive" (e.g. preferred-authentications="publickey,password")
 command-timeout:: Timeout in milliseconds for how long to wait for the SSH command to complete. Default is 5 minutes (e.g. command-timeout="300000")
 connection-timeout:: Timeout in milliseconds for how long to for a connectiuon to connect. Default is 1 minute (e.g. connection-timeout="60000")
 actor:: Actor used for switching groups of actions (e.g. actor="ssh-mock")
+
+The client tries the authentication methods in the order given by `preferred-authentications`. Methods that are not part
+of the list are not used at all. By default the client uses `publickey,password,keyboard-interactive` and does not try
+`gssapi-with-mic`, which would otherwise ask for Kerberos credentials on servers that support it.
+You can change the order with the `preferred-authentications` attribute in XML or the `preferredAuthentications` method in Java.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public SshClient sshClient() {
+    return new SshClientBuilder()
+        .host("localhost")
+        .port(9072)
+        .user("roland")
+        .password("secret")
+        .preferredAuthentications("password,publickey")
+        .build();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-ssh:client id="sshClient"
+       port="9072"
+       user="roland"
+       password="secret"
+       preferred-authentications="password,publickey"
+       host="localhost"/>
+----
 
 Once defines as client component in the Spring application context test cases can reference the client in every send test action.
 

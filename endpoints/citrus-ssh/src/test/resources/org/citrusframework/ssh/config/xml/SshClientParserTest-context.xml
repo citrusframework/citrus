@@ -19,6 +19,7 @@
                      message-converter="sshMessageConverter"
                      command-timeout="10000"
                      connection-timeout="5000"
+                     preferred-authentications="password,publickey"
                      known-hosts-path="classpath:org/citrusframework/ssh/known_hosts"/>
 
   <bean id="sshMessageConverter" class="org.mockito.Mockito" factory-method="mock">
