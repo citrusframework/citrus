@@ -109,6 +109,39 @@ public class SwaggerJavaTestGeneratorTest {
         verifyTest("PetApiClient_deletePet_IT");
     }
 
+    @Test
+    public void testCreateJupiterTest() throws IOException {
+        SwaggerJavaTestGenerator generator = new SwaggerJavaTestGenerator();
+
+        generator.withAuthor("Christoph")
+                .withDescription("This is a sample test")
+                .usePackage("org.citrusframework")
+                .withFramework(UnitFramework.JUNIT);
+
+        generator.withNamePrefix("UserLoginClient_");
+        generator.withSpec("org/citrusframework/swagger/user-login-api.json");
+
+        generator.create();
+
+        verifyJupiterTest("UserLoginClient_createUser_IT");
+    }
+
+    private void verifyJupiterTest(String name) throws IOException {
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/" +
+                name + FileUtils.FILE_EXTENSION_JAVA);
+        Assertions.assertTrue(javaFile.exists());
+
+        String javaContent = FileUtils.readToString(javaFile);
+        Assertions.assertTrue(javaContent.contains("public class " + name));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("@CitrusSupport"));
+        Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertFalse(javaContent.contains("CitrusExtension"));
+        Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertTrue(javaContent.contains("@CitrusResource TestActionRunner runner"));
+    }
+
     private void verifyTest(String name) throws IOException {
         File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/" +
                 name + FileUtils.FILE_EXTENSION_JAVA);

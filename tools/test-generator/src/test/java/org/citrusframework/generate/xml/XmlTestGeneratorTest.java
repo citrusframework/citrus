@@ -52,6 +52,7 @@ public class XmlTestGeneratorTest {
         Assertions.assertTrue(javaContent.contains("* This is a sample test"));
         Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+        Assertions.assertTrue(javaContent.contains("public void sampleIT(@CitrusResource @Optional TestCaseRunner runner) {"));
 
         String xmlContent = FileUtils.readToString(xmlFile);
         Assertions.assertTrue(xmlContent.contains("<author>Christoph</author>"));
@@ -80,7 +81,13 @@ public class XmlTestGeneratorTest {
         Assertions.assertTrue(javaContent.contains("public class SampleIT"));
         Assertions.assertTrue(javaContent.contains("* This is a sample test"));
         Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assertions.assertTrue(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertTrue(javaContent.contains("@CitrusSupport"));
+        Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertFalse(javaContent.contains("CitrusExtension"));
+        Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertTrue(javaContent.contains("@CitrusTestSource"));
+        Assertions.assertTrue(javaContent.contains("name = \"SampleIT\""));
+        Assertions.assertTrue(javaContent.contains("public void sampleIT() {"));
 
         String xmlContent = FileUtils.readToString(xmlFile);
         Assertions.assertTrue(xmlContent.contains("<author>Christoph</author>"));
@@ -110,6 +117,7 @@ public class XmlTestGeneratorTest {
         Assertions.assertTrue(javaContent.contains("* This is a sample test"));
         Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assertions.assertTrue(javaContent.contains("extends JUnit4CitrusSupport"));
+        Assertions.assertTrue(javaContent.contains("public void sampleIT(@CitrusResource TestCaseRunner runner) {"));
 
         String xmlContent = FileUtils.readToString(xmlFile);
         Assertions.assertTrue(xmlContent.contains("<author>Christoph</author>"));
@@ -148,7 +156,13 @@ public class XmlTestGeneratorTest {
         Assertions.assertTrue(javaContent.contains("public class SampleIT"));
         Assertions.assertTrue(javaContent.contains("* TODO: Description"));
         Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
-        Assertions.assertTrue(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertTrue(javaContent.contains("@CitrusSupport"));
+        Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertFalse(javaContent.contains("CitrusExtension"));
+        Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertTrue(javaContent.contains("@CitrusTestSource"));
+        Assertions.assertTrue(javaContent.contains("name = \"SampleIT\""));
+        Assertions.assertTrue(javaContent.contains("public void sampleIT() {"));
 
         String xmlContent = FileUtils.readToString(xmlFile);
         Assertions.assertTrue(xmlContent.contains("<author>Unknown</author>"));

@@ -51,5 +51,38 @@ public class MessagingJavaTestGeneratorTest {
         Assertions.assertTrue(javaContent.contains("* This is a sample test"));
         Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
+
+        Assertions.assertTrue(javaFile.delete());
+    }
+
+    @Test
+    public void testCreateJupiterTest() throws IOException {
+        MessagingJavaTestGenerator<?> generator = new MessagingJavaTestGenerator<>();
+
+        generator.withAuthor("Christoph")
+                 .withDescription("This is a sample test")
+                 .withName("SampleJupiterIT")
+                 .usePackage("org.citrusframework")
+                 .withFramework(UnitFramework.JUNIT);
+
+        generator.withRequest(new DefaultMessage("<TestRequest><Message>Citrus rocks!</Message></TestRequest>"));
+        generator.withResponse(new DefaultMessage("<TestResponse><Message>Hell Ya!</Message></TestResponse>"));
+
+        generator.create();
+
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleJupiterIT.java");
+        Assertions.assertTrue(javaFile.exists());
+
+        String javaContent = FileUtils.readToString(javaFile);
+        Assertions.assertTrue(javaContent.contains("public class SampleJupiterIT implements TestActionSupport"));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("@CitrusSupport"));
+        Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertFalse(javaContent.contains("CitrusExtension"));
+        Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertTrue(javaContent.contains("@CitrusResource TestActionRunner runner"));
+
+        Assertions.assertTrue(javaFile.delete());
     }
 }
