@@ -16,13 +16,12 @@
 
 package org.citrusframework.generate.javadsl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.stream.Stream;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
@@ -35,19 +34,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class JavaDslTestGeneratorTest {
 
     private final JavaDslTestGenerator<?> generatorUnderTest = new JavaDslTestGenerator<>();
     private final File testFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "/java/org/citrusframework/FooTest.java");
-    private final File exampleTestFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "/java/com/example/FooTest.java");
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 
     @AfterEach
     public void cleanUp() {
         cleanupUtils.deleteFile(testFile);
-        cleanupUtils.deleteFile(exampleTestFile);
     }
 
     @Test
@@ -92,36 +90,38 @@ public class JavaDslTestGeneratorTest {
     }
 
     @Test
-    public void create_should_generate_compilable_junit_jupiter_test() throws IOException {
+    public void create_should_generate_compilable_junit_jupiter_test(@TempDir Path tempDir) throws IOException {
+        Path srcDir = tempDir.resolve("src");
 
         //GIVEN
         generatorUnderTest.withName("FooTest")
                 .withDisabled(false)
                 .withFramework(UnitFramework.JUNIT)
-                .usePackage("com.example");
+                .usePackage("com.example")
+                .useSrcDirectory(srcDir.toString());
 
         //WHEN
         generatorUnderTest.create();
 
         //THEN
-        Assertions.assertTrue(exampleTestFile.exists());
-        assertContains(FileUtils.readToString(exampleTestFile), "import org.citrusframework.TestActionRunner;");
+        Path generatedJava = srcDir.resolve("java/com/example/FooTest.java");
+        Assertions.assertTrue(Files.exists(generatedJava));
+        assertContains(Files.readString(generatedJava), "import org.citrusframework.TestActionRunner;");
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         Assumptions.assumeTrue(compiler != null, "No system Java compiler available");
 
-        Path outputDirectory = Files.createTempDirectory("citrus-test-generator");
-        try {
-            int result = compiler.run(null, null, null,
-                    "-classpath", System.getProperty("java.class.path"),
-                    "-d", outputDirectory.toString(),
-                    exampleTestFile.getAbsolutePath());
+        Path outputDirectory = tempDir.resolve("classes");
+        Files.createDirectories(outputDirectory);
+        ByteArrayOutputStream compilerErr = new ByteArrayOutputStream();
+        int result = compiler.run(null, null, compilerErr,
+                "-classpath", System.getProperty("java.class.path"),
+                "-d", outputDirectory.toString(),
+                generatedJava.toString());
 
-            Assertions.assertEquals(0, result, "Generated JUnit Jupiter test does not compile");
-            Assertions.assertTrue(Files.exists(outputDirectory.resolve("com/example/FooTest.class")));
-        } finally {
-            deleteRecursively(outputDirectory);
-        }
+        Assertions.assertEquals(0, result,
+                () -> "Generated JUnit Jupiter test does not compile:\n" + compilerErr.toString(StandardCharsets.UTF_8));
+        Assertions.assertTrue(Files.exists(outputDirectory.resolve("com/example/FooTest.class")));
     }
 
     @Test
@@ -193,17 +193,5 @@ public class JavaDslTestGeneratorTest {
     private void checkAnnotations(String javaContent) {
         assertContains(javaContent, "@CitrusTest");
         assertContains(javaContent, "@Test");
-    }
-
-    private void deleteRecursively(Path directory) throws IOException {
-        try (Stream<Path> paths = Files.walk(directory)) {
-            paths.sorted(Comparator.reverseOrder()).forEach(path -> {
-                try {
-                    Files.deleteIfExists(path);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            });
-        }
     }
 }

@@ -171,7 +171,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
      * @return the runner type
      */
     protected TypeName getRunnerType() {
-        if (getFramework().equals(UnitFramework.JUNIT)) {
+        if (UnitFramework.JUNIT.equals(getFramework())) {
             return ClassName.get(TestActionRunner.class);
         }
 

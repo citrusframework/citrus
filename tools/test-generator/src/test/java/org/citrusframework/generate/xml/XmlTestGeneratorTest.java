@@ -85,6 +85,8 @@ public class XmlTestGeneratorTest {
         Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
         Assertions.assertFalse(javaContent.contains("CitrusExtension"));
         Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertFalse(javaContent.contains("TestActionRunner"));
+        Assertions.assertTrue(javaContent.contains("@Test"));
         Assertions.assertTrue(javaContent.contains("@CitrusTestSource"));
         Assertions.assertTrue(javaContent.contains("name = \"SampleIT\""));
         Assertions.assertTrue(javaContent.contains("public void sampleIT() {"));
@@ -160,6 +162,8 @@ public class XmlTestGeneratorTest {
         Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
         Assertions.assertFalse(javaContent.contains("CitrusExtension"));
         Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertFalse(javaContent.contains("TestActionRunner"));
+        Assertions.assertTrue(javaContent.contains("@Test"));
         Assertions.assertTrue(javaContent.contains("@CitrusTestSource"));
         Assertions.assertTrue(javaContent.contains("name = \"SampleIT\""));
         Assertions.assertTrue(javaContent.contains("public void sampleIT() {"));
