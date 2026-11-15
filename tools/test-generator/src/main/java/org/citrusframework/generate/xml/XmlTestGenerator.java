@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 import jakarta.xml.bind.JAXBElement;
 import org.citrusframework.generate.AbstractTemplateBasedTestGenerator;
 import org.citrusframework.generate.TestGenerator;
+import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.javadsl.JavaTestGenerator;
 import org.citrusframework.model.testcase.core.EchoActionType;
 import org.citrusframework.model.testcase.core.ObjectFactory;
@@ -126,7 +127,7 @@ public class XmlTestGenerator<T extends XmlTestGenerator<T>> extends AbstractTem
      * @return
      */
     protected TestGenerator getJavaTestGenerator() {
-        return new JavaTestGenerator()
+        return new XmlJavaTestGenerator()
                 .withName(getName())
                 .withDisabled(isDisabled())
                 .withDescription(getDescription())
@@ -180,5 +181,18 @@ public class XmlTestGenerator<T extends XmlTestGenerator<T>> extends AbstractTem
      */
     public void setMode(GeneratorMode mode) {
         this.mode = mode;
+    }
+
+    /**
+     * Java test generator for XML-driven tests. XML tests run the test logic from the XML file,
+     * so JUnit Jupiter methods do not declare an unused runner parameter. TestNG and JUnit 4 keep
+     * the runner parameter for backwards compatible output.
+     */
+    private static final class XmlJavaTestGenerator extends JavaTestGenerator<XmlJavaTestGenerator> {
+
+        @Override
+        protected boolean isRunnerParameterRequired() {
+            return !UnitFramework.JUNIT.equals(getFramework());
+        }
     }
 }

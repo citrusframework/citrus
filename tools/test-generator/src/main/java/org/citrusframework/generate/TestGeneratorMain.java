@@ -108,7 +108,7 @@ public class TestGeneratorMain {
 
             this.addOption(OptionBuilder.withArgName("framework")
                     .hasArg()
-                    .withDescription("the framework to use (optional) [testng, junit4, junit3]")
+                    .withDescription("the framework to use (optional) [testng, junit4, junit-jupiter]")
                     .isRequired(false)
                     .create("framework"));
         }

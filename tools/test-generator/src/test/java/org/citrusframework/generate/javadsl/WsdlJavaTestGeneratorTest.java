@@ -60,6 +60,39 @@ public class WsdlJavaTestGeneratorTest {
         verifyTest("BookStore_deleteBook_IT", "book:deleteBook", "book:deleteBookResponse");
     }
 
+    @Test
+    public void testCreateJupiterTest() throws IOException {
+        WsdlJavaTestGenerator generator = new WsdlJavaTestGenerator();
+
+        generator.withAuthor("Christoph")
+                .withDescription("This is a sample test")
+                .usePackage("org.citrusframework")
+                .withFramework(UnitFramework.JUNIT);
+
+        generator.withWsdl("org/citrusframework/wsdl/BookStore.wsdl");
+
+        generator.create();
+
+        verifyJupiterTest("BookStore_addBook_IT", "book:addBook", "book:addBookResponse");
+    }
+
+    private void verifyJupiterTest(String name, String requestName, String responseName) throws IOException {
+        File javaFile = new File(testDir + name + FileUtils.FILE_EXTENSION_JAVA);
+        Assertions.assertTrue(javaFile.exists());
+
+        String javaContent = FileUtils.readToString(javaFile);
+        Assertions.assertTrue(javaContent.contains("public class " + name));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("@CitrusSupport"));
+        Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertFalse(javaContent.contains("CitrusExtension"));
+        Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertTrue(javaContent.contains("@CitrusResource TestActionRunner runner"));
+        Assertions.assertTrue(javaContent.contains(requestName));
+        Assertions.assertTrue(javaContent.contains(responseName));
+    }
+
     private void verifyTest(String name, String requestName, String responseName) throws IOException {
         File javaFile = new File(testDir + name + FileUtils.FILE_EXTENSION_JAVA);
         Assertions.assertTrue(javaFile.exists());

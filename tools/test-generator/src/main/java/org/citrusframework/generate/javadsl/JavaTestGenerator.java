@@ -32,6 +32,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -116,14 +117,13 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
     }
 
     /**
-     * Gets the Junit Jupiter base extension to use.
-     * @return The AnnotationSpec of the Junit Jupiter extension
+     * Gets the Citrus annotation used to run the generated test class.
+     * JUnit Jupiter tests use the Citrus support annotation, other frameworks rely on a base class instead.
+     * @return The AnnotationSpec of the Citrus support annotation
      */
     protected AnnotationSpec getBaseExtension() {
-        ClassName extension = ClassName.get("org.citrusframework.junit.jupiter", "CitrusExtension");
-        return createAnnotationBuilder("org.junit.jupiter.api.extension", "ExtendWith")
-                .addMember("value", "$T.class", extension)
-                .build();
+        ClassName support = ClassName.get("org.citrusframework.junit.jupiter", "CitrusSupport");
+        return AnnotationSpec.builder(support).build();
     }
 
     /**
@@ -132,18 +132,21 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
      * @return The method specification
      */
     private MethodSpec getTestMethod(final String name) {
-        final ParameterSpec.Builder methodParamBuilder = ParameterSpec
-                .builder(TestCaseRunner.class, "runner")
-                .addAnnotation(CitrusResource.class);
-
-        if(getFramework().equals(UnitFramework.TESTNG)){
-            methodParamBuilder.addAnnotation(createTestNgAnnotationBuilder("Optional").build());
-        }
-
         final MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(name)
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(getCitrusAnnotation())
-                .addParameter(methodParamBuilder.build());
+                .addAnnotation(getCitrusAnnotation());
+
+        if (isRunnerParameterRequired()) {
+            final ParameterSpec.Builder methodParamBuilder = ParameterSpec
+                    .builder(getRunnerType(), "runner")
+                    .addAnnotation(CitrusResource.class);
+
+            if (getFramework().equals(UnitFramework.TESTNG)) {
+                methodParamBuilder.addAnnotation(createTestNgAnnotationBuilder("Optional").build());
+            }
+
+            methodBuilder.addParameter(methodParamBuilder.build());
+        }
 
         Stream.of(getTestAnnotations()).forEach(methodBuilder::addAnnotation);
 
@@ -151,6 +154,28 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
                                                     .addCode("\n\n"));
 
         return methodBuilder.build();
+    }
+
+    /**
+     * Whether the generated test method requires an injected runner parameter.
+     * The XML-driven generator opts out, because it does not declare an unused runner parameter.
+     * @return true if a runner parameter should be generated
+     */
+    protected boolean isRunnerParameterRequired() {
+        return true;
+    }
+
+    /**
+     * Gets the runner type to inject into the generated test method.
+     * JUnit Jupiter tests use TestActionRunner, other frameworks use TestCaseRunner.
+     * @return the runner type
+     */
+    protected TypeName getRunnerType() {
+        if (getFramework().equals(UnitFramework.JUNIT)) {
+            return ClassName.get(TestActionRunner.class);
+        }
+
+        return ClassName.get(TestCaseRunner.class);
     }
 
     /**

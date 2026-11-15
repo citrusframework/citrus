@@ -99,6 +99,40 @@ public class XsdJavaTestGeneratorTest {
     }
 
     @Test
+    public void testCreateJupiterTest() throws IOException {
+        XsdJavaTestGenerator generator = new XsdJavaTestGenerator();
+
+        generator.withAuthor("Christoph")
+                .withDescription("This is a sample test")
+                .usePackage("org.citrusframework")
+                .withFramework(UnitFramework.JUNIT);
+
+        generator.withXsd("org/citrusframework/xsd/HelloService.xsd");
+        generator.withRequestMessage("Hello");
+        generator.withResponseMessage("HelloResponse");
+
+        generator.create();
+
+        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/HelloIT.java");
+        Assertions.assertTrue(javaFile.exists());
+
+        String javaContent = FileUtils.readToString(javaFile);
+        Assertions.assertTrue(javaContent.contains("public class HelloIT"));
+        Assertions.assertTrue(javaContent.contains("* This is a sample test"));
+        Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
+        Assertions.assertTrue(javaContent.contains("@CitrusSupport"));
+        Assertions.assertFalse(javaContent.contains("@ExtendWith(CitrusExtension.class)"));
+        Assertions.assertFalse(javaContent.contains("CitrusExtension"));
+        Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
+        Assertions.assertTrue(javaContent.contains("@CitrusResource TestActionRunner runner"));
+        Assertions.assertTrue(javaContent.contains("public class HelloIT implements TestActionSupport"));
+        Assertions.assertTrue(javaContent.contains("send().endpoint(\"client\")"));
+        Assertions.assertTrue(javaContent.contains("<hel:Hello xmlns:hel="));
+        Assertions.assertTrue(javaContent.contains("receive().endpoint(\"client\")"));
+        Assertions.assertTrue(javaContent.contains("<hel:HelloResponse xmlns:hel="));
+    }
+
+    @Test
     public void testUnknownRequest() {
         XsdJavaTestGenerator generator = new XsdJavaTestGenerator();
 
