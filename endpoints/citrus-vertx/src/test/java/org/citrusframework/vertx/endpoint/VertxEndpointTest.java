@@ -16,6 +16,8 @@
 
 package org.citrusframework.vertx.endpoint;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.report.MessageListeners;
@@ -27,7 +29,9 @@ import org.mockito.stubbing.Answer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -111,6 +115,7 @@ public class VertxEndpointTest extends AbstractUnitTest {
 
         when(vertx.eventBus()).thenReturn(eventBus);
         when(eventBus.consumer(eventBusAddress)).thenReturn(messageConsumer);
+        when(messageConsumer.completion()).thenReturn(Future.succeededFuture());
         doAnswer((Answer<MessageConsumer>) invocation -> {
             Handler handler = (Handler) invocation.getArguments()[0];
             handler.handle(messageMock);
@@ -121,6 +126,59 @@ public class VertxEndpointTest extends AbstractUnitTest {
         Assertions.assertEquals("Hello from Vertx!", receivedMessage.getPayload());
         Assertions.assertEquals(eventBusAddress, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS));
         Assertions.assertEquals("replyAddress", receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS));
+
+        verify(messageConsumer).unregister();
+    }
+
+    @Test
+    public void testVertxEndpointConsumerWaitsForRegistration() {
+        String eventBusAddress = "news-feed";
+        VertxEndpointConfiguration endpointConfiguration = new VertxEndpointConfiguration();
+        endpointConfiguration.setAddress(eventBusAddress);
+
+        VertxEndpoint vertxEndpoint = new VertxEndpoint(endpointConfiguration);
+        vertxEndpoint.setVertxInstanceFactory(instanceFactory);
+
+        reset(vertx, eventBus, messageConsumer, messageMock);
+
+        when(messageMock.body()).thenReturn("Hello from Vertx!");
+        when(messageMock.address()).thenReturn(eventBusAddress);
+
+        when(vertx.eventBus()).thenReturn(eventBus);
+        when(eventBus.consumer(eventBusAddress)).thenReturn(messageConsumer);
+
+        // Registration never completes: the consumer must not report messages before it is registered on the event bus
+        when(messageConsumer.completion()).thenReturn(Promise.<Void>promise().future());
+        doAnswer((Answer<MessageConsumer>) invocation -> {
+            Handler handler = (Handler) invocation.getArguments()[0];
+            handler.handle(messageMock);
+            return messageConsumer;
+        }).when(messageConsumer).handler(any(Handler.class));
+
+        Assertions.assertThrows(MessageTimeoutException.class,
+                () -> vertxEndpoint.createConsumer().receive(context, 200L));
+
+        verify(messageConsumer).unregister();
+    }
+
+    @Test
+    public void testVertxEndpointConsumerRegistrationFailure() {
+        String eventBusAddress = "news-feed";
+        VertxEndpointConfiguration endpointConfiguration = new VertxEndpointConfiguration();
+        endpointConfiguration.setAddress(eventBusAddress);
+
+        VertxEndpoint vertxEndpoint = new VertxEndpoint(endpointConfiguration);
+        vertxEndpoint.setVertxInstanceFactory(instanceFactory);
+
+        reset(vertx, eventBus, messageConsumer);
+
+        when(vertx.eventBus()).thenReturn(eventBus);
+        when(eventBus.consumer(eventBusAddress)).thenReturn(messageConsumer);
+        when(messageConsumer.completion()).thenReturn(Future.failedFuture("Cluster unavailable"));
+
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> vertxEndpoint.createConsumer().receive(context, 200L));
+        Assertions.assertEquals("Cluster unavailable", exception.getCause().getMessage());
 
         verify(messageConsumer).unregister();
     }
