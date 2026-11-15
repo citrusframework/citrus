@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.testng;
+package org.citrusframework.support;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
