@@ -21,12 +21,25 @@ import java.io.IOException;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
+import org.citrusframework.generate.util.CleanupUtils;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.util.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class MessagingJavaTestGeneratorTest {
+
+    private final File testNgFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleReqResIT.java");
+    private final File jupiterFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleJupiterIT.java");
+
+    private final CleanupUtils cleanupUtils = new CleanupUtils();
+
+    @AfterEach
+    public void cleanUp() {
+        cleanupUtils.deleteFile(testNgFile);
+        cleanupUtils.deleteFile(jupiterFile);
+    }
 
     @Test
     public void testCreateTest() throws IOException {
@@ -43,16 +56,13 @@ public class MessagingJavaTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleReqResIT.java");
-        Assertions.assertTrue(javaFile.exists());
+        Assertions.assertTrue(testNgFile.exists());
 
-        String javaContent = FileUtils.readToString(javaFile);
+        String javaContent = FileUtils.readToString(testNgFile);
         Assertions.assertTrue(javaContent.contains("public class SampleReqResIT"));
         Assertions.assertTrue(javaContent.contains("* This is a sample test"));
         Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assertions.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
-
-        Assertions.assertTrue(javaFile.delete());
     }
 
     @Test
@@ -70,10 +80,9 @@ public class MessagingJavaTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(CitrusSettings.getDefaultTestSrcDirectory() + "java/org/citrusframework/SampleJupiterIT.java");
-        Assertions.assertTrue(javaFile.exists());
+        Assertions.assertTrue(jupiterFile.exists());
 
-        String javaContent = FileUtils.readToString(javaFile);
+        String javaContent = FileUtils.readToString(jupiterFile);
         Assertions.assertTrue(javaContent.contains("public class SampleJupiterIT implements TestActionSupport"));
         Assertions.assertTrue(javaContent.contains("* This is a sample test"));
         Assertions.assertTrue(javaContent.contains("package org.citrusframework;"));
@@ -82,7 +91,5 @@ public class MessagingJavaTestGeneratorTest {
         Assertions.assertFalse(javaContent.contains("CitrusExtension"));
         Assertions.assertFalse(javaContent.contains("TestCaseRunner"));
         Assertions.assertTrue(javaContent.contains("@CitrusResource TestActionRunner runner"));
-
-        Assertions.assertTrue(javaFile.delete());
     }
 }
