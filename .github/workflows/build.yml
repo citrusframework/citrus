@@ -17,6 +17,8 @@
 name: ci
 
 on:
+  # pull_request is intentional: pull_request_target would run untrusted PR
+  # code with write permissions and access to secrets.
   pull_request:
     paths-ignore:
       - '**.adoc'
