@@ -174,11 +174,6 @@
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit-platform</artifactId>
-            <version>${maven.surefire.plugin.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-testng</artifactId>
             <version>${maven.surefire.plugin.version}</version>
           </dependency>
