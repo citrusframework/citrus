@@ -80,6 +80,12 @@ public @interface SshClientConfig {
     String knownHosts() default "";
 
     /**
+     * Preferred authentications.
+     * @return
+     */
+    String preferredAuthentications() default "publickey,password,keyboard-interactive";
+
+    /**
      * CommandTimeout.
      * @return
      */

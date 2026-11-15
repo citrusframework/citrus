@@ -212,6 +212,23 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     /**
+     * Sets the preferred authentications property.
+     */
+    public ScpClientBuilder preferredAuthentications(String preferredAuthentications) {
+        endpoint.getEndpointConfiguration().setPreferredAuthentications(preferredAuthentications);
+        return this;
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:security") },
+            description = "Sets the preferred authentication mechanism."
+    )
+    @XmlAttribute(name = "preferred-authentications")
+    public void setPreferredAuthentications(String preferredAuthentications) {
+        preferredAuthentications(preferredAuthentications);
+    }
+
+    /**
      * Sets the message correlator.
      */
     public ScpClientBuilder correlator(MessageCorrelator correlator) {

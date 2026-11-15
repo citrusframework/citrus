@@ -171,6 +171,20 @@ public class SshClientBuilder extends AbstractEndpointBuilder<SshClient> {
     }
 
     /**
+     * Sets the preferred authentications property.
+     */
+    public SshClientBuilder preferredAuthentications(String preferredAuthentications) {
+        endpoint.getEndpointConfiguration().setPreferredAuthentications(preferredAuthentications);
+        return this;
+    }
+
+    @SchemaProperty(description = "Sets the ordered list of preferred authentication methods.")
+    @XmlAttribute(name = "preferred-authentications")
+    public void setPreferredAuthentications(String preferredAuthentications) {
+        preferredAuthentications(preferredAuthentications);
+    }
+
+    /**
      * Sets the commandTimeout property.
      */
     public SshClientBuilder commandTimeout(long commandTimeout) {

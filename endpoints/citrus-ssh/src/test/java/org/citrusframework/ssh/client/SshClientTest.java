@@ -42,10 +42,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.isNull;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -185,6 +189,34 @@ public class SshClientTest extends AbstractUnitTest {
 
         strictHostChecking(false, null);
         standardChannelPrepAndSend();
+    }
+
+    @Test
+    public void withDefaultPreferredAuthentications() throws JSchException, IOException {
+        strictHostChecking(false, null);
+        standardChannelPrepAndSend();
+
+        verify(session).setConfig(SshClient.PREFERRED_AUTHENTICATIONS, "publickey,password,keyboard-interactive");
+    }
+
+    @Test
+    public void withPreferredAuthentications() throws JSchException, IOException {
+        client.getEndpointConfiguration().setPreferredAuthentications("password,publickey");
+
+        strictHostChecking(false, null);
+        standardChannelPrepAndSend();
+
+        verify(session).setConfig(SshClient.PREFERRED_AUTHENTICATIONS, "password,publickey");
+    }
+
+    @Test
+    public void withoutPreferredAuthentications() throws JSchException, IOException {
+        client.getEndpointConfiguration().setPreferredAuthentications(null);
+
+        strictHostChecking(false, null);
+        standardChannelPrepAndSend();
+
+        verify(session, never()).setConfig(eq(SshClient.PREFERRED_AUTHENTICATIONS), anyString());
     }
 
     private void send() {

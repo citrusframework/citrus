@@ -50,6 +50,9 @@ public class SshEndpointConfiguration extends AbstractPollableEndpointConfigurat
      /** If strict host checking is used, path to the 'known_hosts' file */
     private String knownHosts;
 
+     /** Ordered list of authentication methods the client tries when connecting to the server */
+    private String preferredAuthentications = "publickey,password,keyboard-interactive";
+
      /** Timeout how long to wait for answering the request */
     private long commandTimeout = 1000 * 60 * 5; // 5 minutes
 
@@ -191,6 +194,22 @@ public class SshEndpointConfiguration extends AbstractPollableEndpointConfigurat
      */
     public void setKnownHosts(String knownHosts) {
         this.knownHosts = knownHosts;
+    }
+
+    /**
+     * Gets the preferred authentications.
+     * @return
+     */
+    public String getPreferredAuthentications() {
+        return preferredAuthentications;
+    }
+
+    /**
+     * Sets the preferred authentications.
+     * @param preferredAuthentications
+     */
+    public void setPreferredAuthentications(String preferredAuthentications) {
+        this.preferredAuthentications = preferredAuthentications;
     }
 
     /**

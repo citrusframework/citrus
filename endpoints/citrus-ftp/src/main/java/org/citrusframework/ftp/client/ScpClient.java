@@ -23,6 +23,7 @@ import org.apache.sshd.client.keyverifier.RejectAllServerKeyVerifier;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+import org.apache.sshd.core.CoreModuleProperties;
 import org.apache.sshd.scp.client.DefaultScpClientCreator;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -35,6 +36,7 @@ import org.citrusframework.ftp.model.PutCommand;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,6 +125,10 @@ public class ScpClient extends SftpClient {
                 client.setServerKeyVerifier(new KnownHostsServerKeyVerifier(RejectAllServerKeyVerifier.INSTANCE, FileUtils.getFileResource(getEndpointConfiguration().getKnownHosts()).file().toPath()));
             } else {
                 client.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
+            }
+
+            if (StringUtils.hasText(getEndpointConfiguration().getPreferredAuthentications())) {
+                CoreModuleProperties.PREFERRED_AUTHS.set(client, getEndpointConfiguration().getPreferredAuthentications());
             }
 
             ClientSession session = client.connect(getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()).verify(getEndpointConfiguration().getTimeout()).getSession();

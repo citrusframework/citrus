@@ -55,6 +55,10 @@ public class SshClientConfigParser implements AnnotationConfigParser<SshClientCo
             builder.knownHosts(context.replaceDynamicContentInString(annotation.knownHosts()));
         }
 
+        if (StringUtils.hasText(annotation.preferredAuthentications())) {
+            builder.preferredAuthentications(context.replaceDynamicContentInString(annotation.preferredAuthentications()));
+        }
+
         builder.commandTimeout(annotation.commandTimeout());
         builder.connectionTimeout(annotation.connectionTimeout());
 

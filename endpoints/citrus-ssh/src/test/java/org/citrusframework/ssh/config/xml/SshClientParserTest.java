@@ -40,6 +40,7 @@ public class SshClientParserTest extends AbstractBeanDefinitionParserTest {
         Assertions.assertNull(client.getEndpointConfiguration().getPrivateKeyPath());
         Assertions.assertNull(client.getEndpointConfiguration().getPrivateKeyPassword());
         Assertions.assertNull(client.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals("publickey,password,keyboard-interactive", client.getEndpointConfiguration().getPreferredAuthentications());
         Assertions.assertEquals(1000 * 60 * 5, client.getEndpointConfiguration().getCommandTimeout());
         Assertions.assertEquals(1000 * 60 * 1, client.getEndpointConfiguration().getConnectionTimeout());
         Assertions.assertFalse(client.getEndpointConfiguration().isStrictHostChecking());
@@ -54,6 +55,7 @@ public class SshClientParserTest extends AbstractBeanDefinitionParserTest {
         Assertions.assertEquals("classpath:org/citrusframework/ssh/citrus.priv", client.getEndpointConfiguration().getPrivateKeyPath());
         Assertions.assertEquals("consol", client.getEndpointConfiguration().getPrivateKeyPassword());
         Assertions.assertEquals("classpath:org/citrusframework/ssh/known_hosts", client.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals("password,publickey", client.getEndpointConfiguration().getPreferredAuthentications());
         Assertions.assertEquals(10000, client.getEndpointConfiguration().getCommandTimeout());
         Assertions.assertEquals(5000, client.getEndpointConfiguration().getConnectionTimeout());
         Assertions.assertTrue(client.getEndpointConfiguration().isStrictHostChecking());

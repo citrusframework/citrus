@@ -52,6 +52,9 @@ import org.citrusframework.util.StringUtils;
  */
 public class SshClient extends AbstractEndpoint implements Producer, ReplyConsumer {
 
+    /** JSch session config key holding the ordered list of authentication methods */
+    static final String PREFERRED_AUTHENTICATIONS = "PreferredAuthentications";
+
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
 
@@ -188,6 +191,11 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
                     session.setPassword(getEndpointConfiguration().getPassword());
                 }
                 session.setConfig(KnownHostsServerKeyVerifier.STRICT_CHECKING_OPTION, getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
+
+                if (StringUtils.hasText(getEndpointConfiguration().getPreferredAuthentications())) {
+                    session.setConfig(PREFERRED_AUTHENTICATIONS, getEndpointConfiguration().getPreferredAuthentications());
+                }
+
                 session.connect();
             } catch (JSchException e) {
                 throw new CitrusRuntimeException("Cannot connect via SSH: " + e,e);

@@ -75,6 +75,12 @@ public @interface ScpClientConfig {
     String privateKeyPassword() default "";
 
     /**
+     * Preferred authentications.
+     * @return
+     */
+    String preferredAuthentications() default "publickey,password,keyboard-interactive";
+
+    /**
      * Message correlator.
      * @return
      */

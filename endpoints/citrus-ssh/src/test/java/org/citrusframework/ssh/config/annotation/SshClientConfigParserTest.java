@@ -55,6 +55,7 @@ public class SshClientConfigParserTest extends AbstractUnitTest {
             commandTimeout=10000,
             connectionTimeout=5000,
             knownHosts="classpath:org/citrusframework/ssh/known_hosts",
+            preferredAuthentications="password,publickey",
             timeout=10000L,
             messageConverter="sshMessageConverter")
     private SshClient sshClient2;
@@ -87,6 +88,7 @@ public class SshClientConfigParserTest extends AbstractUnitTest {
         Assertions.assertNull(sshClient1.getEndpointConfiguration().getPrivateKeyPath());
         Assertions.assertNull(sshClient1.getEndpointConfiguration().getPrivateKeyPassword());
         Assertions.assertNull(sshClient1.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals("publickey,password,keyboard-interactive", sshClient1.getEndpointConfiguration().getPreferredAuthentications());
         Assertions.assertEquals(1000 * 60 * 5, sshClient1.getEndpointConfiguration().getCommandTimeout());
         Assertions.assertEquals(1000 * 60, sshClient1.getEndpointConfiguration().getConnectionTimeout());
         Assertions.assertFalse(sshClient1.getEndpointConfiguration().isStrictHostChecking());
@@ -100,6 +102,7 @@ public class SshClientConfigParserTest extends AbstractUnitTest {
         Assertions.assertEquals("classpath:org/citrusframework/ssh/citrus.priv", sshClient2.getEndpointConfiguration().getPrivateKeyPath());
         Assertions.assertEquals("consol", sshClient2.getEndpointConfiguration().getPrivateKeyPassword());
         Assertions.assertEquals("classpath:org/citrusframework/ssh/known_hosts", sshClient2.getEndpointConfiguration().getKnownHosts());
+        Assertions.assertEquals("password,publickey", sshClient2.getEndpointConfiguration().getPreferredAuthentications());
         Assertions.assertEquals(10000, sshClient2.getEndpointConfiguration().getCommandTimeout());
         Assertions.assertEquals(5000, sshClient2.getEndpointConfiguration().getConnectionTimeout());
         Assertions.assertTrue(sshClient2.getEndpointConfiguration().isStrictHostChecking());

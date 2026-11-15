@@ -20,6 +20,7 @@
                      password="consol"
                      private-key-path="classpath:org/citrusframework/scp/citrus.priv"
                      private-key-password="consol"
+                     preferred-authentications="password,publickey"
                      timeout="10000"/>
 
   <citrus-scp:client id="scpClient3"
