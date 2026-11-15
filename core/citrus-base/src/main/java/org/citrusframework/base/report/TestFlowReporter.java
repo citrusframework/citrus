@@ -22,10 +22,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -56,22 +58,26 @@ import org.citrusframework.util.yaml.YamlStringBuilder;
  * Test actions that exchange messages with send or receive operations provide message content information.
  * The result is a graph of executed test actions that represents the test flow.
  * Graphical designers may use this test flow graph to visualize the test result in detail.
+ * <p>
+ * The reporter is shared by all tests, which may run concurrently. Each test case run records into its own report entry,
+ * so concurrent runs of tests with the same name do not mix their actions. The report holds one entry per test name:
+ * the entry of the run that started or completed most recently.
  */
 public class TestFlowReporter extends AbstractTestReporter implements TestListener, TestActionListener, ShutdownPhase {
 
     private final TestFlowReport flowReport = new TestFlowReport();
 
-    private final Set<String> finalActionsTests = ConcurrentHashMap.newKeySet();
+    /** Report entry of each test case run that has started and not yet ended */
+    private final Map<TestCase, ReportEntry> runs = Collections.synchronizedMap(new WeakHashMap<>());
+
+    private final Set<TestCase> finalActionsTests = ConcurrentHashMap.newKeySet();
 
     private final boolean enabled = TestFlowReporterSettings.isReportEnabled();
 
     @Override
     protected void generate(TestResults testResults) {
-        testResults.doWithResults(result -> {
-            if (flowReport.entries.containsKey(result.getTestName())) {
-                flowReport.entries.get(result.getTestName()).setResult(result);
-            }
-        });
+        testResults.doWithResults(result -> flowReport.get(result.getTestName())
+                .ifPresent(reportEntry -> reportEntry.setResult(result)));
 
         if (enabled && !flowReport.getEntries().isEmpty()
                 && (TestFlowReporterSettings.isJsonReport() || TestFlowReporterSettings.isYamlReport())) {
@@ -159,8 +165,8 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
     }
 
     private void recordTestAction(TestCase test, TestAction testAction, String error) {
-        boolean finalAction = finalActionsTests.contains(test.getName());
-        ReportEntry reportEntry = flowReport.getOrCreateNew(test.getName());
+        boolean finalAction = finalActionsTests.contains(test);
+        ReportEntry reportEntry = getReportEntry(test);
         String actionPath = finalAction
                 ? "finally.%d.%s".formatted(reportEntry.getFinalActions().size(), testAction.getName())
                 : getActionPath(test, testAction);
@@ -236,12 +242,34 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     @Override
     public void onFinalActionsStart(TestCase test) {
-        finalActionsTests.add(test.getName());
+        finalActionsTests.add(test);
     }
 
     @Override
     public void onFinalActionsEnd(TestCase test) {
-        finalActionsTests.remove(test.getName());
+        finalActionsTests.remove(test);
+    }
+
+    /**
+     * Get the report entry of the given test case run. The entry is added to the report when no entry with the test name exists yet.
+     * Falls back to the entry with the test name for tests that did not report a test start.
+     */
+    private ReportEntry getReportEntry(TestCase test) {
+        ReportEntry reportEntry = runs.get(test);
+        if (reportEntry == null) {
+            return flowReport.getOrCreateNew(test.getName());
+        }
+
+        flowReport.entries.putIfAbsent(test.getName(), reportEntry);
+        return reportEntry;
+    }
+
+    private void completeReportEntry(TestCase test) {
+        if (test.getTestResult() != null) {
+            ReportEntry reportEntry = getReportEntry(test);
+            reportEntry.setResult(test.getTestResult());
+            flowReport.add(test.getName(), reportEntry);
+        }
     }
 
     private static String getActionPath(TestActionContainer container, TestAction testAction) {
@@ -254,23 +282,26 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     @Override
     public void onTestStart(TestCase test) {
-        if (flowReport.get(test.getName()).isPresent()) {
-            flowReport.reset(test.getName());
-        }
+        ReportEntry reportEntry = new ReportEntry(test.getName());
+        runs.put(test, reportEntry);
+        // Replace the report of a previous run with the same name
+        flowReport.entries.replace(test.getName(), reportEntry);
     }
 
     @Override
     public void onTestSuccess(TestCase test) {
-        if (test.getTestResult() != null) {
-            flowReport.getOrCreateNew(test.getName()).setResult(test.getTestResult());
-        }
+        completeReportEntry(test);
     }
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
-        if (test.getTestResult() != null) {
-            flowReport.getOrCreateNew(test.getName()).setResult(test.getTestResult());
-        }
+        completeReportEntry(test);
+    }
+
+    @Override
+    public void onTestEnd(TestCase test) {
+        runs.remove(test);
+        finalActionsTests.remove(test);
     }
 
     @Override
@@ -285,6 +316,10 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         return flowReport.toYaml();
     }
 
+    TestFlowReport getFlowReport() {
+        return flowReport;
+    }
+
     @Override
     public void destroy() {
         clear();
@@ -292,6 +327,7 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
 
     public void clear() {
         flowReport.clear();
+        runs.clear();
         finalActionsTests.clear();
     }
 
@@ -308,13 +344,14 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         }
 
         public ReportEntry getOrCreateNew(String name) {
-            if (!entries.containsKey(name)) {
-                entries.put(name, new ReportEntry(name));
-            }
-
-            return entries.get(name);
+            return entries.computeIfAbsent(name, ReportEntry::new);
         }
 
+        /**
+         * Replace the report entry with the given name by a new empty entry.
+         * @deprecated no longer used by the reporter, which creates a new report entry for each test run on test start.
+         */
+        @Deprecated(since = "5.3.0")
         public void reset(String name) {
             entries.put(name, new ReportEntry(name));
         }
@@ -350,11 +387,14 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         }
     }
 
+    /**
+     * Report entry of a single test run. Its action lists are safe to use from several threads.
+     */
     public static class ReportEntry {
         private final String name;
-        private TestResult result;
-        private final List<TestActionResult> actions = new ArrayList<>();
-        private final List<TestActionResult> finalActions = new ArrayList<>();
+        private volatile TestResult result;
+        private final List<TestActionResult> actions = Collections.synchronizedList(new ArrayList<>());
+        private final List<TestActionResult> finalActions = Collections.synchronizedList(new ArrayList<>());
 
         public ReportEntry(String name) {
             this.name = name;
@@ -389,6 +429,8 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         }
 
         public String toJson() {
+            List<TestActionResult> actions = List.copyOf(this.actions);
+            List<TestActionResult> finalActions = List.copyOf(this.finalActions);
             var builder = new JsonStringBuilder()
                 .withObject()
                     .withProperty("name", name)
@@ -409,6 +451,8 @@ public class TestFlowReporter extends AbstractTestReporter implements TestListen
         }
 
         public String toYaml() {
+            List<TestActionResult> actions = List.copyOf(this.actions);
+            List<TestActionResult> finalActions = List.copyOf(this.finalActions);
             var builder = new YamlStringBuilder()
                 .withProperty("name", name)
                 .withObject("result").append(Optional.ofNullable(result).map(TestResult::toYaml).orElse("{}")).closeObject()
