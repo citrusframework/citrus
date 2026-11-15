@@ -178,7 +178,7 @@ public class SshClientBuilder extends AbstractEndpointBuilder<SshClient> {
         return this;
     }
 
-    @SchemaProperty(description = "Sets the ordered list of preferred authentication methods.")
+    @SchemaProperty(description = "Sets the preferred authentication mechanism.")
     @XmlAttribute(name = "preferred-authentications")
     public void setPreferredAuthentications(String preferredAuthentications) {
         preferredAuthentications(preferredAuthentications);
