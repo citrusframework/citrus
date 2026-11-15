@@ -195,6 +195,20 @@
       "defaultValue": false
     },
     {
+      "name": "citrus.camel.cli.command.restarts",
+      "type": "java.lang.Integer",
+      "description": "Number of times a Camel CLI send or receive command is restarted after a transient Camel CLI failure. Set to 0 to disable the restart.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": 1
+    },
+    {
+      "name": "citrus.camel.cli.receive.restart.grace.period",
+      "type": "java.lang.Long",
+      "description": "Grace period in milliseconds added to the receive time window of a restarted Camel CLI receive command. Covers the Camel CLI startup time.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": 10000
+    },
+    {
       "name": "citrus.camel.cli.type",
       "type": "java.lang.String",
       "description": "Camel CLI launcher type.",
