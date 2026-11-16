@@ -79,7 +79,7 @@ private GrpcClient greeterClient;
 Clients can also be created from an endpoint URI in the test:
 
 .XML
-[source,xml,indent=0,role="secondary"]
+[source,xml,indent=0]
 ----
 <grpc client="grpc://localhost:50051?descriptors=classpath:proto/helloworld/greeter.proto">
   <send>
@@ -338,7 +338,7 @@ The simulator accepts calls to its configured services and hands them to the tes
 the next call, a send answers it.
 
 .Java
-[source,java,indent=0,role="primary"]
+[source,java,indent=0]
 ----
 when(grpc().server(greeterServer).receive()
         .call("helloworld.Greeter/SayHello")
@@ -355,7 +355,7 @@ then(grpc().server(greeterServer).send()
 Error status with description and trailers:
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 then(grpc().server(greeterServer).send()
         .response("NOT_FOUND")
@@ -367,7 +367,7 @@ For server-streaming calls the simulator sends any number of stream messages fol
 completion:
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 then(grpc().server(pricesServer).send().streamMessage()
         .message().body("{ \\"symbol\\": \\"ACME\\" }"));
@@ -381,7 +381,7 @@ the first as a normal call, further messages as stream messages, and the end of 
 a stream completion.
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 when(grpc().server(storeServer).receive()
         .call("grpc2grpc.PetStoreService/StoreUsers")
@@ -418,7 +418,7 @@ Request metadata and response headers map to Citrus message headers one to one; 
 carry the `citrus_grpc_trailer_` prefix, so they can be set and validated like any other header:
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 when(grpc().client(greeterClient).send()
         .call("helloworld.Greeter/SayHello")
@@ -438,7 +438,7 @@ so that they survive the round trip.
 The simulator sends response headers and trailers with the response:
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 when(grpc().server(greeterServer).send()
         .response()
@@ -456,7 +456,7 @@ private key. Without a configured trust certificate the client falls back to the
 trust store:
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 GrpcEndpoints.grpc().server()
         .port(50051)
@@ -518,7 +518,7 @@ A receive picks the call of the correlation key by default. To collect the respo
 run in parallel, select the call explicitly:
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 String callId = context.getVariable("citrus_grpc_call_id_greeterClient");
 
@@ -535,7 +535,7 @@ The simulator answers the call that was received last. The id of that call is st
 key of the server endpoint. A send can target a specific call with `callId(...)`:
 
 .Java
-[source,java,indent=0,role="secondary"]
+[source,java,indent=0]
 ----
 then(grpc().server(greeterServer).send()
         .callId(context.getVariable("citrus_message_correlator_greeterServer"))
