@@ -255,6 +255,28 @@ public final class ClassLoaderHelper {
             return match.get();
         }
 
+        // Name-based fallback for cross-classloader scenarios where the same class
+        // is loaded by different classloaders, making isAssignableFrom return false.
+        Optional<Constructor<?>> nameMatch = Arrays.stream(type.getDeclaredConstructors())
+                .filter(constructor -> {
+                    if (constructor.getParameterCount() != parameterTypes.length) {
+                        return false;
+                    }
+
+                    for (int i = 0; i < parameterTypes.length; i++) {
+                        if (!constructor.getParameterTypes()[i].getName().equals(parameterTypes[i].getName())) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
+                .findFirst();
+
+        if (nameMatch.isPresent()) {
+            return nameMatch.get();
+        }
+
         throw new IllegalArgumentException(
                 format(
                         "No matching constructor found for type %s and parameters %s",
