@@ -1,0 +1,124 @@
+[[runtime-spring-boot]]
+== SpringBootTest
+
+Citrus provides a Spring Boot test starter that auto-configures the standard Citrus Spring infrastructure in a Spring Boot test application context.
+With the starter on the test classpath you do not need to import the `CitrusSpringConfig` configuration class explicitly.
+
+NOTE: The Citrus Spring Boot starter is shipped in a separate Maven module. Add it as a test scoped dependency to your project.
+
+.Maven
+[source,xml,indent=0,role="primary"]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-spring-boot-starter-test</artifactId>
+  <version>${citrus.version}</version>
+  <scope>test</scope>
+</dependency>
+----
+
+.Gradle
+[source,groovy,indent=0,role="secondary"]
+----
+testImplementation "org.citrusframework:citrus-spring-boot-starter-test:${citrusVersion}"
+----
+
+The starter brings in the Citrus Spring module and the Citrus JUnit Jupiter integration, so the test is able to use `@CitrusTest` and `@CitrusResource` right away.
+
+The Citrus infrastructure is registered through the Spring Boot auto-configuration mechanism.
+This means that auto-configuration must be enabled in the application context of the test, just as it is when the application uses `@SpringBootApplication` or `@EnableAutoConfiguration`.
+
+[[runtime-spring-boot-annotation]]
+=== Citrus Spring Boot test annotation
+
+Annotate the test class with `@CitrusSpringBootTest`.
+The annotation combines the Spring Boot `@SpringBootTest` annotation with the Citrus `@CitrusSpringSupport` annotation.
+
+.Citrus Spring Boot test
+[source,java]
+----
+import org.citrusframework.TestActionRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.endpoint.direct.DirectEndpoint;
+import org.citrusframework.spring.boot.test.CitrusSpringBootTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@CitrusSpringBootTest
+class MyIntegrationIT implements TestActionSupport {
+
+    @Autowired
+    private DirectEndpoint direct;
+
+    @Test
+    @CitrusTest
+    void shouldSendAndReceive(@CitrusResource TestActionRunner actions) {
+        actions.$(send().endpoint(direct)
+                .message()
+                .body("Hello from Spring Boot!"));
+
+        actions.$(receive().endpoint(direct)
+                .message()
+                .body("Hello from Spring Boot!"));
+    }
+}
+----
+
+The `@CitrusSpringBootTest` annotation supports the same attributes as `@SpringBootTest` (`classes`, `properties`, `args`, `webEnvironment` and `useMainMethod`) and passes them to the Spring Boot test context.
+
+.Citrus Spring Boot test attributes
+[source,java]
+----
+@CitrusSpringBootTest(classes = MyApplication.class,
+        properties = "greeting=Hello",
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class MyIntegrationIT {
+    // ...
+}
+----
+
+You can still use the `@SpringBootTest` and `@CitrusSpringSupport` annotations separately.
+`@CitrusSpringBootTest` is a convenience shortcut and not a replacement.
+
+.Separate Spring Boot and Citrus annotations
+[source,java]
+----
+@SpringBootTest
+@CitrusSpringSupport
+class MyIntegrationIT {
+    // ...
+}
+----
+
+[[runtime-spring-boot-explicit-config]]
+=== Explicit Citrus configuration
+
+Tests that already import `CitrusSpringConfig` explicitly keep working with the starter on the classpath.
+The auto-configuration backs off as soon as the application context already defines the Citrus test context factory (`TestContextFactoryBean`), so no duplicate Citrus beans are created.
+
+.Explicit Citrus configuration
+[source,java]
+----
+@CitrusSpringBootTest
+@Import(CitrusSpringConfig.class)
+class MyIntegrationIT {
+    // ...
+}
+----
+
+[[runtime-spring-boot-disable]]
+=== Disable Citrus auto-configuration
+
+Set the Spring Boot property `citrus.spring.boot.enabled` to `false` to skip the Citrus auto-configuration, for instance in a shared test setup where some application contexts do not use Citrus.
+The property defaults to `true`.
+
+.Disable Citrus auto-configuration
+[source,properties]
+----
+citrus.spring.boot.enabled=false
+----
+
+The starter only auto-configures the standard Citrus infrastructure.
+Message endpoints such as HTTP, JMS or Kafka clients and servers are not auto-configured; define them as Spring beans in your test configuration as usual.

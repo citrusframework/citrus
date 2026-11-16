@@ -80,6 +80,7 @@ The project is organized into several top-level modules:
     - `citrus-testng` - TestNG integration
     - `citrus-cucumber` - Cucumber BDD integration
     - `citrus-quarkus` - Quarkus integration
+    - `citrus-spring-boot-starter-test` - Spring Boot test auto-configuration and `@CitrusSpringBootTest`
     - `citrus-xml`, `citrus-yaml`, `citrus-groovy` - Alternative test DSLs
 
 - **`endpoints/`** - Message transport implementations

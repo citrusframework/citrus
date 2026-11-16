@@ -17,6 +17,7 @@
   <modules>
     <module>citrus-junit</module>
     <module>citrus-junit-jupiter</module>
+    <module>citrus-spring-boot-starter-test</module>
     <module>citrus-testng</module>
     <module>citrus-quarkus</module>
     <module>citrus-main</module>

@@ -5,7 +5,7 @@ The Citrus test case is nothing but a normal Java unit test.
 Citrus integrates with standard unit test frameworks such as https://junit.org[JUnit],
 https://testng.org[TestNG] or https://cucumber.io[Cucumber] as a runtime.
 
-In addition to that Citrus also works with `@QuarkusTest` and `@SpringBootTest` annotated classes.
+In addition to that Citrus also works with `@QuarkusTest` and link:#runtime-spring-boot[`@SpringBootTest`] annotated classes.
 
 Most Java developers are familiar with at least one of the standard tools.
 Everything you can do with JUnit or TestNG you can do with Citrus tests, too.
@@ -135,6 +135,7 @@ include::runtimes-testng.adoc[]
 include::runtimes-junit-jupiter.adoc[]
 include::runtimes-junit4.adoc[]
 include::runtimes-quarkus.adoc[]
+include::runtimes-spring-boot.adoc[]
 include::runtimes-cucumber.adoc[]
 include::runtimes-main.adoc[]
 include::runtimes-jbang.adoc[]
