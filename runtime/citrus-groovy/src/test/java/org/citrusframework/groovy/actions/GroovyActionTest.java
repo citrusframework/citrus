@@ -115,7 +115,7 @@ public class GroovyActionTest extends AbstractUnitTest {
     public void testCustomScriptTemplate() {
         GroovyAction bean = new GroovyAction.Builder()
                 .template("classpath:org/citrusframework/groovy/script/custom-script-template.groovy")
-                .script("Assert.assertEquals(context.getVariable('scriptTemplateVar'), 'It works!')")
+                .script("Assertions.assertEquals(context.getVariable('scriptTemplateVar'), 'It works!')")
                 .build();
         bean.execute(context);
     }

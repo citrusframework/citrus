@@ -19,9 +19,9 @@ actions:
       script:
         template: "classpath:org/citrusframework/groovy/script/custom-script-template.groovy"
         value: |
-          Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
-          Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
-          Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+          Assertions.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+          Assertions.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+          Assertions.assertEquals(context.getVariable("greetingText"), "${greetingText}")
   - groovy:
       script:
         file: "classpath:org/citrusframework/groovy/script/example.groovy"
