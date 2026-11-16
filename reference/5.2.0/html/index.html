@@ -574,7 +574,7 @@ $(addBlockSwitches);
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
 <span id="revnumber">version 5.2.0,</span>
-<span id="revdate">2026-11-13</span>
+<span id="revdate">2026-11-16</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -30355,7 +30355,7 @@ private GrpcClient greeterClient;</code></pre>
 <div class="paragraph">
 <p>Clients can also be created from an endpoint URI in the test:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">XML</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;grpc client="grpc://localhost:50051?descriptors=classpath:proto/helloworld/greeter.proto"&gt;
@@ -30633,7 +30633,7 @@ Complete the request side with <code>streamCompleted()</code> on a send and wait
 <p>The simulator accepts calls to its configured services and hands them to the test: a receive takes
 the next call, a send answers it.</p>
 </div>
-<div class="listingblock primary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">when(grpc().server(greeterServer).receive()
@@ -30651,7 +30651,7 @@ then(grpc().server(greeterServer).send()
 <div class="paragraph">
 <p>Error status with description and trailers:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">then(grpc().server(greeterServer).send()
@@ -30664,7 +30664,7 @@ then(grpc().server(greeterServer).send()
 <p>For server-streaming calls the simulator sends any number of stream messages followed by a
 completion:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">then(grpc().server(pricesServer).send().streamMessage()
@@ -30679,7 +30679,7 @@ then(grpc().server(pricesServer).send().streamCompleted("UNAVAILABLE")
 the first as a normal call, further messages as stream messages, and the end of the request side as
 a stream completion.</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">when(grpc().server(storeServer).receive()
@@ -30719,7 +30719,7 @@ not passed to the adapter. The default test-driven mode delivers every request m
 <p>Request metadata and response headers map to Citrus message headers one to one; response trailers
 carry the <code>citrus_grpc_trailer_</code> prefix, so they can be set and validated like any other header:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">when(grpc().client(greeterClient).send()
@@ -30741,7 +30741,7 @@ so that they survive the round trip.</p>
 <div class="paragraph">
 <p>The simulator sends response headers and trailers with the response:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">when(grpc().server(greeterServer).send()
@@ -30761,7 +30761,7 @@ no message arrives.</p>
 private key. Without a configured trust certificate the client falls back to the JVM default
 trust store:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">GrpcEndpoints.grpc().server()
@@ -30878,7 +30878,7 @@ the endpoint, so several gRPC clients do not overwrite each other:</p>
 <p>A receive picks the call of the correlation key by default. To collect the responses of calls that
 run in parallel, select the call explicitly:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">String callId = context.getVariable("citrus_grpc_call_id_greeterClient");
@@ -30897,7 +30897,7 @@ applies: <code>header:citrus_grpc_call_id = '42'</code>. The <code>header:</code
 <p>The simulator answers the call that was received last. The id of that call is stored in the correlation
 key of the server endpoint. A send can target a specific call with <code>callId(&#8230;&#8203;)</code>:</p>
 </div>
-<div class="listingblock secondary">
+<div class="listingblock">
 <div class="title">Java</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">then(grpc().server(greeterServer).send()
@@ -38101,6 +38101,14 @@ Settings use the <code>citrus.camel.cli.<strong></code> prefix. The older <code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When set to true, the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run. (default="true")</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.cli.command.restarts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times a Camel CLI <code>cmd send</code> or <code>cmd receive</code> command is restarted after a transient Camel CLI failure, e.g. a send timeout or a receive command that did not find the running integration. Set to 0 to disable the restart. (default="1")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.cli.receive.restart.grace.period</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grace period in milliseconds added to the time window of a restarted <code>cmd receive</code> command, so that messages received before the restart are not skipped. Covers the Camel CLI startup time. (default="10000")</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.camel.cli.trust.url</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Comma-separated list of trust URLs for JBang. (default="https://github.com/apache/camel/")</p></td>
 </tr>
@@ -38174,6 +38182,14 @@ Settings use the <code>citrus.camel.cli.<strong></code> prefix. The older <code>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_CLI_RUN_AUTO_SET_PROPERTIES</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When set to true, the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_CLI_COMMAND_RESTARTS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times a Camel CLI <code>cmd send</code> or <code>cmd receive</code> command is restarted after a transient Camel CLI failure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_CAMEL_CLI_RECEIVE_RESTART_GRACE_PERIOD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grace period in milliseconds added to the time window of a restarted <code>cmd receive</code> command.</p></td>
 </tr>
 </tbody>
 </table>
@@ -43911,7 +43927,10 @@ Simply include the <code>citrus-scp</code> namespace in the configuration XML fi
 </table>
 </div>
 <div class="paragraph">
-<p>The configuration above describes a Citrus scp client. The scp-client connects to the server using the user credentials and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.</p>
+<p>The configuration above describes a Citrus scp client. The scp-client connects to the server using the user credentials and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.
+Just like the SFTP client, the SCP client tries the authentication methods in the following order by default: <code>publickey,password,keyboard-interactive</code>.
+You&#8217;re able to configure the order with the <code>preferred-authentications</code> attribute in XML or the
+<code>preferredAuthentications</code> method in Java (e.g. <code>.preferredAuthentications("password,publickey")</code>).</p>
 </div>
 <div class="sect3">
 <h4 id="scp-client-store"><a class="anchor" href="#scp-client-store"></a><a class="link" href="#scp-client-store">23.3.1. Store files</a></h4>
@@ -51217,6 +51236,14 @@ known-hosts-path
 </tr>
 <tr>
 <td class="hdlist1">
+preferred-authentications
+</td>
+<td class="hdlist2">
+<p>Ordered list of authentication methods the client tries when connecting to the server. Default is "publickey,password,keyboard-interactive" (e.g. preferred-authentications="publickey,password")</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
 command-timeout
 </td>
 <td class="hdlist2">
@@ -51240,6 +51267,38 @@ actor
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The client tries the authentication methods in the order given by <code>preferred-authentications</code>. Methods that are not part
+of the list are not used at all. By default the client uses <code>publickey,password,keyboard-interactive</code> and does not try
+<code>gssapi-with-mic</code>, which would otherwise ask for Kerberos credentials on servers that support it.
+You can change the order with the <code>preferred-authentications</code> attribute in XML or the <code>preferredAuthentications</code> method in Java.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Citrus Bean</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@BindToRegistry
+public SshClient sshClient() {
+    return new SshClientBuilder()
+        .host("localhost")
+        .port(9072)
+        .user("roland")
+        .password("secret")
+        .preferredAuthentications("password,publickey")
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;citrus-ssh:client id="sshClient"
+       port="9072"
+       user="roland"
+       password="secret"
+       preferred-authentications="password,publickey"
+       host="localhost"/&gt;</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Once defines as client component in the Spring application context test cases can reference the client in every send test action.</p>
@@ -60772,6 +60831,101 @@ private RandomEnumValueFunction randomHttpStatusCode() {
 2009-09-01 11:00:00</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>When no date format parameter is given the function uses the default date format <code>dd.MM.yyyy</code>. You can change this default
+date format with the system property <code>citrus.default.date.format</code> or the environment variable <code>CITRUS_DEFAULT_DATE_FORMAT</code>.
+The setting applies to both date functions <code>citrus:currentDate()</code> and <code>citrus:changeDate()</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">citrus-application.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">citrus.default.date.format=yyyy-MM-dd'T'HH:mm:ss</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also set the default date format with a test variable named <code>citrus.default.date.format</code>. The test variable
+takes precedence over the system property and environment variable settings, so you can change the default date format
+for a single test or for all tests using a <a href="#global-variables">global variable</a>.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@CitrusTest
+public void defaultDateFormatTest() {
+    variable("citrus.default.date.format", "yyyy-MM-dd'T'HH:mm:ss");
+    variable("date", "citrus:currentDate()");
+
+    then(echo().message("Today is: ${date}"));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;test name="DefaultDateFormatTest" xmlns="http://citrusframework.org/schema/xml/testcase"&gt;
+  &lt;variables&gt;
+    &lt;variable name="citrus.default.date.format" value="yyyy-MM-dd'T'HH:mm:ss" /&gt;
+    &lt;variable name="date" value="citrus:currentDate()" /&gt;
+  &lt;/variables&gt;
+  &lt;actions&gt;
+    &lt;echo&gt;
+      &lt;message&gt;Today is: ${date}&lt;/message&gt;
+    &lt;/echo&gt;
+  &lt;/actions&gt;
+&lt;/test&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: DefaultDateFormatTest
+variables:
+  - name: "citrus.default.date.format"
+    value: "yyyy-MM-dd'T'HH:mm:ss"
+  - name: date
+    value: "citrus:currentDate()"
+actions:
+  - echo:
+      message: "Today is: ${date}"</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+          xmlns:spring="http://www.springframework.org/schema/beans"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase
+              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd"&gt;
+
+    &lt;testcase name="DefaultDateFormatTest"&gt;
+        &lt;variables&gt;
+            &lt;variable name="citrus.default.date.format" value="yyyy-MM-dd'T'HH:mm:ss" /&gt;
+            &lt;variable name="date" value="citrus:currentDate()" /&gt;
+        &lt;/variables&gt;
+        &lt;actions&gt;
+            &lt;echo&gt;
+                &lt;message&gt;Today is: ${date}&lt;/message&gt;
+            &lt;/echo&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+&lt;/spring:beans&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Test variables are created in the order of declaration. Make sure to declare the <code>citrus.default.date.format</code> variable
+before any other variable that uses a date function.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="functions-uppercase"><a class="anchor" href="#functions-uppercase"></a><a class="link" href="#functions-uppercase">42.16. upperCase()</a></h3>
@@ -61164,7 +61318,7 @@ uri=http://127.0.0.1:8080,response=51f98c,opaque=b29a30,algorithm=md5&gt;</code>
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see the change date function works on static date values or dynamic variable values or functions like <strong>citrus:currentDate()</strong> . By default the change date function requires a date format such as the current date function ('dd.MM.yyyy'). You can also define a custom date format:</p>
+<p>As you can see the change date function works on static date values or dynamic variable values or functions like <strong>citrus:currentDate()</strong> . By default the change date function requires a date format such as the current date function ('dd.MM.yyyy'). The default date format is customizable with the <code>citrus.default.date.format</code> setting as described in <a href="#functions-current-date">currentDate()</a>. You can also define a custom date format:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -65613,6 +65767,10 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default message type for validating payloads (default="XML")</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.default.date.format</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default date format used by date functions such as <code>citrus:currentDate()</code> and <code>citrus:changeDate()</code> when no explicit format is given (default="dd.MM.yyyy")</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.test.name.variable</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default test name variable that is automatically created for each test (default="citrus.test.name")</p></td>
 </tr>
@@ -65749,6 +65907,10 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_DEFAULT_MESSAGE_TYPE</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default message type for validating payloads (default="XML")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_DEFAULT_DATE_FORMAT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default date format used by date functions such as <code>citrus:currentDate()</code> and <code>citrus:changeDate()</code> when no explicit format is given (default="dd.MM.yyyy")</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_TEST_NAME_VARIABLE</p></td>
@@ -66239,10 +66401,10 @@ citrus.xml.file.name.pattern=/**/*Test.xml,/**/*IT.xml</code></pre>
 <div class="paragraph">
 <p>Citrus automatically loads these application properties at the startup. All properties are also settable with Java system
 properties directly. The location of the <code>citrus-application.properties</code> file is customizable with the system property
-<code>citrus.application.properties</code> or environment variable <code>CITRUS_APPLICATION_PROPERTIES</code>.
-.Custom property file location.</p>
+<code>citrus.application.properties</code> or environment variable <code>CITRUS_APPLICATION_PROPERTIES</code>.</p>
 </div>
 <div class="listingblock">
+<div class="title">Custom property file location.</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">CITRUS_APPLICATION_PROPERTIES=file:/custom/path/to/citrus-application.properties</code></pre>
 </div>
