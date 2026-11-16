@@ -190,6 +190,9 @@ Also, you can use the `@CitrusResource` annotations to inject the test action ru
 TIP: The Spring application context should use the basic `CitrusSpringConfig` configuration class to load all Citrus components as Spring beans.
 You can customize the Spring application context by adding more configuration classes.
 
+TIP: In a Spring Boot test you can use the Citrus Spring Boot starter instead, which auto-configures the Citrus components without an explicit `CitrusSpringConfig` import.
+See link:#runtime-spring-boot[SpringBootTest] for details.
+
 [[junit-jupiter-test-sharding]]
 === Test Sharding
 
