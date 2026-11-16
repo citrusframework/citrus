@@ -104,14 +104,18 @@ public class JBangSupport implements ProcessLauncher {
     }
 
     /**
-     * Adds JBang trust for given URL.
+     * Adds JBang trust for given URL. Synchronized on the shared set of trusted URLs so that
+     * concurrent callers wait until the trust has been recorded before running any JBang script.
      */
     public JBangSupport trust(String url) {
-        if (trustUrls.add(url)) {
-            ProcessAndOutput result = execute(jBang("trust", "add", url), null, null, null);
-            int exitValue = result.getProcess().exitValue();
-            if (exitValue != OK_EXIT_CODE && exitValue != 1) {
-                throw new CitrusRuntimeException("Error while trusting JBang URLs. Exit code: " + exitValue);
+        synchronized (trustUrls) {
+            if (!trustUrls.contains(url)) {
+                ProcessAndOutput result = execute(jBang("trust", "add", url), null, null, null);
+                int exitValue = result.getProcess().exitValue();
+                if (exitValue != OK_EXIT_CODE && exitValue != 1) {
+                    throw new CitrusRuntimeException("Error while trusting JBang URLs. Exit code: " + exitValue);
+                }
+                trustUrls.add(url);
             }
         }
         return this;
