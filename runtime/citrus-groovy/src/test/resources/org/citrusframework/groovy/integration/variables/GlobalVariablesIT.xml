@@ -48,13 +48,13 @@
           import org.citrusframework.variable.*
           import org.citrusframework.context.TestContext
           import org.citrusframework.groovy.actions.GroovyAction.ScriptExecutor
-          import org.testng.Assert;
+          import org.junit.jupiter.api.Assertions;
 
           public class GScript implements ScriptExecutor {
               public void execute(TestContext context) {
-                  Assert.assertEquals("${globalWelcomingText}", "Hello Citrus!")
-                  Assert.assertEquals("${globalDate}", "Today is ${checkDate}!")
-                  Assert.assertEquals("${globalSum1}", "${globalSum2}")
+                  Assertions.assertEquals("${globalWelcomingText}", "Hello Citrus!")
+                  Assertions.assertEquals("${globalDate}", "Today is ${checkDate}!")
+                  Assertions.assertEquals("${globalSum1}", "${globalSum2}")
               }
           }
         ]]>

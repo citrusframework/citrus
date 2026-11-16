@@ -49,11 +49,11 @@ public class GroovyActionJavaIT implements TestActionSupport {
                 "import org.citrusframework.variable.*" + NEWLINE +
                 "import org.citrusframework.context.TestContext" + NEWLINE +
                 "import org.citrusframework.groovy.actions.GroovyAction.ScriptExecutor" + NEWLINE +
-                "import org.testng.Assert" + NEWLINE +
+                "import org.junit.jupiter.api.Assertions" + NEWLINE +
                 "public class GScript implements ScriptExecutor {" + NEWLINE +
                     "public void execute(TestContext context) {" + NEWLINE +
-                        "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
-                        "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")" + NEWLINE +
+                        "Assertions.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
+                        "Assertions.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")" + NEWLINE +
                     "}" + NEWLINE +
                 "}"));
 
@@ -63,15 +63,15 @@ public class GroovyActionJavaIT implements TestActionSupport {
 
         runner.run(script().groovy("println 'Hello Citrus'").skipTemplate());
 
-        runner.run(script().groovy("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
-                "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
-                "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")")
+        runner.run(script().groovy("Assertions.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
+                "Assertions.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
+                "Assertions.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")")
                 .template("classpath:org/citrusframework/groovy/integration/script/custom-script-template.groovy"));
 
-        runner.run(script().groovy("import org.testng.Assert" + NEWLINE +
-                  "Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
-                  "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
-                  "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")"));
+        runner.run(script().groovy("import org.junit.jupiter.api.Assertions" + NEWLINE +
+                  "Assertions.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
+                  "Assertions.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
+                  "Assertions.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")"));
 
         runner.run(script().groovy("public class MyCustomClass {" + NEWLINE +
                     "public void run() {" + NEWLINE +

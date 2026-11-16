@@ -14,11 +14,11 @@
                 println 'Hello Citrus'
             </groovy>
             
-            <groovy script-template="classpath:org/citrusframework/script/custom-script-template.groovy">
+            <groovy script-template="classpath:org/citrusframework/groovy/script/custom-script-template.groovy">
                 <![CDATA[
-                  Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
-                  Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
-                  Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+                  Assertions.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+                  Assertions.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+                  Assertions.assertEquals(context.getVariable("greetingText"), "${greetingText}")
                 ]]>
             </groovy>
             

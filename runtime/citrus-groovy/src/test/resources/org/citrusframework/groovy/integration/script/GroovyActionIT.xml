@@ -32,12 +32,12 @@
                     import org.citrusframework.variable.*
                     import org.citrusframework.context.TestContext
                     import org.citrusframework.groovy.actions.GroovyAction.ScriptExecutor
-                    import org.testng.Assert
+                    import org.junit.jupiter.api.Assertions
 
                     public class GScript implements ScriptExecutor {
                         public void execute(TestContext context) {
-                            Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
-                            Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+                            Assertions.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+                            Assertions.assertEquals(context.getVariable("greetingText"), "${greetingText}")
                         }
                     }
                 ]]>
@@ -52,18 +52,18 @@
             </groovy>
             <groovy script-template="classpath:org/citrusframework/groovy/integration/script/custom-script-template.groovy">
                 <![CDATA[
-                  Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
-                  Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
-                  Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+                  Assertions.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+                  Assertions.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+                  Assertions.assertEquals(context.getVariable("greetingText"), "${greetingText}")
                 ]]>
             </groovy>
             <groovy>
                 <![CDATA[
-                  import org.testng.Assert
+                  import org.junit.jupiter.api.Assertions
 
-                  Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
-                  Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
-                  Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+                  Assertions.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+                  Assertions.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+                  Assertions.assertEquals(context.getVariable("greetingText"), "${greetingText}")
                 ]]>
             </groovy>
             <groovy>
