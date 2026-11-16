@@ -41,7 +41,7 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
 
         action = getNextTestActionFromTest();
         Assertions.assertNull(action.getScriptResourcePath());
-        Assertions.assertEquals("classpath:org/citrusframework/script/custom-script-template.groovy", action.getScriptTemplatePath());
+        Assertions.assertEquals("classpath:org/citrusframework/groovy/script/custom-script-template.groovy", action.getScriptTemplatePath());
         Assertions.assertNotNull(action.getScript());
 
         action = getNextTestActionFromTest();
