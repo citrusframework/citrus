@@ -20,7 +20,6 @@ import org.citrusframework.api.actions.testcontainers.TestcontainersMongoDBStart
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testcontainers.TestContainersSettings;
 import org.citrusframework.testcontainers.actions.StartTestcontainersAction;
-import org.citrusframework.testcontainers.postgresql.PostgreSQLSettings;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
@@ -46,7 +45,7 @@ public class StartMongoDBAction extends StartTestcontainersAction<MongoDBContain
         private String mongoDBVersion = MongoDBSettings.getMongoDBVersion();
 
         public Builder() {
-            withStartupTimeout(PostgreSQLSettings.getStartupTimeout());
+            withStartupTimeout(MongoDBSettings.getStartupTimeout());
         }
 
         @Override

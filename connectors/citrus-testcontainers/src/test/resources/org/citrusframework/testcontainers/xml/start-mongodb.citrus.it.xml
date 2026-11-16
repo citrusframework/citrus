@@ -21,7 +21,7 @@
   <actions>
     <testcontainers>
       <start>
-        <mongodb auto-remove="false">
+        <mongodb auto-remove="false" startup-timeout="30">
           <labels>
             <label name="app" value="citrus"/>
           </labels>
