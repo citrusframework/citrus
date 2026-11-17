@@ -152,6 +152,9 @@ public class Cookies extends AbstractPlaywrightAction.Builder<CookieAction, Cook
 
     @Override
     public CookieAction build() {
+        if (url != null) {
+            delegate.url(url);
+        }
         switch (DslCommands.normalize(command)) {
             case "add" -> delegate.add(cookie());
             case "clear" -> delegate.clear();

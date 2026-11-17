@@ -177,6 +177,27 @@ class ActionWrapperTest {
     }
 
     @Test
+    void shouldForwardUrlAndNamelessCookieOnReadAndVerify() {
+        Cookies read = new Cookies();
+        read.setCommand("read");
+        read.setName("");
+        read.setUrl("https://example.com/api");
+        read.setVariable("nameless");
+
+        var builtRead = read.build();
+        assertEquals("", builtRead.getCookieName());
+        assertEquals("https://example.com/api", builtRead.getUrl());
+
+        Cookies verify = new Cookies();
+        verify.setCommand("verify");
+        verify.setName("session");
+        verify.setValue("ok");
+        verify.setUrl("https://example.com/api");
+
+        assertEquals("https://example.com/api", verify.build().getUrl());
+    }
+
+    @Test
     void shouldRejectAmbiguousPageSwitch() {
         Page page = new Page();
         page.setCommand("switch");

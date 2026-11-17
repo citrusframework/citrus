@@ -135,6 +135,23 @@ class ExtractActionTest {
     }
 
     @Test
+    void shouldExtractNamelessCookieValue() {
+        browser.createContext("admin");
+        Cookie cookie = new Cookie("", "nameless-token");
+        when(browser.context().cookies()).thenReturn(List.of(cookie));
+
+        new ExtractAction.Builder().cookie("").variable("nameless").build().execute(context);
+
+        assertEquals("nameless-token", context.getVariable("nameless"));
+    }
+
+    @Test
+    void shouldFailFastWhenCookieNameNull() {
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().cookie(null).variable("nameless").build());
+    }
+
+    @Test
     void shouldStoreEmptyStringWhenResultNull() {
         when(locator.textContent()).thenReturn(null);
 

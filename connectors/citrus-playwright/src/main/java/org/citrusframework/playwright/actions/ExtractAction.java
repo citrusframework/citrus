@@ -473,8 +473,8 @@ public class ExtractAction extends AbstractPlaywrightAction {
             if ((value == Value.FRAME_CONTENT) && !StringUtils.hasText(frameSelector)) {
                 throw new CitrusRuntimeException("Missing Playwright frame selector - call frameContent(...) before building extract action");
             }
-            if ((value == Value.STORAGE_LOCAL || value == Value.STORAGE_SESSION || value == Value.COOKIE)
-                    && !StringUtils.hasText(key)) {
+            if (((value == Value.STORAGE_LOCAL || value == Value.STORAGE_SESSION) && !StringUtils.hasText(key))
+                    || (value == Value.COOKIE && key == null)) {
                 throw new CitrusRuntimeException("Missing Playwright state key - call storageLocal(...), storageSession(...), or cookie(...) before building extract action");
             }
             if (!StringUtils.hasText(variable)) {

@@ -37,15 +37,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.options.HttpCredentials;
+import com.microsoft.playwright.options.Proxy;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -68,6 +73,7 @@ import org.citrusframework.playwright.dsl.AbstractDslLoaderTest;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.PlaywrightEndpointBuilder;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
+import org.citrusframework.playwright.model.CookieSpec;
 import org.citrusframework.playwright.support.FixtureServer;
 import org.citrusframework.playwright.support.PlaywrightRuntime;
 import org.citrusframework.playwright.support.FixtureServer.RecordedRequest;
@@ -129,6 +135,9 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
                         .header("Set-Cookie", "FIRST=1; Path=/")
                         .header("Set-Cookie", "SECOND=2; Path=/")
                         .send(200, "text/plain", "two cookies"))
+                .route("/api/nameless-cookie", (request, response) -> response
+                        .header("Set-Cookie", "raw-session-token; Path=/")
+                        .send(200, "text/plain", "nameless cookie"))
                 .route("/api/missing", (request, response) -> response.send(404, "text/plain", "missing"))
                 .route("/protected", (request, response) -> {
                     if (request.header("Authorization") == null) {
@@ -594,6 +603,67 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         assertTrue(lastRequest("/api/me").hasCookie("SID"));
     }
 
+    @Test
+    void shouldStoreAndSendNamelessCookiesPerRfc6265() {
+        startBrowser(builder -> { });
+
+        exchange(browserApi, "/api/nameless-cookie");
+
+        playwright().browser(browser).cookies().verify("", "raw-session-token").build().execute(context);
+        playwright().browser(browser).verify().cookie("", "raw-session-token").build().execute(context);
+        playwright().browser(browser).extract().cookie("").variable("namelessCookie").build().execute(context);
+        assertEquals("raw-session-token", context.getVariable("namelessCookie"));
+
+        exchange(browserApi, "/echo");
+        assertEquals("raw-session-token", lastRequest("/echo").header("Cookie"));
+
+        playwright().browser(browser).cookies().clear().build().execute(context);
+        playwright().browser(browser).cookies()
+                .add(CookieSpec.cookie("", "manual-token").url(server.url("/")))
+                .build().execute(context);
+
+        exchange(browserApi, "/echo");
+        assertEquals("manual-token", lastRequest("/echo").header("Cookie"));
+    }
+
+    @Test
+    void shouldNotSendProxyCredentialsToOriginWebsites() throws Exception {
+        int upstreamPort = URI.create(server.url("")).getPort();
+        String expectedOriginAuth = "Basic " + Base64.getEncoder()
+                .encodeToString("alice:s3cret".getBytes(StandardCharsets.UTF_8));
+
+        try (LocalHttpProxy proxy = LocalHttpProxy.start("proxy-user", "proxy-pass", upstreamPort)) {
+            // 1. Proxy credentials answer 407 proxy challenge only and are never forwarded to target website (401).
+            startBrowser(builder -> builder.contextOptions(new Browser.NewContextOptions()
+                    .setProxy(new Proxy(proxy.url()).setUsername("proxy-user").setPassword("proxy-pass"))));
+
+            http().client(browserApi).send().get().uri("http://origin.example.test/protected").build().execute(context);
+            http().client(browserApi).receive().response(HttpStatus.UNAUTHORIZED).build().execute(context);
+
+            assertTrue(proxy.authenticatedCount() >= 1, "Expected proxy authentication to succeed");
+            RecordedRequest unauthenticatedOrigin = lastRequest("/protected");
+            assertNull(unauthenticatedOrigin.header("Authorization"),
+                    "Proxy credentials must not be leaked as origin Authorization header");
+
+            browser.stop();
+            browser = null;
+
+            // 2. Adding httpCredentials authenticates against the target origin separately from proxy credentials.
+            HttpCredentials originCredentials = new HttpCredentials("alice", "s3cret")
+                    .setOrigin("http://origin.example.test");
+            startBrowser(builder -> builder
+                    .contextOptions(new Browser.NewContextOptions()
+                            .setProxy(new Proxy(proxy.url()).setUsername("proxy-user").setPassword("proxy-pass")))
+                    .httpCredentials(List.of(originCredentials)));
+
+            http().client(browserApi).send().get().uri("http://origin.example.test/protected").build().execute(context);
+            http().client(browserApi).receive().response(HttpStatus.OK).message().body("authorized").build().execute(context);
+
+            RecordedRequest authenticatedOrigin = lastRequest("/protected");
+            assertEquals(expectedOriginAuth, authenticatedOrigin.header("Authorization"));
+        }
+    }
+
     private void startBrowser(Consumer<PlaywrightEndpointBuilder> customizer) {
         PlaywrightEndpointBuilder builder = PlaywrightEndpoints.playwright()
                 .browser()
@@ -640,5 +710,168 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
             messages.append(current.getMessage()).append(" | ");
         }
         return messages.toString();
+    }
+
+    /**
+     * Minimal HTTP proxy supporting both {@code CONNECT} tunneling and forward-proxy HTTP requests,
+     * requiring Basic {@code Proxy-Authorization} and forwarding traffic to the local fixture server.
+     */
+    private static final class LocalHttpProxy implements AutoCloseable {
+
+        private final ServerSocket serverSocket;
+        private final String expectedProxyAuth;
+        private final int upstreamPort;
+        private final AtomicInteger authenticatedCount = new AtomicInteger();
+
+        private LocalHttpProxy(ServerSocket serverSocket, String expectedProxyAuth, int upstreamPort) {
+            this.serverSocket = serverSocket;
+            this.expectedProxyAuth = expectedProxyAuth;
+            this.upstreamPort = upstreamPort;
+        }
+
+        static LocalHttpProxy start(String username, String password, int upstreamPort) throws IOException {
+            ServerSocket socket = new ServerSocket(0, 50, InetAddress.getLoopbackAddress());
+            String auth = "Basic " + Base64.getEncoder()
+                    .encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+            LocalHttpProxy proxy = new LocalHttpProxy(socket, auth, upstreamPort);
+            Thread.ofVirtual().start(proxy::acceptLoop);
+            return proxy;
+        }
+
+        String url() {
+            return "http://127.0.0.1:" + serverSocket.getLocalPort();
+        }
+
+        int authenticatedCount() {
+            return authenticatedCount.get();
+        }
+
+        private void acceptLoop() {
+            while (!serverSocket.isClosed()) {
+                try {
+                    Socket client = serverSocket.accept();
+                    Thread.ofVirtual().start(() -> handleClient(client));
+                } catch (IOException ignored) {
+                    return;
+                }
+            }
+        }
+
+        private void handleClient(Socket client) {
+            try (client) {
+                client.setSoTimeout(5000);
+                InputStream clientIn = client.getInputStream();
+                OutputStream clientOut = client.getOutputStream();
+
+                String head = readHeaderBlock(clientIn);
+                if (head.isEmpty()) {
+                    return;
+                }
+                String[] lines = head.split("\r\n");
+                String requestLine = lines[0];
+                String proxyAuth = null;
+                for (int i = 1; i < lines.length; i++) {
+                    String line = lines[i];
+                    int colon = line.indexOf(':');
+                    if (colon > 0 && "proxy-authorization".equals(line.substring(0, colon).trim().toLowerCase(Locale.ROOT))) {
+                        proxyAuth = line.substring(colon + 1).trim();
+                    }
+                }
+
+                if (!expectedProxyAuth.equals(proxyAuth)) {
+                    byte[] challenge = ("HTTP/1.1 407 Proxy Authentication Required\r\n"
+                            + "Proxy-Authenticate: Basic realm=\"proxy\"\r\n"
+                            + "Content-Length: 0\r\n"
+                            + "Connection: close\r\n\r\n").getBytes(StandardCharsets.ISO_8859_1);
+                    clientOut.write(challenge);
+                    clientOut.flush();
+                    return;
+                }
+
+                authenticatedCount.incrementAndGet();
+                try (Socket upstream = new Socket(InetAddress.getLoopbackAddress(), upstreamPort)) {
+                    upstream.setSoTimeout(5000);
+                    InputStream upstreamIn = upstream.getInputStream();
+                    OutputStream upstreamOut = upstream.getOutputStream();
+
+                    if (requestLine.startsWith("CONNECT ")) {
+                        clientOut.write("HTTP/1.1 200 Connection Established\r\n\r\n".getBytes(StandardCharsets.ISO_8859_1));
+                        clientOut.flush();
+
+                        Thread reverse = Thread.ofVirtual().start(() -> {
+                            try {
+                                upstreamIn.transferTo(clientOut);
+                                clientOut.flush();
+                                client.shutdownOutput();
+                            } catch (IOException ignored) {
+                            }
+                        });
+                        try {
+                            clientIn.transferTo(upstreamOut);
+                            upstreamOut.flush();
+                            upstream.shutdownOutput();
+                        } catch (IOException ignored) {
+                        }
+                        reverse.join(5000);
+                    } else {
+                        String[] parts = requestLine.split(" ");
+                        URI uri = URI.create(parts[1]);
+                        String path = uri.getRawPath() == null || uri.getRawPath().isEmpty() ? "/" : uri.getRawPath();
+                        if (uri.getRawQuery() != null) {
+                            path = path + "?" + uri.getRawQuery();
+                        }
+                        StringBuilder forwarded = new StringBuilder()
+                                .append(parts[0]).append(' ').append(path).append(' ').append(parts[2]).append("\r\n");
+                        for (int i = 1; i < lines.length; i++) {
+                            String line = lines[i];
+                            String lower = line.toLowerCase(Locale.ROOT);
+                            if (!lower.startsWith("proxy-authorization:")
+                                    && !lower.startsWith("proxy-connection:")
+                                    && !lower.startsWith("connection:")) {
+                                forwarded.append(line).append("\r\n");
+                            }
+                        }
+                        forwarded.append("Connection: close\r\n\r\n");
+                        upstreamOut.write(forwarded.toString().getBytes(StandardCharsets.ISO_8859_1));
+                        upstreamOut.flush();
+                        upstreamIn.transferTo(clientOut);
+                        clientOut.flush();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            } catch (IOException ignored) {
+            }
+        }
+
+        private static String readHeaderBlock(InputStream in) throws IOException {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream(512);
+            int matched = 0;
+            while (buffer.size() < 16_384) {
+                int b = in.read();
+                if (b == -1) {
+                    break;
+                }
+                buffer.write(b);
+                if ((matched == 0 && b == '\r')
+                        || (matched == 1 && b == '\n')
+                        || (matched == 2 && b == '\r')
+                        || (matched == 3 && b == '\n')) {
+                    matched++;
+                    if (matched == 4) {
+                        break;
+                    }
+                } else {
+                    matched = b == '\r' ? 1 : 0;
+                }
+            }
+            String raw = buffer.toString(StandardCharsets.ISO_8859_1);
+            return raw.endsWith("\r\n\r\n") ? raw.substring(0, raw.length() - 4) : raw;
+        }
+
+        @Override
+        public void close() throws IOException {
+            serverSocket.close();
+        }
     }
 }

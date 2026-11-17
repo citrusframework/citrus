@@ -29,13 +29,16 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.model.CookieSpec;
 import org.citrusframework.playwright.util.LocatorResolver;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Citrus action for browser cookie operations on the current context.
  *
- * <p>Cookie values and names are resolved through Citrus variables. Add
- * commands use the current page URL as a default cookie URL when no explicit
- * URL or domain is configured.</p>
+ * <p>Cookie values, names, and URLs are resolved through Citrus variables. Add
+ * commands use the configured action URL or current page URL as a default cookie
+ * URL when no explicit URL or domain is configured on the cookie specification.
+ * Read and verify commands filter context cookies with RFC 6265 URL matching
+ * when an action URL is configured.</p>
  */
 public class CookieAction extends AbstractPlaywrightAction {
 
@@ -50,6 +53,7 @@ public class CookieAction extends AbstractPlaywrightAction {
     private final CookieSpec cookie;
     private final String name;
     private final String expectedValue;
+    private final String url;
     private final String variable;
 
     public CookieAction(Builder builder) {
@@ -58,6 +62,7 @@ public class CookieAction extends AbstractPlaywrightAction {
         this.cookie = builder.cookie;
         this.name = builder.name;
         this.expectedValue = builder.expectedValue;
+        this.url = builder.url;
         this.variable = builder.variable;
     }
 
@@ -66,7 +71,9 @@ public class CookieAction extends AbstractPlaywrightAction {
         switch (command) {
             case ADD -> {
                 BrowserContext currentContext = browser.getCurrentContext();
-                String defaultUrl = browser.currentPageIfAvailable().map(Page::url).orElse(null);
+                String defaultUrl = StringUtils.hasText(url)
+                        ? LocatorResolver.resolve(url, context)
+                        : browser.currentPageIfAvailable().map(Page::url).orElse(null);
                 currentContext.addCookies(List.of(cookie.toCookie(context, defaultUrl)));
             }
             case CLEAR -> browser.getCurrentContext().clearCookies();
@@ -87,6 +94,14 @@ public class CookieAction extends AbstractPlaywrightAction {
 
     private Cookie findCookie(PlaywrightBrowser browser, TestContext context) {
         String resolvedName = LocatorResolver.resolve(name, context);
+        if (StringUtils.hasText(url)) {
+            String resolvedUrl = LocatorResolver.resolve(url, context);
+            Optional<Cookie> cookie = browser.getCurrentContext().cookies(resolvedUrl).stream()
+                    .filter(candidate -> resolvedName.equals(candidate.name))
+                    .findFirst();
+            return cookie.orElseThrow(() -> new CitrusRuntimeException(
+                    "No Playwright cookie found with name '%s' for URL: %s".formatted(resolvedName, resolvedUrl)));
+        }
         Optional<Cookie> cookie = browser.getCurrentContext().cookies().stream()
                 .filter(candidate -> resolvedName.equals(candidate.name))
                 .findFirst();
@@ -105,6 +120,10 @@ public class CookieAction extends AbstractPlaywrightAction {
         return name;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public String getVariable() {
         return variable;
     }
@@ -117,6 +136,7 @@ public class CookieAction extends AbstractPlaywrightAction {
         private CookieSpec cookie;
         private String name;
         private String expectedValue;
+        private String url;
         private String variable;
 
         /**
@@ -175,6 +195,18 @@ public class CookieAction extends AbstractPlaywrightAction {
             this.command = Command.VERIFY;
             this.name = name;
             this.expectedValue = value;
+            return this;
+        }
+
+        /**
+         * Associates a URL with cookie lookup (RFC 6265 domain/path filter for read and verify)
+         * or provides a fallback cookie URL for add.
+         *
+         * @param url target URL
+         * @return this builder
+         */
+        public Builder url(String url) {
+            this.url = url;
             return this;
         }
 
