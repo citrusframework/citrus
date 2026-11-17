@@ -154,6 +154,11 @@ $(playwright().check().locator("#agree").scroll("none"));
 `rightClick`, `hover`, `tap`, `check` and `uncheck`. Setting it on any other command fails at
 build time, because the underlying Playwright option does not exist for them.
 
+Pointer and input actions (`click`, `tap`, `check`, `fill`, `clear`, `select`) also wait for the
+target element to be *non-inert*. If the element or any ancestor carries the HTML `inert`
+attribute, the action waits until `inert` is removed and fails with a Playwright timeout naming
+the `inert` subtree when it stays inert.
+
 Waiting can also be driven by a predicate evaluated against the matched element:
 
 [source,java]
@@ -175,6 +180,10 @@ $(playwright().frame().click("#submit"));
 
 Without a selector the inner locator must match in exactly one frame; an ambiguous match fails
 with an error naming the locator and the scope that was searched.
+
+Elements inside a hidden `<iframe>` (for example `visibility: hidden` or `display: none`) are
+considered hidden by frame actions and `visible()` / `hidden()` assertions until the frame itself
+becomes visible.
 
 [[playwright-verification]]
 == Verify and extract
@@ -211,6 +220,10 @@ substring check has no timeout because it reads an already captured snapshot:
 $(playwright().verify().locator("#panel").ariaSnapshotMatches("- heading \"Title\"").timeout(5000));
 ----
 
+Unrendered DOM text — such as light-DOM text not assigned to any `<slot>` in a shadow root, or
+text placed directly inside a closed `<details>` element — is excluded from ARIA snapshots and
+accessible-name calculations (`LocatorSpec.role(...).name(...)`).
+
 Extract values into test variables:
 
 [source,java]
@@ -218,6 +231,20 @@ Extract values into test variables:
 $(playwright().extract().locator("#message").text().variable("message"));
 $(playwright().extract().title().variable("pageTitle"));
 $(playwright().extract().cookie("session").variable("sessionCookie"));
+----
+
+Cookie `read` and `verify` actions inspect all cookies in the current browser context by default.
+Pass `url(...)` (or `url` in XML/YAML) to filter cookies for a specific request URL using strict
+RFC 6265 rules: host-only cookies do not match subdomains, `Path=/api` does not match `/apiv2`,
+and `Path=/foo/` does not match `/foo`. Nameless cookies (`Set-Cookie: token`) are stored and
+queried with an empty cookie name (`""`):
+
+[source,java]
+----
+$(playwright().cookies().verify("session", "abc").url("https://app.example.com/api/orders"));
+$(playwright().cookies().read("session").url("https://app.example.com/api/orders").variable("sessionCookie"));
+$(playwright().cookies().verify("", "raw-token"));
+$(playwright().extract().cookie("").variable("namelessCookie"));
 ----
 
 [[playwright-javascript]]
@@ -431,6 +458,11 @@ private PlaywrightBrowser browser;
 An explicitly configured `contextOptions` still wins, so the raw driver escape hatch keeps working
 unchanged.
 
+NOTE: Proxy credentials configured via `Proxy.setUsername(...)` / `setPassword(...)` on browser
+launch or context options only answer proxy authentication challenges (`407`) and are never sent
+to origin websites. Always configure `httpCredentials` when the target website itself requires
+HTTP authentication (`401`).
+
 Each credential can control when it is sent with `send`: `always` or `unauthorized`. Unset
 means the driver default. Use `unauthorized` against servers that require an unauthenticated
 first request:
@@ -636,9 +668,12 @@ $(http().client(browserApi)
 === What travels with a request
 
 The browser context's cookies, including HttpOnly ones, go out with every request, and a
-`Set-Cookie` on a response is stored in the context, so the next page navigation sends it. The
+`Set-Cookie` on a response is stored in the context, so the next page navigation sends it. Cookie
+matching follows RFC 6265 domain and path boundaries, and nameless cookies (`Set-Cookie: token`)
+are stored under `""` and sent as `Cookie: token` rather than `Cookie: =token`. The
 browser context's HTTP settings apply as well: extra HTTP headers, user agent, HTTP credentials,
-proxy, client certificates and `ignoreHTTPSErrors`. Configure them on the browser endpoint
+proxy, client certificates and `ignoreHTTPSErrors`. Proxy credentials authenticate only with the
+proxy (`407`); target website authentication (`401`) uses `httpCredentials`. Configure them on the browser endpoint
 (`contextOptions(...)`, `httpCredentials(...)`), and they hold for pages and API requests alike.
 Bind a client to a named context with `context("admin")` to test several users side by side.
 

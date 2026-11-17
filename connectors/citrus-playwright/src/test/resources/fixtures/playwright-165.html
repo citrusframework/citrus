@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Citrus Playwright 1.65 Semantics Fixture</title>
+</head>
+<body>
+<div id="inert-zone" inert>
+    <button id="inert-btn" type="button">Inert Save</button>
+    <input id="inert-input" type="text" value="" />
+    <input id="inert-check" type="checkbox" />
+    <select id="inert-select">
+        <option value="alpha">Alpha</option>
+        <option value="beta">Beta</option>
+    </select>
+</div>
+<div id="inert-result">untouched</div>
+
+<section id="aria-panel">
+    <details id="closed-details">
+        <summary>Details Summary</summary>
+        Direct closed text
+    </details>
+    <div id="shadow-btn" role="button" tabindex="0">Unslotted Fallback</div>
+    <div id="shadow-clicked">idle</div>
+</section>
+
+<iframe id="hidden-frame" style="visibility: hidden"
+        srcdoc="&lt;button id=&quot;secret-frame-btn&quot;&gt;Frame Action&lt;/button&gt;&lt;div id=&quot;frame-out&quot;&gt;&lt;/div&gt;&lt;script&gt;document.getElementById('secret-frame-btn').addEventListener('click',()=&gt;{document.getElementById('frame-out').textContent='frame-clicked';});&lt;/script&gt;"></iframe>
+
+<script>
+    document.getElementById('inert-btn').addEventListener('click', () => {
+        const input = document.getElementById('inert-input').value;
+        const checked = document.getElementById('inert-check').checked;
+        const selected = document.getElementById('inert-select').value;
+        document.getElementById('inert-result').textContent = `${input}:${checked}:${selected}`;
+    });
+
+    const shadowHost = document.getElementById('shadow-btn');
+    const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+    shadowRoot.innerHTML = '<span>Rendered Label</span>';
+    shadowHost.addEventListener('click', () => {
+        document.getElementById('shadow-clicked').textContent = 'shadow-clicked';
+    });
+</script>
+</body>
+</html>

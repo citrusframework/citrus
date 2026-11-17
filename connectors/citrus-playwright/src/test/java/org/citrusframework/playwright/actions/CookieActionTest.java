@@ -123,4 +123,54 @@ class CookieActionTest {
     void shouldFailFastWhenReadVariableMissing() {
         assertThrows(CitrusRuntimeException.class, () -> new CookieAction.Builder().read("session").build());
     }
+
+    @Test
+    void shouldReadAndVerifyCookieFilteredByUrl() {
+        browser.createContext("admin");
+        context.setVariable("apiUrl", "https://app.example.com/api/orders");
+        Cookie cookie = new Cookie("session", "scoped");
+        when(browser.context().cookies("https://app.example.com/api/orders")).thenReturn(List.of(cookie));
+
+        new CookieAction.Builder()
+                .read("session")
+                .url("${apiUrl}")
+                .variable("scopedSession")
+                .build()
+                .execute(context);
+        new CookieAction.Builder()
+                .verify("session", "scoped")
+                .url("${apiUrl}")
+                .build()
+                .execute(context);
+
+        assertEquals("scoped", context.getVariable("scopedSession"));
+        verify(browser.context(), org.mockito.Mockito.times(2)).cookies("https://app.example.com/api/orders");
+    }
+
+    @Test
+    void shouldFailWithUrlInMessageWhenUrlFilteredCookieMissing() {
+        browser.createContext("admin");
+        when(browser.context().cookies("https://sub.example.com/")).thenReturn(List.of());
+
+        CookieAction action = new CookieAction.Builder()
+                .read("host_only")
+                .url("https://sub.example.com/")
+                .variable("v")
+                .build();
+
+        CitrusRuntimeException error = assertThrows(CitrusRuntimeException.class, () -> action.execute(context));
+        assertTrue(error.getMessage().contains("https://sub.example.com/"), error.getMessage());
+    }
+
+    @Test
+    void shouldReadAndVerifyNamelessCookie() {
+        browser.createContext("admin");
+        Cookie nameless = new Cookie("", "raw-token");
+        when(browser.context().cookies()).thenReturn(List.of(nameless));
+
+        new CookieAction.Builder().read("").variable("nameless").build().execute(context);
+        new CookieAction.Builder().verify("", "raw-token").build().execute(context);
+
+        assertEquals("raw-token", context.getVariable("nameless"));
+    }
 }

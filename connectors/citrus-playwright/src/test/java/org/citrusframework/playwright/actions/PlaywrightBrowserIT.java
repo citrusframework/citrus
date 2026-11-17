@@ -18,10 +18,13 @@ package org.citrusframework.playwright.actions;
 
 import static org.citrusframework.playwright.actions.PlaywrightActionBuilder.playwright;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.TimeoutError;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -34,6 +37,7 @@ import java.util.stream.Collectors;
 import org.citrusframework.TestCase;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
 import org.citrusframework.playwright.endpoint.builder.PlaywrightEndpoints;
@@ -42,6 +46,7 @@ import org.citrusframework.playwright.model.BoundingBoxResult;
 import org.citrusframework.playwright.model.ConsoleMessageRecord;
 import org.citrusframework.playwright.model.CookieSpec;
 import org.citrusframework.playwright.model.DownloadMetadata;
+import org.citrusframework.playwright.model.LocatorSpec;
 import org.citrusframework.playwright.model.NetworkRecord;
 import org.citrusframework.playwright.model.NetworkResponseResult;
 import org.citrusframework.playwright.model.PlaywrightTarget;
@@ -601,6 +606,132 @@ class PlaywrightBrowserIT {
             assertEquals("127.0.0.1", result.serverIp());
             assertEquals(Integer.valueOf(apiPort), result.serverPort());
             assertEquals(null, result.tlsProtocol());
+        } finally {
+            playwright().browser(browser).stop().build().execute(context);
+        }
+    }
+
+    @Test
+    void shouldEnforcePlaywright165BrowserSemanticsAgainstLocalFixture() {
+        URL fixture = getClass().getResource("/fixtures/playwright-165.html");
+
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType("chromium")
+                .headless(true)
+                .defaultTimeout(600)
+                .build();
+
+        TestContext context = new TestContext();
+        try {
+            playwright().browser(browser).start().build().execute(context);
+            playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
+
+            // 1. Inert actionability (Playwright 1.65): pointer and input actions time out while subtree is inert.
+            TimeoutError clickInertError = assertThrows(TimeoutError.class,
+                    () -> playwright().browser(browser).click().locator("#inert-btn").build().execute(context));
+            assertTrue(clickInertError.getMessage().contains("inert"), clickInertError.getMessage());
+
+            TimeoutError fillInertError = assertThrows(TimeoutError.class,
+                    () -> playwright().browser(browser).fill().locator("#inert-input").value("blocked").build().execute(context));
+            assertTrue(fillInertError.getMessage().contains("inert"), fillInertError.getMessage());
+
+            playwright().browser(browser).javascript()
+                    .script("() => document.getElementById('inert-zone').removeAttribute('inert')")
+                    .build().execute(context);
+            playwright().browser(browser).fill().locator("#inert-input").value("active").build().execute(context);
+            playwright().browser(browser).check().locator("#inert-check").build().execute(context);
+            playwright().browser(browser).select().locator("#inert-select").value("beta").build().execute(context);
+            playwright().browser(browser).click().locator("#inert-btn").build().execute(context);
+            playwright().browser(browser).verify().locator("#inert-result").text("active:true:beta").build().execute(context);
+
+            // 2. RFC 6265 URL-scoped cookie matching (Playwright 1.65): host-only and strict path boundaries.
+            playwright().browser(browser).cookies()
+                    .add(CookieSpec.cookie("hostOnly", "v1").url("https://example.com/"))
+                    .build().execute(context);
+            playwright().browser(browser).cookies()
+                    .verify("hostOnly", "v1").url("https://example.com/dashboard")
+                    .build().execute(context);
+            assertThrows(CitrusRuntimeException.class,
+                    () -> playwright().browser(browser).cookies()
+                            .verify("hostOnly", "v1").url("https://sub.example.com/dashboard")
+                            .build().execute(context));
+
+            playwright().browser(browser).cookies()
+                    .add(CookieSpec.cookie("apiScoped", "v2").domain("example.com").path("/api"))
+                    .build().execute(context);
+            playwright().browser(browser).cookies()
+                    .verify("apiScoped", "v2").url("https://example.com/api/orders")
+                    .build().execute(context);
+            assertThrows(CitrusRuntimeException.class,
+                    () -> playwright().browser(browser).cookies()
+                            .verify("apiScoped", "v2").url("https://example.com/apiv2")
+                            .build().execute(context));
+
+            playwright().browser(browser).cookies()
+                    .add(CookieSpec.cookie("slashScoped", "v3").domain("example.com").path("/foo/"))
+                    .build().execute(context);
+            playwright().browser(browser).cookies()
+                    .verify("slashScoped", "v3").url("https://example.com/foo/bar")
+                    .build().execute(context);
+            assertThrows(CitrusRuntimeException.class,
+                    () -> playwright().browser(browser).cookies()
+                            .verify("slashScoped", "v3").url("https://example.com/foo")
+                            .build().execute(context));
+
+            // 3. ARIA snapshots & accessible names (Playwright 1.65): unrendered text is excluded.
+            playwright().browser(browser).verify().locator("#aria-panel")
+                    .ariaSnapshotContains("Details Summary").build().execute(context);
+            playwright().browser(browser).verify().locator("#aria-panel")
+                    .ariaSnapshotContains("Rendered Label").build().execute(context);
+            assertThrows(ValidationException.class,
+                    () -> playwright().browser(browser).verify().locator("#aria-panel")
+                            .ariaSnapshotContains("Direct closed text").build().execute(context));
+            assertThrows(ValidationException.class,
+                    () -> playwright().browser(browser).verify().locator("#aria-panel")
+                            .ariaSnapshotContains("Unslotted Fallback").build().execute(context));
+
+            playwright().browser(browser).verify()
+                    .locator(LocatorSpec.role("button").name("Unslotted Fallback"))
+                    .count(0).build().execute(context);
+            playwright().browser(browser).click()
+                    .locator(LocatorSpec.role("button").name("Rendered Label"))
+                    .build().execute(context);
+            playwright().browser(browser).verify().locator("#shadow-clicked").text("shadow-clicked").build().execute(context);
+
+            playwright().browser(browser).javascript()
+                    .script("() => { document.getElementById('closed-details').open = true; }")
+                    .build().execute(context);
+            playwright().browser(browser).verify().locator("#aria-panel")
+                    .ariaSnapshotContains("Direct closed text").build().execute(context);
+
+            // 4. Hidden iframes (Playwright 1.64+): elements inside visibility:hidden / display:none iframes are considered hidden.
+            LocatorSpec frameButtonSpec = LocatorSpec.raw(page -> page.frameLocator("#hidden-frame").locator("#secret-frame-btn"));
+            Locator frameButton = browser.getCurrentPage().frameLocator("#hidden-frame").locator("#secret-frame-btn");
+            assertFalse(frameButton.isVisible());
+            playwright().browser(browser).verify().locator(frameButtonSpec).hidden().build().execute(context);
+
+            CitrusRuntimeException hiddenFrameError = assertThrows(CitrusRuntimeException.class,
+                    () -> playwright().browser(browser).frame().frame("#hidden-frame")
+                            .click("#secret-frame-btn").build().execute(context));
+            assertTrue(hiddenFrameError.getCause() instanceof TimeoutError,
+                    String.valueOf(hiddenFrameError.getCause()));
+
+            playwright().browser(browser).javascript()
+                    .script("() => { const f = document.getElementById('hidden-frame'); f.style.visibility = 'visible'; f.style.display = 'none'; }")
+                    .build().execute(context);
+            assertFalse(frameButton.isVisible());
+            playwright().browser(browser).verify().locator(frameButtonSpec).hidden().build().execute(context);
+
+            playwright().browser(browser).javascript()
+                    .script("() => { document.getElementById('hidden-frame').style.display = 'block'; }")
+                    .build().execute(context);
+            assertTrue(frameButton.isVisible());
+            playwright().browser(browser).verify().locator(frameButtonSpec).visible().build().execute(context);
+            playwright().browser(browser).frame().frame("#hidden-frame")
+                    .click("#secret-frame-btn").build().execute(context);
+            playwright().browser(browser).frame().frame("#hidden-frame")
+                    .verifyText("#frame-out", "frame-clicked").build().execute(context);
         } finally {
             playwright().browser(browser).stop().build().execute(context);
         }
