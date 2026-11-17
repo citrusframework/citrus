@@ -19,15 +19,12 @@ package org.citrusframework.groovy.yaml;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
-import org.citrusframework.base.DefaultTestCaseRunner;
-import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestActionRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.base.context.StaticTestContextFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.citrusframework.junit.jupiter.NoopTestCaseRunner;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,18 +78,5 @@ public class AbstractYamlActionTest extends AbstractUnitTest {
         testLoader.setSource(TestSourceHelper.create(sourcePath));
 
         return testLoader;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected static class NoopTestCaseRunner extends DefaultTestCaseRunner {
-        public NoopTestCaseRunner(TestContext context) {
-            super(context);
-        }
-
-        @Override
-        public <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder) {
-            builder.build();
-            return this;
-        }
     }
 }

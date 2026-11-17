@@ -19,15 +19,12 @@ package org.citrusframework.playwright.dsl;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
-import org.citrusframework.base.DefaultTestCaseRunner;
-import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
-import org.citrusframework.TestActionRunner;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.base.context.StaticTestContextFactory;
 import org.citrusframework.common.TestSourceHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.junit.jupiter.AbstractUnitTest;
+import org.citrusframework.junit.jupiter.NoopTestCaseRunner;
 import org.citrusframework.playwright.support.StubStartedBrowser;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.yaml.YamlTestLoader;
@@ -106,18 +103,5 @@ public abstract class AbstractDslLoaderTest extends AbstractUnitTest {
                 "classpath:org/citrusframework/playwright/xml/" + testName + ".xml"));
 
         return testLoader;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected static class NoopTestCaseRunner extends DefaultTestCaseRunner {
-        public NoopTestCaseRunner(TestContext context) {
-            super(context);
-        }
-
-        @Override
-        public <T extends TestAction> TestActionRunner run(TestActionBuilder<T> builder) {
-            builder.build();
-            return this;
-        }
     }
 }
