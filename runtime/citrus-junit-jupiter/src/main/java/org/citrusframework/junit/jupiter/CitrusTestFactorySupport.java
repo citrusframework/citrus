@@ -56,6 +56,10 @@ public final class CitrusTestFactorySupport {
         return factory(TestLoader.XML);
     }
 
+    public static CitrusTestFactorySupport yaml() {
+        return factory(TestLoader.YAML);
+    }
+
     public static CitrusTestFactorySupport groovy() {
         return factory(TestLoader.GROOVY);
     }

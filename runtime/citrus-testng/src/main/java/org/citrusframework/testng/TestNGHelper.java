@@ -16,21 +16,18 @@
 
 package org.citrusframework.testng;
 
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.api.common.TestSourceAware;
+import org.citrusframework.base.DefaultTestCase;
+import org.citrusframework.common.ResolvedTestSource;
 import org.citrusframework.common.TestSourceHelper;
+import org.citrusframework.common.TestSourceResolver;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.ClasspathResourceResolver;
-import org.citrusframework.spi.Resource;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -39,14 +36,10 @@ import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 import org.testng.SkipException;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public final class TestNGHelper {
 
@@ -150,86 +143,20 @@ public final class TestNGHelper {
 
         if (method.getAnnotation(CitrusTestSource.class) != null) {
             CitrusTestSource citrusTestAnnotation = method.getAnnotation(CitrusTestSource.class);
-            methodTestLoaders.addAll(createMethodTestLoaders(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                    citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), provider, citrusTestAnnotation.type(), CitrusSettings.getTestFileNamePattern(citrusTestAnnotation.type())));
-        }
+            for (ResolvedTestSource resolvedTestSource : TestSourceResolver.resolve(citrusTestAnnotation, method)) {
+                TestLoader testLoader = provider.createTestLoader(resolvedTestSource.getTestName(),
+                        resolvedTestSource.getPackageName(), citrusTestAnnotation.type());
 
-        return methodTestLoaders;
-    }
-
-    /**
-     * Constructs list of test loaders for given method with proper test name, package name and source according to
-     * Citrus test annotation.
-     * @param method
-     * @param testNames
-     * @param testPackageName
-     * @param packagesToScan
-     * @param sources
-     * @param provider
-     * @param type
-     * @param testFileNamePattern
-     * @return
-     */
-    private static List<? extends TestLoader> createMethodTestLoaders(Method method, String[] testNames, String testPackageName,
-                                                                      String[] packagesToScan, String[] sources, TestLoaderProvider provider,
-                                                                      String type, Set<String> testFileNamePattern) {
-        List<TestLoader> methodTestLoaders = new ArrayList<>();
-
-        String packageName = method.getDeclaringClass().getPackage().getName();
-        if (StringUtils.hasText(testPackageName)) {
-            packageName = testPackageName;
-        }
-
-        if (testNames.length > 0) {
-            for (String name : testNames) {
-                methodTestLoaders.add(provider.createTestLoader(name, packageName, type));
-            }
-        } else if (packagesToScan.length == 0 && sources.length == 0) {
-            methodTestLoaders.add(provider.createTestLoader(method.getName(), packageName, type));
-        }
-
-        for (String source : sources) {
-            Resource file = FileUtils.getFileResource(source);
-
-            String sourceFilePackageName  = "";
-            if (source.startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
-                sourceFilePackageName = source.substring(Resources.CLASSPATH_RESOURCE_PREFIX.length());
-            }
-
-            if (StringUtils.hasText(sourceFilePackageName) && sourceFilePackageName.contains("/")) {
-                sourceFilePackageName = sourceFilePackageName.substring(0, sourceFilePackageName.lastIndexOf("/"));
-            }
-
-            TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(FileUtils.getFileName(file.location())),
-                    sourceFilePackageName.replace("/","."), type);
-
-            if (testLoader instanceof TestSourceAware) {
-                ((TestSourceAware) testLoader).setSource(TestSourceHelper.create(source));
-                methodTestLoaders.add(testLoader);
-            } else {
-                logger.warn("Test loader {} is not able to handle test source {}", testLoader.getClass(), source);
-            }
-        }
-
-        for (String packageScan : packagesToScan) {
-            try {
-                for (String fileNamePattern : testFileNamePattern) {
-                    Set<Path> fileResources = new ClasspathResourceResolver().getResources(packageScan.replace('.', File.separatorChar), fileNamePattern);
-                    for (Path fileResource : fileResources) {
-                        String filePath = fileResource.getParent().toFile().getCanonicalPath();
-
-                        if (packageScan.startsWith("file:")) {
-                            filePath = "file:" + filePath;
-                        }
-
-                        filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
-
-                        methodTestLoaders.add(provider.createTestLoader(
-                                FileUtils.getBaseName(String.valueOf(fileResource.getFileName())), filePath, type));
+                if (resolvedTestSource.getSource() != null) {
+                    if (testLoader instanceof TestSourceAware testSourceAware) {
+                        testSourceAware.setSource(TestSourceHelper.create(resolvedTestSource.getSource()));
+                        methodTestLoaders.add(testLoader);
+                    } else {
+                        logger.warn("Test loader {} is not able to handle test source {}", testLoader.getClass(), resolvedTestSource.getSource());
                     }
+                } else {
+                    methodTestLoaders.add(testLoader);
                 }
-            } catch (RuntimeException | IOException e) {
-                throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageScan + "'", e);
             }
         }
 

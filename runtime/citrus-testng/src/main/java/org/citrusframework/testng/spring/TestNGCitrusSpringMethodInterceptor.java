@@ -16,22 +16,16 @@
 
 package org.citrusframework.testng.spring;
 
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.spi.ClasspathResourceResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.citrusframework.common.ResolvedTestSource;
+import org.citrusframework.common.TestSourceResolver;
 import org.testng.IMethodInstance;
 import org.testng.IMethodInterceptor;
 import org.testng.ITestContext;
 import org.testng.internal.MethodInstance;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * TestNG method interceptor duplicates method instances for each package scan test and test name in
@@ -42,9 +36,6 @@ import java.util.Set;
  */
 public class TestNGCitrusSpringMethodInterceptor implements IMethodInterceptor {
 
-    /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(TestNGCitrusSpringMethodInterceptor.class);
-
     @Override
     public List<IMethodInstance> intercept(List<IMethodInstance> methods, ITestContext context) {
         List<IMethodInstance> interceptedMethods = new ArrayList<>();
@@ -52,35 +43,18 @@ public class TestNGCitrusSpringMethodInterceptor implements IMethodInterceptor {
         for (IMethodInstance method : methods) {
             boolean baseMethodAdded = false;
             if (method.getInstance() instanceof TestNGCitrusSpringSupport) {
-                if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusTestSource.class) != null) {
-                    CitrusTestSource citrusTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusTestSource.class);
-                    if (citrusTestAnnotation.name().length > 1) {
-                        for (int i = 0; i < citrusTestAnnotation.name().length; i++) {
+                java.lang.reflect.Method testMethod = method.getMethod().getConstructorOrMethod().getMethod();
+                CitrusTestSource citrusTestAnnotation = testMethod.getAnnotation(CitrusTestSource.class);
+                if (citrusTestAnnotation != null) {
+                    List<ResolvedTestSource> resolvedTestSources = TestSourceResolver.resolve(citrusTestAnnotation, testMethod);
+                    if (resolvedTestSources.size() > 1) {
+                        for (int i = 0; i < resolvedTestSources.size(); i++) {
                             if (i == 0) {
                                 baseMethodAdded = true;
                                 interceptedMethods.add(method);
                             } else {
                                 interceptedMethods.add(new MethodInstance(method.getMethod()));
                             }
-                        }
-                    }
-
-                    String[] packagesToScan = citrusTestAnnotation.packageScan();
-                    for (String packageName : packagesToScan) {
-                        try {
-                            for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(citrusTestAnnotation.type())) {
-                                Set<Path> fileResources = new ClasspathResourceResolver().getResources(packageName.replace('.', File.separatorChar), fileNamePattern);
-                                for (int i = 0; i < fileResources.size(); i++) {
-                                    if (i == 0 && !baseMethodAdded) {
-                                        baseMethodAdded = true;
-                                        interceptedMethods.add(method);
-                                    } else {
-                                        interceptedMethods.add(new MethodInstance(method.getMethod()));
-                                    }
-                                }
-                            }
-                        } catch (IOException e) {
-                            logger.error("Unable to locate file resources for test package '{}'", packageName, e);
                         }
                     }
                 }

@@ -23,6 +23,7 @@ import org.citrusframework.TestSource;
 import org.citrusframework.api.main.TestEngine;
 import org.citrusframework.api.main.TestRunConfiguration;
 import org.citrusframework.testng.scan.SampleTestNGTest;
+import org.citrusframework.testng.scan.SeveralSourcesSample;
 import org.testng.Assert;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
@@ -65,6 +66,14 @@ public class TestNGEngineTest {
         configuration.setPackages(Collections.singletonList(SampleTestNGTest.class.getPackage().getName()));
 
         runTestEngine(configuration, 0L);
+    }
+
+    @Test
+    public void shouldRunSeveralSourcesAsSeparateInvocations() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setTestSources(Collections.singletonList(new TestSource(SeveralSourcesSample.class)));
+
+        runTestEngine(configuration, 2L);
     }
 
     @Test
