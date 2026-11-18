@@ -17,6 +17,8 @@
 package org.citrusframework.junit.jupiter;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.dsl.DefaultTestActions;
@@ -30,7 +32,10 @@ import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.CompositeTestLoader;
 import org.citrusframework.common.DefaultTestLoader;
+import org.citrusframework.common.ResolvedTestSource;
+import org.citrusframework.common.TestSourceResolver;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.api.common.TestSourceAware;
 import org.citrusframework.common.TestSourceHelper;
@@ -149,11 +154,38 @@ public final class CitrusExtensionHelper {
         if (CitrusExtensionHelper.isTestSourceMethod(method)) {
             CitrusTestSource citrusTestAnnotation = method.getAnnotation(CitrusTestSource.class);
 
+            List<ResolvedTestSource> resolvedTestSources = TestSourceResolver.resolve(citrusTestAnnotation, method);
+            if (resolvedTestSources.size() > 1) {
+                List<String> testNames = new ArrayList<>();
+                List<TestLoader> delegates = new ArrayList<>();
+
+                for (ResolvedTestSource resolvedTestSource : resolvedTestSources) {
+                    TestLoader delegate = TestLoader.lookup(citrusTestAnnotation.type())
+                            .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", citrusTestAnnotation.type())));
+
+                    delegate.setTestClass(extensionContext.getRequiredTestClass());
+                    delegate.setTestName(resolvedTestSource.getTestName());
+                    delegate.setPackageName(resolvedTestSource.getPackageName());
+                    CitrusAnnotations.injectAll(delegate, getCitrus(extensionContext));
+
+                    if (resolvedTestSource.getSource() != null && delegate instanceof TestSourceAware testSourceAware) {
+                        testSourceAware.setSource(TestSourceHelper.create(resolvedTestSource.getSource()));
+                    }
+
+                    testNames.add(resolvedTestSource.getTestName());
+                    delegates.add(delegate);
+                }
+
+                return new CompositeTestLoader(testNames, delegates);
+            }
+
             testLoader = TestLoader.lookup(citrusTestAnnotation.type())
                     .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", citrusTestAnnotation.type())));
 
-            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
-                    citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
+            ResolvedTestSource resolvedTestSource = resolvedTestSources.get(0);
+            configure(testLoader, extensionContext, method, new String[]{ resolvedTestSource.getTestName() },
+                    resolvedTestSource.getPackageName(), new String[]{},
+                    resolvedTestSource.getSource() != null ? new String[]{ resolvedTestSource.getSource() } : new String[]{});
         } else {
             testLoader = new DefaultTestLoader();
             configure(testLoader, extensionContext, method, new String[]{}, null, new String[]{}, new String[]{});
