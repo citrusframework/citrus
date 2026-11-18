@@ -81,6 +81,21 @@ jobs:
             !~/.m2/repository/org/citrusframework
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Cache Maven wrapper jar
+        id: mvnw-jar
+        uses: actions/cache@v5
+        with:
+          # mvnw downloads this git-ignored jar from Maven Central when it is
+          # missing, once per job. Caching it means only a cold key makes the request.
+          path: .mvn/wrapper/maven-wrapper.jar
+          key: ${{ runner.os }}-mvnw-jar-${{ hashFiles('.mvn/wrapper/maven-wrapper.properties') }}
+      - name: Fetch Maven wrapper jar
+        if: steps.mvnw-jar.outputs.cache-hit != 'true'
+        run: >-
+          curl --fail --silent --show-error --location
+          --retry 5 --retry-all-errors --retry-delay 15
+          -o .mvn/wrapper/maven-wrapper.jar
+          https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.4/maven-wrapper-3.3.4.jar
       - name: Info
         run: |
           java -version
@@ -155,6 +170,19 @@ jobs:
             !~/.m2/repository/org/citrusframework
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Restore Maven wrapper jar
+        id: mvnw-jar
+        uses: actions/cache/restore@v5
+        with:
+          path: .mvn/wrapper/maven-wrapper.jar
+          key: ${{ runner.os }}-mvnw-jar-${{ hashFiles('.mvn/wrapper/maven-wrapper.properties') }}
+      - name: Fetch Maven wrapper jar
+        if: steps.mvnw-jar.outputs.cache-hit != 'true'
+        run: >-
+          curl --fail --silent --show-error --location
+          --retry 5 --retry-all-errors --retry-delay 15
+          -o .mvn/wrapper/maven-wrapper.jar
+          https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.4/maven-wrapper-3.3.4.jar
       - name: Cache Playwright browsers
         if: contains(matrix.modules, 'citrus-playwright')
         uses: actions/cache@v5
