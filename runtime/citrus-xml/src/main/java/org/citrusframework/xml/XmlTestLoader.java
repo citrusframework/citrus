@@ -78,6 +78,8 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
                                     .unmarshal(new StringSource(applyNamespace(FileUtils.readToString(xmlSource))), XmlTestCase.class)
                                     .getValue()
                                     .getTestCase();
+            testCase.setTestClass(testClass);
+            testCase.setPackageName(packageName);
             if (runner instanceof DefaultTestCaseRunner) {
                 ((DefaultTestCaseRunner) runner).setTestCase(testCase);
             }

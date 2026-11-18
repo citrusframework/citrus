@@ -18,6 +18,9 @@ package org.citrusframework.integration;
 
 import java.util.stream.Stream;
 
+import org.citrusframework.Citrus;
+import org.citrusframework.TestResult;
+import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.junit.jupiter.CitrusSupport;
@@ -25,14 +28,20 @@ import org.citrusframework.junit.jupiter.CitrusTestFactory;
 import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 /**
  * @since 2.1
  */
 @CitrusSupport
 public class XmlTestLoaderIT {
+
+    @CitrusFramework
+    private Citrus citrus;
 
     @BindToRegistry
     DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
@@ -57,4 +66,24 @@ public class XmlTestLoaderIT {
     @Test
     @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/xml/actions/create-variables.citrus.it.xml" })
     public void XmlTestLoader_4_IT() {}
+
+    @Test
+    @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/xml/identity.citrus.it.xml" })
+    public void XmlTestLoader_5_IT() {}
+
+    /**
+     * The test result is reported when the loader stops the test case, which happens after the test
+     * method body has run. Assert on the reported result once the test method completed.
+     */
+    @AfterEach
+    public void verifyIdentityTestResult(TestInfo testInfo) {
+        if (testInfo.getTestMethod().map(method -> method.getName().equals("XmlTestLoader_5_IT")).orElse(false)) {
+            TestResult result = citrus.getCitrusContext().getTestResults().asList().stream()
+                    .filter(r -> "IdentityXmlTest".equals(r.getTestName()))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Missing test result for IdentityXmlTest"));
+
+            Assertions.assertEquals(XmlTestLoaderIT.class.getName(), result.getClassName());
+        }
+    }
 }
