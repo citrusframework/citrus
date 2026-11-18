@@ -34,16 +34,20 @@ import org.citrusframework.actions.AbstractAsyncTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.api.container.AfterTest;
+import org.citrusframework.bean.BeanDefinition;
 import org.citrusframework.container.Async;
 import org.citrusframework.api.container.BeforeTest;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.base.functions.core.CurrentDateFunction;
 import org.citrusframework.report.TestListener;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -441,6 +445,37 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         if (duration.compareTo(Duration.ofMillis(2000)) < 0) {
             fail("TestResult / Duration should be more than 2000 ms, because that's how long all actions take!");
         }
+    }
+
+    @Test
+    public void testStartInitializesBeansBeforeEndpoints() {
+        fixture.setName("DefaultTestCaseTest");
+
+        BeanDefinition beanDefinition = new BeanDefinition();
+        beanDefinition.setName("myBean");
+        beanDefinition.setType(DefaultTextEqualsMessageValidator.class.getName());
+        fixture.getBeanDefinitions().add(beanDefinition);
+
+        Endpoint endpoint = mock(Endpoint.class);
+        doReturn("myEndpoint").when(endpoint).getName();
+        fixture.getEndpoints().add(new EndpointBuilder<Endpoint>() {
+            @Override
+            public boolean supports(Class<?> endpointType) {
+                return false;
+            }
+
+            @Override
+            public Endpoint build() {
+                context.getReferenceResolver().resolve("myBean", DefaultTextEqualsMessageValidator.class);
+                return endpoint;
+            }
+        });
+
+        fixture.start(context);
+
+        assertEquals(DefaultTextEqualsMessageValidator.class,
+                context.getReferenceResolver().resolve("myBean").getClass());
+        assertEquals(endpoint, context.getReferenceResolver().resolve("myEndpoint", Endpoint.class));
     }
 
     private static Duration verifyDurationHasBeenMeasured(TestResult fixture) {

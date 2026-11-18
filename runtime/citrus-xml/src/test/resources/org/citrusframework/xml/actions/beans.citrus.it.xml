@@ -1,6 +1,10 @@
 <test xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:t="https://citrusframework.test/endpoint"
       name="BeansTest" author="Christoph" status="FINAL">
   <description>Bean definition test in XML</description>
+  <endpoints>
+    <t:beanaware name="myEndpoint" beanName="myBean"/>
+  </endpoints>
   <configuration>
     <beans>
       <bean name="myValidator" type="org.citrusframework.validation.DefaultTextEqualsMessageValidator"/>

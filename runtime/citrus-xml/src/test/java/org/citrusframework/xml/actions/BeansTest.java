@@ -18,6 +18,8 @@ package org.citrusframework.xml.actions;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.xml.XmlTestLoader;
 import org.junit.jupiter.api.Assertions;
@@ -45,5 +47,10 @@ public class BeansTest extends AbstractXmlActionTest {
         FooBean fooBean = context.getReferenceResolver().resolve("myBean", FooBean.class);
         Assertions.assertEquals("Hello Citrus!", fooBean.getMessage());
         Assertions.assertEquals(42, fooBean.getCount());
+
+        Endpoint endpoint = context.getReferenceResolver().resolve("myEndpoint", Endpoint.class);
+        Assertions.assertEquals(DirectEndpoint.class, endpoint.getClass());
+        Assertions.assertEquals(fooBean.getMessage(),
+                ((DirectEndpoint) endpoint).getEndpointConfiguration().getQueueName());
     }
 }

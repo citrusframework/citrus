@@ -11,6 +11,10 @@ configuration:
       properties:
         message: "Hello Citrus!"
         count: "42"
+endpoints:
+  - name: myEndpoint
+    beanaware:
+      beanName: myBean
 actions:
   - echo:
       message: "Bean test"
