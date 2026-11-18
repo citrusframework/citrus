@@ -147,6 +147,49 @@ public class CitrusSchemaGeneratorTest {
     }
 
     @Test
+    public void verifyBeanDefinitionsInConfiguration() {
+        assertValidTestCase("""
+                {
+                  "name": "BeanTest",
+                  "author": "Christoph",
+                  "status": "FINAL",
+                  "description": "Sample test in YAML",
+                  "configuration": {
+                    "beans": [
+                      {
+                        "name": "myValidator",
+                        "type": "org.citrusframework.validation.DefaultTextEqualsMessageValidator"
+                      },
+                      {
+                        "name": "connectionFactory",
+                        "type": "org.example.jms.ActiveMQConnectionFactory",
+                        "properties": {
+                          "brokerUrl": "tcp://localhost:61616",
+                          "userName": "admin"
+                        }
+                      }
+                    ]
+                  },
+                  "actions": [
+                    {
+                      "echo": {
+                        "message": "Bean test"
+                      }
+                    }
+                  ]
+                }
+                """);
+
+        assertInvalidTestCase("""
+                {"name":"BeanTest","configuration":{"beans":[{"name":"myValidator"}]},"actions":[{"echo":{"message":"Bean test"}}]}
+                """);
+
+        assertInvalidTestCase("""
+                {"name":"BeanTest","configuration":{"beans":[{"type":"org.example.jms.ActiveMQConnectionFactory"}]},"actions":[{"echo":{"message":"Bean test"}}]}
+                """);
+    }
+
+    @Test
     public void verifyUnknownTestActionsRejected() {
         assertInvalidTestCase("""
                 {"name":"UnknownActionTest","actions":[%s]}
