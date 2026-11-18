@@ -184,8 +184,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             initializeTestParameters(parameters, context);
             initializeTestVariables(variableDefinitions, context);
             traceVariables("Test", context);
-            initializeEndpoints(endpoints, endpointDefinitions, context);
             initializeBeans(beanDefinitions, context);
+            initializeEndpoints(endpoints, endpointDefinitions, context);
 
             beforeTest(context);
         } catch (final Exception | Error e) {
