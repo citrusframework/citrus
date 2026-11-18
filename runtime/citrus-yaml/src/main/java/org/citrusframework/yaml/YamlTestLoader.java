@@ -119,6 +119,8 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
             Resource yamlSource = getSource().getSourceFile();
             YamlTestCase tc = yaml.load(FileUtils.readToString(yamlSource));
             testCase = tc.getTestCase();
+            testCase.setTestClass(testClass);
+            testCase.setPackageName(packageName);
             if (runner instanceof DefaultTestCaseRunner) {
                 ((DefaultTestCaseRunner) runner).setTestCase(testCase);
             }
