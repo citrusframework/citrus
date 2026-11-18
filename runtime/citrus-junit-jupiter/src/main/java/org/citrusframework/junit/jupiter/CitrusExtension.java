@@ -208,9 +208,6 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         testLoader.doWithTestCase(testCase -> {
             try {
                 invocation.proceed();
-
-                // remove current stored objects so next invocation is able to proceed
-                clearStoredObjects(extensionContext);
             } catch (RuntimeException e) {
                 throw e;
             } catch (Throwable e) {
@@ -227,8 +224,9 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
 
     @Override
     public void afterEach(ExtensionContext extensionContext) {
-        extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE)
-                .remove(getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName());
+        // Runs for every invocation, including failed ones. Without this, a failed invocation of a
+        // parameterized test leaves its TestLoader in the store and the following invocations never run.
+        clearStoredObjects(extensionContext);
     }
 
     @Override
