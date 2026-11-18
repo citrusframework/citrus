@@ -34,6 +34,22 @@ public class EchoTest extends AbstractXmlActionTest {
         Assertions.assertEquals("EchoTest", result.getName());
         Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
         Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals("Sample test in XML", result.getDescription());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(EchoAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("Hello from Citrus!", ((EchoAction) result.getTestAction(0)).getMessage());
+    }
+
+    @Test
+    public void shouldLoadEchoDescriptionTrimmed() {
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/echo-description.citrus.it.xml");
+
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assertions.assertEquals("EchoDescriptionTest", result.getName());
+        Assertions.assertEquals("Sample test in XML\n" +
+                "    with several lines\n" +
+                "    and surrounding whitespace", result.getDescription());
         Assertions.assertEquals(1L, result.getActionCount());
         Assertions.assertEquals(EchoAction.class, result.getTestAction(0).getClass());
         Assertions.assertEquals("Hello from Citrus!", ((EchoAction) result.getTestAction(0)).getMessage());
@@ -48,6 +64,7 @@ public class EchoTest extends AbstractXmlActionTest {
         Assertions.assertEquals("PrintTest", result.getName());
         Assertions.assertEquals("Christoph", result.getMetaInfo().getAuthor());
         Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
+        Assertions.assertEquals("Sample test in XML", result.getDescription());
         Assertions.assertEquals(1L, result.getActionCount());
         Assertions.assertEquals(EchoAction.class, result.getTestAction(0).getClass());
         Assertions.assertEquals("Hello from Citrus!", ((EchoAction) result.getTestAction(0)).getMessage());

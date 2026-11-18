@@ -78,6 +78,13 @@ public class XmlTestCase {
     }
 
     @XmlElement
+    public void setDescription(String description) {
+        if (StringUtils.hasText(description)) {
+            delegate.setDescription(description.trim());
+        }
+    }
+
+    @XmlElement
     public void setVariables(Variables variables) {
         variables.getVariables().forEach(variable -> {
             if (variable.multilineValue != null) {
