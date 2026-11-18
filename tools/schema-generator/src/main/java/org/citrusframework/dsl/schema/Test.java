@@ -57,6 +57,12 @@ public class Test {
     }
 
     @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:configuration" ) },
+            description = "The test configuration holding bean definitions.")
+    public void setConfiguration(YamlTestCase.Configuration configuration) {
+    }
+
+    @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:actions" ) },
             description = "The test actions.")
     public void setActions(List<TestActions> actions) {
