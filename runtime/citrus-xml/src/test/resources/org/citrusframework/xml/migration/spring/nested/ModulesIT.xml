@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:citrus="http://www.citrusframework.org/schema/testcase"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <citrus:testcase name="ModulesIT">
+    <citrus:actions>
+      <citrus:sql datasource="dataSource" transaction-manager="txManager" transaction-timeout="5000" transaction-isolation-level="ISOLATION_READ_COMMITTED" ignore-errors="true">
+        <citrus:statement>DELETE FROM ORDERS</citrus:statement>
+        <citrus:statement>INSERT INTO ORDERS VALUES (1, 'sample')</citrus:statement>
+      </citrus:sql>
+      <citrus:sql datasource="dataSource">
+        <citrus:resource file="classpath:query.sql"/>
+        <citrus:validate column="ORDER_ID" value="1"/>
+        <citrus:validate column="DESCRIPTION">
+          <citrus:values>
+            <citrus:value>sample</citrus:value>
+            <citrus:value>@ignore@</citrus:value>
+          </citrus:values>
+        </citrus:validate>
+        <citrus:extract column="ORDER_ID" variable="orderId"/>
+      </citrus:sql>
+      <citrus:sql datasource="dataSource">
+        <citrus:statement>SELECT * FROM ORDERS</citrus:statement>
+        <citrus:validate-script type="groovy">assert rows.size() == 1</citrus:validate-script>
+      </citrus:sql>
+      <citrus:plsql datasource="dataSource" ignore-errors="false">
+        <citrus:script>BEGIN NULL; END;</citrus:script>
+      </citrus:plsql>
+      <citrus:plsql datasource="dataSource">
+        <citrus:resource file="classpath:script.sql"/>
+      </citrus:plsql>
+      <citrus:groovy>println 'Hello Citrus'</citrus:groovy>
+      <citrus:groovy resource="classpath:script.groovy" use-script-template="false"/>
+      <citrus:purge-jms-queues connection-factory="connectionFactory" timeout="100" sleep="10">
+        <citrus:queue name="JMS.Queue"/>
+        <citrus:queue ref="jmsQueue"/>
+      </citrus:purge-jms-queues>
+      <citrus:purge-channel message-selector="mySelector">
+        <citrus:channel name="myChannel"/>
+      </citrus:purge-channel>
+      <citrus:ant build-file="classpath:build.xml" build-listener="myListener">
+        <citrus:execute target="sayHello"/>
+        <citrus:properties file="classpath:build.properties">
+          <citrus:property name="welcomeText" value="Hello"/>
+        </citrus:properties>
+      </citrus:ant>
+      <citrus:start server="myServer"/>
+      <citrus:stop>
+        <citrus:description>Stop servers</citrus:description>
+        <citrus:servers>
+          <citrus:server name="myServer"/>
+          <citrus:server name="otherServer"/>
+        </citrus:servers>
+      </citrus:stop>
+      <citrus:action reference="myAction"/>
+      <citrus:wait milliseconds="2000">
+        <citrus:http url="http://localhost:8080/health" status="200" method="GET" timeout="500"/>
+      </citrus:wait>
+      <citrus:wait seconds="1.5">
+        <citrus:file path="classpath:test.txt"/>
+      </citrus:wait>
+      <citrus:wait>
+        <citrus:message name="helloRequest"/>
+      </citrus:wait>
+    </citrus:actions>
+  </citrus:testcase>
+</beans>

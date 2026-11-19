@@ -47,6 +47,8 @@ The test logic itself is defined in the XML file like this:
 </test>
 ----
 
+TIP: You can migrate existing Spring bean XML tests to the XML test language with the link:#run-spring-xml-migration[Spring bean XML migration tool].
+
 [[run-xml-bean-definitions]]
 === Bean definitions
 
