@@ -1565,6 +1565,7 @@
         <xs:element ref="tns:knative"/>
         <xs:element ref="tns:testcontainers"/>
         <xs:element ref="tns:playwright"/>
+        <xs:element ref="tns:docker"/>
         <xs:any namespace="##other" processContents="lax"/>
       </xs:choice>
     </xs:sequence>
@@ -2181,6 +2182,7 @@
   <xs:element name="agent" type="tns:Agent"/>
   <xs:element name="jbang" type="tns:JBang"/>
   <xs:element name="kubernetes" type="tns:Kubernetes"/>
+  <xs:element name="docker" type="tns:Docker"/>
   <xs:element name="knative" type="tns:Knative"/>
   <xs:element name="testcontainers" type="tns:Testcontainers"/>
   <xs:element name="playwright" type="tns:Playwright"/>
@@ -4331,6 +4333,104 @@
     <xs:attribute name="namespace" type="xs:string"/>
     <xs:attribute name="auto-remove" type="xs:boolean"/>
     <xs:attribute name="actor" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Docker">
+    <xs:annotation>
+      <xs:documentation>Execute Docker commands</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="info">
+          <xs:complexType/>
+        </xs:element>
+        <xs:element name="ping">
+          <xs:complexType/>
+        </xs:element>
+        <xs:element name="version">
+          <xs:complexType/>
+        </xs:element>
+        <xs:element name="start">
+          <xs:complexType>
+            <xs:attribute name="container" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="stop">
+          <xs:complexType>
+            <xs:attribute name="container" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="remove">
+          <xs:complexType>
+            <xs:attribute name="container" use="required" type="xs:string"/>
+            <xs:attribute name="force" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="wait">
+          <xs:complexType>
+            <xs:attribute name="container" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="inspect">
+          <xs:complexType>
+            <xs:attribute name="container" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="inspect-image">
+          <xs:complexType>
+            <xs:attribute name="image" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="build-image">
+          <xs:complexType>
+            <xs:attribute name="no-cache" type="xs:boolean"/>
+            <xs:attribute name="basedir" type="xs:string"/>
+            <xs:attribute name="tag" type="xs:string"/>
+            <xs:attribute name="remove" type="xs:boolean"/>
+            <xs:attribute name="quiet" type="xs:boolean"/>
+            <xs:attribute name="docker-file" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pull-image">
+          <xs:complexType>
+            <xs:attribute name="image" use="required" type="xs:string"/>
+            <xs:attribute name="tag" type="xs:string"/>
+            <xs:attribute name="repository" type="xs:string"/>
+            <xs:attribute name="registry" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="remove-image">
+          <xs:complexType>
+            <xs:attribute name="image" use="required" type="xs:string"/>
+            <xs:attribute name="force" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="create">
+          <xs:complexType>
+            <xs:attribute name="image" use="required" type="xs:string"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="attach-stderr" type="xs:boolean"/>
+            <xs:attribute name="attach-stdin" type="xs:boolean"/>
+            <xs:attribute name="attach-stdout" type="xs:boolean"/>
+            <xs:attribute name="capability-add" type="xs:string"/>
+            <xs:attribute name="capability-drop" type="xs:string"/>
+            <xs:attribute name="domain-name" type="xs:string"/>
+            <xs:attribute name="cmd" type="xs:string"/>
+            <xs:attribute name="env" type="xs:string"/>
+            <xs:attribute name="entrypoint" type="xs:string"/>
+            <xs:attribute name="hostname" type="xs:string"/>
+            <xs:attribute name="port-specs" type="xs:string"/>
+            <xs:attribute name="exposed-ports" type="xs:string"/>
+            <xs:attribute name="port-bindings" type="xs:string"/>
+            <xs:attribute name="volumes" type="xs:string"/>
+            <xs:attribute name="working-dir" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="client" type="xs:string"/>
+    <xs:attribute name="result" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Knative">

@@ -1,0 +1,8 @@
+name: DockerInspectTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      inspect:
+        container: "myContainer"

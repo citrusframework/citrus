@@ -1,0 +1,8 @@
+name: DockerWaitTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      wait:
+        container: "myContainer"

@@ -1,0 +1,8 @@
+name: DockerStopTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      stop:
+        container: "myContainer"

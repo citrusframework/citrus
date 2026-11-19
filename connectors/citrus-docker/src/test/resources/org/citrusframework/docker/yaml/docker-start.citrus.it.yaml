@@ -1,0 +1,8 @@
+name: DockerStartTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      start:
+        container: "myContainer"

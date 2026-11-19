@@ -1,0 +1,7 @@
+name: DockerUnknownTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      bogus: {}

@@ -1,0 +1,8 @@
+name: DockerInspectImageTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      inspect-image:
+        image: "citrus:latest"

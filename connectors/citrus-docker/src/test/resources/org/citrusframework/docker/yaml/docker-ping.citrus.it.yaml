@@ -1,0 +1,8 @@
+name: DockerPingTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      ping: {}
+      result: '{"stream": null, "status": "success", "progressDetail": null, "progress": null, "id": null, "from": null, "time": null, "errorDetail": null, "error": null, "aux": null}'
