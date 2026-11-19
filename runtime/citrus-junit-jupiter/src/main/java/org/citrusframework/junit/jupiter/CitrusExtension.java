@@ -80,6 +80,12 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         }
 
         var testCase = getTestCase(extensionContext);
+        if (testCase == null) {
+            // The test case is not available when the failure happened before the test source was
+            // loaded - report the original exception instead of failing to mark the test case.
+            return;
+        }
+
         var testResult = testCase.getTestResult();
 
         if (testResult == null || !testResult.isFailed()) {
@@ -204,6 +210,11 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         TestLoader testLoader = getTestLoader(extensionContext);
         CitrusAnnotations.injectAll(testLoader, citrus, context);
         CitrusAnnotations.injectTestRunner(testLoader, testRunner);
+
+        if (isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
+            CitrusParameterHelper.injectTestParameters(testLoader, extensionContext.getRequiredTestMethod(),
+                    invocationContext.getArguments());
+        }
 
         testLoader.doWithTestCase(testCase -> {
             try {
