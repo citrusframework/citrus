@@ -193,6 +193,53 @@ You can customize the Spring application context by adding more configuration cl
 TIP: In a Spring Boot test you can use the Citrus Spring Boot starter instead, which auto-configures the Citrus components without an explicit `CitrusSpringConfig` import.
 See link:#runtime-spring-boot[SpringBootTest] for details.
 
+[[junit-jupiter-parallel]]
+=== Run tests in parallel
+
+JUnit Jupiter supports parallel test execution at both class and method level via `junit-platform.properties` or the `@Execution` annotation:
+
+.`junit-platform.properties`
+[source,properties]
+----
+junit.jupiter.execution.parallel.enabled = true
+junit.jupiter.execution.parallel.mode.default = concurrent
+junit.jupiter.execution.parallel.mode.classes.default = concurrent
+----
+
+Each test invocation — including standard `@Test` methods, overloaded test methods, and concurrent `@ParameterizedTest`, `@RepeatedTest`, or `@TestTemplate` invocations — receives its own isolated `TestActionRunner`, `TestContext`, `TestCase`, and `TestLoader` via `@CitrusResource` method parameter injection:
+
+.Parallel JUnit Jupiter test
+[source,java]
+----
+@CitrusSupport
+@Execution(ExecutionMode.CONCURRENT)
+class ParallelResource_IT implements TestActionSupport {
+
+    @Test
+    @CitrusTest
+    void firstTest(@CitrusResource TestActionRunner runner) {
+        runner.run(sequential().actions(
+            createVariable("id", "citrus:randomUUID()"),
+            echo("First test id: ${id}")
+        ));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"alpha", "beta"})
+    @CitrusTest
+    void parameterizedTest(String name, @CitrusResource TestActionRunner runner) {
+        runner.run(sequential().actions(
+            createVariable("item", name),
+            echo("Item: ${item}")
+        ));
+    }
+}
+----
+
+IMPORTANT: If you combine `@TestInstance(TestInstance.Lifecycle.PER_CLASS)` with concurrent method execution (`ExecutionMode.CONCURRENT`), inject per-test resources (`TestActionRunner`, `GherkinTestActionRunner`, `TestCaseRunner`, `TestContext`) as `@CitrusResource` method parameters rather than fields on the shared test instance. Citrus rejects concurrent mutation of per-test `@CitrusResource` fields on a `PER_CLASS` test instance to prevent cross-test interference.
+
+Also make sure that any shared message endpoints used by parallel tests correlate messages per test (for example via link:#actions-receive[message selectors] or dedicated endpoints/ports).
+
 [[junit-jupiter-test-sharding]]
 === Test Sharding
 

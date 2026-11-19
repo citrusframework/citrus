@@ -16,8 +16,8 @@
 
 package org.citrusframework.base.context;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.citrusframework.api.container.AfterTest;
 import org.citrusframework.api.container.BeforeTest;
@@ -63,9 +63,9 @@ public class DefaultTestContextFactory implements TestContextFactory {
 
     private TestActionListeners testActionListeners;
 
-    private List<BeforeTest> beforeTest = new ArrayList<>();
+    private List<BeforeTest> beforeTest = new CopyOnWriteArrayList<>();
 
-    private List<AfterTest> afterTest = new ArrayList<>();
+    private List<AfterTest> afterTest = new CopyOnWriteArrayList<>();
 
     private MessageListeners messageListeners;
 
@@ -268,7 +268,7 @@ public class DefaultTestContextFactory implements TestContextFactory {
      * @param beforeTest
      */
     public void setBeforeTest(List<BeforeTest> beforeTest) {
-        this.beforeTest = beforeTest;
+        this.beforeTest = beforeTest != null ? new CopyOnWriteArrayList<>(beforeTest) : null;
     }
 
     /**
@@ -284,7 +284,7 @@ public class DefaultTestContextFactory implements TestContextFactory {
      * @param afterTest
      */
     public void setAfterTest(List<AfterTest> afterTest) {
-        this.afterTest = afterTest;
+        this.afterTest = afterTest != null ? new CopyOnWriteArrayList<>(afterTest) : null;
     }
 
     /**

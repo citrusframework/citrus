@@ -16,9 +16,9 @@
 
 package org.citrusframework.report;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 import org.citrusframework.TestAction;
@@ -36,7 +36,7 @@ import org.citrusframework.context.TestContext;
 public class TestActionListeners implements TestActionListenerAware, TestActionContainerListener {
 
     /** List of test action listeners **/
-    private final List<TestActionListener> testActionListeners = new ArrayList<>();
+    private final List<TestActionListener> testActionListeners = new CopyOnWriteArrayList<>();
 
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {

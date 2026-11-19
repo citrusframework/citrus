@@ -16,9 +16,9 @@
 
 package org.citrusframework.report;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
@@ -28,7 +28,7 @@ public class MessageListeners implements MessageListenerAware {
     /**
      * List of message listener known to Spring application context
      */
-    private final List<MessageListener> messageListener = new ArrayList<>();
+    private final CopyOnWriteArrayList<MessageListener> messageListener = new CopyOnWriteArrayList<>();
 
     /**
      * Delegate to all known message listener instances.
@@ -69,9 +69,7 @@ public class MessageListeners implements MessageListenerAware {
 
     @Override
     public void addMessageListener(MessageListener listener) {
-        if (!this.messageListener.contains(listener)) {
-            this.messageListener.add(listener);
-        }
+        this.messageListener.addIfAbsent(listener);
     }
 
     /**

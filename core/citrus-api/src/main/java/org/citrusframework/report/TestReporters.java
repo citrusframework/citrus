@@ -18,8 +18,8 @@ package org.citrusframework.report;
 
 import org.citrusframework.TestCase;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.nonNull;
@@ -34,12 +34,12 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
     /**
      * List of test listeners
      **/
-    private final List<TestReporter> testReporters = new ArrayList<>();
+    private final List<TestReporter> testReporters = new CopyOnWriteArrayList<>();
 
     /**
      * Collect test results for overall result overview at the very end of test execution
      */
-    private TestResults testResults = new TestResults();
+    private volatile TestResults testResults = new TestResults();
 
     @Override
     public void onStart() {

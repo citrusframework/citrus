@@ -16,8 +16,8 @@
 
 package org.citrusframework.report;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.citrusframework.TestCase;
 
@@ -29,7 +29,7 @@ import org.citrusframework.TestCase;
 public class TestListeners implements TestListenerAware {
 
     /** List of test listeners **/
-    private final List<TestListener> testListeners = new ArrayList<>();
+    private final CopyOnWriteArrayList<TestListener> testListeners = new CopyOnWriteArrayList<>();
 
     public void onTestFailure(TestCase test, Throwable cause) {
         for (TestListener listener : testListeners) {
@@ -123,9 +123,7 @@ public class TestListeners implements TestListenerAware {
 
     @Override
     public void addTestListener(TestListener listener) {
-        if (!testListeners.contains(listener)) {
-            this.testListeners.add(listener);
-        }
+        this.testListeners.addIfAbsent(listener);
     }
 
     /**

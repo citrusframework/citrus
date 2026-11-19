@@ -485,7 +485,12 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      */
     public void setGlobalVariables(GlobalVariables globalVariables) {
         GlobalVariables.Builder builder = new GlobalVariables.Builder();
-        for (Entry<String, Object> entry : globalVariables.getVariables().entrySet()) {
+        Map<String, Object> sourceVariables = globalVariables.getVariables();
+        Map<String, Object> snapshot;
+        synchronized (sourceVariables) {
+            snapshot = new LinkedHashMap<>(sourceVariables);
+        }
+        for (Entry<String, Object> entry : snapshot.entrySet()) {
             final String adaptedKey = resolveDynamicContentIfRequired(entry.getKey());
             final Object adaptedValue = resolveDynamicContentIfRequired(entry.getValue());
             variables.put(adaptedKey, adaptedValue);

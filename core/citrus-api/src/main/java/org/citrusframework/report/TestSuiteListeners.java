@@ -16,9 +16,9 @@
 
 package org.citrusframework.report;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Class managing a list of injected test suite listeners. Each event is spread to all
@@ -28,13 +28,11 @@ import java.util.List;
 public class TestSuiteListeners implements TestSuiteListenerAware {
 
     /** List of testsuite listeners **/
-    private final List<TestSuiteListener> testSuiteListeners = new ArrayList<>();
+    private final CopyOnWriteArrayList<TestSuiteListener> testSuiteListeners = new CopyOnWriteArrayList<>();
 
     @Override
     public void addTestSuiteListener(TestSuiteListener testSuiteListener) {
-        if (!testSuiteListeners.contains(testSuiteListener)) {
-            testSuiteListeners.add(testSuiteListener);
-        }
+        testSuiteListeners.addIfAbsent(testSuiteListener);
     }
 
     public void onFinish() {
