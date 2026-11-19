@@ -27,4 +27,4 @@ actions:
           - name: "app"
             value: "todo"
           - name: "state"
-            value: "ready"
+            value: "${labelValue}"

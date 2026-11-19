@@ -19,6 +19,7 @@ package org.citrusframework.kubernetes.yaml;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import org.citrusframework.TestCase;
+import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
 import org.citrusframework.kubernetes.command.GetService;
 import org.citrusframework.kubernetes.command.Info;
@@ -32,6 +33,9 @@ public class ExecuteTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadExecuteActions() {
+        TestActor actor = new TestActor("myActor");
+        context.getReferenceResolver().bind("myActor", actor);
+
         createPod("my-pod");
         createService();
 
@@ -44,6 +48,7 @@ public class ExecuteTest extends AbstractYamlActionTest {
 
         Assertions.assertEquals(KubernetesExecuteAction.class, result.getTestAction(0).getClass());
         Assertions.assertEquals(Info.class, ((KubernetesExecuteAction) result.getTestAction(0)).getCommand().getClass());
+        Assertions.assertEquals(actor, ((KubernetesExecuteAction) result.getTestAction(0)).getActor());
 
         Assertions.assertEquals(KubernetesExecuteAction.class, result.getTestAction(1).getClass());
         KubernetesExecuteAction listPods = (KubernetesExecuteAction) result.getTestAction(1);

@@ -24,7 +24,7 @@
       <delete-pod>
         <labels>
           <label name="app" value="todo"/>
-          <label name="state" value="ready"/>
+          <label name="state" value="${labelValue}"/>
         </labels>
       </delete-pod>
     </kubernetes>

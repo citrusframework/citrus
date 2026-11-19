@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActor;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
@@ -97,6 +98,10 @@ public class Execute implements TestActionBuilder<KubernetesExecuteAction>, Refe
 
     void client(org.citrusframework.kubernetes.client.KubernetesClient client) {
         delegate.client(client);
+    }
+
+    void actor(TestActor actor) {
+        delegate.actor(actor);
     }
 
     @Override
