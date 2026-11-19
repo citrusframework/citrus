@@ -28,10 +28,12 @@ import org.citrusframework.junit.jupiter.source.SingleSourceFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Isolated
 public class CitrusTestSourceEntriesTest {
 
     @BeforeEach

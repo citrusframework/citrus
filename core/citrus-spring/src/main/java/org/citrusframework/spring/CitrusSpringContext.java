@@ -44,6 +44,7 @@ public class CitrusSpringContext extends DefaultCitrusContext {
 
     /** Basic Spring application context */
     private final ApplicationContext applicationContext;
+    private final boolean ownsApplicationContext;
 
     /**
      * Protected constructor using given builder to construct this instance.
@@ -53,6 +54,7 @@ public class CitrusSpringContext extends DefaultCitrusContext {
         super(builder);
 
         this.applicationContext = builder.applicationContext;
+        this.ownsApplicationContext = builder.ownsApplicationContext;
     }
 
     /**
@@ -64,11 +66,13 @@ public class CitrusSpringContext extends DefaultCitrusContext {
     }
 
     /**
-     * Closing Citrus and its application context.
+     * Closing Citrus and its application context when owned by this Citrus context.
      */
     public void close() {
         super.close();
-        if (applicationContext instanceof ConfigurableApplicationContext configurableApplicationContext && configurableApplicationContext.isActive()) {
+        if (ownsApplicationContext
+                && applicationContext instanceof ConfigurableApplicationContext configurableApplicationContext
+                && configurableApplicationContext.isActive()) {
             configurableApplicationContext.close();
         }
     }
@@ -79,7 +83,10 @@ public class CitrusSpringContext extends DefaultCitrusContext {
      * @return
      */
     public static CitrusSpringContext create() {
-        return create(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
+        return new Builder()
+                .withApplicationContext(new AnnotationConfigApplicationContext(CitrusSpringConfig.class))
+                .ownsApplicationContext(true)
+                .build();
     }
 
     /**
@@ -89,7 +96,10 @@ public class CitrusSpringContext extends DefaultCitrusContext {
      * @return
      */
     public static CitrusSpringContext create(Class<? extends CitrusSpringConfig> configClass) {
-        return create(new AnnotationConfigApplicationContext(configClass));
+        return new Builder()
+                .withApplicationContext(new AnnotationConfigApplicationContext(configClass))
+                .ownsApplicationContext(true)
+                .build();
     }
 
     /**
@@ -109,6 +119,12 @@ public class CitrusSpringContext extends DefaultCitrusContext {
     public static final class Builder extends DefaultCitrusContext.Builder {
 
         private ApplicationContext applicationContext;
+        private boolean ownsApplicationContext;
+
+        public Builder ownsApplicationContext(boolean ownsApplicationContext) {
+            this.ownsApplicationContext = ownsApplicationContext;
+            return this;
+        }
 
         public Builder withApplicationContext(ApplicationContext applicationContext) {
             this.applicationContext = applicationContext;

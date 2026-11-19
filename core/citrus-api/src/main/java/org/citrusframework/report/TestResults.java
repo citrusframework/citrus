@@ -106,7 +106,11 @@ public class TestResults {
     }
 
     public String getSuccessPercentageFormatted() {
-        return results.isEmpty() || getSuccess() == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) getSuccess() / (results.size()) * 100);
+        synchronized (results) {
+            int size = results.size();
+            int success = getSuccess();
+            return size == 0 || success == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) success / size * 100);
+        }
     }
 
     /**
@@ -137,7 +141,11 @@ public class TestResults {
     }
 
     public String getFailedPercentageFormatted() {
-        return results.isEmpty() || getFailed() == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) getFailed() / (results.size()) * 100);
+        synchronized (results) {
+            int size = results.size();
+            int failed = getFailed();
+            return size == 0 || failed == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) failed / size * 100);
+        }
     }
 
     /**
@@ -168,7 +176,11 @@ public class TestResults {
     }
 
     public String getSkippedPercentageFormatted() {
-        return results.isEmpty() ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) getSkipped() / (results.size()) * 100);
+        synchronized (results) {
+            int size = results.size();
+            int skipped = getSkipped();
+            return size == 0 || skipped == 0 ? ZERO_PERCENTAGE : getNewDecimalFormat().format((double) skipped / size * 100);
+        }
     }
 
     /**
@@ -193,10 +205,12 @@ public class TestResults {
      * Gets the total duration of all tests.
      */
     public Duration getTotalDuration() {
-        return Duration.ofMillis(results.stream()
-                .filter(r -> Objects.nonNull(r.getDuration()))
-                .mapToLong(r -> r.getDuration().toMillis())
-                .sum());
+        synchronized (results) {
+            return Duration.ofMillis(results.stream()
+                    .filter(r -> Objects.nonNull(r.getDuration()))
+                    .mapToLong(r -> r.getDuration().toMillis())
+                    .sum());
+        }
     }
 
     private DecimalFormat getNewDecimalFormat() {

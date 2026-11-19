@@ -17,6 +17,7 @@
 package org.citrusframework.validation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,13 +54,15 @@ public class MessageValidatorRegistry {
     public static final String BEAN_NAME = "citrusMessageValidatorRegistry";
 
     /** Registered message validators */
-    private Map<String, MessageValidator<? extends ValidationContext>> messageValidators = new LinkedHashMap<>();
+    private Map<String, MessageValidator<? extends ValidationContext>> messageValidators =
+            Collections.synchronizedMap(new LinkedHashMap<>());
 
     /** Registered schema validators */
-    private Map<String, SchemaValidator<? extends SchemaValidationContext>> schemaValidators = new LinkedHashMap<>();
+    private Map<String, SchemaValidator<? extends SchemaValidationContext>> schemaValidators =
+            Collections.synchronizedMap(new LinkedHashMap<>());
 
     /** Default message header validator - gets looked up via resource path */
-    private MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator;
+    private volatile MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator;
 
     /** Default message validators used as a fallback option */
     private final DefaultEmptyMessageValidator defaultEmptyMessageValidator = new DefaultEmptyMessageValidator();
@@ -87,7 +90,7 @@ public class MessageValidatorRegistry {
     public List<MessageValidator<? extends ValidationContext>> findMessageValidators(String messageType, Message message, boolean mustFindValidator) {
         List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<>();
 
-        for (MessageValidator<? extends ValidationContext> validator : messageValidators.values()) {
+        for (MessageValidator<? extends ValidationContext> validator : snapshotMessageValidators()) {
             if (validator.supportsMessageType(messageType, message)) {
                 matchingValidators.add(validator);
             }
@@ -160,7 +163,7 @@ public class MessageValidatorRegistry {
     private List<MessageValidator<? extends ValidationContext>> findFallbackMessageValidators(String messageType, Message message) {
         List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<>();
 
-        for (MessageValidator<? extends ValidationContext> validator : messageValidators.values()) {
+        for (MessageValidator<? extends ValidationContext> validator : snapshotMessageValidators()) {
             if (validator.supportsMessageType(messageType, message)) {
                 matchingValidators.add(validator);
             }
@@ -172,7 +175,7 @@ public class MessageValidatorRegistry {
     private List<SchemaValidator<? extends SchemaValidationContext>> findFallbackSchemaValidators(String messageType, Message message) {
         List<SchemaValidator<? extends SchemaValidationContext>> matchingValidators = new ArrayList<>();
 
-        for (SchemaValidator<? extends SchemaValidationContext> validator : schemaValidators.values()) {
+        for (SchemaValidator<? extends SchemaValidationContext> validator : snapshotSchemaValidators()) {
             if (validator.supportsMessageType(messageType, message)) {
                 matchingValidators.add(validator);
             }
@@ -181,17 +184,33 @@ public class MessageValidatorRegistry {
         return matchingValidators;
     }
 
+    private List<MessageValidator<? extends ValidationContext>> snapshotMessageValidators() {
+        Map<String, MessageValidator<? extends ValidationContext>> validators = this.messageValidators;
+        if (validators == null) {
+            return Collections.emptyList();
+        }
+        synchronized (validators) {
+            return new ArrayList<>(validators.values());
+        }
+    }
+
+    private List<SchemaValidator<? extends SchemaValidationContext>> snapshotSchemaValidators() {
+        Map<String, SchemaValidator<? extends SchemaValidationContext>> validators = this.schemaValidators;
+        if (validators == null) {
+            return Collections.emptyList();
+        }
+        synchronized (validators) {
+            return new ArrayList<>(validators.values());
+        }
+    }
+
     /**
      * Try to find validator for given name. Returns optional validator if any with that name present.
      * @param name to be searched for
      * @return optional message validator instance
      */
     public Optional<MessageValidator<? extends ValidationContext>> findMessageValidator(String name) {
-        if (this.messageValidators.containsKey(name)) {
-            return Optional.of(this.messageValidators.get(name));
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(this.messageValidators.get(name));
     }
 
     /**
@@ -200,8 +219,9 @@ public class MessageValidatorRegistry {
      * @return message validator instance
      */
     public MessageValidator<? extends ValidationContext> getMessageValidator(String name) {
-        if (this.messageValidators.containsKey(name)) {
-            return this.messageValidators.get(name);
+        MessageValidator<? extends ValidationContext> validator = this.messageValidators.get(name);
+        if (validator != null) {
+            return validator;
         }
 
         throw new NoSuchMessageValidatorException(format("Unable to find message validator with name '%s'", name));
@@ -238,7 +258,7 @@ public class MessageValidatorRegistry {
      * @param messageValidators the messageValidators to set
      */
     public void setMessageValidators(Map<String, MessageValidator<? extends ValidationContext>> messageValidators) {
-        this.messageValidators = messageValidators;
+        this.messageValidators = messageValidators != null ? Collections.synchronizedMap(messageValidators) : null;
     }
 
     /**
@@ -262,7 +282,7 @@ public class MessageValidatorRegistry {
      * @return
      */
     public MessageValidator<? extends ValidationContext> getDefaultMessageHeaderValidator() {
-        return messageValidators.values()
+        return snapshotMessageValidators()
                 .stream()
                 .filter(this::isDefaultMessageHeaderValidator)
                 .findFirst()
@@ -279,7 +299,7 @@ public class MessageValidatorRegistry {
     public List<SchemaValidator<? extends SchemaValidationContext>> findSchemaValidators(String messageType, Message message) {
         List<SchemaValidator<? extends SchemaValidationContext>> matchingSchemaValidators = new ArrayList<>();
 
-        for (SchemaValidator<? extends SchemaValidationContext> validator : schemaValidators.values()) {
+        for (SchemaValidator<? extends SchemaValidationContext> validator : snapshotSchemaValidators()) {
             if (validator.supportsMessageType(messageType, message)) {
                 matchingSchemaValidators.add(validator);
             }
@@ -310,11 +330,7 @@ public class MessageValidatorRegistry {
      * @return optional message validator instance
      */
     public Optional<SchemaValidator<? extends SchemaValidationContext>> findSchemaValidator(String name) {
-        if (this.schemaValidators.containsKey(name)) {
-            return Optional.of(this.schemaValidators.get(name));
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(this.schemaValidators.get(name));
     }
 
     /**
@@ -322,7 +338,7 @@ public class MessageValidatorRegistry {
      * @param schemaValidators the messageValidators to set
      */
     public void setSchemaValidators(Map<String, SchemaValidator<? extends SchemaValidationContext>> schemaValidators) {
-        this.schemaValidators = schemaValidators;
+        this.schemaValidators = schemaValidators != null ? Collections.synchronizedMap(schemaValidators) : null;
     }
 
     /**

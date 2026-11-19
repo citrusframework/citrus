@@ -16,20 +16,37 @@
 
 package org.citrusframework.junit.jupiter;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.api.common.TestLoader;
+import org.citrusframework.api.container.AfterSuite;
+import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -41,6 +58,9 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.opentest4j.TestAbortedException;
 
 import static org.citrusframework.base.annotations.CitrusAnnotations.injectCitrusFramework;
@@ -63,10 +83,11 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
      * Test suite name
      */
     private static final String SUITE_NAME = "citrus-junit-jupiter-suite";
+    private static final String SUITE_STATE_KEY = "citrusSuiteState";
 
-    private static final AtomicBoolean reset = new AtomicBoolean(false);
-    private static final AtomicBoolean beforeSuite = new AtomicBoolean(true);
-    private static final AtomicBoolean afterSuite = new AtomicBoolean(true);
+    private static final ReentrantLock SUITE_LOCK = new ReentrantLock();
+    private static final AtomicBoolean RESET_REQUESTED = new AtomicBoolean(false);
+    private static final Map<Class<?>, Boolean> PER_TEST_RESOURCE_FIELD_CACHE = new ConcurrentHashMap<>();
 
     /**
      * {@link ExtensionContext.Namespace} in which Citrus related objects are stored keyed by test class.
@@ -93,32 +114,93 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         }
     }
 
+    /**
+     * Resolves and binds a scoped {@link Citrus} instance (e.g. per Spring ApplicationContext) without overwriting
+     * the root default {@link Citrus} instance used by parallel test classes with different contexts.
+     */
+    public static Citrus resolveScopedCitrus(ExtensionContext extensionContext, Object scopeKey, Supplier<Citrus> creator) {
+        SUITE_LOCK.lock();
+        try {
+            SuiteState state = getOrCreateSuiteState(extensionContext);
+            Citrus citrus = state.scopedInstances.get(scopeKey);
+            if (citrus == null) {
+                citrus = creator.get();
+                state.scopedInstances.put(scopeKey, citrus);
+                state.registeredInstances.add(citrus);
+            }
+            setScopedCitrus(citrus, extensionContext);
+            return citrus;
+        } finally {
+            SUITE_LOCK.unlock();
+        }
+    }
+
+    private static Citrus ensureCitrusInitialized(ExtensionContext extensionContext) {
+        SUITE_LOCK.lock();
+        try {
+            SuiteState state = getOrCreateSuiteState(extensionContext);
+            if (!requiresCitrus(extensionContext)) {
+                Citrus existing = getCitrus(extensionContext);
+                state.registeredInstances.add(existing);
+                return existing;
+            }
+
+            if (state.defaultCitrus == null) {
+                if (CitrusInstanceManager.hasInstance()
+                        && state.scopedInstances.containsValue(CitrusInstanceManager.getOrDefault())) {
+                    state.defaultCitrus = Citrus.newInstance();
+                } else {
+                    state.defaultCitrus = CitrusInstanceManager.getOrDefault();
+                }
+            }
+
+            setCitrus(state.defaultCitrus, extensionContext);
+            state.registeredInstances.add(state.defaultCitrus);
+            return state.defaultCitrus;
+        } finally {
+            SUITE_LOCK.unlock();
+        }
+    }
+
+    private static SuiteState getOrCreateSuiteState(ExtensionContext extensionContext) {
+        ExtensionContext.Store rootStore = extensionContext.getRoot().getStore(NAMESPACE);
+        SuiteState existing = rootStore.get(SUITE_STATE_KEY, SuiteState.class);
+        if (existing == null) {
+            existing = new SuiteState();
+            rootStore.put(SUITE_STATE_KEY, existing);
+            extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL).put("afterSuiteCallback", existing);
+        }
+        return existing;
+    }
+
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        if (reset.getAndSet(false)) {
-            removeCitrus(extensionContext);
-        }
+        SUITE_LOCK.lock();
+        try {
+            if (RESET_REQUESTED.compareAndSet(true, false)) {
+                extensionContext.getRoot().getStore(NAMESPACE).remove(SUITE_STATE_KEY);
+                removeCitrus(extensionContext);
+            }
+            SuiteState state = getOrCreateSuiteState(extensionContext);
+            Citrus citrus = ensureCitrusInitialized(extensionContext);
 
-        if (requiresCitrus(extensionContext)) {
-            setCitrus(CitrusInstanceManager.getOrDefault(), extensionContext);
-        }
+            if (state.suiteName == null) {
+                // Assertion: If the beforeAll callback is called for a test, the annotated tags are currently
+                // included by the groups filter of surefire / failsafe or no specific filter is defined and
+                // all groups / tags will run anyway.
+                state.tags = extensionContext.getTags().toArray(String[]::new);
+                state.suiteName = extensionContext.getTestClass()
+                        .map(Class::getName)
+                        .orElseGet(() -> extensionContext.getTestMethod()
+                                .map(meth -> meth.getDeclaringClass().getName() + ":" + meth.getName())
+                                .orElse(SUITE_NAME));
+            }
 
-        if (beforeSuite.getAndSet(false)) {
-            // Assertion: If the beforeAll callback is called for a test, the annotated tags are currently
-            // included by the groups filter of surefire / failsafe or no specific filter is defined and
-            // all groups / tags will run anyway.
-
-            //initialize "after all test run hook"
-            String[] tags = extensionContext.getTags().toArray(String[]::new);
-            String suiteName = extensionContext.getTestClass()
-                    .map(Class::getName)
-                    .orElseGet(() -> extensionContext.getTestMethod()
-                            .map(meth -> meth.getDeclaringClass().getName() + ":" + meth.getName())
-                            .orElse(SUITE_NAME));
-
-            extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL).put("afterSuiteCallback", new AfterSuiteCallback(extensionContext, suiteName, tags));
-
-            getCitrus(extensionContext).beforeSuite(suiteName, tags);
+            if (state.beforeSuiteCompleted.add(citrus)) {
+                citrus.beforeSuite(state.suiteName, state.tags);
+            }
+        } finally {
+            SUITE_LOCK.unlock();
         }
     }
 
@@ -133,8 +215,10 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         extensionContext.getExecutionException()
                 .ifPresent(e -> failTestCaseIfNotDoneYet(extensionContext, e));
 
-        extensionContext.getRoot().getStore(NAMESPACE).remove(getBaseKey(extensionContext) + TestContext.class.getSimpleName());
-        extensionContext.getRoot().getStore(NAMESPACE).remove(getBaseKey(extensionContext) + TestCase.class.getSimpleName());
+        ExtensionContext.Store store = extensionContext.getStore(NAMESPACE);
+        String baseKey = getBaseKey(extensionContext);
+        store.remove(baseKey + TestContext.class.getSimpleName());
+        store.remove(baseKey + TestCase.class.getSimpleName());
 
         Object testInstance = extensionContext.getRequiredTestInstance();
         if (testInstance instanceof TestListener testListener) {
@@ -145,92 +229,183 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     @Override
     public <T> T interceptTestFactoryMethod(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
         Object testInstance = extensionContext.getRequiredTestInstance();
-        Citrus citrus = getCitrus(extensionContext);
+        Citrus citrus = ensureCitrusInitialized(extensionContext);
         TestContext context = getTestContext(extensionContext);
 
-        CitrusAnnotations.injectAll(testInstance, citrus, context);
+        injectTestInstance(testInstance, citrus, context, null, extensionContext, 1);
 
         if (testInstance instanceof TestListener testListener) {
             testListener.before(citrus.getCitrusContext());
         }
 
-        return invocation.proceed();
+        bindCurrentCitrus(citrus);
+        try {
+            return invocation.proceed();
+        } finally {
+            clearCurrentCitrus();
+        }
     }
 
     @Override
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) {
-        Object testInstance = extensionContext.getRequiredTestInstance();
-        Citrus citrus = getCitrus(extensionContext);
-        TestContext context = getTestContext(extensionContext);
-
-        TestCaseRunner testRunner = getTestRunner(extensionContext);
-        CitrusAnnotations.injectAll(testInstance, citrus, context);
-        CitrusAnnotations.injectTestRunner(testInstance, testRunner);
-
-        if (testInstance instanceof TestListener testListener) {
-            testListener.before(citrus.getCitrusContext());
-        }
-
-        TestLoader testLoader = getTestLoader(extensionContext);
-        CitrusAnnotations.injectAll(testLoader, citrus, context);
-        CitrusAnnotations.injectTestRunner(testLoader, testRunner);
-
-        testLoader.doWithTestCase(testCase -> {
-            try {
-                invocation.proceed();
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Throwable e) {
-                throw new CitrusRuntimeException("Test failed", e);
-            }
-        });
-
-        try {
-            testLoader.load();
-        } catch (TestCaseFailedException e) {
-            throw new CitrusJUnitException(e.getMessage());
-        }
+        executeTestInvocation(invocation, invocationContext, extensionContext, false);
     }
 
     @Override
     public void interceptTestTemplateMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+        executeTestInvocation(invocation, invocationContext, extensionContext, true);
+    }
+
+    private void executeTestInvocation(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
+                                       ExtensionContext extensionContext, boolean template) {
         Object testInstance = extensionContext.getRequiredTestInstance();
-        Citrus citrus = getCitrus(extensionContext);
+        Citrus citrus = ensureCitrusInitialized(extensionContext);
         TestContext context = getTestContext(extensionContext);
-
         TestCaseRunner testRunner = getTestRunner(extensionContext);
-        CitrusAnnotations.injectAll(testInstance, citrus, context);
-        CitrusAnnotations.injectTestRunner(testInstance, testRunner);
 
-        if (testInstance instanceof TestListener testListener) {
-            testListener.before(citrus.getCitrusContext());
-        }
-
-        TestLoader testLoader = getTestLoader(extensionContext);
-        CitrusAnnotations.injectAll(testLoader, citrus, context);
-        CitrusAnnotations.injectTestRunner(testLoader, testRunner);
-
-        if (isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusParameterHelper.injectTestParameters(testLoader, extensionContext.getRequiredTestMethod(),
-                    invocationContext.getArguments());
-        }
-
-        testLoader.doWithTestCase(testCase -> {
-            try {
-                invocation.proceed();
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Throwable e) {
-                throw new CitrusRuntimeException("Test failed", e);
-            }
-        });
-
+        AtomicInteger activeCounter = getActiveCounter(extensionContext, testInstance);
+        int activeCount = activeCounter.incrementAndGet();
         try {
-            testLoader.load();
-        } catch (TestCaseFailedException e) {
-            throw new CitrusJUnitException(e.getMessage());
+            injectTestInstance(testInstance, citrus, context, testRunner, extensionContext, activeCount);
+
+            if (testInstance instanceof TestListener testListener) {
+                testListener.before(citrus.getCitrusContext());
+            }
+
+            TestLoader testLoader = getTestLoader(extensionContext);
+            CitrusAnnotations.injectAll(testLoader, citrus, context);
+            CitrusAnnotations.injectTestRunner(testLoader, testRunner);
+
+            if (template && isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
+                CitrusParameterHelper.injectTestParameters(testLoader, extensionContext.getRequiredTestMethod(),
+                        invocationContext.getArguments());
+            }
+
+            testLoader.doWithTestCase(testCase -> {
+                try {
+                    invocation.proceed();
+                } catch (RuntimeException e) {
+                    throw e;
+                } catch (Throwable e) {
+                    throw new CitrusRuntimeException("Test failed", e);
+                }
+            });
+
+            try {
+                testLoader.load();
+            } catch (TestCaseFailedException e) {
+                throw new CitrusJUnitException(e.getMessage());
+            }
+        } finally {
+            activeCounter.decrementAndGet();
         }
+    }
+
+    private static AtomicInteger getActiveCounter(ExtensionContext extensionContext, Object testInstance) {
+        SUITE_LOCK.lock();
+        try {
+            SuiteState state = getOrCreateSuiteState(extensionContext);
+            return state.activePerInstance.computeIfAbsent(testInstance, k -> new AtomicInteger(0));
+        } finally {
+            SUITE_LOCK.unlock();
+        }
+    }
+
+    private static void injectTestInstance(Object testInstance, Citrus citrus, TestContext context,
+                                           TestCaseRunner testRunner, ExtensionContext extensionContext, int activeCount) {
+        boolean perClass = extensionContext.getTestInstanceLifecycle()
+                .orElse(TestInstance.Lifecycle.PER_METHOD) == TestInstance.Lifecycle.PER_CLASS;
+
+        if (!perClass) {
+            CitrusAnnotations.injectAll(testInstance, citrus, context);
+            if (testRunner != null) {
+                CitrusAnnotations.injectTestRunner(testInstance, testRunner);
+            }
+            return;
+        }
+
+        synchronized (testInstance) {
+            boolean concurrent = activeCount > 1 || isConcurrentMethodExecution(extensionContext);
+            if (concurrent && hasPerTestResourceFields(testInstance.getClass())) {
+                throw new CitrusRuntimeException(String.format(
+                        "Cannot inject per-test @CitrusResource fields into shared @TestInstance(PER_CLASS) test instance '%s' during concurrent method execution; inject @CitrusResource via test method parameters instead",
+                        testInstance.getClass().getName()));
+            }
+
+            if (!concurrent) {
+                CitrusAnnotations.injectAll(testInstance, citrus, context);
+                if (testRunner != null) {
+                    CitrusAnnotations.injectTestRunner(testInstance, testRunner);
+                }
+            } else {
+                CitrusAnnotations.injectCitrusFramework(testInstance, citrus);
+                CitrusAnnotations.injectCitrusContext(testInstance, citrus.getCitrusContext());
+                citrus.getCitrusContext().parseConfiguration(testInstance);
+                CitrusAnnotations.injectTestActionBuilder(testInstance);
+                SuiteState state;
+                SUITE_LOCK.lock();
+                try {
+                    state = getOrCreateSuiteState(extensionContext);
+                } finally {
+                    SUITE_LOCK.unlock();
+                }
+                if (state.endpointsInjectedPerClass.add(testInstance)) {
+                    CitrusAnnotations.injectEndpoints(testInstance, context);
+                }
+            }
+        }
+    }
+
+    private static boolean hasPerTestResourceFields(Class<?> clazz) {
+        return PER_TEST_RESOURCE_FIELD_CACHE.computeIfAbsent(clazz, type -> {
+            Class<?> current = type;
+            while (current != null && current != Object.class) {
+                for (Field field : current.getDeclaredFields()) {
+                    if (field.isAnnotationPresent(CitrusResource.class)) {
+                        Class<?> fieldType = field.getType();
+                        if (TestContext.class.isAssignableFrom(fieldType)
+                                || TestCaseRunner.class.isAssignableFrom(fieldType)
+                                || GherkinTestActionRunner.class.isAssignableFrom(fieldType)
+                                || TestActionRunner.class.isAssignableFrom(fieldType)) {
+                            return true;
+                        }
+                    }
+                }
+                current = current.getSuperclass();
+            }
+            return false;
+        });
+    }
+
+    private static boolean isConcurrentMethodExecution(ExtensionContext extensionContext) {
+        Optional<Method> method = extensionContext.getTestMethod();
+        if (method.isPresent()) {
+            Optional<Execution> methodExecution = AnnotationSupport.findAnnotation(method.get(), Execution.class);
+            if (methodExecution.isPresent()) {
+                return methodExecution.get().value() == ExecutionMode.CONCURRENT;
+            }
+        }
+
+        Optional<Class<?>> testClass = extensionContext.getTestClass();
+        while (testClass.isPresent()) {
+            Optional<Execution> classExecution = AnnotationSupport.findAnnotation(testClass.get(), Execution.class);
+            if (classExecution.isPresent()) {
+                return classExecution.get().value() == ExecutionMode.CONCURRENT;
+            }
+            testClass = Optional.ofNullable(testClass.get().getEnclosingClass());
+        }
+
+        boolean parallelEnabled = extensionContext.getConfigurationParameter("junit.jupiter.execution.parallel.enabled")
+                .map(Boolean::parseBoolean)
+                .orElse(false);
+        if (!parallelEnabled) {
+            return false;
+        }
+
+        return extensionContext.getConfigurationParameter("junit.jupiter.execution.parallel.mode.default")
+                .map(mode -> "concurrent".equalsIgnoreCase(mode.trim()))
+                .orElse(false);
     }
 
     @Override
@@ -242,7 +417,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
-        injectCitrusFramework(testInstance, getCitrus(extensionContext));
+        injectCitrusFramework(testInstance, ensureCitrusInitialized(extensionContext));
     }
 
     @Override
@@ -252,6 +427,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        ensureCitrusInitialized(extensionContext);
         return CitrusExtensionHelper.resolveParameter(parameterContext, extensionContext);
     }
 
@@ -259,10 +435,13 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
      * Reset Citrus extension forcing a new instance of Citrus and execution of before suite.
      */
     public static void reset() {
-        CitrusInstanceManager.reset();
-        beforeSuite.set(true);
-        afterSuite.set(true);
-        reset.set(true);
+        SUITE_LOCK.lock();
+        try {
+            CitrusInstanceManager.reset();
+            RESET_REQUESTED.set(true);
+        } finally {
+            SUITE_LOCK.unlock();
+        }
     }
 
     /**
@@ -284,14 +463,54 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     }
 
     @SuppressWarnings("deprecation")
-    private record AfterSuiteCallback(ExtensionContext extensionContext, String suiteName,
-                                      String... tags) implements ExtensionContext.Store.CloseableResource, AutoCloseable {
+    private static final class SuiteState implements ExtensionContext.Store.CloseableResource, AutoCloseable {
+        private Citrus defaultCitrus;
+        private final Map<Object, Citrus> scopedInstances = new IdentityHashMap<>();
+        private final Set<Citrus> registeredInstances = new LinkedHashSet<>();
+        private final Set<Citrus> beforeSuiteCompleted = new LinkedHashSet<>();
+        private final Map<Object, AtomicInteger> activePerInstance = new IdentityHashMap<>();
+        private final Set<Object> endpointsInjectedPerClass = Collections.synchronizedSet(Collections.newSetFromMap(new IdentityHashMap<>()));
+        private String suiteName;
+        private String[] tags = new String[0];
+        private boolean closed;
 
         @Override
-            public void close() {
-                if (afterSuite.getAndSet(false)) {
-                    getCitrus(extensionContext).afterSuite(suiteName, tags);
+        public void close() {
+            SUITE_LOCK.lock();
+            try {
+                if (closed) {
+                    return;
                 }
+                closed = true;
+
+                if (beforeSuiteCompleted.isEmpty()) {
+                    return;
+                }
+
+                List<Citrus> completed = new ArrayList<>(beforeSuiteCompleted);
+                Citrus primary = completed.get(completed.size() - 1);
+                String effectiveSuiteName = suiteName != null ? suiteName : SUITE_NAME;
+
+                for (int i = 0; i < completed.size() - 1; i++) {
+                    Citrus secondary = completed.get(i);
+                    secondary.getCitrusContext().getTestSuiteListeners().onFinish();
+                    for (AfterSuite sequenceAfterSuite : secondary.getCitrusContext().getAfterSuite()) {
+                        try {
+                            if (sequenceAfterSuite.shouldExecute(effectiveSuiteName, tags)) {
+                                sequenceAfterSuite.execute(secondary.getCitrusContext().createTestContext());
+                            }
+                        } catch (Exception e) {
+                            secondary.getCitrusContext().getTestSuiteListeners().onFinishFailure(e);
+                            throw new AssertionError("After suite failed with errors", e);
+                        }
+                    }
+                    primary.getCitrusContext().handleTestResults(secondary.getCitrusContext().getTestResults());
+                }
+
+                primary.afterSuite(effectiveSuiteName, tags);
+            } finally {
+                SUITE_LOCK.unlock();
             }
         }
+    }
 }
