@@ -25,7 +25,9 @@ import java.util.Map;
 
 import org.citrusframework.log.CitrusLogSettings;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Mutates global citrus.logger.mask.keywords system property")
 class SecretPatternRedactorTest {
 
     @Test
