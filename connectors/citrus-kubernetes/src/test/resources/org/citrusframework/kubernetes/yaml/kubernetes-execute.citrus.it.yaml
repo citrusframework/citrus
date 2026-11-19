@@ -21,6 +21,7 @@ description: "Sample test in YAML"
 actions:
   - kubernetes:
       client: "k8sClient"
+      actor: "myActor"
       execute:
         info: {}
 

@@ -64,6 +64,8 @@ public class DeletePodTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldDeletePodByLabels() {
+        context.setVariable("labelValue", "ready");
+
         k8sClient.pods().inNamespace("test").resource(new PodBuilder()
                 .withNewMetadata()
                     .withName("pod-2")

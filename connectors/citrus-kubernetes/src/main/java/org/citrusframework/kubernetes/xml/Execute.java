@@ -28,6 +28,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestActor;
 import org.citrusframework.api.actions.kubernetes.command.KubernetesCommand;
 import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
 import org.citrusframework.kubernetes.command.GetPod;
@@ -83,6 +84,10 @@ public class Execute implements TestActionBuilder<KubernetesExecuteAction>, Refe
 
     void client(KubernetesClient client) {
         delegate.client(client);
+    }
+
+    void actor(TestActor actor) {
+        delegate.actor(actor);
     }
 
     @Override

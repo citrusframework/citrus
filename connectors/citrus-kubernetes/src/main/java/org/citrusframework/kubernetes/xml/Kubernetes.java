@@ -208,6 +208,10 @@ public class Kubernetes implements TestActionBuilder<TestAction>, ReferenceResol
                         execute.client(citrusClient);
                     }
                 }
+
+                if (actor != null) {
+                    execute.actor(referenceResolver.resolve(actor, TestActor.class));
+                }
             }
 
             return execute.build();

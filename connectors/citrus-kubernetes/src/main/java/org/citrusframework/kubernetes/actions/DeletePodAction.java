@@ -46,9 +46,12 @@ public class DeletePodAction extends AbstractKubernetesAction {
                     .withName(context.replaceDynamicContentInString(podName))
                     .delete();
         } else if (labels != null && !labels.isEmpty()) {
+            Map<String, String> resolvedLabels = new LinkedHashMap<>();
+            labels.forEach((key, value) -> resolvedLabels.put(key, context.replaceDynamicContentInString(value)));
+
             getKubernetesClient().pods()
                     .inNamespace(namespace(context))
-                    .withLabels(labels)
+                    .withLabels(resolvedLabels)
                     .delete();
         } else if (labelExpression != null) {
             String[] tokens = context.replaceDynamicContentInString(labelExpression).split("=");
