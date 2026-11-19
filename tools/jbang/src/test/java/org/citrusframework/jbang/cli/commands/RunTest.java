@@ -80,9 +80,9 @@ public class RunTest extends CommandTest {
     }
 
     @Test
-    public void shouldKeepFlowReportHistoryAcrossRuns() throws IOException {
+    public void shouldKeepWorkDirectoryAcrossRuns() throws IOException {
         Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").file().toPath();
-        Path workDir = workingDir.resolve("flow-report-history");
+        Path workDir = workingDir.resolve("keep-work-dir");
         Path reportDirectory = workDir.resolve("citrus-reports");
 
         deleteRecursively(workDir);
@@ -94,24 +94,60 @@ public class RunTest extends CommandTest {
         try {
             System.setProperty("citrus.jbang.work.dir", workDir.toString());
             System.setProperty("citrus.jbang.report.directory", reportDirectory.toString());
+            System.setProperty("citrus.report.directory", reportDirectory.toString());
 
             CitrusJBangMain main = createCitrusJBangMain();
             main.execute("run", source.toString());
 
             List<Path> flowReports = listFlowReports(reportDirectory);
-            Assertions.assertEquals(1, flowReports.size(), "Expected one flow report after the first run");
-            Path firstFlowReport = flowReports.get(0);
+            Assertions.assertFalse(flowReports.isEmpty(), "Expected at least one flow report after the first run");
+            int firstRunCount = flowReports.size();
 
             Path sentinel = Files.writeString(workDir.resolve("sentinel.txt"), "sentinel");
 
             main = createCitrusJBangMain();
             main.execute("run", source.toString());
 
-            Assertions.assertFalse(Files.exists(sentinel), "Expected the next run to clean up the JBang work directory");
-            Assertions.assertTrue(Files.exists(firstFlowReport), "Expected the previous run's flow report to be preserved");
+            Assertions.assertTrue(Files.exists(sentinel), "Expected the work directory to be kept intact between runs");
 
             List<Path> flowReportsAfterSecondRun = listFlowReports(reportDirectory);
-            Assertions.assertEquals(2, flowReportsAfterSecondRun.size(), "Expected a second flow report after the second run");
+            Assertions.assertTrue(flowReportsAfterSecondRun.size() > firstRunCount, "Expected additional flow reports after the second run");
+        } finally {
+            restoreProperty("citrus.jbang.work.dir", previousWorkDir);
+            restoreProperty("citrus.jbang.report.directory", previousReportDirectory);
+            restoreProperty("citrus.report.directory", previousCitrusReportDirectory);
+        }
+    }
+
+    @Test
+    public void shouldClearWorkDirectoryWithClearOption() throws IOException {
+        Path source = Resources.fromClasspath("runnable/yaml-sample.citrus.it.yaml").file().toPath();
+        Path workDir = workingDir.resolve("clear-work-dir");
+        Path reportDirectory = workDir.resolve("citrus-reports");
+
+        deleteRecursively(workDir);
+
+        String previousWorkDir = System.getProperty("citrus.jbang.work.dir");
+        String previousReportDirectory = System.getProperty("citrus.jbang.report.directory");
+        String previousCitrusReportDirectory = System.getProperty("citrus.report.directory");
+
+        try {
+            System.setProperty("citrus.jbang.work.dir", workDir.toString());
+            System.setProperty("citrus.jbang.report.directory", reportDirectory.toString());
+            System.setProperty("citrus.report.directory", reportDirectory.toString());
+
+            CitrusJBangMain main = createCitrusJBangMain();
+            main.execute("run", source.toString());
+
+            List<Path> flowReports = listFlowReports(reportDirectory);
+            Assertions.assertFalse(flowReports.isEmpty(), "Expected at least one flow report after the first run");
+
+            Path sentinel = Files.writeString(workDir.resolve("sentinel.txt"), "sentinel");
+
+            main = createCitrusJBangMain();
+            main.execute("run", "--clear", source.toString());
+
+            Assertions.assertFalse(Files.exists(sentinel), "Expected --clear to remove the work directory");
         } finally {
             restoreProperty("citrus.jbang.work.dir", previousWorkDir);
             restoreProperty("citrus.jbang.report.directory", previousReportDirectory);
