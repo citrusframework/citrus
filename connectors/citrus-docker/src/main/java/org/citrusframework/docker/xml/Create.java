@@ -69,12 +69,12 @@ public class Create implements DockerCommandProvider {
 
     @XmlAttribute
     public void setCmd(String cmd) {
-        delegate.cmd(cmd);
+        delegate.withParam("cmd", cmd);
     }
 
     @XmlAttribute
     public void setEnv(String env) {
-        delegate.env(env);
+        delegate.withParam("env", env);
     }
 
     @XmlAttribute(name = "entrypoint")
@@ -89,22 +89,22 @@ public class Create implements DockerCommandProvider {
 
     @XmlAttribute(name = "port-specs")
     public void setPortSpecs(String portSpecs) {
-        delegate.portSpecs(portSpecs);
+        delegate.withParam("port-specs", portSpecs);
     }
 
     @XmlAttribute(name = "exposed-ports")
     public void setExposedPorts(String exposedPorts) {
-        delegate.exposedPorts(exposedPorts);
+        delegate.withParam("exposed-ports", exposedPorts);
     }
 
     @XmlAttribute(name = "port-bindings")
     public void setPortBindings(String portBindings) {
-        delegate.portBindings(portBindings);
+        delegate.withParam("port-bindings", portBindings);
     }
 
     @XmlAttribute
     public void setVolumes(String volumes) {
-        delegate.volumes(volumes);
+        delegate.withParam("volumes", volumes);
     }
 
     @XmlAttribute(name = "working-dir")

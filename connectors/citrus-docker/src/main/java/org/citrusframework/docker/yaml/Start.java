@@ -25,7 +25,7 @@ public class Start implements DockerCommandProvider {
 
     private final ContainerStart.Builder delegate = new org.citrusframework.docker.command.ContainerStart.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the container to start")
+    @SchemaProperty(description = "The id of the container to start", required = true)
     public void setContainer(String container) {
         delegate.container(container);
     }

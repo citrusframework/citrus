@@ -1,0 +1,6 @@
+name: DockerInfoDefaultClientTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      info: {}

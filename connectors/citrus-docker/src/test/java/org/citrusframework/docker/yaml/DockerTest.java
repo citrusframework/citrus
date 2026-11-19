@@ -18,6 +18,10 @@ package org.citrusframework.docker.yaml;
 
 import java.util.Map;
 
+import com.github.dockerjava.api.model.Capability;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.Ports;
+import com.github.dockerjava.api.model.Volume;
 import org.citrusframework.TestCase;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
@@ -33,6 +37,10 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 public class DockerTest extends AbstractYamlActionTest {
 
@@ -80,13 +88,48 @@ public class DockerTest extends AbstractYamlActionTest {
         Assertions.assertEquals("myContainer", parameters.get("name"));
         Assertions.assertEquals(true, parameters.get("attach-stdout"));
         Assertions.assertEquals(true, parameters.get("attach-stderr"));
-        Assertions.assertArrayEquals(new String[]{ "sleep 5" }, (String[]) parameters.get("cmd"));
-        Assertions.assertArrayEquals(new String[]{ "JAVA_HOME=/opt/java" }, (String[]) parameters.get("env"));
+        Assertions.assertEquals("NET_ADMIN,SYS_ADMIN", parameters.get("capability-add"));
+        Assertions.assertEquals("MKNOD", parameters.get("capability-drop"));
+        Assertions.assertEquals("sleep 5;echo done", parameters.get("cmd"));
+        Assertions.assertEquals("JAVA_HOME=/opt/java;PATH=/usr/bin", parameters.get("env"));
         Assertions.assertEquals("citrusHost", parameters.get("hostname"));
         Assertions.assertEquals("citrusframework.org", parameters.get("domain-name"));
         Assertions.assertEquals("/tmp", parameters.get("working-dir"));
         Assertions.assertEquals("/bin/sh", parameters.get("entrypoint"));
+        Assertions.assertEquals("8080;9090", parameters.get("port-specs"));
+        Assertions.assertEquals("8080,9090", parameters.get("exposed-ports"));
+        Assertions.assertEquals("80:8080,90:9090", parameters.get("port-bindings"));
+        Assertions.assertEquals("/tmp:/tmp,/var:/var", parameters.get("volumes"));
+        Assertions.assertEquals("Create a container from an image", action.getDescription());
         Assertions.assertSame(client, action.getDockerClient());
+    }
+
+    @Test
+    public void shouldExecuteCreateCommand() {
+        DockerClient client = bindDockerClient();
+        DockerExecuteAction action = loadDockerAction("docker-create.citrus.it.yaml");
+
+        action.execute(context);
+
+        var command = client.getEndpointConfiguration().getDockerClient().createContainerCmd("citrus:latest");
+        verify(command, atLeastOnce()).withCmd("sleep 5", "echo done");
+        verify(command, atLeastOnce()).withEnv("JAVA_HOME=/opt/java", "PATH=/usr/bin");
+        verify(command, atLeastOnce()).withPortSpecs("8080", "9090");
+        verify(command, atLeastOnce()).withExposedPorts(any(ExposedPort[].class));
+        verify(command, atLeastOnce()).withPortBindings(any(Ports.class));
+        verify(command, atLeastOnce()).withVolumes(any(Volume[].class));
+        verify(command, atLeastOnce()).withCapAdd(Capability.NET_ADMIN, Capability.SYS_ADMIN);
+        verify(command, atLeastOnce()).withCapDrop(Capability.MKNOD);
+    }
+
+    @Test
+    public void shouldUseDefaultClientWhenNotConfigured() {
+        DockerClient boundClient = bindDockerClient();
+
+        DockerExecuteAction action = loadDockerAction("docker-info-default-client.citrus.it.yaml");
+
+        Assertions.assertNotNull(action.getDockerClient());
+        Assertions.assertNotSame(boundClient, action.getDockerClient());
     }
 
     @Test

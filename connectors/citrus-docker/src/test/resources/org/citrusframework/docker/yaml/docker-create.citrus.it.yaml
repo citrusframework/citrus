@@ -4,14 +4,21 @@ status: FINAL
 actions:
   - docker:
       client: myDockerClient
+      description: "Create a container from an image"
       create:
         image: "citrus:latest"
         name: "myContainer"
         attachStdOut: true
         attachStdErr: true
-        cmd: "sleep 5"
-        env: "JAVA_HOME=/opt/java"
+        addCapability: "NET_ADMIN,SYS_ADMIN"
+        dropCapability: "MKNOD"
+        cmd: "sleep 5;echo done"
+        env: "JAVA_HOME=/opt/java;PATH=/usr/bin"
         hostName: "citrusHost"
         domainName: "citrusframework.org"
         workingDir: "/tmp"
         entryPoint: "/bin/sh"
+        portSpecs: "8080;9090"
+        exposedPorts: "8080,9090"
+        portBindings: "80:8080,90:9090"
+        volumes: "/tmp:/tmp,/var:/var"
