@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActionContainerBuilder;
 import org.citrusframework.TestActor;
@@ -29,11 +30,14 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.KubernetesAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
 
 @XmlRootElement(name = "kubernetes")
-public class Kubernetes implements TestActionBuilder<KubernetesAction>, ReferenceResolverAware {
+public class Kubernetes implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private AbstractKubernetesAction.Builder<?, ?> builder;
+
+    private Execute execute;
 
     private String description;
     private String actor;
@@ -170,8 +174,45 @@ public class Kubernetes implements TestActionBuilder<KubernetesAction>, Referenc
         this.builder = builder;
     }
 
+    @XmlElement(name = "delete-pod")
+    public void setDeletePod(DeletePod builder) {
+        this.builder = builder;
+    }
+
+    @XmlElement(name = "execute")
+    public void setExecute(Execute execute) {
+        this.execute = execute;
+    }
+
     @Override
-    public KubernetesAction build() {
+    public TestAction build() {
+        if (execute != null) {
+            if (StringUtils.hasText(description)) {
+                execute.setDescription(description);
+            }
+
+            if (StringUtils.hasText(namespace)) {
+                execute.namespace(namespace);
+            }
+
+            if (referenceResolver != null) {
+                execute.setReferenceResolver(referenceResolver);
+
+                if (StringUtils.hasText(kubernetesClient)) {
+                    if (referenceResolver.isResolvable(kubernetesClient, org.citrusframework.kubernetes.client.KubernetesClient.class)) {
+                        execute.client(referenceResolver.resolve(kubernetesClient, org.citrusframework.kubernetes.client.KubernetesClient.class));
+                    } else if (referenceResolver.isResolvable(kubernetesClient, KubernetesClient.class)) {
+                        org.citrusframework.kubernetes.client.KubernetesClient citrusClient = new org.citrusframework.kubernetes.client.KubernetesClient();
+                        citrusClient.getEndpointConfiguration().setKubernetesClient(
+                                referenceResolver.resolve(kubernetesClient, KubernetesClient.class));
+                        execute.client(citrusClient);
+                    }
+                }
+            }
+
+            return execute.build();
+        }
+
         if (builder == null) {
             throw new CitrusRuntimeException("Missing Kubernetes action - please provide proper action details");
         }

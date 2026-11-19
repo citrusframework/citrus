@@ -16,7 +16,9 @@
 
 package org.citrusframework.kubernetes.actions;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import org.citrusframework.api.actions.kubernetes.KubernetesPodDeleteActionBuilder;
@@ -26,12 +28,14 @@ public class DeletePodAction extends AbstractKubernetesAction {
 
     private final String podName;
     private final String labelExpression;
+    private final Map<String, String> labels;
 
     public DeletePodAction(Builder builder) {
         super("delete-pod", builder);
 
         this.podName = builder.podName;
         this.labelExpression = builder.labelExpression;
+        this.labels = builder.labels;
     }
 
     @Override
@@ -40,6 +44,11 @@ public class DeletePodAction extends AbstractKubernetesAction {
             getKubernetesClient().pods()
                     .inNamespace(namespace(context))
                     .withName(context.replaceDynamicContentInString(podName))
+                    .delete();
+        } else if (labels != null && !labels.isEmpty()) {
+            getKubernetesClient().pods()
+                    .inNamespace(namespace(context))
+                    .withLabels(labels)
                     .delete();
         } else if (labelExpression != null) {
             String[] tokens = context.replaceDynamicContentInString(labelExpression).split("=");
@@ -70,6 +79,7 @@ public class DeletePodAction extends AbstractKubernetesAction {
 
         private String podName;
         private String labelExpression;
+        private Map<String, String> labels = new LinkedHashMap<>();
 
         @Override
         public Builder podName(String podName) {
@@ -80,6 +90,11 @@ public class DeletePodAction extends AbstractKubernetesAction {
         @Override
         public Builder label(String name, String value) {
             this.labelExpression = String.format("%s=%s", name, value);
+            return this;
+        }
+
+        public Builder labels(Map<String, String> labels) {
+            this.labels.putAll(labels);
             return this;
         }
 

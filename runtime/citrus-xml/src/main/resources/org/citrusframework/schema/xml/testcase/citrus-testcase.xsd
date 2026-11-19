@@ -4327,6 +4327,373 @@
             <xs:attribute name="timeout" type="xs:string"/>
           </xs:complexType>
         </xs:element>
+        <xs:element name="delete-pod">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="labels" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="label" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="name" use="required" type="xs:string"/>
+                        <xs:attribute name="value" use="required" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="label" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="execute">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="info">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="list-pods">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="without-labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="without-label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="list-services">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="without-labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="without-label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="list-replication-controllers">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="without-labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="without-label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="list-endpoints">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="without-labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="without-label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="list-nodes">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="without-labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="without-label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="list-events">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="without-labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="without-label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="list-namespaces">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="without-labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="without-label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="get-pod">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" use="required" type="xs:string"/>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="get-service">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="labels" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="label" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="path" use="required" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" use="required" type="xs:string"/>
+                  <xs:attribute name="namespace" type="xs:string"/>
+                  <xs:attribute name="label" type="xs:string"/>
+                  <xs:attribute name="result" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="client" type="xs:string"/>

@@ -1246,6 +1246,84 @@ This action scans the Pod logs for a message `Something interesting`.
 As soon as the log message has been located in the Pod logs the test action finishes with success.
 The action waits for the log message to appear in the Pod logs for given amount of time with a specified polling attempt configuration.
 
+[[kubernetes-delete-pod]]
+== Delete Pod
+
+You can delete a Pod on the Kubernetes cluster by name or by label expression.
+Of course your client connection needs to have sufficient permissions to perform the delete operation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void deletePodTest() {
+    given(kubernetes()
+            .client(k8sClient)
+            .pods()
+            .inNamespace("my-namespace")
+            .delete("my-pod"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DeletePodTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <delete-pod name="my-pod"/>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DeletePodTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      deletePod:
+        name: "my-pod"
+----
+
+Instead of the Pod name you can use a label expression or a list of labels to select the Pods that get deleted.
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DeletePodTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <delete-pod>
+          <labels>
+            <label name="app" value="todo"/>
+            <label name="state" value="ready"/>
+          </labels>
+        </delete-pod>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DeletePodTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      deletePod:
+        labels:
+          - name: "app"
+            value: "todo"
+          - name: "state"
+            value: "ready"
+----
+
 [[kubernetes-agent]]
 == Kubernetes Citrus agent
 
@@ -1673,6 +1751,57 @@ public void kubernetesTest() {
                 .validate((info, context) -> Assert.assertEquals(info.getApiVersion(), "v1"));
 }
 ----
+
+The same read-only commands (`info`, `list`, `get`) are available to YAML and XML tests through the `execute` action:
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="KubernetesExecuteTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient">
+        <execute>
+          <list-pods namespace="my-namespace" label="app=todo">
+            <validate path="$..status.phase" value="Running"/>
+          </list-pods>
+        </execute>
+        <execute>
+          <get-service name="my-service" namespace="my-namespace">
+            <validate path="$.result.metadata.name" value="my-service"/>
+          </get-service>
+        </execute>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: KubernetesExecuteTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      execute:
+        listPods:
+          namespace: "my-namespace"
+          label: "app=todo"
+          validate:
+            - path: "$..status.phase"
+              value: "Running"
+  - kubernetes:
+      client: "k8sClient"
+      execute:
+        getService:
+          name: "my-service"
+          namespace: "my-namespace"
+          validate:
+            - path: "$.result.metadata.name"
+              value: "my-service"
+----
+
+The `execute` action supports the read-only commands `info`, `list-pods`, `list-services`, `list-replication-controllers`, `list-endpoints`, `list-nodes`, `list-events`, `list-namespaces`, `get-pod` and `get-service`.
+Each command takes an optional `namespace`, label expressions (`label`, `labels`, `without-labels`), an optional expected `result` (JSON) and `validate` entries with JsonPath `path` and `value`.
 
 .Spring XML
 [source,xml,indent=0,role="secondary"]
