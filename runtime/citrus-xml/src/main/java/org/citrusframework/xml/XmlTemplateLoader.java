@@ -36,7 +36,7 @@ public class XmlTemplateLoader implements TemplateLoader<org.citrusframework.con
 
     private ReferenceResolver referenceResolver;
 
-    private static final Pattern NAMESPACE_IS_SET = Pattern.compile("^\\s*<(\\w+:)?template .*xmlns(:\\w+)?=\\s*\".*>\\s*$", Pattern.DOTALL);
+    private static final Pattern NAMESPACE_IS_SET = Pattern.compile("<(\\w+:)?template\\s[^>]*xmlns(:\\w+)?\\s*=");
 
     /**
      * Default constructor.
@@ -69,7 +69,7 @@ public class XmlTemplateLoader implements TemplateLoader<org.citrusframework.con
      * @return
      */
     public static String applyNamespace(String xmlSource) {
-        if (NAMESPACE_IS_SET.matcher(xmlSource).matches()) {
+        if (NAMESPACE_IS_SET.matcher(xmlSource).find()) {
             return xmlSource;
         }
 
