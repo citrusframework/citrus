@@ -20,7 +20,7 @@
         <message>Test: Receive RMI request via server instance and send back response.</message>
       </echo>
 
-      <send endpoint="rmi://localhost:1099/newsService" fork="true">
+      <send endpoint="rmi://localhost:2599/newsService" fork="true">
         <message>
           <payload>
             <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -31,7 +31,7 @@
         </message>
       </send>
 
-      <receive endpoint="rmiNewsServer">
+      <receive endpoint="rmiNewsServer2599">
         <message>
           <payload>
             <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -42,7 +42,7 @@
         </message>
       </receive>
 
-      <send endpoint="rmiNewsServer">
+      <send endpoint="rmiNewsServer2599">
         <message>
           <payload>
             <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -52,7 +52,7 @@
         </message>
       </send>
 
-      <receive endpoint="rmi://localhost:1099/newsService">
+      <receive endpoint="rmi://localhost:2599/newsService">
         <message>
           <payload>
             <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">

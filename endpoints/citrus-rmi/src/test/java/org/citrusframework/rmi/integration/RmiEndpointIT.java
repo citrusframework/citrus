@@ -20,7 +20,6 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -32,13 +31,11 @@ import org.springframework.test.context.ContextConfiguration;
 public class RmiEndpointIT {
 
     @Test
-    @Disabled("unstable on local environment")
     @CitrusTestSource(type = TestLoader.SPRING, name = "RmiClientIT")
     public void testClientXml() {
     }
 
     @Test
-    @Disabled("unstable on local environment")
     @CitrusTestSource(type = TestLoader.SPRING, name = "RmiServerIT")
     public void testServerXml() {
     }

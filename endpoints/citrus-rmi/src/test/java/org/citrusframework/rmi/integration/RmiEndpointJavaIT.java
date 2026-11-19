@@ -27,7 +27,6 @@ import org.citrusframework.rmi.remote.HelloService;
 import org.citrusframework.rmi.remote.NewsService;
 import org.citrusframework.rmi.server.RmiServer;
 import org.citrusframework.spring.config.CitrusSpringConfig;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +37,6 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Disabled("unstable on local environment")
 public class RmiEndpointJavaIT implements TestActionSupport {
 
     @Autowired
