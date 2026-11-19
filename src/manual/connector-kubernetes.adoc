@@ -1765,6 +1765,8 @@ The same read-only commands (`info`, `list`, `get`) are available to YAML and XM
             <validate path="$..status.phase" value="Running"/>
           </list-pods>
         </execute>
+      </kubernetes>
+      <kubernetes client="k8sClient">
         <execute>
           <get-service name="my-service" namespace="my-namespace">
             <validate path="$.result.metadata.name" value="my-service"/>
