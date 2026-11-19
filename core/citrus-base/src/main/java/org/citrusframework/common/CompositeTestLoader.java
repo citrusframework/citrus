@@ -58,12 +58,17 @@ public class CompositeTestLoader implements TestLoader {
     @Override
     public void load() {
         List<String> failed = new ArrayList<>();
+        TestCaseFailedException firstFailure = null;
 
         for (int i = 0; i < delegates.size(); i++) {
             TestLoader delegate = delegates.get(i);
             try {
                 delegate.load();
             } catch (TestCaseFailedException e) {
+                if (firstFailure == null) {
+                    firstFailure = e;
+                }
+
                 if (testCase == null) {
                     testCase = delegate.getTestCase();
                 }
@@ -74,7 +79,8 @@ public class CompositeTestLoader implements TestLoader {
 
         if (!failed.isEmpty()) {
             throw new TestCaseFailedException(new CitrusRuntimeException(
-                    "%d of %d test sources failed: %s".formatted(failed.size(), delegates.size(), String.join(", ", failed))));
+                    "%d of %d test sources failed: %s".formatted(failed.size(), delegates.size(), String.join(", ", failed)),
+                    firstFailure));
         }
 
         testCase = delegates.get(delegates.size() - 1).getTestCase();

@@ -28,7 +28,6 @@ import org.citrusframework.junit.jupiter.source.SingleSourceFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,15 +84,11 @@ public class CitrusTestSourceEntriesTest {
         configuration.setTestSources(Collections.singletonList(new TestSource(testClass)));
 
         JUnitJupiterEngine engine = new JUnitJupiterEngine(configuration);
-        engine.addTestListener(new SummaryGeneratingListener() {
-            @Override
-            public void testPlanExecutionFinished(TestPlan testPlan) {
-                super.testPlanExecutionFinished(testPlan);
-
-                assertEquals(passed, getSummary().getTestsSucceededCount());
-                assertEquals(failed, getSummary().getTestsFailedCount());
-            }
-        });
+        SummaryGeneratingListener listener = new SummaryGeneratingListener();
+        engine.addTestListener(listener);
         engine.run();
+
+        assertEquals(passed, listener.getSummary().getTestsSucceededCount());
+        assertEquals(failed, listener.getSummary().getTestsFailedCount());
     }
 }

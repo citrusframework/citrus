@@ -73,6 +73,8 @@ public class FakeTestLoader extends DefaultTestLoader implements TestSourceAware
             throw new TestCaseFailedException(
                     new CitrusRuntimeException("Failed test source " + location));
         }
+
+        handler.forEach(testCaseHandler -> testCaseHandler.accept(testCase));
     }
 
     public record Execution(String testName, String source, TestContext context) {

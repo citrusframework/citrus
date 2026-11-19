@@ -77,8 +77,9 @@ public class CompositeTestLoaderTest {
     public void failsWhenChildFailsAndNamesFailedSources() {
         List<String> loadOrder = new ArrayList<>();
         FakeLoader first = new FakeLoader("first", loadOrder);
-        FakeLoader second = new FakeLoader("second", loadOrder,
-                new TestCaseFailedException(new CitrusRuntimeException("second source failed")));
+        TestCaseFailedException failure = new TestCaseFailedException(
+                new CitrusRuntimeException("second source failed"));
+        FakeLoader second = new FakeLoader("second", loadOrder, failure);
         CompositeTestLoader composite = new CompositeTestLoader(List.of("first", "second"), List.of(first, second));
 
         List<TestCase> handlerCases = new ArrayList<>();
@@ -87,6 +88,7 @@ public class CompositeTestLoaderTest {
         TestCaseFailedException exception = Assertions.assertThrows(TestCaseFailedException.class, composite::load);
 
         Assertions.assertEquals("1 of 2 test sources failed: second", exception.getMessage());
+        Assertions.assertSame(failure, exception.getCause().getCause());
         Assertions.assertEquals(List.of("first", "second"), loadOrder);
         Assertions.assertSame(second.getTestCase(), composite.getTestCase());
         Assertions.assertTrue(handlerCases.isEmpty());
