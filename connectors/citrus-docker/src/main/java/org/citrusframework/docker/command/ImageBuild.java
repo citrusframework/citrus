@@ -66,7 +66,7 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
         }
 
         if (hasParameter("quiet")) {
-            command.withNoCache(Boolean.valueOf(getParameter("quiet", testContext)));
+            command.withQuiet(Boolean.valueOf(getParameter("quiet", testContext)));
         }
 
         if (hasParameter("remove")) {

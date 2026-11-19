@@ -473,4 +473,34 @@ public class DockerExecuteActionTest extends AbstractUnitTest implements TestAct
         Assertions.assertEquals("new_image", context.getVariable(DockerMessageHeaders.IMAGE_ID));
 
     }
+
+    @Test
+    public void testBuildImageQuietDoesNotDisableCache() {
+        BuildImageCmd command = Mockito.mock(BuildImageCmd.class);
+        BuildResponseItem responseItem = Mockito.mock(BuildResponseItem.class);
+
+        reset(dockerClient, command, responseItem);
+
+        when(dockerClient.buildImageCmd()).thenReturn(command);
+        when(responseItem.isBuildSuccessIndicated()).thenReturn(true);
+        when(responseItem.getImageId()).thenReturn("new_image");
+        doAnswer((Answer<BuildImageResultCallback>) invocation -> {
+            BuildImageResultCallback resultCallback = (BuildImageResultCallback) invocation.getArguments()[0];
+
+            resultCallback.onNext(responseItem);
+            resultCallback.onComplete();
+
+            return resultCallback;
+        }).when(command).exec(any(BuildImageResultCallback.class));
+
+        DockerExecuteAction action = docker
+                .client(client)
+                .buildImage()
+                    .quiet(true)
+                .build();
+        action.execute(context);
+
+        verify(command).withQuiet(true);
+        verify(command, never()).withNoCache(true);
+    }
 }
