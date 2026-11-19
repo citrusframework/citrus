@@ -44,8 +44,8 @@ Following annotation properties are available:
 type:: Type of the test source to load (spring, groovy, xml, ...)
 name:: List of test case names to execute. Names also define XML file names to look for (*.xml* file extension is not needed here).
 packageName:: Custom package location for the XML files to load
-packageScan:: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate
-test is executed. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus
+packageScan:: List of packages that are automatically scanned for XML test files to execute. Each XML file found is run as a
+separate Citrus test case. Note that this performs a Java Classpath package scan so all XML files in package are assumed to be valid Citrus
 XML test cases. In order to minimize the amount of accidentally loaded XML files the scan will only load XML files with `\\**/*Test.xml` and `**/*IT.xml`
 file name pattern.
 
@@ -75,8 +75,8 @@ public class Sample_IT extends TestNGCitrusSpringSupport {
 }
 ----
 
-This tells Citrus to search for the files `Test_1.xml` and `Test_2.xml`. Citrus loads the files and runs each of them as
-a separate test. You can also load all test in a package with a `packageScan`.
+This tells Citrus to search for the files `Test_1.xml` and `Test_2.xml`. Citrus loads all files and runs each of them as
+a separate Citrus test case. You can also load all tests in a package with a `packageScan`.
 
 .Load multiple XML files
 [source,java]
@@ -89,7 +89,12 @@ public class Sample_IT extends TestNGCitrusSpringSupport {
 }
 ----
 
-This loads all XML files in the given packages and executes each of them as a separate test.
+This loads all XML files in the given packages and runs each of them as a separate Citrus test case.
+
+How these test sources are reported depends on the test framework:
+
+* TestNG runs every loaded test source as a separate test invocation, so each source appears as its own test in the TestNG report.
+* JUnit Jupiter runs all sources declared on one annotated method as a single JUnit test. Each source still runs as its own Citrus test case and appears separately in the Citrus report. If any source fails, the JUnit test fails and the failure message names the failed sources.
 
 You can also mix the various `@CitrusTestSource` annotations in a single Java class.
 The class can have several methods with different annotations. Each annotated method represents one or more Citrus XML test cases.
@@ -118,8 +123,9 @@ public class SampleIT extends TestNGCitrusSpringSupport {
 ----
 
 You are free to combine these test annotations as you like in your class.
-Each XML test loaded as part of the class will be reported separately as a unit test.
-So the test reports will have the exact number of tests executed with proper success and failed stats.
+Each loaded test source runs as its own Citrus test case.
+TestNG reports every source as a separate test, while JUnit Jupiter reports one test per annotated method with all of its sources.
+The Citrus test reports always contain the exact number of executed test cases with proper success and failed stats.
 You can use the reports as normal unit test reports, for instance in a continuous build.
 
 NOTE: When test execution takes place each test method annotation is evaluated in sequence.

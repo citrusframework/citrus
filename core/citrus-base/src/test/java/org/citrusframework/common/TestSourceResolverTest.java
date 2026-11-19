@@ -120,6 +120,19 @@ public class TestSourceResolverTest {
     }
 
     @Test
+    public void resolvesFallbackEntryWhenPackageScanFindsNothing() {
+        Stub testSource = new Stub();
+        testSource.packageScan = new String[]{ "org.citrusframework.common.empty" };
+
+        List<ResolvedTestSource> entries = TestSourceResolver.resolve(testSource, method);
+
+        Assertions.assertEquals(1, entries.size());
+        Assertions.assertEquals("resolveMethod", entries.get(0).getTestName());
+        Assertions.assertEquals(TestSourceResolverTest.class.getPackageName(), entries.get(0).getPackageName());
+        Assertions.assertNull(entries.get(0).getSource());
+    }
+
+    @Test
     public void resolvesNamesThenSourcesThenPackageScan() {
         Stub testSource = new Stub();
         testSource.name = new String[]{ "namedTest" };

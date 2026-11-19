@@ -22,8 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Citrus test case annotation used for Groovy test case definition inside a unit test class.
- * Each method annotated with this annotation will result in a separate test execution.
+ * Citrus test case annotation used for external test case definitions inside a unit test class.
+ * Each method annotated with this annotation loads its configured test sources and runs each of them
+ * as a separate Citrus test case.
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

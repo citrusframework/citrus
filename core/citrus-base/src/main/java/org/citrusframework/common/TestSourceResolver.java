@@ -68,10 +68,6 @@ public final class TestSourceResolver {
             entries.add(new ResolvedTestSource(name, packageName, null));
         }
 
-        if (testSource.name().length == 0 && testSource.packageScan().length == 0 && testSource.sources().length == 0) {
-            entries.add(new ResolvedTestSource(method.getName(), packageName, null));
-        }
-
         for (String source : testSource.sources()) {
             Resource file = FileUtils.getFileResource(source);
 
@@ -99,6 +95,10 @@ public final class TestSourceResolver {
                 entries.add(new ResolvedTestSource(
                         FileUtils.getBaseName(String.valueOf(fileResource.getFileName())), filePath, null));
             }
+        }
+
+        if (entries.isEmpty()) {
+            entries.add(new ResolvedTestSource(method.getName(), packageName, null));
         }
 
         return entries;
