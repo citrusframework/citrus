@@ -25,7 +25,7 @@ public class PullImage implements DockerCommandProvider {
 
     private final ImagePull.Builder delegate = new org.citrusframework.docker.command.ImagePull.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the image to pull")
+    @SchemaProperty(description = "The id of the image to pull", required = true)
     public void setImage(String image) {
         delegate.image(image);
     }

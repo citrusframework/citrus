@@ -25,7 +25,7 @@ public class Stop implements DockerCommandProvider {
 
     private final ContainerStop.Builder delegate = new org.citrusframework.docker.command.ContainerStop.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the container to stop")
+    @SchemaProperty(description = "The id of the container to stop", required = true)
     public void setContainer(String container) {
         delegate.container(container);
     }

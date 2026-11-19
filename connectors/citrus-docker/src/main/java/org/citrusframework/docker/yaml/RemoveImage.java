@@ -25,7 +25,7 @@ public class RemoveImage implements DockerCommandProvider {
 
     private final ImageRemove.Builder delegate = new org.citrusframework.docker.command.ImageRemove.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the image to remove")
+    @SchemaProperty(description = "The id of the image to remove", required = true)
     public void setImage(String image) {
         delegate.image(image);
     }

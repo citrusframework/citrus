@@ -25,7 +25,7 @@ public class Wait implements DockerCommandProvider {
 
     private final ContainerWait.Builder delegate = new org.citrusframework.docker.command.ContainerWait.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the container to wait for")
+    @SchemaProperty(description = "The id of the container to wait for", required = true)
     public void setContainer(String container) {
         delegate.container(container);
     }

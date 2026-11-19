@@ -25,7 +25,7 @@ public class Remove implements DockerCommandProvider {
 
     private final ContainerRemove.Builder delegate = new org.citrusframework.docker.command.ContainerRemove.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the container to remove")
+    @SchemaProperty(description = "The id of the container to remove", required = true)
     public void setContainer(String container) {
         delegate.container(container);
     }

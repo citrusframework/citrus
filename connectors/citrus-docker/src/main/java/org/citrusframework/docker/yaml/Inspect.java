@@ -25,7 +25,7 @@ public class Inspect implements DockerCommandProvider {
 
     private final ContainerInspect.Builder delegate = new org.citrusframework.docker.command.ContainerInspect.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the container to inspect")
+    @SchemaProperty(description = "The id of the container to inspect", required = true)
     public void setContainer(String container) {
         delegate.container(container);
     }
