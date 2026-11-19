@@ -28,7 +28,9 @@ import org.citrusframework.kubernetes.KubernetesVariableNames;
 import org.citrusframework.kubernetes.UnitTestSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+@Isolated("Sets the global citrus.kubernetes.cluster.type system property to LOCAL")
 public class ResolveServiceUrlFunctionTest extends UnitTestSupport {
 
     private final ResolveServiceUrlFunction function = new ResolveServiceUrlFunction();
@@ -68,7 +70,7 @@ public class ResolveServiceUrlFunctionTest extends UnitTestSupport {
             Assertions.assertEquals("http://localhost", function.execute(Collections.singletonList("foo-service"), context));
             Assertions.assertEquals("http://localhost:8080", function.execute(Arrays.asList("foo-service", "8080"), context));
         } finally {
-            System.setProperty("citrus.kubernetes.cluster.type", ClusterType.KUBERNETES.name());
+            System.clearProperty("citrus.kubernetes.cluster.type");
         }
     }
 
