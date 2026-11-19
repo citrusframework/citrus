@@ -44,6 +44,9 @@ public class Init extends CitrusCommand {
     @Option(name = "directory", description = "Directory where the files will be created", defaultValue = ".")
     String directory;
 
+    @Option(name = "force", description = "Overwrite existing files", hasValue = false, defaultValue = "false")
+    boolean force;
+
     @ParentCommand
     CitrusJBangMain parent;
 
@@ -94,6 +97,12 @@ public class Init extends CitrusCommand {
             }
 
             File target = workingDir.resolve(file).toFile();
+
+            if (target.exists() && !force) {
+                printer().println("Error: File already exists: %s (use --force to overwrite)".formatted(target.getPath()));
+                return 1;
+            }
+
             content = content.replaceFirst("\\{\\{ \\.Name }}", name);
 
             writeString(target.toPath(), content);
