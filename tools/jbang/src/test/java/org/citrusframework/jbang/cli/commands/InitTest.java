@@ -16,13 +16,28 @@
 
 package org.citrusframework.jbang.cli.commands;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class InitTest extends CommandTest {
+
+    @BeforeEach
+    public void cleanTargetDir() throws IOException {
+        Path targetDir = workingDir.resolve("test");
+        if (Files.exists(targetDir)) {
+            try (var walk = Files.walk(targetDir)) {
+                walk.sorted(Comparator.reverseOrder())
+                        .forEach(p -> p.toFile().delete());
+            }
+        }
+    }
 
     @Test
     public void shouldInitJavaTest() {
@@ -82,6 +97,38 @@ public class InitTest extends CommandTest {
 
         Assertions.assertEquals("", printer.getOutput());
         Assertions.assertTrue(targetDir.resolve("sample.citrus.it.feature").toFile().exists());
+    }
+
+    @Test
+    public void shouldFailWhenFileAlreadyExists() throws IOException {
+        Path targetDir = workingDir.resolve("test");
+        Files.createDirectories(targetDir);
+        Path existingFile = targetDir.resolve("SampleIT.java");
+        Files.writeString(existingFile, "existing content");
+
+        CitrusJBangMain main = createCitrusJBangMain(1);
+        main.execute("init", "SampleIT.java",
+                "--directory", targetDir.toString());
+
+        Assertions.assertEquals("Error: File already exists: %s (use --force to overwrite)".formatted(existingFile.toFile().getPath()), printer.getOutput());
+        Assertions.assertEquals("existing content", Files.readString(existingFile));
+    }
+
+    @Test
+    public void shouldOverwriteWithForce() throws IOException {
+        Path targetDir = workingDir.resolve("test");
+        Files.createDirectories(targetDir);
+        Path existingFile = targetDir.resolve("SampleIT.java");
+        Files.writeString(existingFile, "existing content");
+
+        CitrusJBangMain main = createCitrusJBangMain();
+        main.execute("init", "SampleIT.java",
+                "--directory", targetDir.toString(),
+                "--force");
+
+        Assertions.assertEquals("", printer.getOutput());
+        Assertions.assertTrue(existingFile.toFile().exists());
+        Assertions.assertNotEquals("existing content", Files.readString(existingFile));
     }
 
     @Test
