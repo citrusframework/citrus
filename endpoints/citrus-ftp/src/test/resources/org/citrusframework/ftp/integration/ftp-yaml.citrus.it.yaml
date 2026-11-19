@@ -1,0 +1,78 @@
+#
+# Copyright the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: FtpYamlIT
+author: Christoph
+status: FINAL
+description: Test sends and receives messages as Ftp client and server in YAML.
+endpoints:
+  - ftp:
+      server:
+        name: ftpYamlServer
+        port: 22224
+        auto-start: true
+        user-manager-properties: classpath:ftp.server.properties
+  - ftp:
+      client:
+        name: ftpYamlClient
+        host: localhost
+        port: 22224
+        username: admin
+        password: admin
+        timeout: 10000
+actions:
+  - echo:
+      message: "Test: Receive Ftp request via server instance and send back response."
+  - echo:
+      message: "Sending PWD command to FTP server"
+  - send:
+      endpoint: ftpYamlClient
+      fork: true
+      message:
+        body:
+          data: |
+            <command xmlns="http://www.citrusframework.org/schema/ftp/message">
+              <signal>PWD</signal>
+              <arguments>test</arguments>
+            </command>
+  - receive:
+      endpoint: ftpYamlServer
+      message:
+        body:
+          data: |
+            <command xmlns="http://www.citrusframework.org/schema/ftp/message">
+              <signal>PWD</signal>
+              <arguments>test</arguments>
+            </command>
+  - send:
+      endpoint: ftpYamlServer
+      message:
+        body:
+          data: |
+            <command-result xmlns="http://www.citrusframework.org/schema/ftp/message">
+              <reply-code>257</reply-code>
+              <reply-string>"/" is current directory</reply-string>
+            </command-result>
+  - receive:
+      endpoint: ftpYamlClient
+      message:
+        body:
+          data: |
+            <command-result xmlns="http://www.citrusframework.org/schema/ftp/message">
+              <success>true</success>
+              <reply-code>257</reply-code>
+              <reply-string>@contains('is current directory')@</reply-string>
+            </command-result>

@@ -1,0 +1,81 @@
+#
+# Copyright the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: RmiYamlIT
+author: Christoph Deppisch
+status: FINAL
+description: Test RMI client server communication in YAML.
+
+endpoints:
+  - rmi:
+      server:
+        name: rmiYamlServer
+        host: localhost
+        port: 2199
+        binding: newsService
+        remote-interfaces: org.citrusframework.rmi.remote.NewsService
+        create-registry: true
+        timeout: 10000
+        auto-start: true
+  - rmi:
+      client:
+        name: rmiYamlClient
+        host: localhost
+        port: 2199
+        binding: newsService
+
+actions:
+  - echo:
+      message: "Test 1: Call RMI service as client and receive result"
+
+  - send:
+      endpoint: rmiYamlClient
+      fork: true
+      message:
+        body:
+          data: |
+            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <remote>org.citrusframework.rmi.remote.NewsService</remote>
+              <method>getNews</method>
+            </service-invocation>
+
+  - receive:
+      endpoint: rmiYamlServer
+      message:
+        body:
+          data: |
+            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <remote>org.citrusframework.rmi.remote.NewsService</remote>
+              <method>getNews</method>
+            </service-invocation>
+
+  - send:
+      endpoint: rmiYamlServer
+      message:
+        body:
+          data: |
+            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <object type="java.lang.String" value="This is news from RMI!"/>
+            </service-result>
+
+  - receive:
+      endpoint: rmiYamlClient
+      message:
+        body:
+          data: |
+            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <object type="java.lang.String" value="This is news from RMI!"/>
+            </service-result>

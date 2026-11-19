@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test name="RmiXmlIT" author="Christoph Deppisch" status="FINAL"
+      xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
+                          http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Test RMI client server communication in XML.</description>
+
+  <endpoints>
+    <rmi>
+      <server name="rmiXmlServer" host="localhost" port="2299" binding="newsService"
+              remote-interfaces="org.citrusframework.rmi.remote.NewsService"
+              create-registry="true" timeout="10000" auto-start="true"/>
+    </rmi>
+    <rmi>
+      <client name="rmiXmlClient" host="localhost" port="2299" binding="newsService"/>
+    </rmi>
+  </endpoints>
+
+  <actions>
+    <echo>
+      <message>Test 1: Call RMI service as client and receive result</message>
+    </echo>
+
+    <send endpoint="rmiXmlClient" fork="true">
+      <message>
+        <body>
+          <data><![CDATA[
+            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <remote>org.citrusframework.rmi.remote.NewsService</remote>
+              <method>getNews</method>
+            </service-invocation>
+          ]]></data>
+        </body>
+      </message>
+    </send>
+
+    <receive endpoint="rmiXmlServer">
+      <message>
+        <body>
+          <data><![CDATA[
+            <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <remote>org.citrusframework.rmi.remote.NewsService</remote>
+              <method>getNews</method>
+            </service-invocation>
+          ]]></data>
+        </body>
+      </message>
+    </receive>
+
+    <send endpoint="rmiXmlServer">
+      <message>
+        <body>
+          <data><![CDATA[
+            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <object type="java.lang.String" value="This is news from RMI!"/>
+            </service-result>
+          ]]></data>
+        </body>
+      </message>
+    </send>
+
+    <receive endpoint="rmiXmlClient">
+      <message>
+        <body>
+          <data><![CDATA[
+            <service-result xmlns="http://www.citrusframework.org/schema/rmi/message">
+              <object type="java.lang.String" value="This is news from RMI!"/>
+            </service-result>
+          ]]></data>
+        </body>
+      </message>
+    </receive>
+  </actions>
+</test>

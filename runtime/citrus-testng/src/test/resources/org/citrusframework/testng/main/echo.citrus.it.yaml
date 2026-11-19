@@ -1,0 +1,7 @@
+name: EchoTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - echo:
+      message: "Hello from Citrus!"

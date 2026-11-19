@@ -422,3 +422,68 @@ actions:
 
 After that template instances will not influence each other anymore.
 But notice that variable changes inside the template then do not affect the test case neither.
+
+[[run-yaml-data-driven]]
+=== Data-driven tests
+
+A YAML test can consume external data sets. The test runs once per data row, and each row's
+values reach the test as variables.
+
+With TestNG you provide the data rows with a data provider and name the values with
+`@CitrusParameters` on the test method that loads the YAML file.
+
+.TestNG data provider
+[source,java]
+----
+@CitrusSupport
+public class DataProviderIT extends TestNGCitrusSpringSupport {
+
+    @CitrusTestSource(type = TestLoader.YAML, sources = { "classpath:org/example/data-driven.citrus.it.yaml" })
+    @CitrusParameters("message")
+    @Test(dataProvider = "citrusDataProvider")
+    public void dataDrivenIT(String message) { }
+
+    @DataProvider
+    public Object[][] citrusDataProvider() {
+        return new Object[][] {
+            { "Hello World!" },
+            { "Hallo Welt!" }
+        };
+    }
+}
+----
+
+With JUnit you use a parameterized test method together with `@CitrusParameters`.
+
+.JUnit parameterized test
+[source,java]
+----
+@CitrusSupport
+public class ParameterizedIT {
+
+    @CitrusResource
+    private TestContext context;
+
+    @ParameterizedTest
+    @CitrusTestSource(type = TestLoader.YAML, sources = { "classpath:org/example/parameterized.citrus.it.yaml" })
+    @CitrusParameters("greeting")
+    @CsvSource({ "Hello", "Hallo" })
+    public void parameterizedIT(String greeting) {
+        Assertions.assertEquals(greeting, context.getVariable("greeting"));
+    }
+}
+----
+
+IMPORTANT: JUnit resolves all parameters of a parameterized test method itself, so a `@CitrusResource`
+parameter cannot be injected on the method. Use field injection as shown above.
+
+The YAML file refers to the injected values as ordinary test variables.
+
+.data-driven.citrus.it.yaml
+[source,yaml]
+----
+name: DataDrivenTest
+actions:
+  - echo:
+      message: "${message}"
+----
