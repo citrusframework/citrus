@@ -54,3 +54,111 @@ anyOf(equalTo('text containing a backslash and quote \\\\' and a , (comma)  '), 
   </message>
 </receive>
 ----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: HamcrestValidationTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      message:
+        type: "xml"
+        validate:
+          - xpath:
+              - expression: "/TestRequest/Error"
+                value: "@assertThat(anyOf(empty(), nullValue()))@"
+              - expression: "/TestRequest/Status[.='success']"
+                value: "@assertThat(greaterThan(0.0))@"
+                resultType: "number"
+              - expression: "/TestRequest/OrderType"
+                value: "@assertThat(hasSize(3))@"
+                resultType: "node-set"
+----
+
+The matcher expressions also work on JSON message content with JSONPath validation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive("someEndpoint")
+    .validate(validation().json()
+        .expression("$.text", allOf(startsWith("Hello"), endsWith("Citrus!")))
+        .expression("$.greetings", hasItems("Hello", "Hi"))
+        .expression("$.index", not(is(42)))
+        .expression("$.lastModified", anyOf(is("1970-01-01"), nullValue())));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message type="json"/>
+  <validate>
+    <json-path expression="$.text" value="@assertThat(allOf(startsWith(Hello), endsWith(Citrus!)))@"/>
+    <json-path expression="$.greetings" value="@assertThat(hasItems(Hello, Hi))@"/>
+    <json-path expression="$.index" value="@assertThat(not(is(42)))@"/>
+    <json-path expression="$.lastModified" value="@assertThat(anyOf(is(1970-01-01), nullValue()))@"/>
+  </validate>
+</receive>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JsonHamcrestValidationTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      message:
+        type: "json"
+        validate:
+          - jsonPath:
+              - expression: "$.text"
+                value: "@assertThat(allOf(startsWith(Hello), endsWith(Citrus!)))@"
+              - expression: "$.greetings"
+                value: "@assertThat(hasItems(Hello, Hi))@"
+              - expression: "$.index"
+                value: "@assertThat(not(is(42)))@"
+              - expression: "$.lastModified"
+                value: "@assertThat(anyOf(is(1970-01-01), nullValue()))@"
+----
+
+=== Matcher expressions in containers
+
+Iterating test containers evaluate their condition as a matcher expression, so you can iterate
+until a Hamcrest matcher is satisfied.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+iterate()
+    .condition("@assertThat('${i}', 'lessThanOrEqualTo(5)')@")
+    .index("i")
+    .actions(
+        echo("iteration ${i}")
+    );
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<iterate condition="@assertThat('${i}', 'lessThanOrEqualTo(5)')@" index="i">
+  <actions>
+    <echo message="iteration ${i}"/>
+  </actions>
+</iterate>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: IterateHamcrestTest
+actions:
+  - iterate:
+      condition: "@assertThat('${i}', 'lessThanOrEqualTo(5)')@"
+      index: "i"
+      actions:
+        - echo:
+            message: "iteration ${i}"
+----

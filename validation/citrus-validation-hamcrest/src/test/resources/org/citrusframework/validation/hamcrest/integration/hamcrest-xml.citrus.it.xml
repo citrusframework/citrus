@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test name="HamcrestXmlTest" author="Christoph" status="FINAL"
+      xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
+                          http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Hamcrest validation matchers in XML tests</description>
+  <endpoints>
+    <direct name="hamcrestXmlEndpoint" queue-name="hamcrestXmlQueue" auto-create-queue="true"/>
+  </endpoints>
+  <actions>
+    <echo message="Test hamcrest validation matchers in XML"/>
+    <send endpoint="hamcrestXmlEndpoint">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data><![CDATA[Hello Citrus!]]></data>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="hamcrestXmlEndpoint">
+      <message type="plaintext">
+        <headers>
+          <header name="Operation" value="@assertThat(endsWith(Hello))@"/>
+        </headers>
+        <body>
+          <data><![CDATA[Hello Citrus!]]></data>
+        </body>
+      </message>
+    </receive>
+    <send endpoint="hamcrestXmlEndpoint">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHi"/>
+        </headers>
+        <body>
+          <data><![CDATA[Hello Citrus!]]></data>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="hamcrestXmlEndpoint">
+      <message type="plaintext">
+        <headers>
+          <header name="Operation" value="@assertThat(anyOf(is(sayHello), is(sayHi)))@"/>
+        </headers>
+        <body>
+          <data><![CDATA[Hello Citrus!]]></data>
+        </body>
+      </message>
+    </receive>
+    <iterate condition="@assertThat('${i}', 'lessThanOrEqualTo(5)')@" index="i">
+      <actions>
+        <echo message="iteration ${i}"/>
+      </actions>
+    </iterate>
+  </actions>
+</test>

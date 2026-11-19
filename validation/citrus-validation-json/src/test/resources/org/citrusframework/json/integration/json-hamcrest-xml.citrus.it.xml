@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test name="JsonHamcrestXmlTest" author="Christoph" status="FINAL"
+      xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
+                          http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Hamcrest matchers with JsonPath validation in XML tests</description>
+  <endpoints>
+    <direct name="jsonHamcrestXmlEndpoint" queue-name="jsonHamcrestXmlQueue" auto-create-queue="true"/>
+  </endpoints>
+  <actions>
+    <echo message="Test hamcrest matchers with JsonPath in XML"/>
+    <send endpoint="jsonHamcrestXmlEndpoint">
+      <message type="json">
+        <body>
+          <data><![CDATA[{
+  "text": "Hello Citrus!",
+  "greetings": ["Hello", "Hi", "Hey"],
+  "index": 23,
+  "lastModified": null
+}]]></data>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="jsonHamcrestXmlEndpoint">
+      <message type="json"/>
+      <validate>
+        <json-path expression="$.text" value="@assertThat(allOf(startsWith(Hello), endsWith(Citrus!)))@"/>
+        <json-path expression="$.greetings" value="@assertThat(hasItem(Hello))@"/>
+        <json-path expression="$.greetings" value="@assertThat(hasItems(Hello, Hi))@"/>
+        <json-path expression="$.index" value="@assertThat(not(is(42)))@"/>
+        <json-path expression="$.lastModified" value="@assertThat(anyOf(is(1970-01-01), nullValue()))@"/>
+      </validate>
+    </receive>
+  </actions>
+</test>
