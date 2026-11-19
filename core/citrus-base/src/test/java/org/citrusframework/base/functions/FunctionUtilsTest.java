@@ -88,6 +88,37 @@ public class FunctionUtilsTest extends UnitTestSupport {
     }
 
     @Test
+    public void testUnbalancedFunctionCallFails() {
+        InvalidFunctionUsageException exception = assertThrows(InvalidFunctionUsageException.class, () -> {
+            FunctionUtils.replaceFunctionsInString("citrus:concat('todo_', citrus:randomNumber(4)", context);
+        });
+
+        assertEquals("Unbalanced parentheses in function call: citrus:concat('todo_', citrus:randomNumber(4)",
+                exception.getMessage());
+    }
+
+    @Test
+    public void testUnbalancedSingleFunctionCallFails() {
+        assertThrows(InvalidFunctionUsageException.class, () -> {
+            FunctionUtils.replaceFunctionsInString("citrus:randomNumber(4", context);
+        });
+    }
+
+    @Test
+    public void testUnregisteredFunctionLikeTextStaysUnchanged() {
+        assertEquals("see foo:bar( for details",
+                FunctionUtils.replaceFunctionsInString("see foo:bar( for details", context));
+        assertEquals("todo foo:bar(4",
+                FunctionUtils.replaceFunctionsInString("todo foo:bar(4", context));
+    }
+
+    @Test
+    public void testWellFormedFunctionCallResolvesInString() {
+        assertEquals("Hello World!",
+                FunctionUtils.replaceFunctionsInString("citrus:concat('Hello', ' World!')", context));
+    }
+
+    @Test
     public void testInvalidFunction() {
         assertThrows(InvalidFunctionUsageException.class, () -> {
             FunctionUtils.resolveFunction("citrus:citrus", context);

@@ -50,9 +50,13 @@ public final class FunctionUtils {
      */
     public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) {
         // make sure given string expression meets requirements for having a function
-        if (stringValue == null || stringValue.isBlank() ||
-                (stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
+        if (stringValue == null || stringValue.isBlank()) {
+            return stringValue;
+        }
 
+        verifyFunctionCalls(stringValue, context);
+
+        if ((stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
             // it is not a function, as it is defined as 'prefix:methodName(arguments)'
             return stringValue;
         }
@@ -115,6 +119,53 @@ public final class FunctionUtils {
         }
 
         return newString;
+    }
+
+    /**
+     * Verifies that calls of registered functions in the given string are balanced. A call that is
+     * missing its closing parenthesis would otherwise silently stay as unresolved text.
+     * Text that only looks like a function call of an unregistered name is left alone.
+     */
+    private static void verifyFunctionCalls(String stringValue, TestContext context) {
+        for (FunctionLibrary library : context.getFunctionRegistry().getFunctionLibraries()) {
+            int searchIndex = 0;
+            int prefixIndex;
+            while ((prefixIndex = stringValue.indexOf(library.getPrefix(), searchIndex)) != -1) {
+                int nameStart = prefixIndex + library.getPrefix().length();
+                int openIndex = stringValue.indexOf('(', nameStart);
+                if (openIndex > -1 && library.knowsFunction(stringValue.substring(prefixIndex, openIndex + 1))
+                        && !closesFunctionCall(stringValue, openIndex)) {
+                    throw new InvalidFunctionUsageException("Unbalanced parentheses in function call: "
+                            + stringValue.substring(prefixIndex));
+                }
+
+                searchIndex = nameStart;
+            }
+        }
+    }
+
+    /**
+     * Counts parentheses by depth starting at the given opening parenthesis and checks whether the
+     * function call closes within the string.
+     */
+    private static boolean closesFunctionCall(String stringValue, int openIndex) {
+        int control = 0;
+
+        for (int i = openIndex; i < stringValue.length(); i++) {
+            if (stringValue.charAt(i) == '(') {
+                control++;
+            }
+
+            if (stringValue.charAt(i) == ')') {
+                control--;
+
+                if (control == 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
