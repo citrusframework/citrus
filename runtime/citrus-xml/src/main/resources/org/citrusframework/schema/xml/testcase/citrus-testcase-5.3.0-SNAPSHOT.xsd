@@ -1046,6 +1046,7 @@
           <xs:attribute name="actor" type="xs:string"/>
           <xs:attribute name="message-converter" type="xs:string"/>
           <xs:attribute name="marshaller" type="xs:string"/>
+          <xs:attribute name="marshaller-type" type="xs:string"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="server">
@@ -1065,6 +1066,7 @@
           <xs:attribute name="message-converter" type="xs:string"/>
           <xs:attribute name="known-users" type="xs:string"/>
           <xs:attribute name="marshaller" type="xs:string"/>
+          <xs:attribute name="marshaller-type" type="xs:string"/>
           <xs:attribute name="debug-logging" type="xs:boolean"/>
         </xs:complexType>
       </xs:element>
