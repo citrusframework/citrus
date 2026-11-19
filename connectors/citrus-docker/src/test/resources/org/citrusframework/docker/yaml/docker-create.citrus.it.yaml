@@ -1,0 +1,17 @@
+name: DockerCreateTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      create:
+        image: "citrus:latest"
+        name: "myContainer"
+        attachStdOut: true
+        attachStdErr: true
+        cmd: "sleep 5"
+        env: "JAVA_HOME=/opt/java"
+        hostName: "citrusHost"
+        domainName: "citrusframework.org"
+        workingDir: "/tmp"
+        entryPoint: "/bin/sh"

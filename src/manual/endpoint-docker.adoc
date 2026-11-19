@@ -257,15 +257,15 @@ public void dockerTest() {
 <test name="DockerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
       <docker>
-        <pull/>
+        <pull image="${imageId}" tag="latest"/>
       </docker>
 
       <docker>
-        <create/>
+        <create image="${imageId}" name="${containerName}" cmd="top"/>
       </docker>
 
       <docker>
-        <start/>
+        <start container="${containerName}"/>
       </docker>
     </actions>
 </test>
@@ -277,13 +277,19 @@ public void dockerTest() {
 name: DockerTest
 actions:
   - docker:
-      pull: {}
+      pull:
+        image: "${imageId}"
+        tag: "latest"
 
   - docker:
-      create: {}
+      create:
+        image: "${imageId}"
+        name: "${containerName}"
+        cmd: "top"
 
   - docker:
-      start: {}
+      start:
+        container: "${containerName}"
 ----
 
 .Spring XML
@@ -342,6 +348,8 @@ Citrus supports the following Docker commands with respective test actions:
 * *docker:info*
 
 Some of the Docker commands can be executed both on container and image targets such as *docker:inspect* or *docker:remove* . The command action then offers both *container* and *image* attributes so the user can choose the target of the command operation to be a container or an image.
+
+In YAML and XML tests the `docker` action holds one of the following command elements: `info`, `ping`, `version`, `create`, `start`, `stop`, `remove`, `wait`, `inspect`, `inspect-image`, `build-image`, `pull-image`, `remove-image`. Each command element carries its own settings as attributes (e.g. `image`, `container`, `tag`, `cmd`). The `docker` action supports an optional `client` attribute that references a Docker client component in the Citrus registry, and an optional `result` attribute to validate the command result in JSON format.
 
 The Java DSL Docker commands provide an optional Docker *CommandResultCallback* that is called with the unmarshalled command result object. In the example above the _Version_ model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
 

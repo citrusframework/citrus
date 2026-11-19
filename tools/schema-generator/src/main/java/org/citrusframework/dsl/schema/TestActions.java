@@ -18,6 +18,7 @@ package org.citrusframework.dsl.schema;
 
 import org.citrusframework.agent.connector.yaml.Agent;
 import org.citrusframework.camel.yaml.Camel;
+import org.citrusframework.docker.yaml.Docker;
 import org.citrusframework.groovy.yaml.Groovy;
 import org.citrusframework.http.yaml.Http;
 import org.citrusframework.jbang.yaml.JBang;
@@ -221,6 +222,10 @@ public class TestActions {
 
     @SchemaProperty(kind = GROUP, description = "Kubernetes test actions.", module = "citrus-kubernetes")
     public void setKubernetes(Kubernetes builder) {
+    }
+
+    @SchemaProperty(kind = GROUP, description = "Docker test actions.", module = "citrus-docker")
+    public void setDocker(Docker builder) {
     }
 
     @SchemaProperty(kind = GROUP, description = "Knative test actions.", module = "citrus-knative")

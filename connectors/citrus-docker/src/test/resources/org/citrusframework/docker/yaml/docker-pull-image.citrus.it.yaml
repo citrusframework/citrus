@@ -1,0 +1,10 @@
+name: DockerPullImageTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      pull-image:
+        image: "citrus"
+        tag: "latest"
+        registry: "docker.io"

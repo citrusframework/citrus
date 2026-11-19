@@ -1,0 +1,10 @@
+<test name="DockerCreateTest" author="Christoph" status="FINAL"
+      xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <actions>
+    <docker client="myDockerClient">
+      <create image="citrus:latest" name="myContainer" attach-stdout="true" attach-stderr="true" cmd="sleep 5" env="JAVA_HOME=/opt/java" hostname="citrusHost" domain-name="citrusframework.org" working-dir="/tmp" entrypoint="/bin/sh"/>
+    </docker>
+  </actions>
+</test>

@@ -1,0 +1,9 @@
+name: DockerRemoveTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      remove:
+        container: "myContainer"
+        force: true

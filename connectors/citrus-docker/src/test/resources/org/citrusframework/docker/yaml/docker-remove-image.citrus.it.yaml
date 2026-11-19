@@ -1,0 +1,9 @@
+name: DockerRemoveImageTest
+author: Christoph
+status: FINAL
+actions:
+  - docker:
+      client: myDockerClient
+      remove-image:
+        image: "citrus:latest"
+        force: true
