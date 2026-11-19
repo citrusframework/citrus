@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:hello="http://citrusframework.org/schemas/hello"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="MessagesIT">
+    <actions>
+      <send endpoint="helloEndpoint" actor="client" fork="true">
+        <description>Send hello request</description>
+        <message type="xml" data-dictionary="myDictionary" schema-validation="false">
+          <payload>
+            <hello:HelloRequest xmlns:ctx="http://citrusframework.org/schemas/context" ctx:id="1">
+              <hello:Text>Hello</hello:Text>
+            </hello:HelloRequest>
+          </payload>
+          <element path="/hello:HelloRequest/hello:Text" value="Hi"/>
+        </message>
+        <header>
+          <data>
+            <![CDATA[<Header>header data</Header>]]>
+          </data>
+          <resource file="classpath:header.xml" charset="UTF-8"/>
+          <fragment>
+            <Operation xmlns="http://citrusframework.org/header">sayHello</Operation>
+          </fragment>
+          <element name="operation" value="sayHello"/>
+        </header>
+        <extract>
+          <header name="operation" variable="operation"/>
+        </extract>
+      </send>
+
+      <receive endpoint="helloEndpoint" timeout="1000" actor="server">
+        <selector>
+          <element name="operation" value="sayHello"/>
+        </selector>
+        <message schema-validation="false" validator="myValidator" header-validator="myHeaderValidator" name="helloResponse">
+          <resource file="classpath:hello-response.xml"/>
+          <element path="/HelloResponse/Text" value="Hello"/>
+          <ignore path="/HelloResponse/Id"/>
+          <validate path="/HelloResponse/Text" value="Hello" result-type="string">
+            <script type="groovy" file="classpath:validate.groovy"/>
+            <xpath expression="/HelloResponse/Id" value="@ignore@"/>
+            <json-path expression="$.text" value="Hello"/>
+            <namespace prefix="ns" value="http://citrusframework.org/schemas/validate"/>
+          </validate>
+          <namespace prefix="hello" value="http://citrusframework.org/schemas/hello"/>
+        </message>
+        <header ignore-case="true">
+          <element name="operation" value="sayHello"/>
+        </header>
+        <extract>
+          <header name="operation" variable="operation"/>
+          <message path="/HelloResponse/Text" variable="text" result-type="string"/>
+        </extract>
+      </receive>
+
+      <receive endpoint="helloEndpoint">
+        <selector>
+          <value>operation = 'sayHello'</value>
+        </selector>
+        <message type="json">
+          <builder type="groovy">
+            json.message { text 'Hello' }
+          </builder>
+        </message>
+      </receive>
+
+      <expect-timeout endpoint="helloEndpoint" wait="500">
+        <description>No message expected</description>
+        <select>operation = 'sayHello'</select>
+      </expect-timeout>
+
+      <purge-endpoint timeout="100" sleep="10">
+        <selector>
+          <element name="operation" value="sayHello"/>
+        </selector>
+        <endpoint name="helloEndpoint"/>
+        <endpoint ref="otherEndpoint"/>
+      </purge-endpoint>
+    </actions>
+  </testcase>
+</spring:beans>

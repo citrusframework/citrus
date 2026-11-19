@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ContainersIT">
+    <meta-info>
+      <author>Christoph</author>
+      <creationdate>2026-11-19</creationdate>
+      <status>DRAFT</status>
+    </meta-info>
+
+    <actions>
+      <sequential>
+        <description>Sequential actions</description>
+        <echo><message>sequential 1</message></echo>
+        <echo><message>sequential 2</message></echo>
+      </sequential>
+      <parallel>
+        <echo><message>parallel 1</message></echo>
+        <echo><message>parallel 2</message></echo>
+      </parallel>
+      <iterate condition="i lt= 6" index="i" start="2" step="2">
+        <create-variables>
+          <variable name="lastIndex" value="${i}"/>
+        </create-variables>
+      </iterate>
+      <repeat-until-true condition="r gt= 3" index="r">
+        <echo><message>repeat ${r}</message></echo>
+      </repeat-until-true>
+      <repeat-onerror-until-true condition="e gt= 2" index="e" auto-sleep="10">
+        <echo><message>repeat on error ${e}</message></echo>
+      </repeat-onerror-until-true>
+      <conditional expression="1 = 1">
+        <create-variables>
+          <variable name="conditional" value="executed"/>
+        </create-variables>
+      </conditional>
+      <catch exception="org.citrusframework.exceptions.CitrusRuntimeException">
+        <fail message="Caught failure"/>
+      </catch>
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException" message="Expected failure">
+        <when>
+          <fail message="Expected failure"/>
+        </when>
+      </assert>
+      <async>
+        <actions>
+          <echo><message>async</message></echo>
+        </actions>
+        <success>
+          <echo><message>async success</message></echo>
+        </success>
+        <error>
+          <echo><message>async error</message></echo>
+        </error>
+      </async>
+      <timer id="myTimer" interval="50" delay="10" repeatCount="2">
+        <echo><message>timer</message></echo>
+      </timer>
+      <stop-timer timerId="myTimer"/>
+      <wait seconds="1" interval="100">
+        <action>
+          <echo><message>wait</message></echo>
+        </action>
+      </wait>
+      <call-template name="greet">
+        <parameter name="greeting" value="Hello"/>
+        <parameter name="name">
+          <value>Citrus</value>
+        </parameter>
+      </call-template>
+    </actions>
+  </testcase>
+
+  <template name="greet" global-context="true">
+    <create-variables>
+      <variable name="templateResult" value="${greeting} ${name}"/>
+    </create-variables>
+  </template>
+</spring:beans>
