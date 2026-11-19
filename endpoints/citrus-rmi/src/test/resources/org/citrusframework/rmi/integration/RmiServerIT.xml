@@ -28,7 +28,7 @@
         <message>Test 1: Receive RMI service call as server and return null result</message>
       </echo>
 
-      <send endpoint="rmiHelloClient" fork="true">
+      <send endpoint="rmiHelloClient2499" fork="true">
         <message>
           <payload>
             <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -42,7 +42,7 @@
         </message>
       </send>
 
-      <receive endpoint="rmiHelloServer">
+      <receive endpoint="rmiHelloServer2499">
         <message>
           <payload>
             <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -56,7 +56,7 @@
         </message>
       </receive>
 
-      <send endpoint="rmiHelloServer">
+      <send endpoint="rmiHelloServer2499">
         <message>
           <payload>
             <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
@@ -64,7 +64,7 @@
         </message>
       </send>
 
-      <receive endpoint="rmiHelloClient">
+      <receive endpoint="rmiHelloClient2499">
         <message>
           <payload>
             <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
@@ -76,7 +76,7 @@
         <message>Test 2: Receive RMI service call return some result object</message>
       </echo>
 
-      <send endpoint="rmiHelloClient" fork="true">
+      <send endpoint="rmiHelloClient2499" fork="true">
         <message>
           <payload>
             <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -87,7 +87,7 @@
         </message>
       </send>
 
-      <receive endpoint="rmiHelloServer">
+      <receive endpoint="rmiHelloServer2499">
         <message>
           <payload>
             <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -98,7 +98,7 @@
         </message>
       </receive>
 
-      <send endpoint="rmiHelloServer">
+      <send endpoint="rmiHelloServer2499">
         <message>
           <payload>
             <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
@@ -108,7 +108,7 @@
         </message>
       </send>
 
-      <receive endpoint="rmiHelloClient">
+      <receive endpoint="rmiHelloClient2499">
         <message>
           <payload>
             <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">

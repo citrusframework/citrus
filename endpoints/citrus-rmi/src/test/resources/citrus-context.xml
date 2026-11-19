@@ -55,4 +55,59 @@
                        port="1099"
                        binding="newsService"
                        timeout="10000"/>
+
+  <!-- Isolated endpoints for RmiEndpointIT (RmiClientIT/RmiServerIT).
+       Own registry on 2499 so this class shares no RMI state with the
+       concurrently running test classes. -->
+  <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
+    <property name="staticMethod" value="java.rmi.registry.LocateRegistry.createRegistry"/>
+    <property name="arguments" value="2499"/>
+  </bean>
+
+  <citrus-rmi:server id="rmiHelloServer2499"
+                       host="localhost"
+                       port="2499"
+                       interface="org.citrusframework.rmi.remote.HelloService"
+                       binding="helloService"
+                       create-registry="false"
+                       timeout="10000"
+                       auto-start="true"/>
+
+  <citrus-rmi:server id="rmiNewsServer2499"
+                       host="localhost"
+                       port="2499"
+                       interface="org.citrusframework.rmi.remote.NewsService"
+                       binding="newsService"
+                       create-registry="false"
+                       timeout="10000"
+                       auto-start="true"/>
+
+  <citrus-rmi:client id="rmiHelloClient2499"
+                       host="localhost"
+                       port="2499"
+                       binding="helloService"
+                       timeout="10000"/>
+
+  <citrus-rmi:client id="rmiNewsClient2499"
+                       host="localhost"
+                       port="2499"
+                       binding="newsService"
+                       timeout="10000"/>
+
+  <!-- Isolated endpoints for RmiDynamicEndpointIT.
+       Own registry on 2599 so this class shares no RMI state with the
+       concurrently running test classes. -->
+  <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
+    <property name="staticMethod" value="java.rmi.registry.LocateRegistry.createRegistry"/>
+    <property name="arguments" value="2599"/>
+  </bean>
+
+  <citrus-rmi:server id="rmiNewsServer2599"
+                       host="localhost"
+                       port="2599"
+                       interface="org.citrusframework.rmi.remote.NewsService"
+                       binding="newsService"
+                       create-registry="false"
+                       timeout="10000"
+                       auto-start="true"/>
 </beans>
