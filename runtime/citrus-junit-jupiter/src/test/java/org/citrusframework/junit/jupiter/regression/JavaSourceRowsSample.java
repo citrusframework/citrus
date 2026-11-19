@@ -16,6 +16,7 @@
 
 package org.citrusframework.junit.jupiter.regression;
 
+import org.citrusframework.annotations.CitrusParameters;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
@@ -33,6 +34,7 @@ class JavaSourceRowsSample {
 
     @ParameterizedTest
     @ValueSource(strings = {"first", "second", "third"})
+    @CitrusParameters("value")
     @CitrusTestSource(type = TestLoader.JAVA, sources = "classpath:org/citrusframework/junit/jupiter/regression/ParameterizedRowTest.java")
     void row(String value, @CitrusResource TestContext context) {
         context.setVariable("row", value);

@@ -153,10 +153,14 @@ public final class TestNGParameterHelper {
      */
     private static String[] getParameterNames(Method method) {
         String[] parameterNames;
-        CitrusParameters citrusParameters = method.getAnnotation(CitrusParameters.class);
+        org.citrusframework.annotations.CitrusParameters citrusParameters =
+                method.getAnnotation(org.citrusframework.annotations.CitrusParameters.class);
+        CitrusParameters testNgCitrusParameters = method.getAnnotation(CitrusParameters.class);
         Parameters testNgParameters = method.getAnnotation(Parameters.class);
         if (citrusParameters != null) {
             parameterNames = citrusParameters.value();
+        } else if (testNgCitrusParameters != null) {
+            parameterNames = testNgCitrusParameters.value();
         } else if (testNgParameters != null) {
             parameterNames = testNgParameters.value();
         } else {
