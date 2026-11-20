@@ -51,6 +51,7 @@ public class CredentialsAction extends AbstractPlaywrightAction {
     private final String userHandle;
     private final String privateKey;
     private final String publicKey;
+    private final Integer signCount;
     private final String variable;
 
     public CredentialsAction(Builder builder) {
@@ -61,11 +62,16 @@ public class CredentialsAction extends AbstractPlaywrightAction {
         this.userHandle = builder.userHandle;
         this.privateKey = builder.privateKey;
         this.publicKey = builder.publicKey;
+        this.signCount = builder.signCount;
         this.variable = builder.variable;
     }
 
     public Command getCommand() {
         return command;
+    }
+
+    public Integer getSignCount() {
+        return signCount;
     }
 
     @Override
@@ -75,7 +81,8 @@ public class CredentialsAction extends AbstractPlaywrightAction {
         switch (command) {
             case CREATE -> credentials.create(LocatorResolver.resolve(origin, context), createOptions(context));
             case INSTALL -> credentials.install();
-            case DELETE -> credentials.delete(LocatorResolver.resolve(origin, context));
+            case DELETE -> credentials.delete(LocatorResolver.resolve(
+                    origin != null && !origin.isBlank() ? origin : id, context));
             case READ -> readCredential(credentials, context);
         }
     }
@@ -94,6 +101,9 @@ public class CredentialsAction extends AbstractPlaywrightAction {
         }
         if (publicKey != null) {
             options.setPublicKey(LocatorResolver.resolve(publicKey, context));
+        }
+        if (signCount != null) {
+            options.setSignCount(signCount);
         }
 
         return options;
@@ -127,6 +137,7 @@ public class CredentialsAction extends AbstractPlaywrightAction {
         private String userHandle;
         private String privateKey;
         private String publicKey;
+        private Integer signCount;
         private String variable;
 
         /**
@@ -195,17 +206,38 @@ public class CredentialsAction extends AbstractPlaywrightAction {
             return this;
         }
 
+        /**
+         * Sets the initial signature counter for the seeded credential.
+         *
+         * @param signCount non-negative initial signature counter
+         * @return this builder
+         */
+        public Builder signCount(int signCount) {
+            this.signCount = signCount;
+            return this;
+        }
+
         @Override
         public CredentialsAction build() {
             if (command == null) {
                 throw new CitrusRuntimeException("Missing Playwright credentials command");
             }
-            if ((command == Command.CREATE || command == Command.DELETE)
-                    && (origin == null || origin.isBlank())) {
+            if (command == Command.CREATE && (origin == null || origin.isBlank())) {
                 throw new CitrusRuntimeException("Missing Playwright credentials origin");
+            }
+            if (command == Command.DELETE
+                    && (origin == null || origin.isBlank())
+                    && (id == null || id.isBlank())) {
+                throw new CitrusRuntimeException("Missing Playwright credentials id or origin");
             }
             if (command == Command.READ && (variable == null || variable.isBlank())) {
                 throw new CitrusRuntimeException("Missing Playwright credentials target variable");
+            }
+            if (signCount != null && command != Command.CREATE) {
+                throw new CitrusRuntimeException("Playwright credentials signCount only applies to the create command");
+            }
+            if (signCount != null && signCount < 0) {
+                throw new CitrusRuntimeException("Playwright credentials signCount must not be negative: " + signCount);
             }
             return new CredentialsAction(this);
         }

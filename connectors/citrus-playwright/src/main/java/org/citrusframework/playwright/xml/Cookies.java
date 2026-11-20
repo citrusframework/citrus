@@ -157,9 +157,36 @@ public class Cookies extends AbstractPlaywrightAction.Builder<CookieAction, Cook
         }
         switch (DslCommands.normalize(command)) {
             case "add" -> delegate.add(cookie());
-            case "clear" -> delegate.clear();
-            case "read" -> delegate.read(name);
-            case "verify" -> delegate.verify(name, value);
+            case "clear" -> {
+                delegate.clear();
+                if (name != null) {
+                    delegate.name(name);
+                }
+                if (domain != null) {
+                    delegate.domain(domain);
+                }
+                if (path != null) {
+                    delegate.path(path);
+                }
+            }
+            case "read" -> {
+                delegate.read(name);
+                if (domain != null) {
+                    delegate.domain(domain);
+                }
+                if (path != null) {
+                    delegate.path(path);
+                }
+            }
+            case "verify" -> {
+                delegate.verify(name, value);
+                if (domain != null) {
+                    delegate.domain(domain);
+                }
+                if (path != null) {
+                    delegate.path(path);
+                }
+            }
             default -> throw DslCommands.unsupported("cookies", command);
         }
 

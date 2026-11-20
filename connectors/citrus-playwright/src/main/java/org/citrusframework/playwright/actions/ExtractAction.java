@@ -67,6 +67,7 @@ public class ExtractAction extends AbstractPlaywrightAction {
         NORMALIZED_LOCATOR,
         URL,
         TITLE,
+        PAGE_SOURCE,
         PAGE_COUNT,
         FRAME_CONTENT,
         STORAGE_LOCAL,
@@ -83,8 +84,8 @@ public class ExtractAction extends AbstractPlaywrightAction {
          */
         boolean requiresLocator() {
             return switch (this) {
-                case ARIA_SNAPSHOT, URL, TITLE, PAGE_COUNT, FRAME_CONTENT, STORAGE_LOCAL, STORAGE_SESSION, COOKIE,
-                     CONSOLE_MESSAGES, NETWORK_RECORDS, DOWNLOAD_METADATA -> false;
+                case ARIA_SNAPSHOT, URL, TITLE, PAGE_SOURCE, PAGE_COUNT, FRAME_CONTENT, STORAGE_LOCAL,
+                     STORAGE_SESSION, COOKIE, CONSOLE_MESSAGES, NETWORK_RECORDS, DOWNLOAD_METADATA -> false;
                 default -> true;
             };
         }
@@ -101,6 +102,7 @@ public class ExtractAction extends AbstractPlaywrightAction {
     private final Boolean boxes;
     private final Integer depth;
     private final Double timeoutMs;
+    private final Boolean includeShadow;
 
     /**
      * Returns the extraction value read by this action.
@@ -143,6 +145,10 @@ public class ExtractAction extends AbstractPlaywrightAction {
         return timeoutMs;
     }
 
+    public Boolean getIncludeShadow() {
+        return includeShadow;
+    }
+
     /**
      * Creates an extract action from its fluent builder.
      *
@@ -161,6 +167,7 @@ public class ExtractAction extends AbstractPlaywrightAction {
         this.boxes = builder.boxes;
         this.depth = builder.depth;
         this.timeoutMs = builder.timeoutMs;
+        this.includeShadow = builder.includeShadow;
     }
 
     @Override
@@ -193,6 +200,7 @@ public class ExtractAction extends AbstractPlaywrightAction {
                     ? locatorReader.ariaSnapshot(locator(browser, context), ariaMode, boxes, depth, timeoutMs)
                     : pageReader.ariaSnapshot(page, ariaMode, boxes, depth, timeoutMs);
             case NORMALIZED_LOCATOR -> locatorReader.normalizedLocator(locator(browser, context));
+            case PAGE_SOURCE -> pageReader.pageContent(page, includeShadow);
             case PAGE_COUNT -> pageReader.pageCount(browser);
             case FRAME_CONTENT -> pageReader.frameContent(page, LocatorResolver.resolve(frameSelector, context));
             case STORAGE_LOCAL -> storageReader.localStorage(page, LocatorResolver.resolve(key, context));
@@ -230,6 +238,7 @@ public class ExtractAction extends AbstractPlaywrightAction {
         private Boolean boxes;
         private Integer depth;
         private Double timeoutMs;
+        private Boolean includeShadow;
 
         /**
          * Extracts the current locator text content.
@@ -499,6 +508,40 @@ public class ExtractAction extends AbstractPlaywrightAction {
         }
 
         /**
+         * Extracts the serialized HTML source of the current page.
+         *
+         * @return this builder
+         */
+        public Builder pageSource() {
+            this.value = Value.PAGE_SOURCE;
+            return this;
+        }
+
+        /**
+         * Extracts the serialized HTML source of the current page, optionally serializing open
+         * shadow roots as declarative {@code <template shadowrootmode="open">} elements.
+         *
+         * @param includeShadow true to serialize open shadow roots
+         * @return this builder
+         */
+        public Builder pageSource(boolean includeShadow) {
+            this.value = Value.PAGE_SOURCE;
+            this.includeShadow = includeShadow;
+            return this;
+        }
+
+        /**
+         * Includes or omits open shadow roots when extracting {@link #pageSource()}.
+         *
+         * @param includeShadow true to serialize open shadow roots
+         * @return this builder
+         */
+        public Builder includeShadow(Boolean includeShadow) {
+            this.includeShadow = includeShadow;
+            return this;
+        }
+
+        /**
          * Extracts the number of pages registered with the browser endpoint.
          *
          * @return this builder
@@ -610,6 +653,9 @@ public class ExtractAction extends AbstractPlaywrightAction {
             }
             if (timeoutMs != null && timeoutMs < 0) {
                 throw new CitrusRuntimeException("Playwright ARIA snapshot timeout must not be negative: " + timeoutMs);
+            }
+            if (includeShadow != null && value != Value.PAGE_SOURCE) {
+                throw new CitrusRuntimeException("Playwright includeShadow option is only supported when extracting pageSource");
             }
             if (value == Value.CSS_VALUE && !StringUtils.hasText(property)) {
                 throw new CitrusRuntimeException("Missing Playwright CSS property - call cssValue(...) before building extract action");

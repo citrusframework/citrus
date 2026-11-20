@@ -61,6 +61,31 @@ public class PageStateReader {
     }
 
     /**
+     * Reads sanitized HTML content of the supplied page.
+     *
+     * @param page page to serialize
+     * @return sanitized HTML document content
+     */
+    public String pageContent(Page page) {
+        return redactor.sanitizeText(page.content());
+    }
+
+    /**
+     * Reads sanitized HTML content of the supplied page, optionally serializing open shadow roots
+     * as declarative {@code <template shadowrootmode="open">} elements.
+     *
+     * @param page page to serialize
+     * @param includeShadow whether to include shadow roots, or {@code null} for default behavior
+     * @return sanitized HTML document content
+     */
+    public String pageContent(Page page, Boolean includeShadow) {
+        if (includeShadow == null) {
+            return pageContent(page);
+        }
+        return redactor.sanitizeText(page.content(new Page.ContentOptions().setIncludeShadow(includeShadow)));
+    }
+
+    /**
      * Reads sanitized body content from a frame on the supplied page.
      *
      * @param page page containing the target frame

@@ -41,6 +41,7 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
     private Boolean boxes;
     private Integer depth;
     private Double timeout;
+    private Boolean includeShadow;
 
     @SchemaProperty(description = "Extraction value such as text (default), value, count, url, title, or storage-local.")
     public void setValue(String value) {
@@ -92,6 +93,11 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
         this.timeout = timeout;
     }
 
+    @SchemaProperty(description = "Whether to serialize open shadow roots when extracting page-source.")
+    public void setIncludeShadow(Boolean includeShadow) {
+        this.includeShadow = includeShadow;
+    }
+
     @SchemaProperty(description = "Target element to extract data from.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
@@ -130,6 +136,9 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
         if (timeout != null) {
             delegate.timeout(timeout);
         }
+        if (includeShadow != null) {
+            delegate.includeShadow(includeShadow);
+        }
         if (StringUtils.hasText(variable)) {
             delegate.variable(variable);
         }
@@ -161,6 +170,7 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
             case "normalized_locator" -> delegate.normalizedLocator();
             case "url", "page_url" -> delegate.url();
             case "title", "page_title" -> delegate.title();
+            case "page_source" -> delegate.pageSource();
             case "page_count" -> delegate.pageCount();
             case "frame_content" -> delegate.frameContent(frameSelector);
             case "storage_local" -> delegate.storageLocal(key);

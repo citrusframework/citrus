@@ -100,5 +100,25 @@
         <element css="#gender"/>
       </select>
     </playwright>
+
+    <playwright>
+      <screencast command="start" path="target/playwright/walkthrough.webm" fps="24" size-width="640" size-height="480"/>
+    </playwright>
+
+    <playwright>
+      <screencast command="show-actions" position="top-right" cursor="pointer" style-point="background: #ff0000" style-highlight="border: 2px solid #0000ff" style-title="font-size: 18px"/>
+    </playwright>
+
+    <playwright>
+      <credentials command="create" origin="https://example.com" id="pass-1" sign-count="9"/>
+    </playwright>
+
+    <playwright>
+      <extract value="page-source" include-shadow="true" variable="shadowPageHtml"/>
+    </playwright>
+
+    <playwright>
+      <cookies command="clear" name="session" domain="localhost" path="/api"/>
+    </playwright>
   </actions>
 </test>

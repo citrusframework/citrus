@@ -230,6 +230,9 @@ public class CitrusSchemaGeneratorTest {
         assertValidTestCase("""
                 {"name":"PlaywrightLocatorAndSnapshotTest","actions":[{"playwright":{"click":{"element":{"role":"button","name":"Apply","within":{"ref":"e2"}}}}},{"playwright":{"extract":{"value":"aria-snapshot","ariaMode":"ai","boxes":true,"depth":2,"timeout":1500,"variable":"snap"}}}]}
                 """);
+        assertValidTestCase("""
+                {"name":"PlaywrightScreencastAndOptionsTest","actions":[{"playwright":{"screencast":{"command":"start","path":"target/run.webm","fps":24}}},{"playwright":{"screencast":{"command":"show-actions","cursor":"pointer","stylePoint":"color: red","styleHighlight":"border: 1px solid blue","styleTitle":"font-size: 18px"}}},{"playwright":{"credentials":{"command":"create","origin":"https://example.com","signCount":5}}},{"playwright":{"extract":{"value":"page-source","includeShadow":true,"variable":"pageHtml"}}},{"playwright":{"cookies":{"command":"clear","name":"sid","domain":"example.com","path":"/api"}}}]}
+                """);
 
         for (String container : NESTED_ACTION_CONTAINERS) {
             assertValidTestCase(container.formatted(KNOWN_ACTION));

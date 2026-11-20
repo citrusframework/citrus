@@ -243,9 +243,29 @@ class ExtractActionTest {
     }
 
     @Test
+    void shouldExtractPageSourceWithAndWithoutIncludeShadow() {
+        when(browser.page().content()).thenReturn("<html><body>Light</body></html>");
+        when(browser.page().content(any(Page.ContentOptions.class)))
+                .thenReturn("<html><body><template shadowrootmode=\"open\">Shadow</template></body></html>");
+
+        new ExtractAction.Builder().pageSource().variable("lightHtml").build().execute(context);
+        assertEquals("<html><body>Light</body></html>", context.getVariable("lightHtml"));
+
+        new ExtractAction.Builder().pageSource(true).variable("shadowHtml").build().execute(context);
+        assertEquals("<html><body><template shadowrootmode=\"open\">Shadow</template></body></html>",
+                context.getVariable("shadowHtml"));
+
+        ArgumentCaptor<Page.ContentOptions> options = ArgumentCaptor.forClass(Page.ContentOptions.class);
+        verify(browser.page()).content(options.capture());
+        assertEquals(Boolean.TRUE, options.getValue().includeShadow);
+    }
+
+    @Test
     void shouldRejectInvalidAriaSnapshotOptions() {
         assertThrows(CitrusRuntimeException.class,
                 () -> new ExtractAction.Builder().locator(".el").text().ariaMode("ai").variable("out").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().locator(".el").text().includeShadow(true).variable("out").build());
         assertThrows(CitrusRuntimeException.class,
                 () -> new ExtractAction.Builder().ariaSnapshot("ai").depth(-1).variable("out").build());
         assertThrows(CitrusRuntimeException.class,
