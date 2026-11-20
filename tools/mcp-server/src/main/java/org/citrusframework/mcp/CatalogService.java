@@ -99,21 +99,21 @@ public class CatalogService {
     }
 
     public String getVersion() {
-        if (StringUtils.hasText(CitrusVersion.version())) {
-            return CitrusVersion.version();
-        } else {
-            return loadCatalogIndex("").version();
+        return requireVersion(CitrusVersion.version());
+    }
+
+    static String requireVersion(String version) {
+        if (!StringUtils.hasText(version)) {
+            throw new CitrusRuntimeException(
+                    "Unable to resolve Citrus version for catalog lookup. Ensure META-INF/citrus.version is on the classpath.");
         }
+        return version;
     }
 
     private CatalogIndex loadCatalogIndex(String version) {
-        if (StringUtils.hasText(version)) {
-            return JsonSupport.json().readValue(ClassLoaderHelper.getClassLoader()
-                    .getResourceAsStream("citrus-catalog/citrus/%s/index.json".formatted(version)), CatalogIndex.class);
-        } else {
-            return JsonSupport.json().readValue(ClassLoaderHelper.getClassLoader()
-                    .getResourceAsStream("citrus-catalog/citrus/index.json"), CatalogIndex.class);
-        }
+        return JsonSupport.json().readValue(ClassLoaderHelper.getClassLoader()
+                .getResourceAsStream("citrus-catalog/citrus/%s/index.json".formatted(requireVersion(
+                        StringUtils.hasText(version) ? version : getVersion()))), CatalogIndex.class);
     }
 
     /**
