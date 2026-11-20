@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import com.microsoft.playwright.Dialog;
 
+@SuppressWarnings("unchecked")
 class DialogActionTest {
 
     private MockPlaywrightBrowser browser;

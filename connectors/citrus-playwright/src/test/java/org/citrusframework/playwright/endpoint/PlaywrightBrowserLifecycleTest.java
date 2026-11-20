@@ -279,7 +279,7 @@ class PlaywrightBrowserLifecycleTest {
 
         assertTrue(failure instanceof CitrusRuntimeException,
                 "expected a Citrus failure but got " + failure);
-        assertTrue(failure.getMessage().contains("already used by thread " + Thread.currentThread().getId()),
+        assertTrue(failure.getMessage().contains("already used by thread " + Thread.currentThread().threadId()),
                 failure.getMessage());
         assertTrue(failure.getMessage().contains("one PlaywrightBrowser endpoint per parallel test thread"),
                 failure.getMessage());
