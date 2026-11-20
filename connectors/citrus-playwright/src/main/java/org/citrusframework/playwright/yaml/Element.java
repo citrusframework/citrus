@@ -21,12 +21,15 @@ import org.citrusframework.playwright.model.LocatorSpec;
 
 /**
  * Locator element model shared by all element aware Playwright YAML actions.
+ * <p>
+ * The {@code within} scope accepts a single nesting level because {@link ElementLocator} is
+ * intentionally non-recursive. Use the XML DSL or Java API for deeper nesting.
  */
 public class Element extends ElementLocator {
 
     private ElementLocator within;
 
-    @SchemaProperty(description = "Enclosing locator specification narrowing matches via Playwright's within() composition.")
+    @SchemaProperty(description = "Enclosing locator specification narrowing matches via Playwright's within() composition. YAML supports one nesting level; use XML or Java for deeper nesting.")
     public void setWithin(ElementLocator within) {
         this.within = within;
     }
