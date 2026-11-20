@@ -1236,6 +1236,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                     Requirement: https://github.com/citrusframework/citrus/issues/1419
                     """)
     public void testReceiveMessage_shouldIgnoreValidationContexts_whenCustomValidatorIsPresent_andValidationStrategyIsExclusive() {
+        environmentVariables.set(CUSTOM_VALIDATOR_STRATEGY_ENV, "EXCLUSIVE");
+
         var testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
