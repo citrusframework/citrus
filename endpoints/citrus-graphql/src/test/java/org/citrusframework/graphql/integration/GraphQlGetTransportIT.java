@@ -31,6 +31,7 @@ import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.graphql.GraphQlTestSupport;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
@@ -76,8 +77,7 @@ public class GraphQlGetTransportIT implements TestActionSupport, CitrusExtension
 
     @Override
     public void before(CitrusContext context) {
-        getClient.getEndpointConfiguration()
-                .setRequestUrl("http://localhost:%d".formatted(getServer.getPort()));
+        GraphQlTestSupport.bindRequestUrl(getClient, getServer);
     }
 
     @Test

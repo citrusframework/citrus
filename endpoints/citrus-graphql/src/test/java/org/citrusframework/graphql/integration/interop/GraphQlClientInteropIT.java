@@ -43,20 +43,17 @@ import static org.citrusframework.api.graphql.GraphQlError.error;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GraphQlClientInteropIT implements TestActionSupport {
 
-    private static int port;
-
     private static SpringGraphQlServer springServer;
 
     @BindToRegistry
     private final GraphQlClient springGraphQl = GraphQlEndpoints.graphql().client()
-            .requestUrl("http://localhost:%d".formatted(port))
+            .requestUrl("http://localhost:%d".formatted(springServer.getPort()))
             .timeout(5000L)
             .build();
 
     @BeforeAll
     static void startSpringGraphQl() throws Exception {
         springServer = SpringGraphQlServer.start(0);
-        port = springServer.getPort();
     }
 
     @AfterAll

@@ -24,6 +24,7 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.graphql.GraphQlTestSupport;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
@@ -32,8 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-
-
 
 /**
  * Resource variant of {@link GraphQlZeroJavaIT}: same 6 resources x get, list, create, update,
@@ -63,8 +62,7 @@ public class GraphQlZeroResourceIT implements TestActionSupport, CitrusExtension
 
     @Override
     public void before(CitrusContext context) {
-        graphqlZero.getEndpointConfiguration()
-                .setRequestUrl("http://localhost:%d".formatted(zeroServer.getPort()));
+        GraphQlTestSupport.bindRequestUrl(graphqlZero, zeroServer);
     }
 
     @Test
