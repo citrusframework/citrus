@@ -32,5 +32,5 @@ public class RmiYamlIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.YAML, sources = { "classpath:org/citrusframework/rmi/integration/rmi-yaml.citrus.it.yaml" })
-    public void RmiYamlIT() {}
+    public void testClientServer() {}
 }

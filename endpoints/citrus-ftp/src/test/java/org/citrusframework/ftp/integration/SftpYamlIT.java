@@ -32,5 +32,5 @@ public class SftpYamlIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.YAML, sources = { "classpath:org/citrusframework/ftp/integration/sftp-yaml.citrus.it.yaml" })
-    public void SftpYamlIT() {}
+    public void testClientServer() {}
 }
