@@ -23,6 +23,7 @@ import graphql.schema.DataFetchingEnvironment;
 import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee11.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -65,6 +66,10 @@ final class SpringGraphQlServer implements AutoCloseable {
     @Override
     public void close() throws Exception {
         server.stop();
+    }
+
+    int getPort() {
+        return ((ServerConnector) server.getConnectors()[0]).getLocalPort();
     }
 
     static Object book(DataFetchingEnvironment environment) {
