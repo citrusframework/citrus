@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import com.microsoft.playwright.Screencast;
 import com.microsoft.playwright.ScreencastFrame;
 import com.microsoft.playwright.options.AnnotatePosition;
+import com.microsoft.playwright.options.ScreencastActionStyle;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -138,7 +139,7 @@ public class ScreencastAction extends AbstractPlaywrightAction {
             options.setPosition(position);
         }
         if (fontSize != null) {
-            options.setFontSize(fontSize);
+            options.setStyle(new ScreencastActionStyle().setTitle("font-size: %dpx".formatted(fontSize)));
         }
         if (duration != null) {
             options.setDuration(duration);

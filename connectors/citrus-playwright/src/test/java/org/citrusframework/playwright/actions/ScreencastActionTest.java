@@ -98,7 +98,7 @@ class ScreencastActionTest {
                 ArgumentCaptor.forClass(Screencast.ShowActionsOptions.class);
         verify(screencast).showActions(captor.capture());
         assertEquals(AnnotatePosition.TOP_RIGHT, captor.getValue().position);
-        assertEquals(Integer.valueOf(18), captor.getValue().fontSize);
+        assertEquals("font-size: 18px", captor.getValue().style.title);
     }
 
     @Test
