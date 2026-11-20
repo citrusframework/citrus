@@ -17,6 +17,7 @@
 package org.citrusframework.playwright.state;
 
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaSnapshotMode;
 
 import java.util.List;
 
@@ -68,5 +69,46 @@ public class PageStateReader {
      */
     public String frameContent(Page page, String frameSelector) {
         return redactor.sanitizeText(page.frameLocator(frameSelector).locator("body").innerHTML());
+    }
+
+    /**
+     * Reads Playwright's page-level ARIA snapshot.
+     *
+     * @param page page to inspect
+     * @return sanitized ARIA snapshot text
+     */
+    public String ariaSnapshot(Page page) {
+        return redactor.sanitizeText(page.ariaSnapshot());
+    }
+
+    /**
+     * Reads Playwright's page-level ARIA snapshot with optional mode, bounding-box, depth, and
+     * timeout settings.
+     *
+     * @param page page to inspect
+     * @param mode snapshot mode ({@code ai} or {@code default}), or {@code null}
+     * @param boxes whether to include bounding-box coordinates, or {@code null}
+     * @param depth maximum ARIA tree depth, or {@code null}
+     * @param timeoutMs timeout in milliseconds, or {@code null}
+     * @return sanitized ARIA snapshot text
+     */
+    public String ariaSnapshot(Page page, AriaSnapshotMode mode, Boolean boxes, Integer depth, Double timeoutMs) {
+        if (mode == null && boxes == null && depth == null && timeoutMs == null) {
+            return ariaSnapshot(page);
+        }
+        Page.AriaSnapshotOptions options = new Page.AriaSnapshotOptions();
+        if (mode != null) {
+            options.setMode(mode);
+        }
+        if (boxes != null) {
+            options.setBoxes(boxes);
+        }
+        if (depth != null) {
+            options.setDepth(depth);
+        }
+        if (timeoutMs != null) {
+            options.setTimeout(timeoutMs);
+        }
+        return redactor.sanitizeText(page.ariaSnapshot(options));
     }
 }

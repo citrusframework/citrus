@@ -135,7 +135,16 @@ $(playwright().click().locator(LocatorSpec.text("Save")));
 $(playwright().click().locator(LocatorSpec.role("button").name("Submit")));
 $(playwright().click().locator(LocatorSpec.testId("submit-button").last()));
 $(playwright().click().locator(LocatorSpec.css("button.action").visible()));
+$(playwright().click().locator(LocatorSpec.ref("e2")));
+$(playwright().click().locator(
+        LocatorSpec.role("button").name("Apply").within(LocatorSpec.css("#card-beta"))));
 ----
+
+`LocatorSpec.ref(...)` resolves element references (`[ref=eN]`) emitted by AI-mode ARIA snapshots
+via `Page.getByRef(...)` (and `aria-ref=` inside a `FrameLocator`). `within(...)` composes a locator
+inside a container `LocatorSpec` before `visible()` and positional selectors (`first()`, `last()`,
+`nth(...)`), so `.within(LocatorSpec.css("#panel")).visible().first()` selects the first visible
+match inside `#panel`.
 
 `visible()` narrows a locator to visible elements only. It is the recommended replacement for the
 `:visible` CSS pseudo-class. Unlike `first()`, `last()` and `nth(...)` it is a *filter* rather
@@ -231,7 +240,18 @@ Extract values into test variables:
 $(playwright().extract().locator("#message").text().variable("message"));
 $(playwright().extract().title().variable("pageTitle"));
 $(playwright().extract().cookie("session").variable("sessionCookie"));
+$(playwright().extract().ariaSnapshot("ai").boxes(true).depth(4).variable("pageAiTree"));
+$(playwright().extract().locator("#card-beta").ariaSnapshot("ai").variable("cardAiTree"));
+$(playwright().extract().locator(LocatorSpec.ref("e2")).normalizedLocator().variable("javaLocator"));
 ----
+
+`ariaSnapshot(...)` works on the full page (when no locator is set) or on a specific locator. Pass
+`"ai"` (or `AriaSnapshotMode.AI`) to emit `[ref=eN]` identifiers that pair directly with
+`LocatorSpec.ref("eN")`, optionally adding bounding `boxes(true)`, maximum tree `depth(...)`, and
+`timeout(...)` in milliseconds. `normalizedLocator()` converts a resolved locator (for example a
+transient `ref` locator) into a canonical Playwright Java locator expression via
+`locator.normalize().toString()` for diagnostics or code generation; normalized expressions are
+read-only strings and are not parsed back into `LocatorSpec`.
 
 Cookie `read` and `verify` actions inspect all cookies in the current browser context by default.
 Pass `url(...)` (or `url` in XML/YAML) to filter cookies for a specific request URL using strict
@@ -877,7 +897,7 @@ actions:
 </playwright>
 ----
 
-Supported element action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `screencast`, `credentials`, `drop`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`) or `test-id`, narrowed by `nth`, `first` or `last`.
+Supported element action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `screencast`, `credentials`, `drop`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable, plus optional `aria-mode`, `boxes`, `depth`, `timeout` for `aria-snapshot`, and `value="normalized-locator"`). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`), `test-id` or `ref`, optionally scoped inside a nested `within` element and narrowed by `visible`, `nth`, `first` or `last`.
 
 The same applies to XML:
 
@@ -885,8 +905,20 @@ The same applies to XML:
 ----
 <playwright>
   <click scroll="none">
-    <element css=".action" visible="true"/>
+    <element role="button" name="Apply" visible="true">
+      <within css="#card-beta"/>
+    </element>
   </click>
+</playwright>
+
+<playwright>
+  <extract value="aria-snapshot" aria-mode="ai" boxes="true" depth="3" variable="aiTree"/>
+</playwright>
+
+<playwright>
+  <extract value="normalized-locator" variable="javaLocator">
+    <element ref="e2"/>
+  </extract>
 </playwright>
 
 <playwright>

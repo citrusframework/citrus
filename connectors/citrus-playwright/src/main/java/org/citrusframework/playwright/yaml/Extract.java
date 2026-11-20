@@ -37,6 +37,10 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
     private String property;
     private String key;
     private String frameSelector;
+    private String ariaMode;
+    private Boolean boxes;
+    private Integer depth;
+    private Double timeout;
 
     @SchemaProperty(description = "Extraction value such as text (default), value, count, url, title, or storage-local.")
     public void setValue(String value) {
@@ -68,6 +72,26 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
         this.frameSelector = frameSelector;
     }
 
+    @SchemaProperty(description = "ARIA snapshot mode ('ai' or 'default') for the aria-snapshot extraction.")
+    public void setAriaMode(String ariaMode) {
+        this.ariaMode = ariaMode;
+    }
+
+    @SchemaProperty(description = "Whether to include bounding boxes in the aria-snapshot extraction.")
+    public void setBoxes(Boolean boxes) {
+        this.boxes = boxes;
+    }
+
+    @SchemaProperty(description = "Maximum tree depth for the aria-snapshot extraction.")
+    public void setDepth(Integer depth) {
+        this.depth = depth;
+    }
+
+    @SchemaProperty(description = "Timeout in milliseconds for the aria-snapshot extraction.")
+    public void setTimeout(Double timeout) {
+        this.timeout = timeout;
+    }
+
     @SchemaProperty(description = "Target element to extract data from.")
     public void setElement(Element element) {
         delegate.locator(element.toLocatorSpec());
@@ -94,6 +118,18 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
     @Override
     public ExtractAction build() {
         applyValue();
+        if (StringUtils.hasText(ariaMode)) {
+            delegate.ariaMode(ariaMode);
+        }
+        if (boxes != null) {
+            delegate.boxes(boxes);
+        }
+        if (depth != null) {
+            delegate.depth(depth);
+        }
+        if (timeout != null) {
+            delegate.timeout(timeout);
+        }
         if (StringUtils.hasText(variable)) {
             delegate.variable(variable);
         }
@@ -122,6 +158,7 @@ public class Extract extends AbstractPlaywrightAction.Builder<ExtractAction, Ext
             case "selected_option_text" -> delegate.selectedOptionText();
             case "selected_option_values" -> delegate.selectedOptionValues();
             case "aria_snapshot" -> delegate.ariaSnapshot();
+            case "normalized_locator" -> delegate.normalizedLocator();
             case "url", "page_url" -> delegate.url();
             case "title", "page_title" -> delegate.title();
             case "page_count" -> delegate.pageCount();

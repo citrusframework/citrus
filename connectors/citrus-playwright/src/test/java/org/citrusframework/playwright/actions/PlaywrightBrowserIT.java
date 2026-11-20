@@ -32,6 +32,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.citrusframework.TestCase;
@@ -732,6 +734,95 @@ class PlaywrightBrowserIT {
                     .click("#secret-frame-btn").build().execute(context);
             playwright().browser(browser).frame().frame("#hidden-frame")
                     .verifyText("#frame-out", "frame-clicked").build().execute(context);
+        } finally {
+            playwright().browser(browser).stop().build().execute(context);
+        }
+    }
+
+    @Test
+    void shouldExerciseRefLocatorsWithinScopingAiAriaSnapshotsAndNormalizedLocators() {
+        URL fixture = getClass().getResource("/fixtures/playwright-locators-ai.html");
+
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType("chromium")
+                .headless(true)
+                .defaultTimeout(5000)
+                .build();
+
+        TestContext context = new TestContext();
+        try {
+            playwright().browser(browser).start().build().execute(context);
+            playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
+
+            // 1. Page-level and locator-level AI ARIA snapshots emit [ref=eN] identifiers and boxes.
+            playwright().browser(browser).extract()
+                    .ariaSnapshot("ai").boxes(true).depth(4)
+                    .variable("pageAiTree")
+                    .build().execute(context);
+            String pageAiTree = context.getVariable("pageAiTree");
+            assertTrue(pageAiTree.contains("Alpha Tier"), pageAiTree);
+            assertTrue(pageAiTree.contains("Beta Tier"), pageAiTree);
+            assertTrue(pageAiTree.contains("[ref="), pageAiTree);
+
+            playwright().browser(browser).extract()
+                    .locator("#card-beta")
+                    .ariaSnapshot("ai")
+                    .variable("betaCardTree")
+                    .build().execute(context);
+            String betaCardTree = context.getVariable("betaCardTree");
+            Matcher betaRefMatcher = Pattern.compile("button \"Apply\"[^\n]*\\[ref=(e\\d+)]").matcher(betaCardTree);
+            assertTrue(betaRefMatcher.find(), betaCardTree);
+            context.setVariable("betaApplyRef", betaRefMatcher.group(1));
+
+            // 2. LocatorSpec.ref("${betaApplyRef}") clicks via Page.getByRef(...) and normalizes to Java code.
+            playwright().browser(browser).click()
+                    .locator(LocatorSpec.ref("${betaApplyRef}"))
+                    .build().execute(context);
+            playwright().browser(browser).verify()
+                    .locator("#apply-output").text("beta")
+                    .build().execute(context);
+
+            playwright().browser(browser).extract()
+                    .locator(LocatorSpec.ref("${betaApplyRef}"))
+                    .normalizedLocator()
+                    .variable("betaNormalized")
+                    .build().execute(context);
+            String betaNormalized = context.getVariable("betaNormalized");
+            assertTrue(betaNormalized.contains("getByRole") && betaNormalized.contains("Apply"), betaNormalized);
+
+            // 3. LocatorSpec.within(...) scopes matches to a container before clicking.
+            playwright().browser(browser).click()
+                    .locator(LocatorSpec.role("button").name("Apply").within(LocatorSpec.css("#card-alpha")))
+                    .build().execute(context);
+            playwright().browser(browser).verify()
+                    .locator("#apply-output").text("alpha")
+                    .build().execute(context);
+
+            playwright().browser(browser).click()
+                    .locator(LocatorSpec.role("button").name("Apply").within(LocatorSpec.css("#card-beta")))
+                    .build().execute(context);
+            playwright().browser(browser).verify()
+                    .locator("#apply-output").text("beta")
+                    .build().execute(context);
+
+            // 4. REF locator inside an iframe resolves via FrameLocator("aria-ref=...").
+            playwright().browser(browser).extract()
+                    .locator(LocatorSpec.raw(page -> page.frameLocator("#ref-frame").locator("body")))
+                    .ariaSnapshot("ai")
+                    .variable("frameAiTree")
+                    .build().execute(context);
+            String frameAiTree = context.getVariable("frameAiTree");
+            Matcher frameRefMatcher = Pattern.compile("button \"Frame Confirm\"[^\n]*\\[ref=([a-z0-9]+)]").matcher(frameAiTree);
+            assertTrue(frameRefMatcher.find(), frameAiTree);
+            context.setVariable("frameConfirmRef", frameRefMatcher.group(1));
+
+            playwright().browser(browser).frame().frame("#ref-frame")
+                    .click(LocatorSpec.ref("${frameConfirmRef}"))
+                    .build().execute(context);
+            playwright().browser(browser).frame().frame("#ref-frame")
+                    .verifyText("#frame-ref-out", "frame-confirmed")
+                    .build().execute(context);
         } finally {
             playwright().browser(browser).stop().build().execute(context);
         }

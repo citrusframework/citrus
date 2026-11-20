@@ -19,6 +19,7 @@ package org.citrusframework.playwright.xml;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.model.LocatorSpec;
@@ -27,7 +28,7 @@ import org.citrusframework.playwright.model.LocatorSpec;
  * Locator element model shared by all element aware Playwright XML actions.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {})
+@XmlType(name = "", propOrder = {"within"})
 public class Element {
 
     @XmlAttribute
@@ -49,6 +50,9 @@ public class Element {
     private String testId;
 
     @XmlAttribute
+    private String ref;
+
+    @XmlAttribute
     private Integer nth;
 
     @XmlAttribute
@@ -59,6 +63,9 @@ public class Element {
 
     @XmlAttribute
     private Boolean visible;
+
+    @XmlElement(name = "within")
+    private Element within;
 
     public void setCss(String css) {
         this.css = css;
@@ -108,6 +115,14 @@ public class Element {
         return testId;
     }
 
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
     public void setNth(Integer nth) {
         this.nth = nth;
     }
@@ -140,6 +155,14 @@ public class Element {
         return visible;
     }
 
+    public void setWithin(Element within) {
+        this.within = within;
+    }
+
+    public Element getWithin() {
+        return within;
+    }
+
     /**
      * Converts the element properties into a {@link LocatorSpec}.
      * @return locator specification derived from this element.
@@ -159,10 +182,15 @@ public class Element {
             }
         } else if (testId != null) {
             spec = LocatorSpec.testId(testId);
+        } else if (ref != null) {
+            spec = LocatorSpec.ref(ref);
         } else {
-            throw new CitrusRuntimeException("Missing Playwright locator selector - please provide one of css, xpath, text, role, or test-id");
+            throw new CitrusRuntimeException("Missing Playwright locator selector - please provide one of css, xpath, text, role, test-id, or ref");
         }
 
+        if (within != null) {
+            spec.within(within.toLocatorSpec());
+        }
         if (Boolean.TRUE.equals(visible)) {
             spec.visible();
         }

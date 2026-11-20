@@ -31,10 +31,12 @@ public class Element {
     private String role;
     private String name;
     private String testId;
+    private String ref;
     private Integer nth;
     private Boolean first;
     private Boolean last;
     private Boolean visible;
+    private Element within;
 
     @SchemaProperty(description = "CSS selector for the target element.")
     public void setCss(String css) {
@@ -90,6 +92,15 @@ public class Element {
         return testId;
     }
 
+    @SchemaProperty(description = "ARIA snapshot element reference selector (for example 'e2' from an AI ARIA snapshot).")
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
     @SchemaProperty(description = "Selects the nth matching element (zero-based).")
     public void setNth(Integer nth) {
         this.nth = nth;
@@ -126,6 +137,15 @@ public class Element {
         return visible;
     }
 
+    @SchemaProperty(description = "Enclosing locator specification narrowing matches via Playwright's within() composition.")
+    public void setWithin(Element within) {
+        this.within = within;
+    }
+
+    public Element getWithin() {
+        return within;
+    }
+
     /**
      * Converts the element properties into a {@link LocatorSpec}.
      * @return locator specification derived from this element.
@@ -145,10 +165,15 @@ public class Element {
             }
         } else if (testId != null) {
             spec = LocatorSpec.testId(testId);
+        } else if (ref != null) {
+            spec = LocatorSpec.ref(ref);
         } else {
-            throw new CitrusRuntimeException("Missing Playwright locator selector - please provide one of css, xpath, text, role, or test-id");
+            throw new CitrusRuntimeException("Missing Playwright locator selector - please provide one of css, xpath, text, role, test-id, or ref");
         }
 
+        if (within != null) {
+            spec.within(within.toLocatorSpec());
+        }
         if (Boolean.TRUE.equals(visible)) {
             spec.visible();
         }
