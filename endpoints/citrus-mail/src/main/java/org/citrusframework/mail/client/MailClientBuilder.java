@@ -25,8 +25,10 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.base.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
@@ -43,9 +45,27 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
 
     private String marshaller;
     private String messageConverter;
+    private String marshallerType;
 
     @Override
     public MailClient build() {
+        if (StringUtils.hasText(marshaller) && StringUtils.hasText(marshallerType)) {
+            throw new CitrusRuntimeException(
+                    "Invalid mail endpoint declaration: choose either 'marshaller' or 'marshallerType' option - both options are set");
+        }
+
+        if (StringUtils.hasText(marshallerType)) {
+            if (!marshallerType.equalsIgnoreCase(MessageType.XML.name())
+                    && !marshallerType.equalsIgnoreCase(MessageType.JSON.name())) {
+                throw new CitrusRuntimeException("Unsupported mail marshaller type: " + marshallerType
+                        + " - supported types are: " + MessageType.XML.name() + ", " + MessageType.JSON.name());
+            }
+
+            MailMarshaller typedMarshaller = new MailMarshaller();
+            typedMarshaller.setType(marshallerType);
+            marshaller(typedMarshaller);
+        }
+
         if (referenceResolver != null) {
             if (StringUtils.hasText(marshaller)) {
                 marshaller(referenceResolver.resolve(marshaller, MailMarshaller.class));
@@ -176,6 +196,20 @@ public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
     @XmlAttribute
     public void setMarshaller(String marshaller) {
         this.marshaller = marshaller;
+    }
+
+    /**
+     * Sets the mail message data format used by this endpoint.
+     */
+    public MailClientBuilder marshallerType(String marshallerType) {
+        this.marshallerType = marshallerType;
+        return this;
+    }
+
+    @SchemaProperty(description = "The mail message data format (XML or JSON).")
+    @XmlAttribute(name = "marshaller-type")
+    public void setMarshallerType(String marshallerType) {
+        this.marshallerType = marshallerType;
     }
 
     /**
