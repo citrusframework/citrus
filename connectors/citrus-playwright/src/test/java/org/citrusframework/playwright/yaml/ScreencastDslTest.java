@@ -19,6 +19,7 @@ package org.citrusframework.playwright.yaml;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import com.microsoft.playwright.options.ScreencastCursor;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.ScreencastAction;
 import org.junit.jupiter.api.Test;
@@ -98,6 +99,54 @@ class ScreencastDslTest {
         screencast.setCommand("start");
 
         assertEquals(ScreencastAction.Command.START, screencast.build().getCommand());
+    }
+
+    @Test
+    void shouldStartRecordingWithDeclaredFpsWhateverOrder() {
+        Screencast screencast = new Screencast();
+        screencast.setFps(24);
+        screencast.setPath("target/playwright/run.webm");
+        screencast.setCommand("start");
+
+        ScreencastAction action = screencast.build();
+        assertEquals(ScreencastAction.Command.START, action.getCommand());
+        assertEquals(Integer.valueOf(24), action.getFps());
+    }
+
+    @Test
+    void shouldShowActionsWithStyleAndCursorWhateverOrder() {
+        Screencast screencast = new Screencast();
+        screencast.setCursor("pointer");
+        screencast.setStylePoint("background: red");
+        screencast.setStyleHighlight("border: 2px solid blue");
+        screencast.setStyleTitle("font-size: 20px");
+        screencast.setCommand("show-actions");
+
+        ScreencastAction action = screencast.build();
+        assertEquals(ScreencastAction.Command.SHOW_ACTIONS, action.getCommand());
+        assertEquals(ScreencastCursor.POINTER, action.getCursor());
+        assertEquals("background: red", action.getStylePoint());
+        assertEquals("border: 2px solid blue", action.getStyleHighlight());
+        assertEquals("font-size: 20px", action.getStyleTitle());
+    }
+
+    @Test
+    void shouldRejectMisplacedFpsStyleOrCursor() {
+        Screencast fpsOnStop = new Screencast();
+        fpsOnStop.setFps(24);
+        fpsOnStop.setCommand("stop");
+        assertThrows(CitrusRuntimeException.class, fpsOnStop::build);
+
+        Screencast styleOnStart = new Screencast();
+        styleOnStart.setPath("target/playwright/run.webm");
+        styleOnStart.setStyleTitle("font-size: 18px");
+        styleOnStart.setCommand("start");
+        assertThrows(CitrusRuntimeException.class, styleOnStart::build);
+
+        Screencast cursorOnStop = new Screencast();
+        cursorOnStop.setCursor("none");
+        cursorOnStop.setCommand("stop");
+        assertThrows(CitrusRuntimeException.class, cursorOnStop::build);
     }
 
     @Test

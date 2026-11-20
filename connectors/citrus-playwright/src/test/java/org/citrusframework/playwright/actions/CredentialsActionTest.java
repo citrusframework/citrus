@@ -97,6 +97,20 @@ class CredentialsActionTest {
     }
 
     @Test
+    void shouldDeleteCredentialsByIdPreferringIdOverOrigin() {
+        new CredentialsAction.Builder().delete("example.com").id("cred-42").build().execute(context);
+
+        verify(credentials).delete("cred-42");
+    }
+
+    @Test
+    void shouldDeleteCredentialsByIdOnly() {
+        new CredentialsAction.Builder().delete().id("cred-42").build().execute(context);
+
+        verify(credentials).delete("cred-42");
+    }
+
+    @Test
     void shouldStoreOnlyCredentialIdInVariable() {
         VirtualCredential registered = new VirtualCredential();
         registered.id = "cred-1";
@@ -122,6 +136,33 @@ class CredentialsActionTest {
     @Test
     void shouldFailFastWhenCommandMissing() {
         assertThrows(CitrusRuntimeException.class, () -> new CredentialsAction.Builder().build());
+    }
+
+    @Test
+    void shouldSeedPasskeyWithSignCount() {
+        CredentialsAction action = new CredentialsAction.Builder()
+                .create("example.com")
+                .id("pass-7")
+                .signCount(7)
+                .build();
+        assertEquals(Integer.valueOf(7), action.getSignCount());
+
+        action.execute(context);
+
+        ArgumentCaptor<Credentials.CreateOptions> captor = ArgumentCaptor.forClass(Credentials.CreateOptions.class);
+        verify(credentials).create(org.mockito.ArgumentMatchers.eq("example.com"), captor.capture());
+        assertEquals("pass-7", captor.getValue().id);
+        assertEquals(Integer.valueOf(7), captor.getValue().signCount);
+    }
+
+    @Test
+    void shouldRejectSignCountOutsideCreateOrNegative() {
+        assertThrows(CitrusRuntimeException.class,
+                () -> new CredentialsAction.Builder().install().signCount(1).build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new CredentialsAction.Builder().delete("example.com").signCount(1).build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new CredentialsAction.Builder().create("example.com").signCount(-1).build());
     }
 
     @Test

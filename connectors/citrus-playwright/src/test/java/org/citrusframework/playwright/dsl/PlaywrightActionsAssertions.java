@@ -19,14 +19,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.microsoft.playwright.options.HarContentPolicy;
+import com.microsoft.playwright.options.ScreencastCursor;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.playwright.actions.ConsoleAction;
 import org.citrusframework.playwright.actions.ContextAction;
 import org.citrusframework.playwright.actions.CookieAction;
+import org.citrusframework.playwright.actions.CredentialsAction;
 import org.citrusframework.playwright.actions.DialogAction;
 import org.citrusframework.playwright.actions.DownloadAction;
 import org.citrusframework.playwright.actions.EmulationAction;
+import org.citrusframework.playwright.actions.ExtractAction;
 import org.citrusframework.playwright.actions.FrameAction;
 import org.citrusframework.playwright.actions.InputAction;
 import org.citrusframework.playwright.actions.NetworkAction;
@@ -34,6 +37,7 @@ import org.citrusframework.playwright.actions.PageAction;
 import org.citrusframework.playwright.actions.PageObjectAction;
 import org.citrusframework.playwright.actions.PdfAction;
 import org.citrusframework.playwright.actions.PermissionAction;
+import org.citrusframework.playwright.actions.ScreencastAction;
 import org.citrusframework.playwright.actions.StorageAction;
 import org.citrusframework.playwright.actions.TracingAction;
 
@@ -48,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public final class PlaywrightActionsAssertions {
 
-    public static final long ACTION_COUNT = 22L;
+    public static final long ACTION_COUNT = 27L;
 
     private PlaywrightActionsAssertions() {
     }
@@ -175,5 +179,31 @@ public final class PlaywrightActionsAssertions {
         InputAction select = (InputAction) result.getTestAction(21);
         assertEquals(InputAction.Command.SELECT, select.getCommand());
         assertEquals(List.of("male", "female", "New York"), select.getValues());
+
+        ScreencastAction screencastStart = (ScreencastAction) result.getTestAction(22);
+        assertEquals(ScreencastAction.Command.START, screencastStart.getCommand());
+        assertEquals(Integer.valueOf(24), screencastStart.getFps());
+
+        ScreencastAction screencastShowActions = (ScreencastAction) result.getTestAction(23);
+        assertEquals(ScreencastAction.Command.SHOW_ACTIONS, screencastShowActions.getCommand());
+        assertEquals(ScreencastCursor.POINTER, screencastShowActions.getCursor());
+        assertEquals("background: #ff0000", screencastShowActions.getStylePoint());
+        assertEquals("border: 2px solid #0000ff", screencastShowActions.getStyleHighlight());
+        assertEquals("font-size: 18px", screencastShowActions.getStyleTitle());
+
+        CredentialsAction credentialsCreate = (CredentialsAction) result.getTestAction(24);
+        assertEquals(CredentialsAction.Command.CREATE, credentialsCreate.getCommand());
+        assertEquals(Integer.valueOf(9), credentialsCreate.getSignCount());
+
+        ExtractAction extractPageSource = (ExtractAction) result.getTestAction(25);
+        assertEquals(ExtractAction.Value.PAGE_SOURCE, extractPageSource.getValue());
+        assertEquals(Boolean.TRUE, extractPageSource.getIncludeShadow());
+        assertEquals("shadowPageHtml", extractPageSource.getVariable());
+
+        CookieAction clearFiltered = (CookieAction) result.getTestAction(26);
+        assertEquals(CookieAction.Command.CLEAR, clearFiltered.getCommand());
+        assertEquals("session", clearFiltered.getCookieName());
+        assertEquals("localhost", clearFiltered.getDomain());
+        assertEquals("/api", clearFiltered.getPath());
     }
 }

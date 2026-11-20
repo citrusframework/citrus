@@ -5887,14 +5887,19 @@
           <xs:complexType>
             <xs:attribute name="chapter-description" type="xs:string"/>
             <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="cursor" type="xs:string"/>
             <xs:attribute name="duration" type="xs:double"/>
             <xs:attribute name="font-size" type="xs:int"/>
+            <xs:attribute name="fps" type="xs:int"/>
             <xs:attribute name="html" type="xs:string"/>
             <xs:attribute name="path" type="xs:string"/>
             <xs:attribute name="position" type="xs:string"/>
             <xs:attribute name="quality" type="xs:int"/>
             <xs:attribute name="size-height" type="xs:int"/>
             <xs:attribute name="size-width" type="xs:int"/>
+            <xs:attribute name="style-highlight" type="xs:string"/>
+            <xs:attribute name="style-point" type="xs:string"/>
+            <xs:attribute name="style-title" type="xs:string"/>
             <xs:attribute name="title" type="xs:string"/>
             <xs:attribute name="variable" type="xs:string"/>
           </xs:complexType>
@@ -5906,6 +5911,7 @@
             <xs:attribute name="origin" type="xs:string"/>
             <xs:attribute name="private-key" type="xs:string"/>
             <xs:attribute name="public-key" type="xs:string"/>
+            <xs:attribute name="sign-count" type="xs:int"/>
             <xs:attribute name="user-handle" type="xs:string"/>
             <xs:attribute name="variable" type="xs:string"/>
           </xs:complexType>
@@ -5968,6 +5974,7 @@
             <xs:attribute name="css-property" type="xs:string"/>
             <xs:attribute name="depth" type="xs:int"/>
             <xs:attribute name="frame-selector" type="xs:string"/>
+            <xs:attribute name="include-shadow" type="xs:boolean"/>
             <xs:attribute name="key" type="xs:string"/>
             <xs:attribute name="timeout" type="xs:double"/>
             <xs:attribute name="value" type="xs:string"/>

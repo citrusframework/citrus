@@ -201,6 +201,32 @@ class ActionWrapperTest {
     }
 
     @Test
+    void shouldForwardClearCookieFiltersAndRejectMisplacedDomainOrUrl() {
+        Cookies clear = new Cookies();
+        clear.setName("sid");
+        clear.setDomain("app.example.com");
+        clear.setPath("/orders");
+        clear.setCommand("clear");
+
+        var builtClear = clear.build();
+        assertEquals("sid", builtClear.getCookieName());
+        assertEquals("app.example.com", builtClear.getDomain());
+        assertEquals("/orders", builtClear.getPath());
+
+        Cookies domainOnRead = new Cookies();
+        domainOnRead.setCommand("read");
+        domainOnRead.setName("sid");
+        domainOnRead.setDomain("example.com");
+        domainOnRead.setVariable("sidVar");
+        assertThrows(CitrusRuntimeException.class, domainOnRead::build);
+
+        Cookies urlOnClear = new Cookies();
+        urlOnClear.setCommand("clear");
+        urlOnClear.setUrl("https://example.com");
+        assertThrows(CitrusRuntimeException.class, urlOnClear::build);
+    }
+
+    @Test
     void shouldRejectAmbiguousPageSwitch() {
         Page page = new Page();
         page.setCommand("switch");
@@ -242,6 +268,7 @@ class ActionWrapperTest {
     @Test
     void shouldCreateCredentialWhateverTheDeclarationOrder() {
         Credentials credentials = new Credentials();
+        credentials.setSignCount(5);
         credentials.setCommand("create");
         credentials.setOrigin("example.com");
         credentials.setId("id");
@@ -249,7 +276,14 @@ class ActionWrapperTest {
         credentials.setPrivateKey("private");
         credentials.setPublicKey("public");
 
-        assertEquals(CredentialsAction.Command.CREATE, credentials.build().getCommand());
+        CredentialsAction built = credentials.build();
+        assertEquals(CredentialsAction.Command.CREATE, built.getCommand());
+        assertEquals(Integer.valueOf(5), built.getSignCount());
+
+        Credentials signCountOnInstall = new Credentials();
+        signCountOnInstall.setSignCount(1);
+        signCountOnInstall.setCommand("install");
+        assertThrows(CitrusRuntimeException.class, signCountOnInstall::build);
     }
 
     @Test
@@ -345,5 +379,14 @@ class ActionWrapperTest {
         assertEquals(ExtractAction.Value.NORMALIZED_LOCATOR, normAction.getValue());
         assertEquals(LocatorSpec.Type.REF, normAction.getLocator().getType());
         assertEquals("e2", normAction.getLocator().getSelector());
+
+        Extract pageSource = new Extract();
+        pageSource.setIncludeShadow(true);
+        pageSource.setValue("page-source");
+        pageSource.setVariable("pageHtml");
+
+        ExtractAction pageSourceAction = pageSource.build();
+        assertEquals(ExtractAction.Value.PAGE_SOURCE, pageSourceAction.getValue());
+        assertEquals(Boolean.TRUE, pageSourceAction.getIncludeShadow());
     }
 }
