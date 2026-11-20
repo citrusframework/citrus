@@ -15,6 +15,7 @@
  */
 package org.citrusframework.graphql.integration;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -22,6 +23,7 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -31,7 +33,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * A GraphQL client calling the GraphQL simulator: queries and mutations over POST and GET.
@@ -40,22 +41,25 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class GraphQlClientServerIT implements TestActionSupport {
-
-    private final int port = findAvailableTcpPort(20000, 32767);
+public class GraphQlClientServerIT implements TestActionSupport, CitrusExtension.TestListener {
 
     @BindToRegistry
     private final GraphQlServer bookServer = GraphQlEndpoints.graphql().server()
-            .port(port)
+            .port(0)
             .autoStart(true)
             .timeout(5000L)
             .build();
 
     @BindToRegistry
     private final GraphQlClient bookClient = GraphQlEndpoints.graphql().client()
-            .requestUrl("http://localhost:%d".formatted(port))
             .timeout(5000L)
             .build();
+
+    @Override
+    public void before(CitrusContext context) {
+        bookClient.getEndpointConfiguration()
+                .setRequestUrl("http://localhost:%d".formatted(bookServer.getPort()));
+    }
 
     @Test
     @CitrusTest
