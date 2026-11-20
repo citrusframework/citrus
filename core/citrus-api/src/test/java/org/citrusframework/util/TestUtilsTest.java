@@ -23,6 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.Completable;
@@ -86,7 +87,7 @@ class TestUtilsTest {
                 Thread.sleep(5_000L);
             } catch (InterruptedException e) {
                 // Simulate brief post-interrupt cleanup inside isDone before worker exits
-                long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(25L);
+                long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(5L);
                 while (System.nanoTime() < deadline) {
                     Thread.onSpinWait();
                 }
@@ -102,12 +103,17 @@ class TestUtilsTest {
     }
 
     @Test
-    void waitForCompletionWithCustomSchedulerAwaitsTerminationInMilliseconds() {
+    void waitForCompletionWithCustomSchedulerAwaitsTerminationInMilliseconds() throws Exception {
         TestContext context = new TestContext();
         String testName = "WaitCustomSchedulerTest";
         context.setVariable(CitrusSettings.getTestNameVariable(), testName);
 
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        AtomicReference<Thread> workerThread = new AtomicReference<>();
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+            workerThread.set(thread);
+            return thread;
+        });
         AtomicInteger checks = new AtomicInteger();
         Completable slowCompletable = ctx -> {
             if (checks.getAndIncrement() == 0) {
@@ -116,7 +122,7 @@ class TestUtilsTest {
             try {
                 Thread.sleep(5_000L);
             } catch (InterruptedException e) {
-                long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(25L);
+                long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(5L);
                 while (System.nanoTime() < deadline) {
                     Thread.onSpinWait();
                 }
@@ -129,6 +135,9 @@ class TestUtilsTest {
                 () -> TestUtils.waitForCompletion(scheduler, slowCompletable, context, 150L));
 
         assertThat(scheduler.isTerminated()).isTrue();
+        assertThat(workerThread.get()).isNotNull();
+        awaitThreadTermination(workerThread.get());
+        assertThat(workerThread.get().isAlive()).isFalse();
     }
 
     @Test
@@ -168,6 +177,13 @@ class TestUtilsTest {
         assertThat(threwCitrusException).isTrue();
         assertThat(interruptRestored).isTrue();
         assertNoAliveWaitingThread(testName);
+    }
+
+    private static void awaitThreadTermination(Thread thread) throws InterruptedException {
+        long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(500L);
+        while (thread.isAlive() && System.nanoTime() < deadline) {
+            Thread.sleep(5L);
+        }
     }
 
     private static void assertNoAliveWaitingThread(String testName) {
