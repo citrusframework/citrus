@@ -18,6 +18,7 @@ package org.citrusframework.graphql.integration.zero;
 
 import java.util.Map;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
@@ -29,6 +30,7 @@ import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
 import org.citrusframework.json.dsl.JsonSupport;
+import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -41,7 +43,6 @@ import org.springframework.test.context.ContextConfiguration;
 import tools.jackson.databind.json.JsonMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * Raw-action variant of {@link GraphQlZeroJavaIT}: same 6 resources x get, list, create, update,
@@ -59,15 +60,13 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class GraphQlZeroSendReceiveIT {
-
-    private final int port = findAvailableTcpPort(20000, 32767);
+public class GraphQlZeroSendReceiveIT implements CitrusExtension.TestListener {
 
     private static final JsonMapper JSON = JsonMapper.shared();
 
     @BindToRegistry
     private final GraphQlServer zeroServer = GraphQlEndpoints.graphql().server()
-            .port(port)
+            .port(0)
             .endpointAdapter(new GraphQlZeroSimulator())
             .autoStart(true)
             .timeout(5000L)
@@ -75,10 +74,15 @@ public class GraphQlZeroSendReceiveIT {
 
     @BindToRegistry
     private final GraphQlClient graphqlZero = GraphQlEndpoints.graphql().client()
-            .requestUrl("http://localhost:%d".formatted(port))
             .schema("classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls")
             .timeout(5000L)
             .build();
+
+    @Override
+    public void before(CitrusContext context) {
+        graphqlZero.getEndpointConfiguration()
+                .setRequestUrl("http://localhost:%d".formatted(zeroServer.getPort()));
+    }
 
     // --- Response entities (Get* operations bind the data section to these) ---
 
