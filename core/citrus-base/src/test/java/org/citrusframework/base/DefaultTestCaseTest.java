@@ -165,7 +165,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
 
     @Test
     public void testWaitForFinishAsync() {
-        fixture.setName("DefaultTestCaseTest");
+        fixture.setName("WaitForFinishAsyncDefaultTestCase");
 
         fixture.addTestAction(new Async.Builder().actions(() -> new AbstractAsyncTestAction() {
             @Override
@@ -184,7 +184,7 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         // Make sure that waiting thread is completed
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("DefaultTestCaseTest")))
+                .filter(t -> t.getName().startsWith(WAIT_THREAD_PREFIX.concat("WaitForFinishAsyncDefaultTestCase")))
                 .filter(Thread::isAlive)
                 .findAny();
 

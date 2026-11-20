@@ -27,6 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.Completable;
@@ -70,8 +71,34 @@ public abstract class TestUtils {
      */
     public static void waitForCompletion(final Completable container,
                                          final TestContext context, long timeout) {
-        waitForCompletion(Executors.newSingleThreadScheduledExecutor(runnable -> TestUtils.createWaitingThread(runnable, context)),
-                container, context, timeout);
+        if (container.isDone(context)) {
+            return;
+        }
+
+        final AtomicReference<Thread> waitThread = new AtomicReference<>();
+        final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
+            Thread thread = TestUtils.createWaitingThread(runnable, context);
+            waitThread.set(thread);
+            return thread;
+        });
+        try {
+            waitForCompletion(scheduledExecutor, container, context, timeout);
+        } finally {
+            Thread thread = waitThread.get();
+            if (thread != null && thread != Thread.currentThread()) {
+                boolean wasInterrupted = Thread.interrupted();
+                try {
+                    thread.join(Math.max(100L, (timeout / 10) / 2));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    logger.warn("Failed to join waiting thread '{}', caused by {}", thread.getName(), e.getMessage());
+                } finally {
+                    if (wasInterrupted) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -102,25 +129,35 @@ public abstract class TestUtils {
                         logger.warn("Failed to wait for completion of nested test actions because of {}", e.getMessage());
                     }
                 }
-            }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
+            }, 100L, Math.max(1L, timeout / 10), TimeUnit.MILLISECONDS);
 
             finished.get(timeout, TimeUnit.MILLISECONDS);
-        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new CitrusRuntimeException("Failed to wait for test container in test '%s' to finish properly".formatted(getTestName(context)), e);
+        } catch (ExecutionException | TimeoutException e) {
             throw new CitrusRuntimeException("Failed to wait for test container in test '%s' to finish properly".formatted(getTestName(context)), e);
         } finally {
             if (scheduler != null) {
                 scheduler.cancel(true);
             }
 
+            boolean wasInterrupted = Thread.interrupted();
+            long terminationTimeout = Math.max(100L, (timeout / 10) / 2);
             try {
                 scheduledExecutor.shutdown();
-                scheduledExecutor.awaitTermination((timeout / 10) / 2, TimeUnit.MICROSECONDS);
+                if (!scheduledExecutor.awaitTermination(terminationTimeout, TimeUnit.MILLISECONDS)) {
+                    scheduledExecutor.shutdownNow();
+                    scheduledExecutor.awaitTermination(terminationTimeout, TimeUnit.MILLISECONDS);
+                }
             } catch (InterruptedException e) {
-                logger.warn("Failed to await orderly termination of waiting tasks to complete, caused by {}", e.getMessage());
-            }
-
-            if (!scheduledExecutor.isTerminated()) {
                 scheduledExecutor.shutdownNow();
+                Thread.currentThread().interrupt();
+                logger.warn("Failed to await orderly termination of waiting tasks to complete, caused by {}", e.getMessage());
+            } finally {
+                if (wasInterrupted) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
