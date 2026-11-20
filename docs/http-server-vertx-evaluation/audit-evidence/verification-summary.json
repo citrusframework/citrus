@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "surefire-reports",
+    "tests": 40,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "java.version": "21.0.12.1",
+    "java.home": "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home",
+    "classes": [
+      "org.citrusframework.http.vertx.VertxExchangeExecutorTest",
+      "org.citrusframework.http.vertx.VertxHttpMessageMapperTest",
+      "org.citrusframework.http.vertx.VertxHttpServerOptionsTest"
+    ]
+  },
+  {
+    "suite": "failsafe-reports",
+    "tests": 24,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "java.version": "21.0.12.1",
+    "java.home": "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home",
+    "classes": [
+      "org.citrusframework.http.integration.VertxHttpServerRoundtripIT",
+      "org.citrusframework.http.vertx.VertxHttpServerCoexistenceIT",
+      "org.citrusframework.http.vertx.VertxHttpServerConcurrencyIT",
+      "org.citrusframework.http.vertx.VertxHttpServerLifecycleIT",
+      "org.citrusframework.http.vertx.VertxHttpServerLimitsIT"
+    ]
+  }
+]

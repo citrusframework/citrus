@@ -1,0 +1,162 @@
+[
+  {
+    "engine": "jetty",
+    "fixture": "text",
+    "runs": 5,
+    "processStartToListenMs": {
+      "median": 741.529052734375,
+      "min": 726.740966796875,
+      "max": 767.9990234375
+    },
+    "startupMs": {
+      "median": 519.85,
+      "min": 510.976,
+      "max": 531.258
+    },
+    "idleThreads": {
+      "median": 14,
+      "min": 14,
+      "max": 14
+    },
+    "threads": {
+      "median": 61,
+      "min": 61,
+      "max": 61
+    },
+    "heapUsedBytes": {
+      "median": 20527952,
+      "min": 20508904,
+      "max": 20620368
+    },
+    "p50Ms": {
+      "median": 1.139,
+      "min": 1.05,
+      "max": 1.321
+    },
+    "p95Ms": {
+      "median": 2.423,
+      "min": 1.861,
+      "max": 2.881
+    }
+  },
+  {
+    "engine": "jetty",
+    "fixture": "binary",
+    "runs": 5,
+    "processStartToListenMs": {
+      "median": 746.06689453125,
+      "min": 742.445068359375,
+      "max": 803.8291015625
+    },
+    "startupMs": {
+      "median": 519.513,
+      "min": 508.038,
+      "max": 537.403
+    },
+    "idleThreads": {
+      "median": 14,
+      "min": 14,
+      "max": 14
+    },
+    "threads": {
+      "median": 61,
+      "min": 61,
+      "max": 61
+    },
+    "heapUsedBytes": {
+      "median": 20712472,
+      "min": 20670728,
+      "max": 20817048
+    },
+    "p50Ms": {
+      "median": 1.045,
+      "min": 1.002,
+      "max": 1.094
+    },
+    "p95Ms": {
+      "median": 2.003,
+      "min": 1.841,
+      "max": 2.108
+    }
+  },
+  {
+    "engine": "vertx",
+    "fixture": "text",
+    "runs": 5,
+    "processStartToListenMs": {
+      "median": 484.58203125,
+      "min": 473.423095703125,
+      "max": 500.987060546875
+    },
+    "startupMs": {
+      "median": 256.764,
+      "min": 254.925,
+      "max": 273.212
+    },
+    "idleThreads": {
+      "median": 9,
+      "min": 9,
+      "max": 9
+    },
+    "threads": {
+      "median": 49,
+      "min": 48,
+      "max": 49
+    },
+    "heapUsedBytes": {
+      "median": 18841088,
+      "min": 18758288,
+      "max": 18866216
+    },
+    "p50Ms": {
+      "median": 1.146,
+      "min": 1.115,
+      "max": 1.184
+    },
+    "p95Ms": {
+      "median": 2.033,
+      "min": 1.935,
+      "max": 2.167
+    }
+  },
+  {
+    "engine": "vertx",
+    "fixture": "binary",
+    "runs": 5,
+    "processStartToListenMs": {
+      "median": 470.280029296875,
+      "min": 466.623046875,
+      "max": 492.04296875
+    },
+    "startupMs": {
+      "median": 255.313,
+      "min": 253.146,
+      "max": 270.797
+    },
+    "idleThreads": {
+      "median": 9,
+      "min": 9,
+      "max": 9
+    },
+    "threads": {
+      "median": 49,
+      "min": 48,
+      "max": 49
+    },
+    "heapUsedBytes": {
+      "median": 18912184,
+      "min": 17794776,
+      "max": 18971312
+    },
+    "p50Ms": {
+      "median": 1.063,
+      "min": 1.021,
+      "max": 1.183
+    },
+    "p95Ms": {
+      "median": 2.215,
+      "min": 2.103,
+      "max": 2.656
+    }
+  }
+]

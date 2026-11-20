@@ -1,0 +1,546 @@
+[INFO] Scanning for projects...
+[INFO] gitflow-incremental-builder is disabled.
+[INFO] 
+[INFO] ------------------< org.citrusframework:citrus-http >-------------------
+[INFO] Building Citrus :: Endpoints :: HTTP 5.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jaxb2:4.1.0:xjc (default) @ citrus-http ---
+[INFO] No changes detected in schema or binding files - skipping JAXB generation.
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ citrus-http ---
+[INFO] Copying 20 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ citrus-http ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ citrus-http ---
+[INFO] Copying 59 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ citrus-http ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 101 source files with javac [debug release 17] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ citrus-http ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.citrusframework.http.vertx.VertxHttpFormConverterTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.394 s -- in org.citrusframework.http.vertx.VertxHttpFormConverterTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ citrus-http ---
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ citrus-http ---
+[INFO] 
+[INFO] --- javadoc:3.12.0:jar (attach-javadocs) @ citrus-http ---
+[INFO] Building jar: /Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-http/target/citrus-http-5.1.0-SNAPSHOT-javadoc.jar
+[INFO] 
+[INFO] --- failsafe:3.5.6:integration-test (integration-tests) @ citrus-http ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running TestSuite
+2026-10-14 15:12:48.218  INFO 32291 --- [           main] g.config.xml.SchemaRepositoryParser : Found schema repository bean definition parser class org.citrusframework.xml.config.xml.XsdSchemaRepositoryParser from resource META-INF/citrus/schema-repository/parser/xml
+2026-10-14 15:12:48.222  INFO 32291 --- [           main] work.spring.config.xml.SchemaParser : Found schema bean definition parser class org.citrusframework.xml.config.xml.XsdSchemaParser from resource META-INF/citrus/schema/parser/xsd
+2026-10-14 15:12:48.223  INFO 32291 --- [           main] g.config.xml.SchemaRepositoryParser : Found schema repository bean definition parser class org.citrusframework.json.config.xml.JsonSchemaRepositoryParser from resource META-INF/citrus/schema-repository/parser/json
+2026-10-14 15:12:48.223  INFO 32291 --- [           main] work.spring.config.xml.SchemaParser : Found schema bean definition parser class org.citrusframework.json.config.xml.JsonSchemaParser from resource META-INF/citrus/schema/parser/json
+2026-10-14 15:12:48.334  WARN 32291 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusSpringConfig' of type [org.citrusframework.spring.config.CitrusSpringConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [citrusComponentInitializer] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-10-14 15:12:48.337  WARN 32291 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusReferenceResolver' of type [org.citrusframework.spring.context.SpringBeanReferenceResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [citrusComponentInitializer]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-10-14 15:12:48.533  WARN 32291 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalDTD property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+2026-10-14 15:12:48.533  WARN 32291 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalSchema property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+2026-10-14 15:12:48.678  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'helloHttpServer-servlet'
+2026-10-14 15:12:48.779  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 101 ms
+2026-10-14 15:12:48.785  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: helloHttpServer
+2026-10-14 15:12:48.790  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'helloHttpServerWithRedirect-servlet'
+2026-10-14 15:12:48.805  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 15 ms
+2026-10-14 15:12:48.805  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: helloHttpServerWithRedirect
+2026-10-14 15:12:48.809  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'echoHttpServer-servlet'
+2026-10-14 15:12:48.826  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 17 ms
+2026-10-14 15:12:48.827  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: echoHttpServer
+2026-10-14 15:12:48.951  WARN 32291 --- [           main] apache.activemq.artemis.core.server : AMQ222018: AIO was not located on this platform, it will fall back to using pure Java NIO. If your platform is Linux, install LibAIO to enable the AIO journal
+2026-10-14 15:12:48.951  WARN 32291 --- [           main] apache.activemq.artemis.core.server : AMQ222269: Please use a fixed value for "journal-pool-files". Default changed per https://issues.apache.org/jira/browse/ARTEMIS-1628
+2026-10-14 15:12:49.079  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'httpServerJms-servlet'
+2026-10-14 15:12:49.097  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 18 ms
+2026-10-14 15:12:49.098  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: httpServerJms
+2026-10-14 15:12:49.101  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'httpStandaloneServer-servlet'
+2026-10-14 15:12:49.118  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 17 ms
+2026-10-14 15:12:49.118  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: httpStandaloneServer
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter :        .__  __                       
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter : _/ ___\|  \   __\_  __ \  |  \/  ___/
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter : \  \___|  ||  |  |  | \/  |  /\___ \ 
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter :  \___  >__||__|  |__|  |____//____  >
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter :      \/                           \/
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter : C I T R U S  T E S T S  5.1.0-SNAPSHOT
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:12:49.126  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+2026-10-14 15:12:49.127  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:12:49.163  WARN 32291 --- [           main] dns.DnsServerAddressStreamProviders : Can not find io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider in the classpath, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+2026-10-14 15:12:49.185  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:49.300  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:49.303  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'HttpServer-servlet'
+2026-10-14 15:12:49.316  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 13 ms
+2026-10-14 15:12:49.316  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: HttpServer
+2026-10-14 15:12:49.361  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Stopped server: HttpServer
+2026-10-14 15:12:49.363  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:49.367  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:49.369  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'HttpServer-servlet'
+2026-10-14 15:12:49.380  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 11 ms
+2026-10-14 15:12:49.380  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: HttpServer
+2026-10-14 15:12:49.384  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Stopped server: HttpServer
+2026-10-14 15:12:49.386  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:49.390  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:49.391  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'HttpServer-servlet'
+2026-10-14 15:12:49.402  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 11 ms
+2026-10-14 15:12:49.402  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: HttpServer
+2026-10-14 15:12:49.406  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Stopped server: HttpServer
+2026-10-14 15:12:49.408  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:49.411  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:49.414  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'HttpServer-servlet'
+2026-10-14 15:12:49.425  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 11 ms
+2026-10-14 15:12:49.425  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: HttpServer
+2026-10-14 15:12:49.428  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Stopped server: HttpServer
+2026-10-14 15:12:49.431  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:49.434  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:49.435  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Initializing Servlet 'HttpServer-servlet'
+2026-10-14 15:12:49.446  INFO 32291 --- [           main] ttp.servlet.CitrusDispatcherServlet : Completed initialization in 11 ms
+2026-10-14 15:12:49.446  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Started server: HttpServer
+2026-10-14 15:12:49.456  INFO 32291 --- [           main] rusframework.http.server.HttpServer : Stopped server: HttpServer
+2026-10-14 15:12:49.458  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:49.462  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:49.467  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxRoundtrip
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/asuruceanu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-14 15:12:49.785  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:12:49.785  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:12:49.785  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxHttpServerRoundtripIT.allWireMethodsRoundtrip (org.citrusframework.http.integration)
+2026-10-14 15:12:49.785  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:12:49.785  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:12:49.847  WARN 32291 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222165: No Dead Letter Address configured for queue JMS.Citrus.Http.Request.Forward in AddressSettings
+2026-10-14 15:12:49.847  WARN 32291 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222166: No Expiry Address configured for queue JMS.Citrus.Http.Request.Forward in AddressSettings
+2026-10-14 15:12:49.878  WARN 32291 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222165: No Dead Letter Address configured for queue JMS.Citrus.Http.Request.Ack in AddressSettings
+2026-10-14 15:12:49.878  WARN 32291 --- [vemq-localhost)] apache.activemq.artemis.core.server : AMQ222166: No Expiry Address configured for queue JMS.Citrus.Http.Request.Ack in AddressSettings
+2026-10-14 15:12:49.897  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for GET
+2026-10-14 15:12:49.898  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:49.904  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:49.905  INFO 32291 --- [     Thread-123] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:49.914  INFO 32291 --- [     Thread-122] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 594746e9-3550-49f4-b4d7-9bf370565e2a
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ GET http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:GET
+    │ Content-Length:0
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:50.442  INFO 32291 --- [     Thread-122] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ b3184af4-3c35-4ef9-81a9-31da68114c23
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:GET
+    │ Content-Length:9
+    │ 
+    │ reply-get
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:50.445  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:50.447  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:50.448  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:50.448  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for POST
+2026-10-14 15:12:50.448  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:50.449  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:50.449  INFO 32291 --- [     Thread-125] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:50.450  INFO 32291 --- [     Thread-124] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 70d7599b-bfb7-4326-b7bd-57409f71803f
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ POST http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:POST
+    │ Content-Length:9
+    │ 
+    │ echo-post
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:51.474  INFO 32291 --- [     Thread-124] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 76987d5c-6c99-49d8-a985-0a94fe61ae18
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:POST
+    │ Content-Length:10
+    │ 
+    │ reply-post
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:51.476  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:51.477  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:51.479  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:51.479  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for PUT
+2026-10-14 15:12:51.480  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:51.480  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:51.480  INFO 32291 --- [     Thread-127] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:51.481  INFO 32291 --- [     Thread-126] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 60d9b204-cc59-43dc-9611-c55105f39a44
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ PUT http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:PUT
+    │ Content-Length:8
+    │ 
+    │ echo-put
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:52.502  INFO 32291 --- [     Thread-126] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ db756634-33f2-4fcc-9447-7df7124ddcce
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:PUT
+    │ Content-Length:9
+    │ 
+    │ reply-put
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:52.503  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:52.504  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:52.505  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:52.505  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for PATCH
+2026-10-14 15:12:52.505  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:52.506  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:52.506  INFO 32291 --- [     Thread-129] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:52.507  INFO 32291 --- [     Thread-128] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ b3a48e9e-c3be-4354-a190-9a616b2fe78a
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ PATCH http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:PATCH
+    │ Content-Length:10
+    │ 
+    │ echo-patch
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:53.523  INFO 32291 --- [     Thread-128] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ bb3a5c9a-55d3-4a8f-bcbe-794b2561074d
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:PATCH
+    │ Content-Length:11
+    │ 
+    │ reply-patch
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:53.525  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:53.525  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:53.528  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:53.528  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for DELETE
+2026-10-14 15:12:53.528  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:53.529  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:53.529  INFO 32291 --- [     Thread-131] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:53.530  INFO 32291 --- [     Thread-130] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 76988aaa-fda5-4c6b-911f-aed573ee3996
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ DELETE http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:DELETE
+    │ Content-Length:0
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:54.548  INFO 32291 --- [     Thread-130] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 07c4fc82-07cf-4452-b8dc-7fd9a0b6ad3f
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:DELETE
+    │ Content-Length:12
+    │ 
+    │ reply-delete
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:54.550  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:54.551  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:54.553  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:54.554  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for OPTIONS
+2026-10-14 15:12:54.554  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:54.554  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:54.555  INFO 32291 --- [     Thread-133] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:54.556  INFO 32291 --- [     Thread-132] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 4531bb63-f6ca-4f65-b22c-91c0fa3d052d
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ OPTIONS http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:OPTIONS
+    │ Content-Length:0
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:55.071  INFO 32291 --- [     Thread-132] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 858fd99f-7e15-45fa-88d3-3b5639f2b828
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:OPTIONS
+    │ Content-Length:13
+    │ 
+    │ reply-options
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:55.073  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:55.074  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:55.076  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:55.076  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for HEAD
+2026-10-14 15:12:55.077  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:55.077  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:55.078  INFO 32291 --- [     Thread-135] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:55.079  INFO 32291 --- [     Thread-134] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 05278f6b-36e4-48e9-baa3-c29d3871a28d
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HEAD http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:HEAD
+    │ Content-Length:0
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:56.095  INFO 32291 --- [     Thread-134] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ c9fbdaec-a1ee-49b3-b9ca-934b99a9dfe4
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:HEAD
+    │ Content-Length:10
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:56.096  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:56.096  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:56.097  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:56.097  INFO 32291 --- [           main] .citrusframework.actions.EchoAction : Vert.x prototype roundtrip for TRACE
+2026-10-14 15:12:56.097  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 15:12:56.098  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:12:56.098  INFO 32291 --- [     Thread-137] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:56.099  INFO 32291 --- [     Thread-136] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ bf40eee0-d2da-4675-9868-6d2b930d8628
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ TRACE http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:TRACE
+    │ Content-Length:0
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:57.115  INFO 32291 --- [     Thread-136] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ e5479cb8-258b-4d97-9f01-1f8a80e41dc6
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:text/plain
+    │ X-Vertx-Case:TRACE
+    │ Content-Length:11
+    │ 
+    │ reply-trace
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:12:57.116  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:12:57.117  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:12:57.120  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:12:57.125  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:12:57.125  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:12:57.125  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxHttpServerRoundtripIT.allWireMethodsRoundtrip
+2026-10-14 15:12:57.125  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:12:57.125  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:12:57.135  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:57.136  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxHttpServerPrototype' (timeout: 5000ms)
+2026-10-14 15:12:58.158  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:58.167  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:58.167  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxHttpServerPrototype' (timeout: 5000ms)
+2026-10-14 15:12:59.194  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:12:59.204  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Started server: vertxHttpServerPrototype
+2026-10-14 15:12:59.204  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:12:59.719  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:13:00.233  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxHttpServerPrototype' (timeout: 5000ms)
+2026-10-14 15:13:01.746  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxHttpServerPrototype
+2026-10-14 15:13:01.750  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:01.751  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:01.751  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxHttpServerRoundtripIT.formConversionThroughCitrusActions (org.citrusframework.http.integration)
+2026-10-14 15:13:01.751  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:01.751  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:01.797  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:13:01.797  INFO 32291 --- [     Thread-148] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:13:01.798  INFO 32291 --- [     Thread-147] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 1ae95ff7-6969-4885-94c2-8cbba5f686c2
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ POST http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:application/x-www-form-urlencoded
+    │ Content-Length:26
+    │ 
+    │ name=a+b&name=c%2Bd&empty=
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:13:02.406  WARN 32291 --- [     Thread-148] k.xml.validation.SchemaFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalDTD property not supported by org.apache.xerces.jaxp.validation.XMLSchemaFactory
+2026-10-14 15:13:02.406  WARN 32291 --- [     Thread-148] k.xml.validation.SchemaFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalSchema property not supported by org.apache.xerces.jaxp.validation.XMLSchemaFactory
+2026-10-14 15:13:02.408  WARN 32291 --- [     Thread-148] l.validation.Jaxp15ValidatorFactory : http://javax.xml.XMLConstants/property/accessExternalDTD property not supported by org.apache.xerces.jaxp.validation.ValidatorImpl
+2026-10-14 15:13:02.408  WARN 32291 --- [     Thread-148] l.validation.Jaxp15ValidatorFactory : http://javax.xml.XMLConstants/property/accessExternalSchema property not supported by org.apache.xerces.jaxp.validation.ValidatorImpl
+2026-10-14 15:13:02.810  INFO 32291 --- [     Thread-147] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 7548339e-4bc7-451b-a5cd-d1c17867c244
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:application/x-www-form-urlencoded
+    │ Content-Length:26
+    │ 
+    │ name=a+b&name=c%2Bd&empty=
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:13:02.811  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:13:02.812  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:13:02.813  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:13:02.814  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:02.814  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:02.814  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxHttpServerRoundtripIT.formConversionThroughCitrusActions
+2026-10-14 15:13:02.814  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:02.814  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:02.818  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:13:03.842  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:03.843  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:03.843  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: VertxHttpServerRoundtripIT.multipartConversionThroughCitrusActions (org.citrusframework.http.integration)
+2026-10-14 15:13:03.843  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:03.843  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:03.890  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ➤ parallel - container with (2) embedded actions
+2026-10-14 15:13:03.890  INFO 32291 --- [     Thread-150] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'vertxRoundtrip' (timeout: 5000ms)
+2026-10-14 15:13:03.891  INFO 32291 --- [     Thread-149] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 991deffc-5e1b-412e-aa04-e21e0a14a2ef
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ POST http://127.0.0.1:64847/vertx-echo
+    │ Accept:text/plain, application/json, application/yaml, application/*+json, */*
+    │ Content-Type:multipart/form-data;boundary=sl97Xc8GQ8ss0wwJG3UJEWuwNATGIat6JUV
+    │ Content-Length:216
+    │ 
+    │ --sl97Xc8GQ8ss0wwJG3UJEWuwNATGIat6JUV
+    │ Content-Disposition: form-data; name="file"; filename="sample.txt"
+    │ Content-Type: text/plain
+    │ Content-Length: 18
+    │ 
+    │ attachment-content
+    │ --sl97Xc8GQ8ss0wwJG3UJEWuwNATGIat6JUV--
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:13:04.916  INFO 32291 --- [     Thread-149] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ a8598040-a6e1-40f9-b51f-2a08f08283b3
+    ├─ Headers ────────────────────────────────────────────────
+    ├─ Body ───────────────────────────────────────────────────
+    │ HTTP/1.1 200 OK OK
+    │ Content-Type:multipart/form-data;boundary=FoslirA38jottJgIje4O9lGo1mQMhLhUqh
+    │ Content-Length:214
+    │ 
+    │ --FoslirA38jottJgIje4O9lGo1mQMhLhUqh
+    │ Content-Disposition: form-data; name="file"; filename="sample.txt"
+    │ Content-Type: text/plain
+    │ Content-Length: 18
+    │ 
+    │ attachment-content
+    │ --FoslirA38jottJgIje4O9lGo1mQMhLhUqh--
+    └────────────────────────────────────────────────────────
+
+2026-10-14 15:13:04.917  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ parallel
+2026-10-14 15:13:04.918  INFO 32291 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'HttpClient' (timeout: 5000ms)
+2026-10-14 15:13:04.920  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ http:receive-response
+2026-10-14 15:13:04.921  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:04.921  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:04.921  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: VertxHttpServerRoundtripIT.multipartConversionThroughCitrusActions
+2026-10-14 15:13:04.921  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 15:13:04.921  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:04.928  INFO 32291 --- [           main] ramework.http.vertx.VertxHttpServer : Stopped server: vertxRoundtrip
+2026-10-14 15:13:04.943  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ✔ CITRUS TEST RESULTS
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS (7340ms) VertxHttpServerRoundtripIT.allWireMethodsRoundtrip
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS (1063ms) VertxHttpServerRoundtripIT.formConversionThroughCitrusActions
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS (1078ms) VertxHttpServerRoundtripIT.multipartConversionThroughCitrusActions
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:04.950  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   TOTAL:    3
+2026-10-14 15:13:04.951  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   PASSED:   3 (100.0%)
+2026-10-14 15:13:04.951  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   FAILED:   0 (0.0%)
+2026-10-14 15:13:04.952  INFO 32291 --- [           main] rusframework.report.LoggingReporter :   TIME:     9481 ms
+2026-10-14 15:13:04.952  INFO 32291 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 15:13:04.952  INFO 32291 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.17 s -- in TestSuite
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.6:verify (integration-tests) @ citrus-http ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  21.838 s
+[INFO] Finished at: 2026-10-14T15:13:05+03:00
+[INFO] ------------------------------------------------------------------------

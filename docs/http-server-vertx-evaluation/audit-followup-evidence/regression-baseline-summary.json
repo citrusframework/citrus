@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-14",
+  "status": "blocked before corrective code changes",
+  "command": "JAVA_HOME=<JDK21> ./mvnw -o verify -pl endpoints/citrus-http,endpoints/citrus-websocket,endpoints/citrus-ws,connectors/citrus-openapi,tools/cucumber-steps/citrus-cucumber-http -am",
+  "root_cause": "helloHttpServer failed to bind 0.0.0.0:11080: java.net.BindException: Address already in use",
+  "port_contention_source": "Not established. No listener was found by lsof after the failed Maven process exited.",
+  "http": {
+    "surefire-reports": {
+      "tests": 277,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "java.version": "21.0.12.1",
+      "java.home": "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+    },
+    "failsafe-reports": {
+      "tests": 198,
+      "failures": 133,
+      "errors": 0,
+      "skipped": 65,
+      "java.version": "21.0.12.1",
+      "java.home": "/Users/asuruceanu/Library/Java/JavaVirtualMachines/jdk-21.0.12.1+1/Contents/Home"
+    }
+  },
+  "required_modules_not_reached": [
+    "endpoints/citrus-websocket",
+    "endpoints/citrus-ws",
+    "connectors/citrus-openapi",
+    "tools/cucumber-steps/citrus-cucumber-http"
+  ]
+}

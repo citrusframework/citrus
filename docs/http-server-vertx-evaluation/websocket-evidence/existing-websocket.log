@@ -1,0 +1,330 @@
+[INFO] Scanning for projects...
+[INFO] gitflow-incremental-builder is disabled.
+[INFO] 
+[INFO] ----------------< org.citrusframework:citrus-websocket >----------------
+[INFO] Building Citrus :: Endpoints :: Websocket 5.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jaxb2:4.1.0:xjc (default) @ citrus-websocket ---
+[INFO] No changes detected in schema or binding files - skipping JAXB generation.
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ citrus-websocket ---
+[INFO] Copying 12 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ citrus-websocket ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ citrus-websocket ---
+[INFO] Copying 9 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ citrus-websocket ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ citrus-websocket ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running TestSuite
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/asuruceanu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-14 18:03:47.700  WARN 64114 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalDTD property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+2026-10-14 18:03:47.702  WARN 64114 --- [           main] ork.xml.DocumentBuilderFactoryUtils : http://javax.xml.XMLConstants/property/accessExternalSchema property not supported by org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.670 s -- in TestSuite
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ citrus-websocket ---
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ citrus-websocket ---
+[INFO] 
+[INFO] --- javadoc:3.12.0:jar (attach-javadocs) @ citrus-websocket ---
+[INFO] Building jar: /Users/asuruceanu/development/projects/citrus-vertx-eval/endpoints/citrus-websocket/target/citrus-websocket-5.1.0-SNAPSHOT-javadoc.jar
+[INFO] 
+[INFO] --- failsafe:3.5.6:integration-test (integration-tests) @ citrus-websocket ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.citrusframework.websocket.integration.WebSocketEndpointIT
+2026-10-14 18:03:52.264  WARN 64138 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusSpringConfig' of type [org.citrusframework.spring.config.CitrusSpringConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [citrusComponentInitializer] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-10-14 18:03:52.267  WARN 64138 --- [           main] onDelegate$BeanPostProcessorChecker : Bean 'citrusReferenceResolver' of type [org.citrusframework.spring.context.SpringBeanReferenceResolver] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [citrusComponentInitializer]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-10-14 18:03:52.490  INFO 64138 --- [           main] et.CitrusWebSocketDispatcherServlet : Initializing Servlet 'echoHttpServer-servlet'
+2026-10-14 18:03:52.597  INFO 64138 --- [           main] et.CitrusWebSocketDispatcherServlet : Completed initialization in 107 ms
+2026-10-14 18:03:52.601  INFO 64138 --- [           main] rk.websocket.server.WebSocketServer : Started server: echoHttpServer
+2026-10-14 18:03:52.605  INFO 64138 --- [           main] et.CitrusWebSocketDispatcherServlet : Initializing Servlet 'echoHttpServer2-servlet'
+2026-10-14 18:03:52.624  INFO 64138 --- [           main] et.CitrusWebSocketDispatcherServlet : Completed initialization in 19 ms
+2026-10-14 18:03:52.624  INFO 64138 --- [           main] rk.websocket.server.WebSocketServer : Started server: echoHttpServer2
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter :        .__  __                       
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter :   ____ |__|/  |________ __ __  ______
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter : _/ ___\|  \   __\_  __ \  |  \/  ___/
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter : \  \___|  ||  |  |  | \/  |  /\___ \ 
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter :  \___  >__||__|  |__|  |____//____  >
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter :      \/                           \/
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter : C I T R U S  T E S T S  5.1.0-SNAPSHOT
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:52.638  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+2026-10-14 18:03:52.639  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/Users/asuruceanu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-10-14 18:03:52.973  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:52.973  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:52.973  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: WebSocketEndpoint_1_IT (org.citrusframework.base)
+2026-10-14 18:03:52.973  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:52.973  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:52.974  INFO 64138 --- [           main] .citrusframework.actions.EchoAction : Test: Send WebSocket request via client and receive message on server.
+2026-10-14 18:03:52.974  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 18:03:52.977  INFO 64138 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 05e57c5b-442b-49d5-b9be-4764174ddeac
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_message_type: json
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "client_message_1",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:53.104  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ send
+2026-10-14 18:03:53.104  INFO 64138 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'webSocketEndpoint1' (timeout: 5000ms)
+2026-10-14 18:03:53.616  INFO 64138 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 7018f2c8-d9e4-4e1a-a5d5-93ea419d1403
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: true
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "client_message_1",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:53.646  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ receive
+2026-10-14 18:03:53.646  INFO 64138 --- [           main] .citrusframework.actions.EchoAction : Test: Send WebSocket request via server and receive message on client.
+2026-10-14 18:03:53.646  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 18:03:53.647  INFO 64138 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 8ba15108-948d-4575-a516-ffddf40d5f74
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_message_type: XML
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "server_message_1",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:53.648  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ send
+2026-10-14 18:03:53.648  INFO 64138 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'webSocketClient1' (timeout: 5000ms)
+2026-10-14 18:03:54.162  INFO 64138 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ b24f8aea-c714-4eb2-8a60-77f66604949f
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: true
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "server_message_1",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.164  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ receive
+2026-10-14 18:03:54.165  INFO 64138 --- [           main] .citrusframework.actions.EchoAction : Test: Send WebSocket request via 2nd client and receive message on server.
+2026-10-14 18:03:54.165  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 18:03:54.166  INFO 64138 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 5c079bed-7e56-4d34-9393-2687cd2ec956
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_message_type: json
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "client_message_2",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.179  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ send
+2026-10-14 18:03:54.179  INFO 64138 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'webSocketEndpoint2' (timeout: 5000ms)
+2026-10-14 18:03:54.179  INFO 64138 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 4592051d-1906-408c-8772-3068d485fd56
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: true
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "client_message_2",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.180  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ receive
+2026-10-14 18:03:54.180  INFO 64138 --- [           main] .citrusframework.actions.EchoAction : Test: Send WebSocket request via 2nd server and receive message on client.
+2026-10-14 18:03:54.180  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 18:03:54.181  INFO 64138 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 9258dc57-828b-4f67-baf3-40caddabffd5
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_message_type: XML
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "server_message_2",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.181  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ send
+2026-10-14 18:03:54.182  INFO 64138 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'webSocketClient2' (timeout: 5000ms)
+2026-10-14 18:03:54.182  INFO 64138 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ c8c41ddc-2ea1-4c23-990e-b22ce2f0683d
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: true
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "server_message_2",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.183  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ receive
+2026-10-14 18:03:54.183  INFO 64138 --- [           main] .citrusframework.actions.EchoAction : Testing dynamic web socket endpoints by sending with dynamic client endpoint
+2026-10-14 18:03:54.183  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 18:03:54.186  INFO 64138 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ b349e5d5-6f4b-4259-af75-dae4328c16b3
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_message_type: json
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "client_message_99",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.193  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ send
+2026-10-14 18:03:54.193  INFO 64138 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'webSocketEndpoint1' (timeout: 5000ms)
+2026-10-14 18:03:54.193  INFO 64138 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 0a459959-e347-4901-8a4b-3a6217a7f62d
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: true
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "client_message_99",
+    │   "timestamp": "14.10.2026"
+    │ }
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.194  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ receive
+2026-10-14 18:03:54.196  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:54.196  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:54.196  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: WebSocketEndpoint_1_IT
+2026-10-14 18:03:54.196  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:54.196  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:54.220  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:54.220  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:54.220  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ➤ TEST START: WebSocketEndpoint_2_IT (org.citrusframework.base)
+2026-10-14 18:03:54.220  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:54.220  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:54.220  INFO 64138 --- [           main] .citrusframework.actions.EchoAction : Test: Send multiple WebSocket requests via client and aggregate messages on server until last message was sent
+2026-10-14 18:03:54.220  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ echo
+2026-10-14 18:03:54.221  INFO 64138 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ 4812ed7a-6f44-4f29-aaa3-55712c94ab1e
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: false
+    │ citrus_message_type: json
+    ├─ Body ───────────────────────────────────────────────────
+    │ [
+    │   {
+    │     "event": "client_message_1",
+    │     "timestamp": "14.10.2026"
+    │   },
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:54.221  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ send
+2026-10-14 18:03:55.242  INFO 64138 --- [           main] mework.actions.ReceiveTimeoutAction : No messages received on destination. Message timeout validation OK!
+2026-10-14 18:03:55.243  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ expect-timeout:webSocketEndpoint1
+2026-10-14 18:03:55.244  INFO 64138 --- [           main] .report.LoggingReporter.Message_OUT : → OUTBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ c59f7b8d-89dc-4c12-8bc3-7cf933a24037
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: true
+    │ citrus_message_type: json
+    ├─ Body ───────────────────────────────────────────────────
+    │ {
+    │   "event": "client_message_2",
+    │   "timestamp": "14.10.2026"
+    │ }
+    │ ]
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:55.246  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ send
+2026-10-14 18:03:55.246  INFO 64138 --- [           main] mework.actions.ReceiveMessageAction : Waiting to receive message on endpoint: 'webSocketEndpoint1' (timeout: 5000ms)
+2026-10-14 18:03:55.247  INFO 64138 --- [           main] k.report.LoggingReporter.Message_IN : ← INBOUND MESSAGE 
+    ┌─ Id ─────────────────────────────────────────────────────
+    │ c72a1d76-1214-4b76-b744-819afff6bc12
+    ├─ Headers ────────────────────────────────────────────────
+    │ citrus_websocket_is_last: true
+    ├─ Body ───────────────────────────────────────────────────
+    │ [
+    │   {
+    │     "event": "client_message_1",
+    │     "timestamp": "14.10.2026"
+    │   },
+    │   {
+    │     "event": "client_message_2",
+    │     "timestamp": "14.10.2026"
+    │   }
+    │ ]
+    └────────────────────────────────────────────────────────
+
+2026-10-14 18:03:55.250  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ receive
+2026-10-14 18:03:55.251  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:55.251  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:55.251  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ TEST SUCCESS: WebSocketEndpoint_2_IT
+2026-10-14 18:03:55.251  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ────────────────────────────────────────────────────────────────────
+2026-10-14 18:03:55.251  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:55.269  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:55.273  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:55.273  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ✔ CITRUS TEST RESULTS
+2026-10-14 18:03:55.273  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:55.274  INFO 64138 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS (1223ms) WebSocketEndpoint_1_IT
+2026-10-14 18:03:55.274  INFO 64138 --- [           main] rusframework.report.LoggingReporter :   ✔ SUCCESS (1031ms) WebSocketEndpoint_2_IT
+2026-10-14 18:03:55.274  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:55.274  INFO 64138 --- [           main] rusframework.report.LoggingReporter :   TOTAL:    2
+2026-10-14 18:03:55.275  INFO 64138 --- [           main] rusframework.report.LoggingReporter :   PASSED:   2 (100.0%)
+2026-10-14 18:03:55.275  INFO 64138 --- [           main] rusframework.report.LoggingReporter :   FAILED:   0 (0.0%)
+2026-10-14 18:03:55.276  INFO 64138 --- [           main] rusframework.report.LoggingReporter :   TIME:     2254 ms
+2026-10-14 18:03:55.276  INFO 64138 --- [           main] rusframework.report.LoggingReporter : 
+2026-10-14 18:03:55.276  INFO 64138 --- [           main] rusframework.report.LoggingReporter : ════════════════════════════════════════════════════════════════════
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.503 s -- in org.citrusframework.websocket.integration.WebSocketEndpointIT
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.6:verify (integration-tests) @ citrus-websocket ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  9.713 s
+[INFO] Finished at: 2026-10-14T18:03:55+03:00
+[INFO] ------------------------------------------------------------------------
