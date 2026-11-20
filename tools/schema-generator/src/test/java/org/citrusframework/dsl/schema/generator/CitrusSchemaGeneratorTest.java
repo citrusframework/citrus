@@ -227,6 +227,9 @@ public class CitrusSchemaGeneratorTest {
         assertValidTestCase("""
                 {"name":"PurgeChannelsTest","actions":[{"purgeChannels":{"channel":"testChannel"}}]}
                 """);
+        assertValidTestCase("""
+                {"name":"PlaywrightLocatorAndSnapshotTest","actions":[{"playwright":{"click":{"element":{"role":"button","name":"Apply","within":{"ref":"e2"}}}}},{"playwright":{"extract":{"value":"aria-snapshot","ariaMode":"ai","boxes":true,"depth":2,"timeout":1500,"variable":"snap"}}}]}
+                """);
 
         for (String container : NESTED_ACTION_CONTAINERS) {
             assertValidTestCase(container.formatted(KNOWN_ACTION));

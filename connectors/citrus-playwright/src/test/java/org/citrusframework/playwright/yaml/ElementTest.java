@@ -19,6 +19,7 @@ package org.citrusframework.playwright.yaml;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.model.LocatorSpec;
 import org.junit.jupiter.api.Test;
+import org.yaml.snakeyaml.Yaml;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -78,5 +79,21 @@ class ElementTest {
 
         CitrusRuntimeException missing = assertThrows(CitrusRuntimeException.class, () -> new Element().toLocatorSpec());
         assertTrue(missing.getMessage().contains("ref"));
+
+        Element parsed = new Yaml().loadAs("""
+                role: button
+                name: Save
+                visible: true
+                within:
+                  ref: e9
+                """, Element.class);
+        LocatorSpec parsedSpec = parsed.toLocatorSpec();
+        assertEquals(LocatorSpec.Type.ROLE, parsedSpec.getType());
+        assertEquals("button", parsedSpec.getSelector());
+        assertEquals("Save", parsedSpec.getName());
+        assertTrue(parsedSpec.isVisible());
+        assertNotNull(parsedSpec.getWithin());
+        assertEquals(LocatorSpec.Type.REF, parsedSpec.getWithin().getType());
+        assertEquals("e9", parsedSpec.getWithin().getSelector());
     }
 }

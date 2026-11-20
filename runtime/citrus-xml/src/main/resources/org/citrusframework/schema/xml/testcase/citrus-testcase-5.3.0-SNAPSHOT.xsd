@@ -5962,10 +5962,14 @@
             <xs:sequence>
               <xs:element name="element" type="tns:PlaywrightElementType" minOccurs="0"/>
             </xs:sequence>
+            <xs:attribute name="aria-mode" type="xs:string"/>
             <xs:attribute name="attribute" type="xs:string"/>
+            <xs:attribute name="boxes" type="xs:boolean"/>
             <xs:attribute name="css-property" type="xs:string"/>
+            <xs:attribute name="depth" type="xs:int"/>
             <xs:attribute name="frame-selector" type="xs:string"/>
             <xs:attribute name="key" type="xs:string"/>
+            <xs:attribute name="timeout" type="xs:double"/>
             <xs:attribute name="value" type="xs:string"/>
             <xs:attribute name="variable" type="xs:string"/>
           </xs:complexType>
@@ -6152,12 +6156,16 @@
   </xs:complexType>
 
   <xs:complexType name="PlaywrightElementType">
+    <xs:sequence>
+      <xs:element name="within" type="tns:PlaywrightElementType" minOccurs="0"/>
+    </xs:sequence>
     <xs:attribute name="css" type="xs:string"/>
     <xs:attribute name="xpath" type="xs:string"/>
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="role" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="test-id" type="xs:string"/>
+    <xs:attribute name="ref" type="xs:string"/>
     <xs:attribute name="nth" type="xs:int"/>
     <xs:attribute name="first" type="xs:boolean"/>
     <xs:attribute name="last" type="xs:boolean"/>
