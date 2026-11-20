@@ -2,7 +2,8 @@
 == Spring Bean XML
 
 IMPORTANT: The Spring bean XML domain specific language for writing tests is deprecated.
-Please consider using the arbitrary XML test language syntax instead (see chapter link:#run-xml-tests[Run XML tests]])
+Please consider using the arbitrary XML test language syntax instead (see chapter link:#run-xml-tests[Run XML tests]]).
+Citrus provides a link:#run-spring-xml-migration[migration tool] that converts existing Spring bean XML tests to the XML test language.
 
 The Spring bean XML domain specific language is a variation of the arbitrary XML domain specific language in Citrus.
 The Spring XML file holds all test actions in the form of Spring XML beans.
@@ -476,3 +477,107 @@ This will enforce that each template instance is working on a dedicated local co
 
 After that template instances won't influence each other anymore.
 But notice that variable changes inside the template then do not affect the test case neither.
+
+[[run-spring-xml-migration]]
+=== Migrate to the XML DSL
+
+Citrus provides a migration tool that converts Spring bean XML tests to the link:#run-xml-tests[XML test language].
+The tool uses an XSLT stylesheet to transform the tests and is part of the `citrus-xml` module.
+
+.Maven dependency
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-xml</artifactId>
+  <version>${citrus.version}</version>
+  <scope>test</scope>
+</dependency>
+----
+
+The migration tool is a Java main class that accepts a source and a target directory.
+The source is either a single Spring bean XML test file or a directory.
+The tool scans the directory and its subdirectories for Spring bean XML tests and skips all other XML files such as Spring bean configuration files.
+
+.Run the migration with the Maven exec plugin
+[source,shell]
+----
+mvn exec:java -Dexec.mainClass=org.citrusframework.xml.migration.SpringXmlTestMigration \
+    -Dexec.classpathScope=test \
+    -Dexec.args="src/test/resources target/migrated-tests"
+----
+
+The migrated tests keep the file name and the relative directory of the Spring bean XML test.
+This way you can replace the Spring bean XML test with the migrated test and load it with the XML test loader (e.g. `@CitrusTestSource(type = TestLoader.XML)`).
+The target directory must not be the source directory, so you are able to review the migrated tests before replacing the Spring bean XML tests.
+
+.Spring bean XML test
+[source,xml]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+  <testcase name="HelloIT">
+    <meta-info>
+      <author>Christoph</author>
+      <creationdate>2026-11-20</creationdate>
+      <status>FINAL</status>
+    </meta-info>
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="operation" value="sayHello"/>
+        </header>
+      </send>
+      <sleep time="1"/>
+    </actions>
+  </testcase>
+</spring:beans>
+----
+
+.Migrated XML test
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      author="Christoph" name="HelloIT" status="FINAL"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase
+            http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <actions>
+    <send endpoint="helloEndpoint">
+      <message>
+        <headers>
+          <header name="operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data>Hello Citrus!</data>
+        </body>
+      </message>
+    </send>
+    <sleep seconds="1"/>
+  </actions>
+</test>
+----
+
+The migration covers all test actions and containers of the Spring bean XML test case schema (`citrus-testcase.xsd`).
+It takes care of the structural differences between the two languages, for instance:
+
+* The test meta information `author` and `status` become attributes of the `test` element.
+* Message headers and body are grouped in the `headers` and `body` elements of the message.
+* Message validation, ignore and namespace elements move from the message to the `receive` action.
+* Nested actions of containers are placed in the `actions` element (or the `when` element of `catch` and `assert`).
+* Elements and attributes that got renamed in the XML test language are converted (e.g. `repeat-until-true` becomes `repeat`, `call-template` becomes `apply-template`, `trace-time` becomes `stop-time` and `wait` becomes `wait-for`).
+* Time values are converted to the units of the XML test language (e.g. the Spring bean XML `sleep` attribute `time` is given in seconds).
+
+Templates defined in a Spring bean XML test are migrated to separate template files named after the test file and the template name (e.g. `TemplateIT-myTemplate.xml`).
+Please make these templates available to the `apply-template` action, for instance with the `file` attribute (see link:#run-xml-templates[XML templates]).
+
+The migration copies elements that have no counterpart in the XML test language as they are and marks them with a `MIGRATION WARNING` comment.
+This applies to the `java` and `input` actions and to the test actions from other Spring bean XML namespaces (e.g. `http`, `ws` or `jms`).
+The tool prints all warnings, so you know which parts of the test need manual migration.
+
+TIP: You can also run the migration programmatically.
+The class `SpringXmlTestMigration` provides methods to migrate a directory (`migrate(source, targetDirectory)`), a single test source (`migrateTest(springXml)`) or a template (`migrateTemplate(springXml, templateName)`).

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ActionsIT">
+    <meta-info>
+      <author>Christoph</author>
+      <creationdate>2026-11-19</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph</last-updated-by>
+      <last-updated-on>2026-11-19T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Spring XML test using basic test actions</description>
+
+    <variables>
+      <variable name="text" value="Hello Citrus!"/>
+      <variable name="multiline">
+        <value>
+          <data>
+            <![CDATA[Hello <Citrus/>]]>
+          </data>
+        </value>
+      </variable>
+    </variables>
+
+    <actions>
+      <echo>
+        <description>Print the text</description>
+        <message>${text}</message>
+      </echo>
+      <print>
+        <message>${multiline}</message>
+      </print>
+      <sleep time="0.1"/>
+      <sleep milliseconds="50"/>
+      <delay seconds="0.05"/>
+      <create-variables>
+        <variable name="name" value="Citrus"/>
+        <variable name="greeting">
+          <value>
+            <data>
+              Hello ${name}!
+            </data>
+          </value>
+        </variable>
+        <variable name="sum">
+          <value>
+            <script type="groovy">return 1 + 2</script>
+          </value>
+        </variable>
+      </create-variables>
+      <trace-variables>
+        <description>Trace -- some variables</description>
+        <variable name="name"/>
+        <variable name="greeting"/>
+      </trace-variables>
+      <trace-time id="timer"/>
+      <load>
+        <properties file="classpath:org/citrusframework/xml/load.properties"/>
+      </load>
+      <transform variable="transformed">
+        <xml-resource file="classpath:org/citrusframework/xml/transform-source.xml"/>
+        <xslt-resource file="classpath:org/citrusframework/xml/transform.xslt"/>
+      </transform>
+      <send endpoint="helloEndpoint">
+        <message name="helloRequest">
+          <data>Hello from Citrus!</data>
+        </message>
+        <header>
+          <element name="operation" value="sayHello"/>
+          <element name="count" value="5" type="integer"/>
+        </header>
+        <extract>
+          <header name="operation" variable="sentOperation"/>
+        </extract>
+      </send>
+      <receive endpoint="helloEndpoint" timeout="5000">
+        <message type="plaintext">
+          <data>
+            Hello from Citrus!
+          </data>
+        </message>
+        <header>
+          <element name="operation" value="sayHello"/>
+        </header>
+        <extract>
+          <header name="count" variable="count"/>
+        </extract>
+      </receive>
+      <send endpoint="xmlEndpoint">
+        <message>
+          <payload>
+            <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test">
+              <Message>Hello</Message>
+            </trq:TestRequest>
+          </payload>
+        </message>
+      </send>
+      <trace-time id="timer" suffix="done"/>
+    </actions>
+
+    <finally>
+      <create-variables>
+        <variable name="finally" value="executed"/>
+      </create-variables>
+    </finally>
+  </testcase>
+</spring:beans>
