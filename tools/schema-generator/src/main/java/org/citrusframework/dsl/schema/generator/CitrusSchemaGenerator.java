@@ -37,8 +37,10 @@ import com.github.victools.jsonschema.generator.TypeContext;
 import org.citrusframework.api.agent.CitrusAgentConfiguration;
 import org.citrusframework.dsl.schema.Catalog;
 import org.citrusframework.dsl.schema.Test;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
 
@@ -61,6 +63,10 @@ public class CitrusSchemaGenerator {
             }
 
             String version = args.length > 1 ? args[1] : "5.3.0-SNAPSHOT";
+            if (!StringUtils.hasText(version)) {
+                throw new CitrusRuntimeException(
+                        "Unable to resolve Citrus version for catalog generation. Ensure META-INF/citrus.version is on the classpath.");
+            }
             String catalogIndex = FileUtils.readToString(Resources.fromClasspath("templates/catalog-index.json")).replaceAll("@version@", version);
             writeFile(outputDir, "index.json", catalogIndex);
 
