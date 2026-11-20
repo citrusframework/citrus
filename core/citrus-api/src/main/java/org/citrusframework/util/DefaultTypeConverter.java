@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -151,7 +152,7 @@ public class DefaultTypeConverter implements TypeConverter {
             if (target == null) {
                 return (T) "null";
             } else if (ByteBuffer.class.isAssignableFrom(target.getClass())) {
-                return (T) new String(((ByteBuffer) target).array());
+                return (T) new String(((ByteBuffer) target).array(), getFileCharset());
             } else if (short[].class.isAssignableFrom(target.getClass())) {
                 return (T) Arrays.toString((short[]) target);
             } else if (int[].class.isAssignableFrom(target.getClass())) {
@@ -173,7 +174,9 @@ public class DefaultTypeConverter implements TypeConverter {
             } else if (List.class.isAssignableFrom(target.getClass()) || Map.class.isAssignableFrom(target.getClass())) {
                 return (T) target.toString();
             } else if (byte[].class.isAssignableFrom(target.getClass())) {
-                return (T) Arrays.toString((byte[]) target);
+                return (T) new String((byte[]) target, getFileCharset());
+            } else if (InputStream.class.isAssignableFrom(target.getClass())) {
+                return (T) readToString((InputStream) target);
             }
         }
 
@@ -237,6 +240,18 @@ public class DefaultTypeConverter implements TypeConverter {
         throw new CitrusRuntimeException(String.format("Unable to convert '%s' to required type '%s'", value, type.getName()));
     }
 
+    private static Charset getFileCharset() {
+        return Charset.forName(CitrusSettings.getFileEncoding());
+    }
+
+    private static String readToString(InputStream inputStream) {
+        try {
+            return new String(inputStream.readAllBytes(), getFileCharset());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Unable to convert InputStream to String representation", e);
+        }
+    }
+
     protected <T> Optional<T> convertBefore(Object target, Class<T> type) {
         return Optional.empty();
     }
@@ -253,11 +268,7 @@ public class DefaultTypeConverter implements TypeConverter {
     protected <T> T convertAfter(Object target, Class<T> type) {
         if (String.class.equals(type)) {
             if (InputStream.class.isAssignableFrom(target.getClass())) {
-                try {
-                    return (T) Arrays.toString(((InputStream) target).readAllBytes());
-                } catch (IOException e) {
-                    throw new CitrusRuntimeException("Unable to convert InputStream to String representation", e);
-                }
+                return (T) readToString((InputStream) target);
             }
 
             logger.debug("Using default toString representation for object type {}", target.getClass());
