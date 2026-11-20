@@ -31,7 +31,6 @@ import org.citrusframework.junit.jupiter.AbstractUnitTest;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 public class GraphQlServerTest extends AbstractUnitTest {
 
@@ -62,17 +61,16 @@ public class GraphQlServerTest extends AbstractUnitTest {
 
     @Test
     public void shouldServeGetRequestsAsJsonThroughStartedServer() throws Exception {
-        int port = findAvailableTcpPort(20000, 32767);
         GraphQlServer server = new GraphQlServer();
         server.setName("graphQlServer");
-        server.setPort(port);
+        server.setPort(0);
         server.setAutoStart(true);
         server.setDefaultTimeout(5000L);
         server.initialize();
 
         try {
             CompletableFuture<HttpResponse<String>> response = HttpClient.newHttpClient().sendAsync(
-                    HttpRequest.newBuilder(URI.create("http://localhost:%d/graphql?query=%%7B+books+%%7B+title+%%7D+%%7D".formatted(port)))
+                    HttpRequest.newBuilder(URI.create("http://localhost:%d/graphql?query=%%7B+books+%%7B+title+%%7D+%%7D".formatted(server.getPort())))
                             .header("Accept", "application/graphql-response+json")
                             .GET()
                             .build(),

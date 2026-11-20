@@ -33,7 +33,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.api.graphql.GraphQlError.error;
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * The GraphQL client against a real Spring GraphQL server.
@@ -44,19 +43,17 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GraphQlClientInteropIT implements TestActionSupport {
 
-    private static final int port = findAvailableTcpPort(20000, 32767);
-
     private static SpringGraphQlServer springServer;
 
     @BindToRegistry
     private final GraphQlClient springGraphQl = GraphQlEndpoints.graphql().client()
-            .requestUrl("http://localhost:%d".formatted(port))
+            .requestUrl("http://localhost:%d".formatted(springServer.getPort()))
             .timeout(5000L)
             .build();
 
     @BeforeAll
     static void startSpringGraphQl() throws Exception {
-        springServer = SpringGraphQlServer.start(port);
+        springServer = SpringGraphQlServer.start(0);
     }
 
     @AfterAll

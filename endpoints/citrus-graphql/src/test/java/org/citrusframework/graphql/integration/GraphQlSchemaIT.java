@@ -15,6 +15,7 @@
  */
 package org.citrusframework.graphql.integration;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -23,6 +24,8 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.graphql.GraphQlTestSupport;
+import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -31,8 +34,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
-
 /**
  * Schema validation of documents on both sides; the schema is split across several SDL files.
  */
@@ -40,7 +41,7 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class GraphQlSchemaIT implements TestActionSupport {
+public class GraphQlSchemaIT implements TestActionSupport, CitrusExtension.TestListener {
 
     private static final String[] SCHEMA = {
             "classpath:org/citrusframework/graphql/schema/query.graphqls",
@@ -48,11 +49,9 @@ public class GraphQlSchemaIT implements TestActionSupport {
             "classpath:org/citrusframework/graphql/schema/scalars.graphqls"
     };
 
-    private final int port = findAvailableTcpPort(20000, 32767);
-
     @BindToRegistry
     private final GraphQlServer schemaServer = GraphQlEndpoints.graphql().server()
-            .port(port)
+            .port(0)
             .autoStart(true)
             .timeout(3000L)
             .schema(SCHEMA)
@@ -60,10 +59,14 @@ public class GraphQlSchemaIT implements TestActionSupport {
 
     @BindToRegistry
     private final GraphQlClient schemaClient = GraphQlEndpoints.graphql().client()
-            .requestUrl("http://localhost:%d".formatted(port))
             .timeout(3000L)
             .schema(SCHEMA)
             .build();
+
+    @Override
+    public void before(CitrusContext context) {
+        GraphQlTestSupport.bindRequestUrl(schemaClient, schemaServer);
+    }
 
     @Test
     @CitrusTest

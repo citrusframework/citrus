@@ -38,7 +38,6 @@ import org.springframework.web.client.RestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.api.graphql.GraphQlError.error;
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * A real Spring GraphQL client against the GraphQL simulator.
@@ -49,11 +48,9 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GraphQlServerInteropIT implements TestActionSupport {
 
-    private final int port = findAvailableTcpPort(20000, 32767);
-
     @BindToRegistry
     private final GraphQlServer simulator = GraphQlEndpoints.graphql().server()
-            .port(port)
+            .port(0)
             .autoStart(true)
             .timeout(5000L)
             .build();
@@ -105,6 +102,6 @@ public class GraphQlServerInteropIT implements TestActionSupport {
     }
 
     private HttpSyncGraphQlClient springClient() {
-        return HttpSyncGraphQlClient.create(RestClient.create("http://localhost:%d/graphql".formatted(port)));
+        return HttpSyncGraphQlClient.create(RestClient.create("http://localhost:%d/graphql".formatted(simulator.getPort())));
     }
 }

@@ -16,6 +16,7 @@
 
 package org.citrusframework.graphql.integration.zero;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -23,6 +24,8 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.graphql.GraphQlTestSupport;
+import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -30,8 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * Resource variant of {@link GraphQlZeroJavaIT}: same 6 resources x get, list, create, update,
@@ -43,13 +44,11 @@ import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class GraphQlZeroResourceIT implements TestActionSupport {
-
-    private final int port = findAvailableTcpPort(20000, 32767);
+public class GraphQlZeroResourceIT implements TestActionSupport, CitrusExtension.TestListener {
 
     @BindToRegistry
     private final GraphQlServer zeroServer = GraphQlEndpoints.graphql().server()
-            .port(port)
+            .port(0)
             .endpointAdapter(new GraphQlZeroSimulator())
             .autoStart(true)
             .timeout(5000L)
@@ -57,10 +56,14 @@ public class GraphQlZeroResourceIT implements TestActionSupport {
 
     @BindToRegistry
     private final GraphQlClient graphqlZero = GraphQlEndpoints.graphql().client()
-            .requestUrl("http://localhost:%d".formatted(port))
             .schema("classpath:org/citrusframework/graphql/integration/zero/graphqlzero.graphqls")
             .timeout(5000L)
             .build();
+
+    @Override
+    public void before(CitrusContext context) {
+        GraphQlTestSupport.bindRequestUrl(graphqlZero, zeroServer);
+    }
 
     @Test
     @CitrusTest

@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.citrusframework.CitrusContext;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
@@ -30,6 +31,8 @@ import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.graphql.GraphQlTestSupport;
+import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -41,7 +44,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
-import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -54,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class GraphQlGetTransportIT implements TestActionSupport {
+public class GraphQlGetTransportIT implements TestActionSupport, CitrusExtension.TestListener {
 
     private static final String QUERY = """
             query Book($id: ID!, $q: String) {
@@ -62,19 +64,21 @@ public class GraphQlGetTransportIT implements TestActionSupport {
             } ÄÖü €""";
     private static final String VARIABLES = "{\"id\":\"42\",\"ids\":[\"a,b\",\"c\"],\"q\":\"x+y%20z ${notACitrusVariable}\"}";
 
-    private final int port = findAvailableTcpPort(20000, 32767);
-
     @BindToRegistry
     private final HttpServer getServer = new HttpServerBuilder()
-            .port(port)
+            .port(0)
             .autoStart(true)
             .timeout(5000L)
             .build();
 
     @BindToRegistry
     private final HttpClient getClient = new HttpClientBuilder()
-            .requestUrl("http://localhost:%d".formatted(port))
             .build();
+
+    @Override
+    public void before(CitrusContext context) {
+        GraphQlTestSupport.bindRequestUrl(getClient, getServer);
+    }
 
     @Test
     @CitrusTest
