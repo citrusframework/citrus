@@ -114,9 +114,9 @@ class ExtractActionTest {
     void shouldExtractLocalStorageValue() {
         com.microsoft.playwright.WebStorage storage = mock(com.microsoft.playwright.WebStorage.class);
         when(browser.page().localStorage()).thenReturn(storage);
-        when(storage.getItem("token")).thenReturn("abc");
+        when(storage.getItem("theme")).thenReturn("abc");
 
-        new ExtractAction.Builder().storageLocal("token").variable("stored").build().execute(context);
+        new ExtractAction.Builder().storageLocal("theme").variable("stored").build().execute(context);
 
         assertEquals("abc", context.getVariable("stored"));
     }

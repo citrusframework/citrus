@@ -65,6 +65,7 @@ import org.citrusframework.validation.context.json.JsonPathMessageValidationCont
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import jakarta.servlet.http.Cookie;
 import org.mockito.ArgumentCaptor;
 import org.springframework.core.io.ClassPathResource;
@@ -78,6 +79,7 @@ import org.springframework.util.MultiValueMap;
  * transport, with only the driver mocked. Proves that everything above the transport — URL
  * composition, conversion, error strategy, validation — behaves exactly as for a plain client.
  */
+@Isolated("Mutates global citrus.logger.mask.keywords system property")
 class PlaywrightApiClientHttpClientTest extends AbstractUnitTest {
 
     private MockPlaywrightBrowser browser;
