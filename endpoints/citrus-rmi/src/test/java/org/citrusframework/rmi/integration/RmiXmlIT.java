@@ -32,5 +32,5 @@ public class RmiXmlIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/rmi/integration/rmi-xml.citrus.it.xml" })
-    public void RmiXmlIT() {}
+    public void testClientServer() {}
 }

@@ -32,5 +32,5 @@ public class SftpXmlIT {
 
     @Test
     @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/ftp/integration/sftp-xml.citrus.it.xml" })
-    public void SftpXmlIT() {}
+    public void testClientServer() {}
 }

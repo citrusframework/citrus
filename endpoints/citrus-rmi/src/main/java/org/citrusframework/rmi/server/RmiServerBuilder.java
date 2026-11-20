@@ -197,12 +197,13 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
 
         for (String interfaceName : remoteInterfaces.split(",")) {
             try {
-                Class<?> maybeRemote = Class.forName(interfaceName, false, ClassLoaderHelper.getClassLoader());
+                String trimmedName = interfaceName.trim();
+                Class<?> maybeRemote = Class.forName(trimmedName, false, ClassLoaderHelper.getClassLoader());
                 if (Remote.class.isAssignableFrom(maybeRemote)) {
                     interfaces.add((Class<? extends Remote>) maybeRemote);
                 }
             } catch (ClassNotFoundException e) {
-                throw new CitrusRuntimeException(String.format("Failed to load remote interface '%s'", interfaceName), e);
+                throw new CitrusRuntimeException(String.format("Failed to load remote interface '%s'", interfaceName.trim()), e);
             }
         }
 
