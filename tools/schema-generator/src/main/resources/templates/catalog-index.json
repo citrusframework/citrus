@@ -5,7 +5,7 @@
     "name" : "Citrus Latest",
     "version" : "latest",
     "runtime" : "Citrus",
-    "fileName" : "citrus/index.json"
+    "fileName" : "citrus/@version@/index.json"
   }, {
     "name" : "Citrus @version@",
     "version" : "@version@",
