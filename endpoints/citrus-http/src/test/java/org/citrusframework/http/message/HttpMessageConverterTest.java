@@ -16,6 +16,7 @@
 
 package org.citrusframework.http.message;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -459,6 +460,18 @@ public class HttpMessageConverterTest {
 
         // THEN
         assertEquals(payload, httpMessage.getPayload(String.class));
+    }
+
+    @Test
+    public void testHttpEntityByteArrayMessageBodyIsConvertedToTextOnInbound() {
+        // GIVEN
+        final HttpEntity<byte[]> httpEntity = new HttpEntity<>("id,item\n1,book".getBytes(StandardCharsets.UTF_8));
+
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
+
+        // THEN
+        assertEquals("id,item\n1,book", httpMessage.getPayload(String.class));
     }
 
     @Test
