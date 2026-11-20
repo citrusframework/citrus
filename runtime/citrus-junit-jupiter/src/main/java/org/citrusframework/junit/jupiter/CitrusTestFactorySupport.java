@@ -158,7 +158,7 @@ public final class CitrusTestFactorySupport {
         testLoader.setTestName(testName);
         testLoader.setPackageName(packageName);
 
-        CitrusAnnotations.injectAll(testLoader, CitrusInstanceManager.getOrDefault());
+        CitrusAnnotations.injectAll(testLoader, CitrusExtensionHelper.getCurrentCitrusOrDefault());
 
         return testLoader;
     }

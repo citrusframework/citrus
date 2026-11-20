@@ -21,10 +21,10 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.TestCase;
@@ -51,7 +51,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     private static final Logger logger = LoggerFactory.getLogger(HtmlReporter.class);
 
     /** Map holding additional information of test cases */
-    private final Map<String, ResultDetail> details = new HashMap<>();
+    private final Map<String, ResultDetail> details = new ConcurrentHashMap<>();
 
     /** Static resource for the HTML test report template */
     private String reportTemplate = HtmlReporterSettings.getReportTemplate();
@@ -83,6 +83,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
         try {
             final String testDetails = FileUtils.readToString(FileUtils.getFileResource(testDetailTemplate));
             final String emptyString = "";
+            final DateFormat localDateFormat = (DateFormat) dateFormat.clone();
 
             testResults.doWithResults(result -> {
                 ResultDetail detail = Optional.ofNullable(details.get(result.getTestName())).orElseGet(ResultDetail::new);
@@ -92,9 +93,9 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
                 detailProps.put("test.case.name", result.getTestName());
                 detailProps.put("test.author", !StringUtils.hasText(detail.getMetaInfo().getAuthor()) ? emptyString : detail.getMetaInfo().getAuthor());
                 detailProps.put("test.status", detail.getMetaInfo().getStatus().toString());
-                detailProps.put("test.creation.date", detail.getMetaInfo().getCreationDate() == null ? emptyString : dateFormat.format(detail.getMetaInfo().getCreationDate()));
+                detailProps.put("test.creation.date", detail.getMetaInfo().getCreationDate() == null ? emptyString : localDateFormat.format(detail.getMetaInfo().getCreationDate()));
                 detailProps.put("test.updater", !StringUtils.hasText(detail.getMetaInfo().getLastUpdatedBy()) ? emptyString : detail.getMetaInfo().getLastUpdatedBy());
-                detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? emptyString : dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
+                detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? emptyString : localDateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
                 detailProps.put("test.description", !StringUtils.hasText(detail.getDescription()) ? emptyString : detail.getDescription());
                 detailProps.put("test.result", result.getResult());
 

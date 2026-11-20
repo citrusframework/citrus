@@ -16,9 +16,9 @@
 
 package org.citrusframework.validation.matcher;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchValidationMatcherLibraryException;
@@ -28,7 +28,7 @@ import org.citrusframework.exceptions.NoSuchValidationMatcherLibraryException;
  */
 public class ValidationMatcherRegistry {
     /** list of libraries providing custom validation matchers */
-    private List<ValidationMatcherLibrary> validationMatcherLibraries = new ArrayList<>();
+    private List<ValidationMatcherLibrary> validationMatcherLibraries = new CopyOnWriteArrayList<>();
 
     /**
      * Get library for validationMatcher prefix.
@@ -67,7 +67,7 @@ public class ValidationMatcherRegistry {
     /**
      * Adds given validation matcher library to this registry.
      */
-    public void addValidationMatcherLibrary(ValidationMatcherLibrary validationMatcherLibrary) {
+    public synchronized void addValidationMatcherLibrary(ValidationMatcherLibrary validationMatcherLibrary) {
         boolean prefixAlreadyUsed = this.validationMatcherLibraries.stream()
                 .anyMatch(lib -> lib.getPrefix().equals(validationMatcherLibrary.getPrefix()));
 
@@ -79,8 +79,8 @@ public class ValidationMatcherRegistry {
         this.validationMatcherLibraries.add(validationMatcherLibrary);
     }
 
-    public void setValidationMatcherLibraries(List<ValidationMatcherLibrary> validationMatcherLibraries) {
-        this.validationMatcherLibraries = validationMatcherLibraries;
+    public synchronized void setValidationMatcherLibraries(List<ValidationMatcherLibrary> validationMatcherLibraries) {
+        this.validationMatcherLibraries = validationMatcherLibraries != null ? new CopyOnWriteArrayList<>(validationMatcherLibraries) : null;
     }
 
     public List<ValidationMatcherLibrary> getValidationMatcherLibraries() {

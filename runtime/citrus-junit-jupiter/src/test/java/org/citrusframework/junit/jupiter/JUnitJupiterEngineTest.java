@@ -26,12 +26,14 @@ import org.citrusframework.api.main.TestRunConfiguration;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 2.7.4
  */
+@Isolated
 public class JUnitJupiterEngineTest {
 
     @Test
