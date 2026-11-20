@@ -20,7 +20,6 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.parallel.Isolated;
@@ -37,10 +36,5 @@ public class FormUrlEncodedIT {
     @Test
     @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_FormData_IT")
     public void formUrlEncodedFormData() {}
-
-    @Test
-    @Disabled
-    @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_Manual_IT")
-    public void formUrlEncodedManual() {}
 
 }
