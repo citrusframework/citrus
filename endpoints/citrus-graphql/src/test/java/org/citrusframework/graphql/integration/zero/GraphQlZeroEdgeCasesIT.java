@@ -24,6 +24,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.graphql.GraphQlTestSupport;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
@@ -35,7 +36,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.citrusframework.api.graphql.GraphQlError.error;
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
-
 
 /**
  * Edge cases against the {@link GraphQlZeroSimulator}: GET transport, schema validation before
@@ -67,8 +67,7 @@ public class GraphQlZeroEdgeCasesIT implements TestActionSupport, CitrusExtensio
 
     @Override
     public void before(CitrusContext context) {
-        graphqlZero.getEndpointConfiguration()
-                .setRequestUrl("http://localhost:%d".formatted(zeroServer.getPort()));
+        GraphQlTestSupport.bindRequestUrl(graphqlZero, zeroServer);
     }
 
     /** The simulator serves GET without any preflight header. */

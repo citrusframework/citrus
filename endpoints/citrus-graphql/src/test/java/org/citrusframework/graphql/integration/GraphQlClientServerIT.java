@@ -23,6 +23,7 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.graphql.GraphQlTestSupport;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
@@ -55,12 +56,9 @@ public class GraphQlClientServerIT implements TestActionSupport, CitrusExtension
             .timeout(5000L)
             .build();
 
-    // Runs after Citrus binds and starts @BindToRegistry endpoints in CitrusExtension#interceptTestMethod,
-    // so getPort() already reports the bound ephemeral port. Do not move this to @BeforeEach.
     @Override
     public void before(CitrusContext context) {
-        bookClient.getEndpointConfiguration()
-                .setRequestUrl("http://localhost:%d".formatted(bookServer.getPort()));
+        GraphQlTestSupport.bindRequestUrl(bookClient, bookServer);
     }
 
     @Test

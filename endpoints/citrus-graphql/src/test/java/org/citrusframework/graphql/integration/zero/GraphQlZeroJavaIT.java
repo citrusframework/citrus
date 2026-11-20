@@ -24,6 +24,7 @@ import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.graphql.GraphQlTestSupport;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
@@ -32,8 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-
-
 
 /**
  * Java DSL against the {@link GraphQlZeroSimulator}: every query and mutation of the GraphQLZero
@@ -64,8 +63,7 @@ public class GraphQlZeroJavaIT implements TestActionSupport, CitrusExtension.Tes
 
     @Override
     public void before(CitrusContext context) {
-        graphqlZero.getEndpointConfiguration()
-                .setRequestUrl("http://localhost:%d".formatted(zeroServer.getPort()));
+        GraphQlTestSupport.bindRequestUrl(graphqlZero, zeroServer);
     }
 
     @Test

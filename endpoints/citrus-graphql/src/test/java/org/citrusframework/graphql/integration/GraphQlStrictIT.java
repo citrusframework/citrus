@@ -24,6 +24,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.graphql.client.GraphQlClient;
 import org.citrusframework.graphql.endpoint.builder.GraphQlEndpoints;
 import org.citrusframework.graphql.server.GraphQlServer;
+import org.citrusframework.graphql.GraphQlTestSupport;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spi.BindToRegistry;
@@ -59,8 +60,7 @@ public class GraphQlStrictIT implements TestActionSupport, CitrusExtension.TestL
 
     @Override
     public void before(CitrusContext context) {
-        strictClient.getEndpointConfiguration()
-                .setRequestUrl("http://localhost:%d".formatted(strictServer.getPort()));
+        GraphQlTestSupport.bindRequestUrl(strictClient, strictServer);
     }
 
     @Test
