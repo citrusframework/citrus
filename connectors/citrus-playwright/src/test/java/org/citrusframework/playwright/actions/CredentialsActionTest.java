@@ -97,6 +97,20 @@ class CredentialsActionTest {
     }
 
     @Test
+    void shouldDeleteCredentialsByIdPreferringIdOverOrigin() {
+        new CredentialsAction.Builder().delete("example.com").id("cred-42").build().execute(context);
+
+        verify(credentials).delete("cred-42");
+    }
+
+    @Test
+    void shouldDeleteCredentialsByIdOnly() {
+        new CredentialsAction.Builder().delete().id("cred-42").build().execute(context);
+
+        verify(credentials).delete("cred-42");
+    }
+
+    @Test
     void shouldStoreOnlyCredentialIdInVariable() {
         VirtualCredential registered = new VirtualCredential();
         registered.id = "cred-1";

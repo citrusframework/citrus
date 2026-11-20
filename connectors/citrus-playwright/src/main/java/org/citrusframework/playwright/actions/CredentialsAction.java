@@ -82,7 +82,7 @@ public class CredentialsAction extends AbstractPlaywrightAction {
             case CREATE -> credentials.create(LocatorResolver.resolve(origin, context), createOptions(context));
             case INSTALL -> credentials.install();
             case DELETE -> credentials.delete(LocatorResolver.resolve(
-                    origin != null && !origin.isBlank() ? origin : id, context));
+                    id != null && !id.isBlank() ? id : origin, context));
             case READ -> readCredential(credentials, context);
         }
     }
@@ -175,14 +175,28 @@ public class CredentialsAction extends AbstractPlaywrightAction {
         }
 
         /**
-         * Removes the credentials registered for the given origin.
+         * Removes a credential from the virtual authenticator.
          *
-         * @param origin relying party origin
+         * <p>Playwright deletes by credential id. When both id and origin are set, the id wins.
+         * The argument is retained for backwards compatibility with definitions that pass a
+         * credential id through this method.</p>
+         *
+         * @param idOrOrigin credential id, or relying party origin for backwards compatibility
          * @return this builder
          */
-        public Builder delete(String origin) {
+        public Builder delete(String idOrOrigin) {
             this.command = Command.DELETE;
-            this.origin = origin;
+            this.origin = idOrOrigin;
+            return this;
+        }
+
+        /**
+         * Removes the credential configured with {@link #id(String)}.
+         *
+         * @return this builder
+         */
+        public Builder delete() {
+            this.command = Command.DELETE;
             return this;
         }
 
