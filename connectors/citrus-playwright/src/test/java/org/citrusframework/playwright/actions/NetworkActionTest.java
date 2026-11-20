@@ -41,6 +41,7 @@ import com.microsoft.playwright.Response;
 import com.microsoft.playwright.Route;
 import com.microsoft.playwright.Page;
 
+@SuppressWarnings("unchecked")
 class NetworkActionTest {
 
     private MockPlaywrightBrowser browser;
@@ -63,7 +64,7 @@ class NetworkActionTest {
     void shouldStartCaptureOnCurrentPage() {
         new NetworkAction.Builder().capture().build().execute(context);
 
-        verify(browser.page()).onRequest(any(Consumer.class));
+        verify(browser.page()).onRequest(any());
     }
 
     @Test
@@ -152,7 +153,7 @@ class NetworkActionTest {
         when(response.ok()).thenReturn(true);
         when(response.headers()).thenReturn(Map.of("content-type", "application/json"));
         when(response.text()).thenReturn("{\"ok\":true}");
-        when(browser.page().waitForResponse(any(java.util.function.Predicate.class), any(), any())).thenReturn(response);
+        when(browser.page().waitForResponse(org.mockito.ArgumentMatchers.<java.util.function.Predicate<Response>>any(), any(), any())).thenReturn(response);
 
         new NetworkAction.Builder().waitForResponse().urlContains("/orders").includeBody().variable("resp")
                 .build().execute(context);
@@ -246,7 +247,7 @@ class NetworkActionTest {
         securityDetails.subjectName = "CN=api.example.com";
         securityDetails.issuer = "CN=Example CA";
         when(response.securityDetails()).thenReturn(securityDetails);
-        when(browser.page().waitForResponse(any(java.util.function.Predicate.class), any(), any())).thenReturn(response);
+        when(browser.page().waitForResponse(org.mockito.ArgumentMatchers.<java.util.function.Predicate<Response>>any(), any(), any())).thenReturn(response);
         return response;
     }
 

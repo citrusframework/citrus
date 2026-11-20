@@ -639,7 +639,7 @@ public class PlaywrightBrowser extends AbstractEndpoint implements Producer, Shu
      * error instead of racing shared browser state.</p>
      */
     public synchronized void assertActionThread() {
-        long currentThreadId = Thread.currentThread().getId();
+        long currentThreadId = Thread.currentThread().threadId();
         if (actionOwnerThreadId == null) {
             actionOwnerThreadId = currentThreadId;
             return;
