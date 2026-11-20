@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Citrus Playwright Ref, Within and AI Snapshot Fixture</title>
+</head>
+<body>
+<main id="workspace">
+    <section id="card-alpha" aria-label="Alpha Card">
+        <h2>Alpha Tier</h2>
+        <button id="alpha-apply" type="button">Apply</button>
+    </section>
+
+    <section id="card-beta" aria-label="Beta Card">
+        <h2>Beta Tier</h2>
+        <button id="beta-apply" type="button">Apply</button>
+    </section>
+
+    <div id="apply-output">none</div>
+</main>
+
+<iframe id="ref-frame"
+        srcdoc="&lt;button id=&quot;frame-confirm&quot; type=&quot;button&quot;&gt;Frame Confirm&lt;/button&gt;&lt;div id=&quot;frame-ref-out&quot;&gt;idle&lt;/div&gt;&lt;script&gt;document.getElementById('frame-confirm').addEventListener('click',()=&gt;{document.getElementById('frame-ref-out').textContent='frame-confirmed';});&lt;/script&gt;"></iframe>
+
+<script>
+    document.getElementById('alpha-apply').addEventListener('click', () => {
+        document.getElementById('apply-output').textContent = 'alpha';
+    });
+    document.getElementById('beta-apply').addEventListener('click', () => {
+        document.getElementById('apply-output').textContent = 'beta';
+    });
+</script>
+</body>
+</html>

@@ -40,8 +40,13 @@ public final class LocatorResolver {
             case ROLE -> page.getByRole(resolveRole(spec.getSelector(), context),
                     new Page.GetByRoleOptions().setName(resolve(spec.getName(), context)));
             case TEST_ID -> page.getByTestId(resolve(spec.getSelector(), context));
+            case REF -> page.getByRef(resolve(spec.getSelector(), context));
             case RAW -> spec.getRawLocator().apply(page);
         };
+
+        if (spec.getWithin() != null) {
+            locator = locator.within(resolve(page, spec.getWithin(), context));
+        }
 
         return applyModifiers(locator, spec);
     }
@@ -54,8 +59,13 @@ public final class LocatorResolver {
             case ROLE -> frame.getByRole(resolveRole(spec.getSelector(), context),
                     new FrameLocator.GetByRoleOptions().setName(resolve(spec.getName(), context)));
             case TEST_ID -> frame.getByTestId(resolve(spec.getSelector(), context));
+            case REF -> frame.locator("aria-ref=" + resolve(spec.getSelector(), context));
             case RAW -> throw new CitrusRuntimeException("Raw page locators are not supported inside Playwright frame actions");
         };
+
+        if (spec.getWithin() != null) {
+            locator = locator.within(resolve(frame, spec.getWithin(), context));
+        }
 
         return applyModifiers(locator, spec);
     }
