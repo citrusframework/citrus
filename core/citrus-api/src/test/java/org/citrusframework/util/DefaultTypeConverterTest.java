@@ -29,6 +29,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.xml.transform.Source;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.api.xml.StringSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -82,10 +83,19 @@ public class DefaultTypeConverterTest {
         Assertions.assertEquals(ByteArrayInputStream.class, converter.convertIfNecessary(payload, InputStream.class).getClass());
         Assertions.assertEquals(StringSource.class, converter.convertIfNecessary(payload, Source.class).getClass());
         Assertions.assertArrayEquals(payload.getBytes(), converter.convertIfNecessary(payload, byte[].class));
-        Assertions.assertEquals(Arrays.toString(payload.getBytes()), converter.convertIfNecessary(payload.getBytes(), String.class));
+        Assertions.assertEquals(payload, converter.convertIfNecessary(payload.getBytes(), String.class));
         Assertions.assertEquals(payload, converter.convertIfNecessary(ByteBuffer.wrap(payload.getBytes()), String.class));
-        Assertions.assertEquals(Arrays.toString(payload.getBytes()), converter.convertIfNecessary(new ByteArrayInputStream(payload.getBytes()), String.class));
-        Assertions.assertEquals(Arrays.toString(payload.getBytes()), converter.convertIfNecessary(new GZIPInputStream(new ByteArrayInputStream(getZipped(payload.getBytes()))), String.class));
+        Assertions.assertEquals(payload, converter.convertIfNecessary(new ByteArrayInputStream(payload.getBytes()), String.class));
+        Assertions.assertEquals(payload, converter.convertIfNecessary(new GZIPInputStream(new ByteArrayInputStream(getZipped(payload.getBytes()))), String.class));
+    }
+
+    @Test
+    public void shouldConvertBinaryPayloadToTextWithFileEncoding() throws IOException {
+        String payload = "id,item\n1,bücher";
+
+        Assertions.assertEquals(payload, converter.convertIfNecessary(payload.getBytes(CitrusSettings.getFileEncoding()), String.class));
+        Assertions.assertEquals(payload, converter.convertIfNecessary(ByteBuffer.wrap(payload.getBytes(CitrusSettings.getFileEncoding())), String.class));
+        Assertions.assertEquals(payload, converter.convertIfNecessary(new ByteArrayInputStream(payload.getBytes(CitrusSettings.getFileEncoding())), String.class));
     }
 
     private byte[] getZipped(byte[] in) throws IOException {
