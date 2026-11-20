@@ -74,44 +74,34 @@ public class CitrusSchemaGenerator {
             }
 
             JsonNode agentConfiguration = generateSchema(CitrusAgentConfiguration.class, Option.INLINE_ALL_SCHEMAS);
-            writeFile(workingDir, "citrus-agent-configuration.json", agentConfiguration.toString());
             writeFile(versionWorkingDir, "citrus-agent-configuration.json", agentConfiguration.toString());
 
             String index = FileUtils.readToString(Resources.fromClasspath("templates/index.json")).replaceAll("@version@", version);
-            writeFile(workingDir, "index.json", index);
             writeFile(versionWorkingDir, "index.json", index);
 
             Catalog catalog = new Catalog();
             JsonNode jsonSchema = generateSchema(Test.class, catalog, new CitrusModule());
-            writeFile(workingDir, "citrus-testcase.json", jsonSchema.toString());
             writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toString());
 
             String xsdSchema = FileUtils.readToString(Resources.fromClasspath("org/citrusframework/schema/xml/testcase/citrus-testcase.xsd"));
-            writeFile(workingDir, "citrus-testcase.xsd", xsdSchema);
             writeFile(versionWorkingDir, "citrus-testcase.xsd", xsdSchema);
 
             String actionCatalog = JsonSupport.json().writeValueAsString(catalog.getTestActionCatalog());
-            writeFile(workingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog);
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-actions.json", actionCatalog);
 
             String containerCatalog = JsonSupport.json().writeValueAsString(catalog.getTestContainerCatalog());
-            writeFile(workingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog);
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-test-containers.json", containerCatalog);
 
             String endpointCatalog = JsonSupport.json().writeValueAsString(catalog.getEndpointCatalog());
-            writeFile(workingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog);
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-endpoints.json", endpointCatalog);
 
             String functionsCatalog = JsonSupport.json().writeValueAsString(catalog.getFunctionsCatalog());
-            writeFile(workingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog);
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-functions.json", functionsCatalog);
 
             String validationMatcherCatalog = JsonSupport.json().writeValueAsString(catalog.getValidationMatcherCatalog());
-            writeFile(workingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog);
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-validation-matcher.json", validationMatcherCatalog);
 
             String infraServiceCatalog = JsonSupport.json().writeValueAsString(catalog.getInfraServiceCatalog());
-            writeFile(workingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog);
             writeFile(versionWorkingDir, "citrus-catalog-aggregate-infra-services.json", infraServiceCatalog);
         } catch (IOException e) {
             throw new RuntimeException("Failed to generate Citrus DSL schema", e);
