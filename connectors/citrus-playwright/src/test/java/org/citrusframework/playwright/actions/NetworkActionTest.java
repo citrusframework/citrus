@@ -35,6 +35,7 @@ import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 
 import com.microsoft.playwright.Request;
 import com.microsoft.playwright.Response;
@@ -153,7 +154,7 @@ class NetworkActionTest {
         when(response.ok()).thenReturn(true);
         when(response.headers()).thenReturn(Map.of("content-type", "application/json"));
         when(response.text()).thenReturn("{\"ok\":true}");
-        when(browser.page().waitForResponse(org.mockito.ArgumentMatchers.<java.util.function.Predicate<Response>>any(), any(), any())).thenReturn(response);
+        when(browser.page().waitForResponse(ArgumentMatchers.<java.util.function.Predicate<Response>>any(), any(), any())).thenReturn(response);
 
         new NetworkAction.Builder().waitForResponse().urlContains("/orders").includeBody().variable("resp")
                 .build().execute(context);
@@ -247,7 +248,7 @@ class NetworkActionTest {
         securityDetails.subjectName = "CN=api.example.com";
         securityDetails.issuer = "CN=Example CA";
         when(response.securityDetails()).thenReturn(securityDetails);
-        when(browser.page().waitForResponse(org.mockito.ArgumentMatchers.<java.util.function.Predicate<Response>>any(), any(), any())).thenReturn(response);
+        when(browser.page().waitForResponse(ArgumentMatchers.<java.util.function.Predicate<Response>>any(), any(), any())).thenReturn(response);
         return response;
     }
 
