@@ -874,6 +874,30 @@ actions:
         command: "install"
 
   - playwright:
+      click:
+        element:
+          role: "button"
+          name: "Apply"
+          visible: true
+          within:
+            css: "#card-beta"
+
+  - playwright:
+      extract:
+        element:
+          ref: "e2"
+        value: "normalized-locator"
+        variable: "javaLocator"
+
+  - playwright:
+      extract:
+        value: "aria-snapshot"
+        aria-mode: "ai"
+        boxes: true
+        depth: 3
+        variable: "aiTree"
+
+  - playwright:
       stop: {}
 ----
 
@@ -898,6 +922,8 @@ actions:
 ----
 
 Supported element action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `screencast`, `credentials`, `drop`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable, plus optional `aria-mode`, `boxes`, `depth`, `timeout` for `aria-snapshot`, and `value="normalized-locator"`). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`), `test-id` or `ref`, optionally scoped inside a nested `within` element and narrowed by `visible`, `nth`, `first` or `last`.
+
+The YAML DSL supports a single `within` nesting level. Use the XML DSL or the Java API when you need deeper nesting.
 
 The same applies to XML:
 

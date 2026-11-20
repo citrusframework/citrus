@@ -608,6 +608,9 @@ public class ExtractAction extends AbstractPlaywrightAction {
             if (depth != null && depth < 0) {
                 throw new CitrusRuntimeException("Playwright ARIA snapshot depth must not be negative: " + depth);
             }
+            if (timeoutMs != null && timeoutMs < 0) {
+                throw new CitrusRuntimeException("Playwright ARIA snapshot timeout must not be negative: " + timeoutMs);
+            }
             if (value == Value.CSS_VALUE && !StringUtils.hasText(property)) {
                 throw new CitrusRuntimeException("Missing Playwright CSS property - call cssValue(...) before building extract action");
             }

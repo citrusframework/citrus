@@ -23,6 +23,9 @@ import org.citrusframework.playwright.model.LocatorSpec;
 /**
  * Base non-recursive locator specification shared by {@link Element} and nested {@code within}
  * locator scopes so inline JSON schema generation stays free of circular type references.
+ * <p>
+ * As a consequence YAML {@code within} supports a single nesting level. The XML DSL and the
+ * {@link LocatorSpec#within(LocatorSpec)} API allow arbitrary nesting.
  */
 public class ElementLocator {
 

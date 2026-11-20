@@ -186,4 +186,26 @@ class LocatorSpecTest {
 
         assertSame(visibleScoped, target.resolveFor(page));
     }
+
+    @Test
+    void shouldResolveRefAndWithinInsideFrameForPlaywrightTarget() {
+        Page page = mock(Page.class);
+        FrameLocator frame = mock(FrameLocator.class);
+        Locator refButton = mock(Locator.class);
+        Locator container = mock(Locator.class);
+        Locator scoped = mock(Locator.class);
+        Locator visibleScoped = mock(Locator.class);
+
+        when(page.frameLocator("#frame")).thenReturn(frame);
+        when(frame.locator("aria-ref=e7")).thenReturn(refButton);
+        when(frame.locator("#section")).thenReturn(container);
+        when(refButton.within(container)).thenReturn(scoped);
+        when(scoped.visible()).thenReturn(visibleScoped);
+
+        PlaywrightTarget target = PlaywrightTarget.the("Frame save button")
+                .located(LocatorSpec.ref("e7").within(LocatorSpec.css("#section")).visible())
+                .inFrame("#frame");
+
+        assertSame(visibleScoped, target.resolveFor(page));
+    }
 }

@@ -249,6 +249,8 @@ class ExtractActionTest {
         assertThrows(CitrusRuntimeException.class,
                 () -> new ExtractAction.Builder().ariaSnapshot("ai").depth(-1).variable("out").build());
         assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().ariaSnapshot("ai").timeout(-1D).variable("out").build());
+        assertThrows(CitrusRuntimeException.class,
                 () -> new ExtractAction.Builder().ariaSnapshot("unknown").variable("out").build());
     }
 }
