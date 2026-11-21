@@ -1,0 +1,9 @@
+name: ZookeeperExistsTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      client: myZookeeperClient
+      description: "Check node exists"
+      exists:
+        path: /some-path

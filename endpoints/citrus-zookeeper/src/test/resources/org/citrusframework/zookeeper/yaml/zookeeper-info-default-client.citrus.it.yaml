@@ -1,0 +1,7 @@
+name: ZookeeperInfoDefaultClientTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      description: "Get server info"
+      info: {}

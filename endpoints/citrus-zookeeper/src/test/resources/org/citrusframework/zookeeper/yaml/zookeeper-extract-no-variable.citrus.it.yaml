@@ -1,0 +1,10 @@
+name: ZookeeperExtractNoVariableTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      client: myZookeeperClient
+      get:
+        path: /some-path
+      extract:
+        - path: $.responseData.data

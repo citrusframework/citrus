@@ -1,0 +1,11 @@
+name: ZookeeperSetTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      client: myZookeeperClient
+      description: "Set node data"
+      set:
+        path: /some-path
+        data: some-data
+        version: 1
