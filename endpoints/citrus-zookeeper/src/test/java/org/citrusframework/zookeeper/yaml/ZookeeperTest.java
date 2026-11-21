@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
@@ -175,6 +176,68 @@ public class ZookeeperTest extends AbstractYamlActionTest {
                 "classpath:org/citrusframework/zookeeper/yaml/zookeeper-extract-no-variable.citrus.it.yaml");
 
         Assertions.assertThrows(CitrusRuntimeException.class, testLoader::load);
+    }
+
+    @Test
+    public void shouldRejectMultipleCommands() {
+        Zookeeper builder = new Zookeeper();
+        org.citrusframework.zookeeper.yaml.Create create = new org.citrusframework.zookeeper.yaml.Create();
+        create.setPath("/some-path");
+        builder.setCreate(create);
+        org.citrusframework.zookeeper.yaml.Delete delete = new org.citrusframework.zookeeper.yaml.Delete();
+        delete.setPath("/some-path");
+        builder.setDelete(delete);
+
+        Assertions.assertThrows(CitrusRuntimeException.class, builder::build);
+    }
+
+    @Test
+    public void shouldBuildTwiceWithoutDuplication() throws Exception {
+        Zookeeper builder = new Zookeeper();
+        org.citrusframework.zookeeper.yaml.Create create = new org.citrusframework.zookeeper.yaml.Create();
+        create.setPath("/some-path");
+        builder.setCreate(create);
+        Zookeeper.Extraction extraction = new Zookeeper.Extraction();
+        extraction.setPath("$.responseData.path");
+        extraction.setVariable("extractedPath");
+        builder.setExtract(java.util.List.of(extraction));
+
+        builder.build();
+        ZooExecuteAction second = builder.build();
+
+        java.lang.reflect.Field processors = ZooExecuteAction.class.getDeclaredField("messageProcessors");
+        processors.setAccessible(true);
+        Assertions.assertEquals(1, ((java.util.List<?>) processors.get(second)).size());
+    }
+
+    @Test
+    public void shouldRejectBlankValidatePath() {
+        Zookeeper builder = new Zookeeper();
+        org.citrusframework.zookeeper.yaml.Create create = new org.citrusframework.zookeeper.yaml.Create();
+        create.setPath("/some-path");
+        builder.setCreate(create);
+        Zookeeper.Validation validation = new Zookeeper.Validation();
+        validation.setPath("  ");
+        validation.setValue("/some-path");
+        builder.setValidate(java.util.List.of(validation));
+
+        Assertions.assertThrows(CitrusRuntimeException.class, builder::build);
+    }
+
+    @Test
+    public void shouldFallBackToDefaultClientWhenUnresolvable() {
+        ReferenceResolver resolver = org.mockito.Mockito.mock(ReferenceResolver.class);
+        org.mockito.Mockito.when(resolver.resolve("unknownClient", ZooClient.class))
+                .thenThrow(new CitrusRuntimeException("Unable to find bean reference for name 'unknownClient'"));
+
+        Zookeeper builder = new Zookeeper();
+        builder.setReferenceResolver(resolver);
+        builder.setClient("unknownClient");
+        builder.setInfo(new org.citrusframework.zookeeper.yaml.Info());
+
+        ZooExecuteAction action = builder.build();
+
+        Assertions.assertNotNull(action.getZookeeperClient());
     }
 
     private ZooExecuteAction loadZookeeperAction(String source) {
