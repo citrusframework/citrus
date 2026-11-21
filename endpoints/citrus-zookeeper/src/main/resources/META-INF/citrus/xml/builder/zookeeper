@@ -1,0 +1,2 @@
+type=org.citrusframework.zookeeper.xml.Zookeeper
+ns=http://citrusframework.org/schema/xml/testcase
