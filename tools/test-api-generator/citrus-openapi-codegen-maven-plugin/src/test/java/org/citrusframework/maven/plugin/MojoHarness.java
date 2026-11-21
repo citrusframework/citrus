@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.Objects;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.repository.MavenArtifactRepository;
+import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 import org.apache.maven.lifecycle.internal.MojoDescriptorCreator;
 import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.MojoExecution;
@@ -22,7 +25,6 @@ import org.apache.maven.plugin.descriptor.Parameter;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptorBuilder;
 import org.apache.maven.plugin.testing.ConfigurationException;
-import org.apache.maven.plugin.testing.ResolverExpressionEvaluatorStub;
 import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
@@ -30,6 +32,7 @@ import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.component.configurator.ComponentConfigurator;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.component.repository.ComponentDescriptor;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
@@ -139,7 +142,7 @@ final class MojoHarness {
         T mojo = (T) container.lookup(Mojo.class, groupId + ":" + artifactId + ":" + version + ":" + goal);
 
         if (pluginConfiguration != null) {
-            ExpressionEvaluator evaluator = new ResolverExpressionEvaluatorStub();
+            ExpressionEvaluator evaluator = new StubEvaluator(baseDir());
 
             configurator.configureComponent(
                     mojo, pluginConfiguration, evaluator, container.getContainerRealm());
@@ -287,14 +290,14 @@ final class MojoHarness {
                 }
             } else if ("jar".equalsIgnoreCase(resource.getProtocol())) {
                 try {
-                    URL jarfile = new URL(resource.getPath());
+                    URL jarfile = URI.create(resource.getPath()).toURL();
                     if ("file".equalsIgnoreCase(jarfile.getProtocol())) {
                         String path = jarfile.getPath();
                         if (path.endsWith(pluginDescriptorLocation)) {
                             file = new File(path.substring(0, path.length() - pluginDescriptorLocation.length() - 2));
                         }
                     }
-                } catch (MalformedURLException e) {
+                } catch (MalformedURLException | IllegalArgumentException e) {
                     // not jar:file:/ URL, too bad
                 }
             }
@@ -322,5 +325,96 @@ final class MojoHarness {
             basedir = new File("").getAbsolutePath();
         }
         return basedir;
+    }
+
+    /**
+     * Port of the deprecated {@code ResolverExpressionEvaluatorStub}: resolves
+     * {@code basedir} expressions against the module directory and leaves
+     * everything else untouched.
+     */
+    private static final class StubEvaluator implements ExpressionEvaluator {
+
+        private final String basedir;
+
+        StubEvaluator(String basedir) {
+            this.basedir = basedir;
+        }
+
+        @Override
+        public Object evaluate(String expr) throws ExpressionEvaluationException {
+            Object value = null;
+
+            if (expr == null) {
+                return null;
+            }
+
+            String expression = stripTokens(expr);
+
+            if (expression.equals(expr)) {
+                int index = expr.indexOf("${");
+                if (index >= 0) {
+                    int lastIndex = expr.indexOf("}", index);
+                    if (lastIndex >= 0) {
+                        String retVal = expr.substring(0, index);
+
+                        if (index > 0 && expr.charAt(index - 1) == '$') {
+                            retVal += expr.substring(index + 1, lastIndex + 1);
+                        } else {
+                            retVal += evaluate(expr.substring(index, lastIndex + 1));
+                        }
+
+                        retVal += evaluate(expr.substring(lastIndex + 1));
+                        return retVal;
+                    }
+                }
+
+                // Was not an expression
+                if (expression.indexOf("$$") > -1) {
+                    return expression.replaceAll("\\$\\$", "\\$");
+                }
+            }
+
+            if ("basedir".equals(expression) || "project.basedir".equals(expression)) {
+                return basedir;
+            } else if (expression.startsWith("basedir") || expression.startsWith("project.basedir")) {
+                int pathSeparator = expression.indexOf("/");
+
+                if (pathSeparator > 0) {
+                    value = basedir + expression.substring(pathSeparator);
+                } else {
+                    System.out.println("Got expression '" + expression + "' that was not recognised");
+                }
+                return value;
+            } else if ("localRepository".equals(expression)) {
+                File localRepo = new File(basedir, "target/local-repo");
+                return new MavenArtifactRepository(
+                        "localRepository",
+                        "file://" + localRepo.getAbsolutePath(),
+                        new DefaultRepositoryLayout(),
+                        null,
+                        null);
+            } else {
+                return expr;
+            }
+        }
+
+        private String stripTokens(String expr) {
+            if (expr.startsWith("${") && expr.indexOf("}") == expr.length() - 1) {
+                expr = expr.substring(2, expr.length() - 1);
+            }
+
+            return expr;
+        }
+
+        @Override
+        public File alignToBaseDirectory(File file) {
+            if (file.getAbsolutePath().startsWith(basedir)) {
+                return file;
+            } else if (file.isAbsolute()) {
+                return file;
+            } else {
+                return new File(basedir, file.getPath());
+            }
+        }
     }
 }
