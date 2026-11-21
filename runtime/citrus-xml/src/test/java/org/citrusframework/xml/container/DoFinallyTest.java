@@ -16,9 +16,11 @@
 
 package org.citrusframework.xml.container;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.CreateVariablesAction;
+import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.FinallySequence;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.AbstractXmlActionTest;
@@ -43,5 +45,19 @@ public class DoFinallyTest extends AbstractXmlActionTest {
 
         Assertions.assertTrue(context.getVariables().containsKey("finallyRun"));
         Assertions.assertTrue(context.getVariable("finallyRun", boolean.class));
+    }
+
+    @Test
+    public void shouldResolveReferencesInFinallyBlock() {
+        context.getReferenceResolver().bind("cleanupAction", (TestAction) context ->
+                context.setVariable("cleanupDone", true));
+
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/container/do-finally-with-resolver.citrus.it.xml");
+
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assertions.assertEquals("DoFinallyWithResolverTest", result.getName());
+
+        Assertions.assertEquals("true", context.getVariable("cleanupDone"));
     }
 }
