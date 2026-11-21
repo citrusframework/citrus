@@ -129,4 +129,13 @@ public class FileUtilsTest {
         Assertions.assertThrows(CitrusRuntimeException.class,
                 () -> FileUtils.getPackagePath(filePath, "org.citrusframework.kafka"));
     }
+
+    @Test
+    public void testGetPackagePathWithFilePrefix() {
+        String packagePath = "file:org" + File.separator + "citrusframework";
+        String filePath = "file:" + File.separator + String.join(File.separator,
+                "work", "project", "file:org", "citrusframework");
+
+        assertEquals(packagePath, FileUtils.getPackagePath(filePath, "file:org.citrusframework"));
+    }
 }

@@ -90,6 +90,7 @@ public class Sample_IT extends TestNGCitrusSpringSupport {
 ----
 
 This loads all XML files in the given packages and runs each of them as a separate Citrus test case.
+Package scan resolves test files from the classpath root. Package segments are matched as whole path segments, so a project directory whose name contains the package name does not change the resolved location.
 
 How these test sources are reported depends on the test framework:
 
