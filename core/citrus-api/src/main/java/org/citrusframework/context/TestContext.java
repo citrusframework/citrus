@@ -991,6 +991,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
+        public List<TestActionBuilder<?>> getFinalActionBuilders() {
+            return Collections.emptyList();
+        }
+
+        @Override
         public long getActionCount() {
             return 0;
         }
