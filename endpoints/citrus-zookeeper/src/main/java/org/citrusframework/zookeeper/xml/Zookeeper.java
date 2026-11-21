@@ -36,8 +36,6 @@ import org.citrusframework.zookeeper.client.ZooClient;
 @XmlRootElement(name = "zookeeper")
 public class Zookeeper implements TestActionBuilder<ZooExecuteAction>, ReferenceResolverAware {
 
-    private final ZooExecuteAction.Builder delegate = new ZooExecuteAction.Builder();
-
     private Info info;
     private Create create;
     private Delete delete;
@@ -128,10 +126,38 @@ public class Zookeeper implements TestActionBuilder<ZooExecuteAction>, Reference
 
     @Override
     public ZooExecuteAction build() {
-        if (info == null && create == null && delete == null && exists == null
-                && get == null && set == null && children == null) {
+        int commandCount = 0;
+        if (info != null) {
+            commandCount++;
+        }
+        if (create != null) {
+            commandCount++;
+        }
+        if (delete != null) {
+            commandCount++;
+        }
+        if (exists != null) {
+            commandCount++;
+        }
+        if (get != null) {
+            commandCount++;
+        }
+        if (set != null) {
+            commandCount++;
+        }
+        if (children != null) {
+            commandCount++;
+        }
+
+        if (commandCount == 0) {
             throw new CitrusRuntimeException("Missing Zookeeper command - please provide proper command details");
         }
+
+        if (commandCount > 1) {
+            throw new CitrusRuntimeException("Ambiguous Zookeeper command - please provide only one command");
+        }
+
+        ZooExecuteAction.Builder delegate = new ZooExecuteAction.Builder();
 
         if (info != null) {
             delegate.command(info.getCommand());
@@ -171,6 +197,10 @@ public class Zookeeper implements TestActionBuilder<ZooExecuteAction>, Reference
 
         if (validate != null) {
             for (Validation validation : validate) {
+                if (!StringUtils.hasText(validation.getPath())) {
+                    throw new CitrusRuntimeException(
+                            "Missing path on zookeeper validate - please provide proper validate details");
+                }
                 delegate.validate(validation.getPath(), validation.getValue());
             }
         }
@@ -187,9 +217,13 @@ public class Zookeeper implements TestActionBuilder<ZooExecuteAction>, Reference
             delegate.extract(DelegatingPayloadVariableExtractor.Builder.fromBody().expressions(expressions).build());
         }
 
-        if (referenceResolver != null && StringUtils.hasText(client)) {
-            delegate.client(referenceResolver.resolve(client, ZooClient.class));
-        } else if (!StringUtils.hasText(client)) {
+        if (StringUtils.hasText(client) && referenceResolver != null) {
+            try {
+                delegate.client(referenceResolver.resolve(client, ZooClient.class));
+            } catch (CitrusRuntimeException e) {
+                delegate.client(new ZooClient());
+            }
+        } else {
             delegate.client(new ZooClient());
         }
 
