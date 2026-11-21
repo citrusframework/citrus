@@ -40,6 +40,7 @@ import org.citrusframework.dsl.schema.Test;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 
 /**
@@ -48,6 +49,10 @@ import tools.jackson.databind.node.ObjectNode;
 public class CitrusSchemaGenerator {
 
     private static final String DEFINITIONS = "definitions";
+    private static final String REQUIRED = "required";
+    private static final String ANY_OF = "anyOf";
+    private static final String NAME = "name";
+    private static final String TESTS = "tests";
     private static final String REF = "$ref";
     private static final String DEFINITION_REF_PREFIX = "#/definitions/";
     private static final String TEST_ACTIONS_DEFINITION = "TestActions";
@@ -83,6 +88,7 @@ public class CitrusSchemaGenerator {
 
             Catalog catalog = new Catalog();
             JsonNode jsonSchema = generateSchema(Test.class, catalog, new CitrusModule());
+            allowMultiTestRoot(jsonSchema);
             writeFile(workingDir, "citrus-testcase.json", jsonSchema.toString());
             writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toString());
 
@@ -206,6 +212,31 @@ public class CitrusSchemaGenerator {
         } else if (node.isArray()) {
             node.forEach(item -> collectGenericTestActionReferences(item, found));
         }
+    }
+
+    /**
+     * The test file root accepts a single test (requires name) and a multi-test file (requires tests). The root name
+     * stays optional when tests are present, so it falls back to the file name. Combination rules (e.g. tests together
+     * with actions) are enforced by the test loader.
+     */
+    static void allowMultiTestRoot(JsonNode jsonSchema) {
+        if (!(jsonSchema instanceof ObjectNode root) || !(root.path(REQUIRED) instanceof ArrayNode required)) {
+            return;
+        }
+
+        for (int i = required.size() - 1; i >= 0; i--) {
+            if (NAME.equals(required.get(i).asString(""))) {
+                required.remove(i);
+            }
+        }
+
+        if (required.isEmpty()) {
+            root.remove(REQUIRED);
+        }
+
+        ArrayNode anyOf = root.putArray(ANY_OF);
+        anyOf.addObject().putArray(REQUIRED).add(NAME);
+        anyOf.addObject().putArray(REQUIRED).add(TESTS);
     }
 
     private static void writeFile(Path dir, String name, String content) throws IOException {

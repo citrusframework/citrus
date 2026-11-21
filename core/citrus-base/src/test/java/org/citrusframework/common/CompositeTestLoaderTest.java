@@ -111,6 +111,25 @@ public class CompositeTestLoaderTest {
         Assertions.assertSame(second.getTestCase(), composite.getTestCase());
     }
 
+    @Test
+    public void flattensTestCasesOfChildrenRunningSeveralTests() {
+        List<String> loadOrder = new ArrayList<>();
+        FakeLoader single = new FakeLoader("single", loadOrder);
+        TestCase firstOfMulti = new FakeTestCase();
+        TestCase secondOfMulti = new FakeTestCase();
+        FakeLoader multi = new FakeLoader("multi", loadOrder) {
+            @Override
+            public List<TestCase> getTestCases() {
+                return List.of(firstOfMulti, secondOfMulti);
+            }
+        };
+        CompositeTestLoader composite = new CompositeTestLoader(List.of("single", "multi"), List.of(single, multi));
+
+        composite.load();
+
+        Assertions.assertEquals(List.of(single.getTestCase(), firstOfMulti, secondOfMulti), composite.getTestCases());
+    }
+
     private static class FakeLoader implements TestLoader {
 
         private final String name;

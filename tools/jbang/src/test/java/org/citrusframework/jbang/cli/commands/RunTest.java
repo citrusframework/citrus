@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 
+import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.spi.Resources;
 import org.junit.jupiter.api.Assertions;
@@ -69,6 +70,47 @@ public class RunTest extends CommandTest {
 
         CitrusJBangMain main = createCitrusJBangMain();
         main.execute("run", source.toString());
+    }
+
+    @Test
+    public void shouldRunMultiTestYamlFile() {
+        useNewCitrusInstance();
+
+        Path source = Resources.fromClasspath("multi/multi-sample.citrus.it.yaml").file().toPath();
+
+        CitrusJBangMain main = createCitrusJBangMain();
+        main.execute("run", source.toString());
+    }
+
+    @Test
+    public void shouldFailWhenTestOfMultiTestFileFails() {
+        useNewCitrusInstance();
+
+        Path source = Resources.fromClasspath("multi/multi-failing-test.citrus.it.yaml").file().toPath();
+
+        CitrusJBangMain main = createCitrusJBangMain(1);
+        main.execute("run", source.toString());
+    }
+
+    @Test
+    public void shouldFailWhenAfterAllOfMultiTestFileFails() {
+        useNewCitrusInstance();
+
+        Path source = Resources.fromClasspath("multi/multi-failing-after-all.citrus.it.yaml").file().toPath();
+
+        CitrusJBangMain main = createCitrusJBangMain(1);
+        main.execute("run", source.toString());
+    }
+
+    @Test
+    public void shouldRunValidFileNextToBrokenMultiTestFile() {
+        useNewCitrusInstance();
+
+        Path valid = Resources.fromClasspath("multi/multi-sample.citrus.it.yaml").file().toPath();
+        Path broken = Resources.fromClasspath("multi/multi-empty.citrus.it.yaml").file().toPath();
+
+        CitrusJBangMain main = createCitrusJBangMain(1);
+        main.execute("run", valid.toString(), broken.toString());
     }
 
     @Test
@@ -153,6 +195,14 @@ public class RunTest extends CommandTest {
             restoreProperty("citrus.jbang.report.directory", previousReportDirectory);
             restoreProperty("citrus.report.directory", previousCitrusReportDirectory);
         }
+    }
+
+    /**
+     * The exit status reporter of a run attaches to new Citrus instances only. A run in a fresh JVM always creates
+     * one; in this shared test JVM an earlier run may have left its instance behind.
+     */
+    private static void useNewCitrusInstance() {
+        CitrusInstanceManager.reset();
     }
 
     private static List<Path> listFlowReports(Path reportDirectory) throws IOException {

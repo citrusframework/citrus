@@ -24,7 +24,7 @@ import org.citrusframework.yaml.YamlTestCase;
 
 public class Test {
 
-    @SchemaProperty(required = true, description = "The test name.")
+    @SchemaProperty(required = true, description = "The test name. Optional in a multi-test file, which then uses the file name.")
     public void setName(String name) {
     }
 
@@ -72,6 +72,36 @@ public class Test {
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:finally" ) },
             description = "The final test actions.")
     public void setFinally(List<TestActions> actions) {
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:tests" ) },
+            description = "The tests of a multi-test file. They share the variables, endpoints, configuration and hooks of the file.")
+    public void setTests(List<TestEntry> tests) {
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:hooks" ) },
+            description = "Test actions that run once before the first test of a multi-test file.")
+    public void setBeforeAll(List<TestActions> actions) {
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:hooks" ) },
+            description = "Test actions that run at the start of every test of a multi-test file.")
+    public void setBeforeEach(List<TestActions> actions) {
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:hooks" ) },
+            description = "Test actions that run at the end of every test of a multi-test file.")
+    public void setAfterEach(List<TestActions> actions) {
+    }
+
+    @SchemaProperty(
+            metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:hooks" ) },
+            description = "Test actions that run once after the last test of a multi-test file.")
+    public void setAfterAll(List<TestActions> actions) {
     }
 
     public static class Endpoint extends YamlTestCase.Endpoint implements Endpoints {

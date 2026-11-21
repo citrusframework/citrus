@@ -69,6 +69,21 @@ public class JUnitJupiterEngineTest {
     }
 
     @Test
+    void testRunMultiTestSource() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setTestSources(Collections.singletonList(new TestSource("fake-multi", "multi-failing")));
+
+        JUnitJupiterEngine engine = new JUnitJupiterEngine(configuration);
+        SummaryGeneratingListener listener = new SummaryGeneratingListener();
+        engine.addTestListener(listener);
+        engine.run();
+
+        assertEquals(3L, listener.getSummary().getTestsFoundCount());
+        assertEquals(2L, listener.getSummary().getTestsSucceededCount());
+        assertEquals(1L, listener.getSummary().getTestsFailedCount());
+    }
+
+    @Test
     void shouldResolveJUnitEngine() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setEngine("junit-jupiter");

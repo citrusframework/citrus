@@ -478,6 +478,69 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
         assertEquals(endpoint, context.getReferenceResolver().resolve("myEndpoint", Endpoint.class));
     }
 
+    @Test
+    public void testInitializeTestResourcesWithoutLifecycleEvents() {
+        fixture.setName("DefaultTestCaseTest");
+        fixture.setParameters(new String[] { "user" }, new Object[] { "Citrus" });
+        fixture.getVariableDefinitions().put("greeting", "Hello ${user}");
+
+        BeanDefinition beanDefinition = new BeanDefinition();
+        beanDefinition.setName("myBean");
+        beanDefinition.setType(DefaultTextEqualsMessageValidator.class.getName());
+        fixture.getBeanDefinitions().add(beanDefinition);
+
+        Endpoint endpoint = mock(Endpoint.class);
+        doReturn("myEndpoint").when(endpoint).getName();
+        fixture.getEndpoints().add(new EndpointBuilder<Endpoint>() {
+            @Override
+            public boolean supports(Class<?> endpointType) {
+                return false;
+            }
+
+            @Override
+            public Endpoint build() {
+                return endpoint;
+            }
+        });
+
+        TestListener testListenerMock = mock();
+        context.getTestListeners().addTestListener(testListenerMock);
+
+        BeforeTest beforeTestMock = mock();
+        context.setBeforeTest(new ArrayList<>(List.of(beforeTestMock)));
+
+        fixture.initializeTestResources(context);
+
+        assertEquals("DefaultTestCaseTest", context.getVariables().get(CitrusSettings.getTestNameVariable()));
+        assertEquals("Citrus", context.getVariable("user"));
+        assertEquals("Hello Citrus", context.getVariable("greeting"));
+        assertEquals(DefaultTextEqualsMessageValidator.class,
+                context.getReferenceResolver().resolve("myBean").getClass());
+        assertEquals(endpoint, context.getReferenceResolver().resolve("myEndpoint", Endpoint.class));
+        verifyNoInteractions(testListenerMock, beforeTestMock);
+    }
+
+    @Test
+    public void testSharedVariablesBetweenParametersAndOwnVariables() {
+        fixture.setName("DefaultTestCaseTest");
+        fixture.setParameters(new String[] { "user", "mode", "env" }, new Object[] { "bob", "parameter", "dev" });
+
+        Map<String, Object> sharedVariables = new LinkedHashMap<>();
+        sharedVariables.put("user", "alice");
+        sharedVariables.put("mode", "shared");
+        sharedVariables.put("url", "${notResolved}");
+        fixture.setSharedVariables(sharedVariables);
+        fixture.getVariableDefinitions().put("mode", "own");
+
+        fixture.start(context);
+
+        assertEquals("alice", context.getVariables().get("user"));
+        assertEquals("own", context.getVariables().get("mode"));
+        assertEquals("dev", context.getVariables().get("env"));
+        assertEquals("${notResolved}", context.getVariables().get("url"));
+        assertEquals("DefaultTestCaseTest", context.getVariables().get(CitrusSettings.getTestNameVariable()));
+    }
+
     private static Duration verifyDurationHasBeenMeasured(TestResult fixture) {
         assertNotNull(fixture);
         assertNotNull(fixture.getDuration());

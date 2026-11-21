@@ -34,7 +34,7 @@ import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.citrusframework.junit.jupiter.CitrusTestFactory;
 import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
 import org.citrusframework.util.FileUtils;
-import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.DynamicNode;
 
 /**
  * JUnit test wrapper to run Citrus polyglot test definitions such as XML, YAML, Groovy.
@@ -57,7 +57,7 @@ public class JUnitCitrusTest {
     TestCaseRunner runner;
 
     @CitrusTestFactory
-    public Stream<DynamicTest> execute() {
+    public Stream<DynamicNode> execute() {
         return sources.entrySet().stream()
                 .map(entry -> {
                     String type;
@@ -81,7 +81,7 @@ public class JUnitCitrusTest {
                     CitrusAnnotations.injectAll(testLoader, citrus, context);
                     CitrusAnnotations.injectTestRunner(testLoader, runner);
 
-                    return CitrusTestFactorySupport.factory(type).dynamicTest(entry.getKey(), testLoader);
+                    return CitrusTestFactorySupport.factory(type).dynamicNode(entry.getKey(), testLoader);
                 });
     }
 
