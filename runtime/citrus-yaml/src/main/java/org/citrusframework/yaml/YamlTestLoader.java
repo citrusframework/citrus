@@ -18,6 +18,7 @@ package org.citrusframework.yaml;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.stream.Stream;
 import java.util.logging.Level;
 
 import org.citrusframework.base.DefaultTestCaseRunner;
@@ -125,7 +126,7 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
                 ((DefaultTestCaseRunner) runner).setTestCase(testCase);
             }
 
-            testCase.getActionBuilders().stream()
+            Stream.concat(testCase.getActionBuilders().stream(), testCase.getFinalActionBuilders().stream())
                     .filter(action -> ReferenceResolverAware.class.isAssignableFrom(action.getClass()))
                     .map(ReferenceResolverAware.class::cast)
                     .forEach(action -> action.setReferenceResolver(context.getReferenceResolver()));

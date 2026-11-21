@@ -150,6 +150,11 @@ public interface TestCase extends TestActionContainer, Named, Described {
     List<TestActionBuilder<?>> getActionBuilders();
 
     /**
+     * Provides access to the raw test action builders in the finally action chain.
+     */
+    List<TestActionBuilder<?>> getFinalActionBuilders();
+
+    /**
      * Immediately fails the {@link TestCase}, meaning the underlying {@link TestResult} will contain the
      * given {@link Throwable} exception.
      *

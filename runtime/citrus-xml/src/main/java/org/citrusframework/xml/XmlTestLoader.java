@@ -18,6 +18,7 @@ package org.citrusframework.xml;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -84,7 +85,7 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
                 ((DefaultTestCaseRunner) runner).setTestCase(testCase);
             }
 
-            testCase.getActionBuilders().stream()
+            Stream.concat(testCase.getActionBuilders().stream(), testCase.getFinalActionBuilders().stream())
                     .filter(action -> ReferenceResolverAware.class.isAssignableFrom(action.getClass()))
                     .map(ReferenceResolverAware.class::cast)
                     .forEach(action -> action.setReferenceResolver(context.getReferenceResolver()));
