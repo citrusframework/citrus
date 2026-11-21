@@ -1,0 +1,243 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.zookeeper.yaml;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
+import org.citrusframework.zookeeper.actions.ZooExecuteAction;
+import org.citrusframework.zookeeper.client.ZooClient;
+
+import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
+
+public class Zookeeper implements TestActionBuilder<ZooExecuteAction>, ReferenceResolverAware {
+
+    private final ZooExecuteAction.Builder delegate = new ZooExecuteAction.Builder();
+
+    private Info info;
+    private Create create;
+    private Delete delete;
+    private Exists exists;
+    private Get get;
+    private Set set;
+    private Children children;
+
+    private String description;
+    private String client;
+    private String result;
+    private List<Validation> validate = new ArrayList<>();
+    private List<Extraction> extract = new ArrayList<>();
+    private ReferenceResolver referenceResolver;
+
+    @SchemaProperty(description = "The test action description.")
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @SchemaProperty(advanced = true, description = "Reference to a ZooKeeper client bean. Defaults to a new ZooKeeper client.")
+    public void setClient(String client) {
+        this.client = client;
+    }
+
+    @SchemaProperty(advanced = true, description = "Expected command result, validated as JSON.")
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    @SchemaProperty(description = "Path expressions to validate on the command result.")
+    public void setValidate(List<Validation> validate) {
+        this.validate = validate;
+    }
+
+    public List<Validation> getValidate() {
+        return validate;
+    }
+
+    @SchemaProperty(description = "Path expressions to extract variables from the command result.")
+    public void setExtract(List<Extraction> extract) {
+        this.extract = extract;
+    }
+
+    public List<Extraction> getExtract() {
+        return extract;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "zookeeper", module = "citrus-zookeeper", description = "Get server info.")
+    public void setInfo(Info info) {
+        this.info = info;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "zookeeper", module = "citrus-zookeeper", description = "Create a node in the specified path.")
+    public void setCreate(Create create) {
+        this.create = create;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "zookeeper", module = "citrus-zookeeper", description = "Delete a node in the specified path.")
+    public void setDelete(Delete delete) {
+        this.delete = delete;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "zookeeper", module = "citrus-zookeeper", description = "Check that a node exists in the specified path.")
+    public void setExists(Exists exists) {
+        this.exists = exists;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "zookeeper", module = "citrus-zookeeper", description = "Get data from a node in the specified path.")
+    public void setGet(Get get) {
+        this.get = get;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "zookeeper", module = "citrus-zookeeper", description = "Set data on a node in the specified path.")
+    public void setSet(Set set) {
+        this.set = set;
+    }
+
+    @SchemaProperty(kind = ACTION, group = "zookeeper", module = "citrus-zookeeper", description = "Get children of a node in the specified path.")
+    public void setChildren(Children children) {
+        this.children = children;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
+    }
+
+    @Override
+    public ZooExecuteAction build() {
+        if (info == null && create == null && delete == null && exists == null
+                && get == null && set == null && children == null) {
+            throw new CitrusRuntimeException("Missing Zookeeper command - please provide proper command details");
+        }
+
+        if (info != null) {
+            delegate.command(info.getCommand());
+        }
+
+        if (create != null) {
+            delegate.command(create.getCommand());
+        }
+
+        if (delete != null) {
+            delegate.command(delete.getCommand());
+        }
+
+        if (exists != null) {
+            delegate.command(exists.getCommand());
+        }
+
+        if (get != null) {
+            delegate.command(get.getCommand());
+        }
+
+        if (set != null) {
+            delegate.command(set.getCommand());
+        }
+
+        if (children != null) {
+            delegate.command(children.getCommand());
+        }
+
+        if (StringUtils.hasText(description)) {
+            delegate.description(description);
+        }
+
+        if (StringUtils.hasText(result)) {
+            delegate.result(result);
+        }
+
+        if (validate != null) {
+            for (Validation validation : validate) {
+                delegate.validate(validation.getPath(), validation.getValue());
+            }
+        }
+
+        if (extract != null && !extract.isEmpty()) {
+            Map<String, Object> expressions = new LinkedHashMap<>();
+            for (Extraction extraction : extract) {
+                if (!StringUtils.hasText(extraction.getVariable())) {
+                    throw new CitrusRuntimeException(
+                            "Missing variable name on zookeeper extract - please provide proper extract details");
+                }
+                expressions.put(extraction.getPath(), extraction.getVariable());
+            }
+            delegate.extract(DelegatingPayloadVariableExtractor.Builder.fromBody().expressions(expressions).build());
+        }
+
+        if (referenceResolver != null && StringUtils.hasText(client)) {
+            delegate.client(referenceResolver.resolve(client, ZooClient.class));
+        } else if (!StringUtils.hasText(client)) {
+            delegate.client(new ZooClient());
+        }
+
+        return delegate.build();
+    }
+
+    public static class Validation {
+        private String path;
+        private String value;
+
+        public String getPath() {
+            return path;
+        }
+
+        @SchemaProperty(description = "JsonPath expression to validate.", required = true)
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @SchemaProperty(description = "Expected value at the JsonPath expression.")
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    public static class Extraction {
+        private String path;
+        private String variable;
+
+        public String getPath() {
+            return path;
+        }
+
+        @SchemaProperty(description = "JsonPath expression to extract a variable.", required = true)
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getVariable() {
+            return variable;
+        }
+
+        @SchemaProperty(description = "Variable name receiving the extracted value.", required = true)
+        public void setVariable(String variable) {
+            this.variable = variable;
+        }
+    }
+}

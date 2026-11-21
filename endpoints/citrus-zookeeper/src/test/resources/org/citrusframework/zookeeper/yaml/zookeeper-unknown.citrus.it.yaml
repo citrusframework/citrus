@@ -1,0 +1,7 @@
+name: ZookeeperUnknownTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      client: myZookeeperClient
+      unknown: {}

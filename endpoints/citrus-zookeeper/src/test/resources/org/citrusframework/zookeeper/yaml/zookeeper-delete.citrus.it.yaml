@@ -1,0 +1,10 @@
+name: ZookeeperDeleteTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      client: myZookeeperClient
+      description: "Delete a node"
+      delete:
+        path: /some-path
+        version: 1

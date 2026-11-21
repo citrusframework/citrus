@@ -1,0 +1,44 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.zookeeper.yaml;
+
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.zookeeper.command.ZooCommand;
+
+public class Set {
+
+    private final org.citrusframework.zookeeper.command.SetData command = new org.citrusframework.zookeeper.command.SetData();
+
+    @SchemaProperty(description = "The path of the node to update.", required = true)
+    public void setPath(String path) {
+        command.path(path);
+    }
+
+    @SchemaProperty(description = "The data of the node to update.")
+    public void setData(String data) {
+        command.data(data);
+    }
+
+    @SchemaProperty(description = "The expected version of the node to update.")
+    public void setVersion(int version) {
+        command.version(version);
+    }
+
+    public ZooCommand<?> getCommand() {
+        return command;
+    }
+}

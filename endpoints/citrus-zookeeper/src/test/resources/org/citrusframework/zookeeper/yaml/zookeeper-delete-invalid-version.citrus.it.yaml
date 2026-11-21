@@ -1,0 +1,9 @@
+name: ZookeeperDeleteInvalidVersionTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      client: myZookeeperClient
+      delete:
+        path: /some-path
+        version: abc

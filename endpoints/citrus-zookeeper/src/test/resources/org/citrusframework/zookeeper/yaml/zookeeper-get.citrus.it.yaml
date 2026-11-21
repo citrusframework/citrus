@@ -1,0 +1,9 @@
+name: ZookeeperGetTest
+author: Citrus
+status: FINAL
+actions:
+  - zookeeper:
+      client: myZookeeperClient
+      description: "Get node data"
+      get:
+        path: /some-path
