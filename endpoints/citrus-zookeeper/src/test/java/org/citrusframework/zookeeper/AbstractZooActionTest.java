@@ -16,6 +16,10 @@
 
 package org.citrusframework.zookeeper;
 
+import java.util.ArrayList;
+
+import org.apache.zookeeper.AsyncCallback;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
@@ -31,10 +35,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Shared setup for ZooKeeper declarative test action tests. Holds the mocked
@@ -74,9 +79,19 @@ public abstract class AbstractZooActionTest extends AbstractUnitTest {
         return context;
     }
 
-    protected ZooClient bindZooClient() {
+    protected ZooClient bindZooClient() throws KeeperException, InterruptedException {
         ZooKeeper zookeeper = mock(ZooKeeper.class);
-        when(zookeeper.getState()).thenReturn(ZooKeeper.States.CONNECTED);
+        lenient().when(zookeeper.getState()).thenReturn(ZooKeeper.States.CONNECTED);
+        lenient().when(zookeeper.create(anyString(), any(), any(), any())).thenReturn("/some-path");
+        lenient().when(zookeeper.getData(anyString(), anyBoolean(), any())).thenReturn("some-data".getBytes());
+        lenient().when(zookeeper.exists(anyString(), anyBoolean())).thenReturn(null);
+        lenient().when(zookeeper.setData(anyString(), any(), anyInt())).thenReturn(null);
+        lenient().when(zookeeper.getChildren(anyString(), anyBoolean())).thenReturn(new ArrayList<>());
+        lenient().doAnswer(invocation -> {
+            AsyncCallback.VoidCallback callback = invocation.getArgument(2);
+            callback.processResult(0, "/some-path", null);
+            return null;
+        }).when(zookeeper).delete(anyString(), anyInt(), any(), any());
 
         ZooClient zooClient = new ZooClient(zookeeper);
         context.getReferenceResolver().bind("myZookeeperClient", zooClient);
