@@ -133,7 +133,7 @@ public final class JUnit4Helper {
                             filePath = "file:" + filePath;
                         }
 
-                        filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
+                        filePath = FileUtils.getPackagePath(filePath, packageScan);
 
                         interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), type,
                                 FileUtils.getBaseName(String.valueOf(fileResource.getFileName())), filePath));

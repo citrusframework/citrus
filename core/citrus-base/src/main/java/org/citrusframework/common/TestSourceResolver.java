@@ -133,7 +133,7 @@ public final class TestSourceResolver {
                 filePath = "file:" + filePath;
             }
 
-            return filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
+            return FileUtils.getPackagePath(filePath, packageScan);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageScan + "'", e);
         }

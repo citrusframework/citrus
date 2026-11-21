@@ -16,12 +16,14 @@
 
 package org.citrusframework.util;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.junit.jupiter.api.Assertions;
@@ -100,5 +102,31 @@ public class FileUtilsTest {
         assertEquals("foo.xml", FileUtils.getFileName("/path/to/some/foo.xml"));
         assertEquals("foo.bar.java", FileUtils.getFileName("foo.bar.java"));
         assertEquals("foo.bar.java", FileUtils.getFileName("/path/to/some/foo.bar.java"));
+    }
+
+    @Test
+    public void testGetPackagePath() {
+        String filePath = File.separator + String.join(File.separator,
+                "work", "transformation-repro", "target", "test-classes", "transformation");
+
+        assertEquals("transformation", FileUtils.getPackagePath(filePath, "transformation"));
+    }
+
+    @Test
+    public void testGetPackagePathWithMultipleSegments() {
+        String packagePath = String.join(File.separator, "org", "citrusframework", "kafka");
+        String filePath = File.separator + String.join(File.separator,
+                "work", "kafka-tests", "target", "test-classes", "org", "citrusframework", "kafka");
+
+        assertEquals(packagePath, FileUtils.getPackagePath(filePath, "org.citrusframework.kafka"));
+    }
+
+    @Test
+    public void testGetPackagePathWhenPackageIsMissing() {
+        String filePath = File.separator + String.join(File.separator,
+                "work", "project", "target", "test-classes", "transformation");
+
+        Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> FileUtils.getPackagePath(filePath, "org.citrusframework.kafka"));
     }
 }

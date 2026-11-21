@@ -87,7 +87,7 @@ public final class CitrusTestFactorySupport {
                             filePath = "file:" + filePath;
                         }
 
-                        filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
+                        filePath = FileUtils.getPackagePath(filePath, packageScan);
 
                         String testName = FileUtils.getBaseName(String.valueOf(fileResource.getFileName()));
 

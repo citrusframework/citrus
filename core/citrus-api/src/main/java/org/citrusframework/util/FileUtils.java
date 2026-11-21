@@ -352,6 +352,32 @@ public abstract class FileUtils {
     }
 
     /**
+     * Gets the part of the given file path that starts at the last occurrence of the given package path.
+     * The package path must match whole path segments, so project directories that contain the package
+     * name as part of their name are ignored.
+     * @param filePath the absolute file path to search.
+     * @param packagePath the package path to locate, using dots as package separators.
+     * @return the part of the file path starting at the package path.
+     */
+    public static String getPackagePath(String filePath, String packagePath) {
+        String path = packagePath.replace('.', File.separatorChar);
+        int index = filePath.lastIndexOf(path);
+
+        while (index >= 0) {
+            int end = index + path.length();
+            boolean startsAtSegmentBoundary = index == 0 || filePath.charAt(index - 1) == File.separatorChar;
+            boolean endsAtSegmentBoundary = end == filePath.length() || filePath.charAt(end) == File.separatorChar;
+            if (startsAtSegmentBoundary && endsAtSegmentBoundary) {
+                return filePath.substring(index);
+            }
+
+            index = filePath.lastIndexOf(path, index - 1);
+        }
+
+        throw new CitrusRuntimeException("Unable to locate package path '%s' in file path '%s'".formatted(packagePath, filePath));
+    }
+
+    /**
      * Remove file extension from file name.
      * @param fileName
      * @return
