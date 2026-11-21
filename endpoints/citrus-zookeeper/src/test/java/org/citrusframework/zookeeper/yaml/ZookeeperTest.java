@@ -23,6 +23,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
+import org.citrusframework.zookeeper.actions.ZooActionTestSupport;
 import org.citrusframework.zookeeper.actions.ZooExecuteAction;
 import org.citrusframework.zookeeper.client.ZooClient;
 import org.citrusframework.zookeeper.command.Create;
@@ -205,9 +206,7 @@ public class ZookeeperTest extends AbstractYamlActionTest {
         builder.build();
         ZooExecuteAction second = builder.build();
 
-        java.lang.reflect.Field processors = ZooExecuteAction.class.getDeclaredField("messageProcessors");
-        processors.setAccessible(true);
-        Assertions.assertEquals(1, ((java.util.List<?>) processors.get(second)).size());
+        Assertions.assertEquals(1, ZooActionTestSupport.messageProcessorCount(second));
     }
 
     @Test
@@ -225,7 +224,7 @@ public class ZookeeperTest extends AbstractYamlActionTest {
     }
 
     @Test
-    public void shouldFallBackToDefaultClientWhenUnresolvable() {
+    public void shouldRejectUnresolvableClient() {
         ReferenceResolver resolver = org.mockito.Mockito.mock(ReferenceResolver.class);
         org.mockito.Mockito.when(resolver.resolve("unknownClient", ZooClient.class))
                 .thenThrow(new CitrusRuntimeException("Unable to find bean reference for name 'unknownClient'"));
@@ -235,9 +234,7 @@ public class ZookeeperTest extends AbstractYamlActionTest {
         builder.setClient("unknownClient");
         builder.setInfo(new org.citrusframework.zookeeper.yaml.Info());
 
-        ZooExecuteAction action = builder.build();
-
-        Assertions.assertNotNull(action.getZookeeperClient());
+        Assertions.assertThrows(CitrusRuntimeException.class, builder::build);
     }
 
     private ZooExecuteAction loadZookeeperAction(String source) {

@@ -217,11 +217,7 @@ public class Zookeeper implements TestActionBuilder<ZooExecuteAction>, Reference
         }
 
         if (StringUtils.hasText(client) && referenceResolver != null) {
-            try {
-                delegate.client(referenceResolver.resolve(client, ZooClient.class));
-            } catch (CitrusRuntimeException e) {
-                delegate.client(new ZooClient());
-            }
+            delegate.client(referenceResolver.resolve(client, ZooClient.class));
         } else {
             delegate.client(new ZooClient());
         }
