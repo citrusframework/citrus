@@ -21,18 +21,27 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.TestCase;
+import org.citrusframework.api.common.MultiTestLoader;
+import org.citrusframework.api.common.MultiTestRun;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
 import org.citrusframework.util.FileUtils;
+import org.junit.jupiter.api.DynamicContainer;
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.opentest4j.TestAbortedException;
 
 public final class CitrusTestFactorySupport {
 
@@ -76,6 +85,38 @@ public final class CitrusTestFactorySupport {
     public Stream<DynamicTest> packageScan(String ... packagesToScan) {
         List<DynamicTest> tests = new ArrayList<>();
 
+        for (ScannedTest scannedTest : scan(packagesToScan)) {
+            TestLoader testLoader = createTestLoader(scannedTest.testName(), scannedTest.packageName());
+            tests.add(DynamicTest.dynamicTest(scannedTest.testName(), () -> handler.accept(testLoader)));
+        }
+
+        return tests.stream();
+    }
+
+    /**
+     * Creates dynamic nodes based on package scan. Like {@link #packageScan(String...)}, but a test source holding
+     * several test cases (e.g. a YAML or XML multi-test file) becomes one dynamic container with one dynamic test
+     * per test case. Other test sources become one dynamic test each.
+     * @param packagesToScan the packages to scan for test files.
+     * @return the dynamic nodes.
+     * @since 5.3
+     */
+    public Stream<DynamicNode> packageScanNodes(String ... packagesToScan) {
+        List<DynamicNode> nodes = new ArrayList<>();
+
+        for (ScannedTest scannedTest : scan(packagesToScan)) {
+            nodes.add(dynamicNode(scannedTest.testName(), createTestLoader(scannedTest.testName(), scannedTest.packageName())));
+        }
+
+        return nodes.stream();
+    }
+
+    /**
+     * Finds all test files of this factory's type in the given packages.
+     */
+    private List<ScannedTest> scan(String ... packagesToScan) {
+        List<ScannedTest> scannedTests = new ArrayList<>();
+
         for (String packageScan : packagesToScan) {
             try {
                 for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(type)) {
@@ -90,9 +131,7 @@ public final class CitrusTestFactorySupport {
                         filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
                         String testName = FileUtils.getBaseName(String.valueOf(fileResource.getFileName()));
-
-                        TestLoader testLoader = createTestLoader(testName, filePath);
-                        tests.add(DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader)));
+                        scannedTests.add(new ScannedTest(testName, filePath));
                     }
                 }
             } catch (IOException e) {
@@ -100,7 +139,7 @@ public final class CitrusTestFactorySupport {
             }
         }
 
-        return tests.stream();
+        return scannedTests;
     }
 
     /**
@@ -149,6 +188,83 @@ public final class CitrusTestFactorySupport {
         return DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader));
     }
 
+    /**
+     * Creates dynamic nodes for the given test names in the given package. A test source holding several test cases
+     * becomes one dynamic container with one dynamic test per test case.
+     * @since 5.3
+     */
+    public Stream<DynamicNode> dynamicNodes(String packageName, String ... testNames) {
+        return Stream.of(testNames).map(testName -> dynamicNode(testName, createTestLoader(testName, packageName)));
+    }
+
+    /**
+     * Creates dynamic nodes for the given test names in the package of the given test class. A test source holding
+     * several test cases becomes one dynamic container with one dynamic test per test case.
+     * @since 5.3
+     */
+    public Stream<DynamicNode> dynamicNodes(Class<?> testClass, String ... testNames) {
+        return dynamicNodes(testClass.getPackage().getName(), testNames);
+    }
+
+    /**
+     * Creates the dynamic node for the given test name in the given package.
+     * @since 5.3
+     */
+    public DynamicNode dynamicNode(String packageName, String testName) {
+        return dynamicNode(testName, createTestLoader(testName, packageName));
+    }
+
+    /**
+     * Creates the dynamic node for the given test loader. When the loader opens a test source holding several test
+     * cases, the node is a dynamic container named after the source with one dynamic test per test case. The test
+     * cases of one container always run one after another on the container's thread, also when JUnit runs tests in
+     * parallel, and afterAll runs once the last test case has finished. Otherwise the node is the same dynamic test as
+     * {@link #dynamicTest(String, TestLoader)} creates. A source that cannot be opened becomes a dynamic test that
+     * reports the error when it runs.
+     * <p>
+     * The handler of this factory applies to test sources holding a single test case only.
+     * @since 5.3
+     */
+    public DynamicNode dynamicNode(String testName, TestLoader testLoader) {
+        if (testLoader instanceof MultiTestLoader multiTestLoader) {
+            Optional<MultiTestRun> run;
+            try {
+                run = multiTestLoader.openMultiTest();
+            } catch (RuntimeException e) {
+                return DynamicTest.dynamicTest(testName, testLoader::load);
+            }
+
+            if (run.isPresent()) {
+                return toContainer(run.get());
+            }
+        }
+
+        return dynamicTest(testName, testLoader);
+    }
+
+    /**
+     * Maps a multi-test run to a dynamic container whose children run sequentially on the container's thread. The
+     * children stream closes the run, which runs afterAll after the last child.
+     */
+    private static DynamicContainer toContainer(MultiTestRun run) {
+        List<String> testNames = run.getTestNames();
+        Stream<DynamicNode> children = IntStream.range(0, testNames.size())
+                .<DynamicNode>mapToObj(index -> DynamicTest.dynamicTest(testNames.get(index), () -> runTest(run, index)))
+                .onClose(run::close);
+
+        return DynamicContainer.dynamicContainer(configuration -> configuration
+                .displayName(run.getName())
+                .childExecutionMode(ExecutionMode.SAME_THREAD)
+                .children(children));
+    }
+
+    private static void runTest(MultiTestRun run, int index) {
+        TestCase testCase = run.runTest(index);
+        if (testCase.getTestResult() != null && testCase.getTestResult().isSkipped()) {
+            throw new TestAbortedException("Test '%s' is disabled".formatted(testCase.getName()));
+        }
+    }
+
     private TestLoader createTestLoader(String testName, String packageName) {
         TestLoader testLoader = TestLoader.lookup(type)
                 .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing '%s' test loader in project classpath - " +
@@ -161,5 +277,11 @@ public final class CitrusTestFactorySupport {
         CitrusAnnotations.injectAll(testLoader, CitrusInstanceManager.getOrDefault());
 
         return testLoader;
+    }
+
+    /**
+     * Test file found by package scan.
+     */
+    private record ScannedTest(String testName, String packageName) {
     }
 }

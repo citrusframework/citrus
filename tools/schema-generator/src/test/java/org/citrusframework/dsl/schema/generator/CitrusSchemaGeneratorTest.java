@@ -206,6 +206,56 @@ public class CitrusSchemaGeneratorTest {
     }
 
     @Test
+    public void verifyMultiTestFiles() {
+        assertValidTestCase("""
+                {
+                  "name": "OrderServiceIT",
+                  "description": "Order service tests",
+                  "variables": [{"name": "baseUrl", "value": "http://localhost:8080"}],
+                  "configuration": {"beans": []},
+                  "beforeAll": [{"echo": {"message": "Start order service"}}],
+                  "beforeEach": [{"echo": {"message": "Reset orders"}}],
+                  "afterEach": [{"echo": {"message": "Clean up"}}],
+                  "afterAll": [{"echo": {"message": "Stop order service"}}],
+                  "tests": [
+                    {
+                      "name": "createOrder_ok",
+                      "description": "Order is created",
+                      "actions": [{"echo": {"message": "Create order"}}]
+                    },
+                    {
+                      "name": "createOrder_missingItem",
+                      "variables": [{"name": "item", "value": "none"}],
+                      "configuration": {"beans": [{"name": "myValidator", "type": "org.citrusframework.validation.DefaultTextEqualsMessageValidator"}]},
+                      "actions": [{"echo": {"message": "Create order without items"}}],
+                      "finally": [{"echo": {"message": "Done"}}]
+                    }
+                  ]
+                }
+                """);
+
+        assertValidTestCase("""
+                {"tests":[{"name":"ok","actions":[{"echo":{"message":"ok"}}]}]}
+                """);
+
+        assertInvalidTestCase("""
+                {"description":"Neither name nor tests","actions":[{"echo":{"message":"ok"}}]}
+                """);
+
+        assertInvalidTestCase("""
+                {"tests":[{"actions":[{"echo":{"message":"no name"}}]}]}
+                """);
+
+        assertInvalidTestCase("""
+                {"tests":[{"name":"ok","configuration":{"beans":[{"name":"myValidator"}]}}]}
+                """);
+
+        assertInvalidTestCase("""
+                {"name":"UnknownHookAction","beforeEach":[%s],"tests":[{"name":"ok"}]}
+                """.formatted(UNKNOWN_ACTION));
+    }
+
+    @Test
     public void verifyUnknownTestActionsRejected() {
         assertInvalidTestCase("""
                 {"name":"UnknownActionTest","actions":[%s]}
