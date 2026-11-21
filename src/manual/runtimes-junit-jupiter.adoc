@@ -193,6 +193,56 @@ You can customize the Spring application context by adding more configuration cl
 TIP: In a Spring Boot test you can use the Citrus Spring Boot starter instead, which auto-configures the Citrus components without an explicit `CitrusSpringConfig` import.
 See link:#runtime-spring-boot[SpringBootTest] for details.
 
+[[junit-jupiter-test-factory]]
+=== Test factories for YAML and XML files
+
+A `@CitrusTestFactory` method creates one JUnit test per YAML, XML or Groovy test file.
+The `CitrusTestFactorySupport` class finds the files for you, with one shortcut per file type (`java()`, `xml()`, `yaml()`, `groovy()` and `springXml()`).
+
+.Test factory for YAML files
+[source,java]
+----
+import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.yaml;
+
+@CitrusSupport
+public class YamlFilesIT {
+
+    @CitrusTestFactory
+    public Stream<DynamicTest> yamlFiles() {
+        return yaml().packageScan("org.example.tests");
+    }
+}
+----
+
+A YAML or XML file can hold several tests (see link:#run-yaml-multiple-tests[Multiple tests in one file]).
+The `packageScan(...)`, `dynamicTests(...)` and `dynamicTest(...)` methods run such a file as one JUnit test.
+To get one JUnit test per test of the file, use the methods that return dynamic nodes: `packageScanNodes(...)`, `dynamicNodes(...)` and `dynamicNode(...)`.
+They create one JUnit container per multi-test file, named after the file, with one JUnit test per test of the file, and the same JUnit test as before for every single-test file.
+
+.Test factory that reports each test of a multi-test file
+[source,java]
+----
+import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.yaml;
+
+@CitrusSupport
+public class YamlMultiTestLoaderIT {
+
+    @CitrusTestFactory
+    public Stream<DynamicNode> packageScanNodes_IT() {
+        return yaml().packageScanNodes("org.citrusframework.integration.multi");
+    }
+
+    @CitrusTestFactory
+    public Stream<DynamicNode> dynamicNodes_IT() {
+        return yaml().dynamicNodes("org.citrusframework.integration.multi", "orders.citrus.it");
+    }
+}
+----
+
+The tests of one container always run one after another, also when JUnit runs tests in parallel; different files may still run in parallel.
+A disabled test of the file is reported as skipped, and a failing `afterAll` fails the container.
+A file that cannot be loaded is reported as one failed test, and the other files still run.
+
 [[junit-jupiter-test-sharding]]
 === Test Sharding
 

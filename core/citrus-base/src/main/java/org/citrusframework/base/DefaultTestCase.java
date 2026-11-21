@@ -118,6 +118,12 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     private final Map<String, Object> parameters = new LinkedHashMap<>();
 
     /**
+     * Variables shared with this test by its surrounding test source (e.g. the shared state of a
+     * multi-test file), set after the test parameters and before the test variables
+     */
+    private final Map<String, Object> sharedVariables = new LinkedHashMap<>();
+
+    /**
      * The result of this test case
      */
     private TestResult testResult;
@@ -178,20 +184,33 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         context.getTestListeners().onTestStart(this);
 
         try {
-            logger.debug("Initializing test case");
-
-            traceVariables("Global", context);
-            initializeTestParameters(parameters, context);
-            initializeTestVariables(variableDefinitions, context);
-            traceVariables("Test", context);
-            initializeBeans(beanDefinitions, context);
-            initializeEndpoints(endpoints, endpointDefinitions, context);
+            initializeTestResources(context);
 
             beforeTest(context);
         } catch (final Exception | Error e) {
             testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         }
+    }
+
+    /**
+     * Initializes the resources of this test in the given test context: the default test variables and
+     * test parameters, the shared variables, the test variables, the beans and the endpoints, in this order.
+     * Runs no test listener event and no global before test sequence, so the resources can also be set up
+     * outside the test lifecycle (e.g. for the shared declarations of a multi-test file).
+     * @param context the test context to initialize.
+     * @since 5.3
+     */
+    public void initializeTestResources(final TestContext context) {
+        logger.debug("Initializing test case");
+
+        traceVariables("Global", context);
+        initializeTestParameters(parameters, context);
+        initializeSharedVariables(sharedVariables, context);
+        initializeTestVariables(variableDefinitions, context);
+        traceVariables("Test", context);
+        initializeBeans(beanDefinitions, context);
+        initializeEndpoints(endpoints, endpointDefinitions, context);
     }
 
     @Override
@@ -460,6 +479,15 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     }
 
     /**
+     * Sets the shared variables in the given test context as they are, without resolving them again.
+     */
+    private void initializeSharedVariables(Map<String, Object> sharedVariables, TestContext context) {
+        for (final Map.Entry<String, Object> entry : sharedVariables.entrySet()) {
+            context.getVariables().put(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
      * Initialize the test variables in the given test context.
      */
     private void initializeTestVariables(Map<String, Object> variableDefinitions, TestContext context) {
@@ -714,6 +742,27 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     @Override
     public Map<String, Object> getParameters() {
         return parameters;
+    }
+
+    /**
+     * Sets variables shared with this test by its surrounding test source, for instance the shared state
+     * of a multi-test file. The test sets them as they are, after its test parameters and before its own
+     * test variables, so its own variables take precedence over shared ones and shared ones over parameters.
+     * @param sharedVariables the shared variables.
+     * @since 5.3
+     */
+    public void setSharedVariables(Map<String, Object> sharedVariables) {
+        this.sharedVariables.clear();
+        this.sharedVariables.putAll(sharedVariables);
+    }
+
+    /**
+     * Gets the variables shared with this test by its surrounding test source.
+     * @return the shared variables.
+     * @since 5.3
+     */
+    public Map<String, Object> getSharedVariables() {
+        return sharedVariables;
     }
 
     @Override

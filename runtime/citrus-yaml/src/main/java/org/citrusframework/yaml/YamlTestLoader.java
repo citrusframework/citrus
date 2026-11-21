@@ -18,12 +18,17 @@ package org.citrusframework.yaml;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.logging.Level;
 
 import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestSource;
+import org.citrusframework.api.common.MultiTestLoader;
+import org.citrusframework.api.common.MultiTestRun;
+import org.citrusframework.common.MultiTestDefinition;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.api.common.TestSourceAware;
@@ -45,9 +50,12 @@ import org.yaml.snakeyaml.introspector.PropertyUtils;
 /**
  * Loads test case from given YAML source.
  */
-public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware {
+public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware, MultiTestLoader {
 
     private TestSource source;
+
+    /** Parse result of a single-test source kept by {@link #openMultiTest()} for the next load */
+    private YamlTestFile parsed;
 
     private final Yaml yaml;
 
@@ -55,7 +63,7 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
      * Default constructor.
      */
     public YamlTestLoader() {
-        Constructor constructor = new Constructor(YamlTestCase.class, new LoaderOptions());
+        Constructor constructor = new Constructor(YamlTestFile.class, new LoaderOptions());
 
         constructor.setPropertyUtils(new PropertyUtils() {
             @Override
@@ -115,10 +123,54 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
     }
 
     @Override
+    public Optional<MultiTestRun> openMultiTest() {
+        initializeTestContext();
+
+        String yamlSource = readSource();
+        YamlTestFile file = yaml.load(yamlSource);
+        if (!file.isMultiTest()) {
+            parsed = file;
+            return Optional.empty();
+        }
+
+        return Optional.of(createMultiTestRun(yamlSource, file));
+    }
+
+    /**
+     * Creates the run of a multi-test file. Each test case of the run comes from a new parse of the source.
+     */
+    private MultiTestRun createMultiTestRun(String yamlSource, YamlTestFile file) {
+        MultiTestDefinition definition = file.toDefinition(testName);
+        definition.validate(definition.getName());
+
+        return createMultiTestRun(definition, () -> yaml.<YamlTestFile>load(yamlSource).toDefinition(testName));
+    }
+
+    private String readSource() {
+        try {
+            return FileUtils.readToString(getSource().getSourceFile());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to load YAML test with name '" + testName + "'", e);
+        }
+    }
+
+    @Override
     public void doLoad() {
         try {
-            Resource yamlSource = getSource().getSourceFile();
-            YamlTestCase tc = yaml.load(FileUtils.readToString(yamlSource));
+            YamlTestFile tc = parsed;
+            parsed = null;
+
+            if (tc == null) {
+                Resource yamlSource = getSource().getSourceFile();
+                String yamlText = FileUtils.readToString(yamlSource);
+                tc = yaml.load(yamlText);
+
+                if (tc.isMultiTest()) {
+                    runMultiTest(createMultiTestRun(yamlText, tc));
+                    return;
+                }
+            }
+
             testCase = tc.getTestCase();
             testCase.setTestClass(testClass);
             testCase.setPackageName(packageName);

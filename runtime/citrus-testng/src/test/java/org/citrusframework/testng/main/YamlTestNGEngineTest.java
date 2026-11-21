@@ -75,4 +75,43 @@ public class YamlTestNGEngineTest {
         });
         engine.run();
     }
+    @Test
+    public void testRunMultiTestSource() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setTestSources(Collections.singletonList(new TestSource(TestLoader.YAML, "multi", "org/citrusframework/testng/main/multi.citrus.it.yaml")));
+
+        TestNGEngine engine = new TestNGEngine(configuration);
+        engine.addTestListener(new ISuiteListener() {
+            @Override
+            public void onFinish(ISuite suite) {
+                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getFailedTests().size(), 0L);
+                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getPassedTests().size(), 1L);
+            }
+
+            @Override
+            public void onStart(ISuite suite) {
+            }
+        });
+        engine.run();
+    }
+
+    @Test
+    public void testRunFailingMultiTestSource() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setTestSources(Collections.singletonList(new TestSource(TestLoader.YAML, "multi-failing", "org/citrusframework/testng/main/multi-failing.citrus.it.yaml")));
+
+        TestNGEngine engine = new TestNGEngine(configuration);
+        engine.addTestListener(new ISuiteListener() {
+            @Override
+            public void onFinish(ISuite suite) {
+                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getFailedTests().size(), 1L);
+                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getPassedTests().size(), 0L);
+            }
+
+            @Override
+            public void onStart(ISuite suite) {
+            }
+        });
+        engine.run();
+    }
 }

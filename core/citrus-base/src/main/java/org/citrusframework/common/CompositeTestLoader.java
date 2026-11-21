@@ -118,13 +118,15 @@ public class CompositeTestLoader implements TestLoader {
     }
 
     /**
-     * Gets all test cases of the child loaders, in execution order. In case of failures this holds the test
+     * Gets all test cases of the child loaders, in execution order. A child that runs several test cases
+     * (e.g. a multi-test source) contributes all of them. In case of failures this holds the test
      * cases of all children, the first failed one being the one reported by {@link #getTestCase()}.
      * @return the list of test cases.
      */
+    @Override
     public List<TestCase> getTestCases() {
         List<TestCase> testCases = new ArrayList<>();
-        delegates.forEach(delegate -> testCases.add(delegate.getTestCase()));
+        delegates.forEach(delegate -> testCases.addAll(delegate.getTestCases()));
         return Collections.unmodifiableList(testCases);
     }
 }
