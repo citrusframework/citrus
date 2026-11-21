@@ -14,11 +14,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import jakarta.validation.constraints.NotNull;
-import org.apache.maven.plugin.Mojo;
-import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.project.MavenProject;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
@@ -51,25 +48,6 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 public class TestApiGeneratorMojoIntegrationTest {
-
-    /** JUnit 3 harness adapter; carries no test methods, so nothing discovers it. */
-    static final class MojoHarness extends AbstractMojoTestCase {
-        void start() throws Exception {
-            setUp();
-        }
-
-        <T extends Mojo> T mojo(String goal, File pom) throws Exception {
-            return lookupMojo(goal, pom);
-        }
-
-        String baseDir() {
-            return getBasedir();
-        }
-
-        MojoExecution execution(String goal) {
-            return newMojoExecution(goal);
-        }
-    }
 
     private final MojoHarness harness = new MojoHarness();
 
