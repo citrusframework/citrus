@@ -568,7 +568,9 @@ It takes care of the structural differences between the two languages, for insta
 * The test meta information `author` and `status` become attributes of the `test` element.
 * Message headers and body are grouped in the `headers` and `body` elements of the message.
 * Message validation, ignore and namespace elements move from the message to the `receive` action.
-* Actions of the Docker, Camel and Selenium modules (e.g. `docker:ping`, `camel:control-bus` or `selenium:click`) migrate to the `docker`, `camel` and `selenium` actions of the XML test language.
+* Actions of the Docker, Camel, Selenium, Kubernetes, Http, SOAP web service and JMS modules (e.g. `docker:ping`, `camel:control-bus`, `k8s:list-pods`, `http:send-request`, `ws:send` or `jms:purge-jms-queues`) migrate to the `docker`, `camel`, `selenium`, `kubernetes`, `http`, `soap` and `purge-jms-queues` actions of the XML test language.
+* The `ws:send` and `ws:receive` actions do not tell whether the endpoint is a client or a server. The migration creates the client actions `send-request` and `receive-response` and adds a `MIGRATION WARNING` so you can switch to the server actions where needed.
+* Kubernetes pods and services created from a template migrate to the `create-resource` action. Kubernetes delete actions that validate the command result and pods or services created from a specification have no counterpart and need manual migration.
 * Nested actions of containers are placed in the `actions` element (or the `when` element of `catch` and `assert`).
 * Elements and attributes that got renamed in the XML test language are converted (e.g. `repeat-until-true` becomes `repeat`, `call-template` becomes `apply-template`, `trace-time` becomes `stop-time` and `wait` becomes `wait-for`).
 * Time values are converted to the units of the XML test language (e.g. the Spring bean XML `sleep` attribute `time` is given in seconds).
@@ -577,7 +579,7 @@ Templates defined in a Spring bean XML test are migrated to separate template fi
 Please make these templates available to the `apply-template` action, for instance with the `file` attribute (see link:#run-xml-templates[XML templates]).
 
 The migration copies elements that have no counterpart in the XML test language as they are and marks them with a `MIGRATION WARNING` comment.
-This applies to the `java` and `input` actions and to the test actions from other Spring bean XML namespaces that have no XML test language counterpart (e.g. `http`, `ws` or `jms`).
+This applies to the `java` and `input` actions and to the test actions from other Spring bean XML namespaces that have no XML test language counterpart (e.g. `zookeeper`).
 The tool prints all warnings, so you know which parts of the test need manual migration.
 
 TIP: You can also run the migration programmatically.
