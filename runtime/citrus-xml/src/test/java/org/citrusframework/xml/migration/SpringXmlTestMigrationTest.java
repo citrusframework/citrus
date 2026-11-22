@@ -575,6 +575,60 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
     }
 
     @Test
+    public void shouldMigrateHttpServerActions() throws Exception {
+        String migrated = migration.migrateTest(springTest("""
+                <testcase name="HttpServerIT">
+                  <actions xmlns:http="http://www.citrusframework.org/schema/http/testcase">
+                    <http:receive-request server="httpServer" timeout="2000">
+                      <http:POST path="/order">
+                        <http:param name="type" value="gold"/>
+                        <http:headers content-type="application/xml" accept="application/xml">
+                          <http:header name="userId" value="1001"/>
+                        </http:headers>
+                        <http:body validator="myValidator">
+                          <http:data>&lt;order&gt;&lt;id&gt;1001&lt;/id&gt;&lt;/order&gt;</http:data>
+                          <http:validate path="/order/id" value="1001"/>
+                        </http:body>
+                      </http:POST>
+                      <http:extract>
+                        <http:header name="Host" variable="host"/>
+                      </http:extract>
+                    </http:receive-request>
+                    <http:send-response server="httpServer">
+                      <http:headers status="201" reason-phrase="Created">
+                        <http:header name="Location" value="/order/1001"/>
+                      </http:headers>
+                      <http:body>
+                        <http:data>{"id": 1001}</http:data>
+                      </http:body>
+                    </http:send-response>
+                  </actions>
+                </testcase>
+                """));
+        Assertions.assertEquals(Collections.emptyList(), SpringXmlTestMigration.getWarnings(migrated));
+        validate(migrated);
+        Document document = parse(migrated);
+
+        String actions = "/t:test/t:actions/";
+        assertXPath(document, "httpServer", actions + "t:http[1]/@server");
+        assertXPath(document, "2000", actions + "t:http[1]/t:receive-request/@timeout");
+        assertXPath(document, "myValidator", actions + "t:http[1]/t:receive-request/@validator");
+        assertXPath(document, "/order", actions + "t:http[1]/t:receive-request/t:POST/@path");
+        assertXPath(document, "application/xml", actions + "t:http[1]/t:receive-request/t:POST/@content-type");
+        assertXPath(document, "gold", actions + "t:http[1]/t:receive-request/t:POST/t:param/@value");
+        assertXPath(document, "1001", actions + "t:http[1]/t:receive-request/t:POST/t:headers/t:header/@value");
+        assertXPath(document, "<order><id>1001</id></order>", actions + "t:http[1]/t:receive-request/t:POST/t:body/t:data");
+        assertXPath(document, "1001", actions + "t:http[1]/t:receive-request/t:validate/@value");
+        assertXPath(document, "host", actions + "t:http[1]/t:receive-request/t:extract/t:header/@variable");
+
+        assertXPath(document, "httpServer", actions + "t:http[2]/@server");
+        assertXPath(document, "201", actions + "t:http[2]/t:send-response/t:response/@status");
+        assertXPath(document, "Created", actions + "t:http[2]/t:send-response/t:response/@reason-phrase");
+        assertXPath(document, "/order/1001", actions + "t:http[2]/t:send-response/t:response/t:headers/t:header/@value");
+        assertXPath(document, "{\"id\": 1001}", actions + "t:http[2]/t:send-response/t:response/t:body/t:data");
+    }
+
+    @Test
     public void shouldMarkUnsupportedElements() throws Exception {
         String migrated = migrateTest("UnsupportedIT.xml");
 
