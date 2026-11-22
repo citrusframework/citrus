@@ -60,6 +60,9 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
     private Remote proxy;
     private Registry registry;
 
+    /** Strong reference to the registry created by this server, so it is not garbage collected */
+    private Registry createdRegistry;
+
     /**
      * Default constructor initializing endpoint configuration.
      */
@@ -125,7 +128,9 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
     protected void startup() {
         if (createRegistry) {
             try {
-                LocateRegistry.createRegistry(endpointConfiguration.getPort());
+                // Keep a strong reference to the created registry so it is not garbage collected
+                // and unexported before the service binding is added to it
+                createdRegistry = LocateRegistry.createRegistry(endpointConfiguration.getPort());
             } catch (RemoteException e) {
                 throw new CitrusRuntimeException("Failed to create RMI registry", e);
             }
@@ -168,6 +173,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
         registry = null;
         proxy = null;
         stub = null;
+        createdRegistry = null;
     }
 
     public List<Class<? extends Remote>> getRemoteInterfaces() {

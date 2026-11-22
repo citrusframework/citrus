@@ -101,7 +101,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
     @Test
     public void testWaitForFinishAsync() {
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("TestCaseTest");
+        testcase.setName("WaitForFinishAsyncTestCase");
 
         testcase.addTestAction(new Async.Builder().actions(() -> new AbstractAsyncTestAction() {
             @Override
@@ -120,7 +120,7 @@ public class TestCaseTest extends UnitTestSupport implements TestActionSupport {
         // Make sure that waiting thread is completed
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
         Optional<Thread> waitingThread = threads.keySet().stream()
-                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("TestCaseTest")))
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("WaitForFinishAsyncTestCase")))
                 .filter(Thread::isAlive)
                 .findAny();
 

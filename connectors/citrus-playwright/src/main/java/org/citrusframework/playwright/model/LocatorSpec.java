@@ -30,6 +30,7 @@ public class LocatorSpec {
         TEXT,
         ROLE,
         TEST_ID,
+        REF,
         RAW
     }
 
@@ -40,6 +41,7 @@ public class LocatorSpec {
     private boolean first;
     private boolean last;
     private boolean visible;
+    private LocatorSpec within;
     private Function<Page, Locator> rawLocator;
 
     private LocatorSpec(Type type, String selector) {
@@ -65,6 +67,10 @@ public class LocatorSpec {
 
     public static LocatorSpec testId(String testId) {
         return new LocatorSpec(Type.TEST_ID, testId);
+    }
+
+    public static LocatorSpec ref(String ref) {
+        return new LocatorSpec(Type.REF, ref);
     }
 
     public static LocatorSpec raw(Function<Page, Locator> rawLocator) {
@@ -109,6 +115,20 @@ public class LocatorSpec {
         return this;
     }
 
+    /**
+     * Narrows the locator to elements within the subtree matched by {@code parent}
+     * (delegates to Playwright's {@link Locator#within(Locator)}). Applied before visibility and
+     * positional modifiers so {@code first()}, {@code last()}, and {@code nth(int)} select inside
+     * the scoped subtree.
+     *
+     * @param parent enclosing locator specification
+     * @return this spec for chaining
+     */
+    public LocatorSpec within(LocatorSpec parent) {
+        this.within = Objects.requireNonNull(parent, "parent locator must not be null");
+        return this;
+    }
+
     public Type getType() {
         return type;
     }
@@ -135,6 +155,10 @@ public class LocatorSpec {
 
     public boolean isVisible() {
         return visible;
+    }
+
+    public LocatorSpec getWithin() {
+        return within;
     }
 
     public Function<Page, Locator> getRawLocator() {

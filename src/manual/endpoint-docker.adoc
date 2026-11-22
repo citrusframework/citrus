@@ -257,7 +257,7 @@ public void dockerTest() {
 <test name="DockerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
       <docker>
-        <pull image="${imageId}" tag="latest"/>
+        <pull-image image="${imageId}" tag="latest"/>
       </docker>
 
       <docker>
@@ -277,7 +277,7 @@ public void dockerTest() {
 name: DockerTest
 actions:
   - docker:
-      pull:
+      pull-image:
         image: "${imageId}"
         tag: "latest"
 

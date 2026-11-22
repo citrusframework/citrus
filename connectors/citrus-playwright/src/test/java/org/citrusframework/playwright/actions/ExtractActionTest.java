@@ -18,21 +18,28 @@ package org.citrusframework.playwright.actions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Proxy;
 import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.playwright.model.LocatorSpec;
 import org.citrusframework.playwright.support.MockPlaywrightBrowser;
 import org.citrusframework.playwright.support.PlaywrightBrowserScope;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaSnapshotMode;
 import com.microsoft.playwright.options.Cookie;
 
 class ExtractActionTest {
@@ -114,9 +121,9 @@ class ExtractActionTest {
     void shouldExtractLocalStorageValue() {
         com.microsoft.playwright.WebStorage storage = mock(com.microsoft.playwright.WebStorage.class);
         when(browser.page().localStorage()).thenReturn(storage);
-        when(storage.getItem("token")).thenReturn("abc");
+        when(storage.getItem("theme")).thenReturn("abc");
 
-        new ExtractAction.Builder().storageLocal("token").variable("stored").build().execute(context);
+        new ExtractAction.Builder().storageLocal("theme").variable("stored").build().execute(context);
 
         assertEquals("abc", context.getVariable("stored"));
     }
@@ -170,5 +177,80 @@ class ExtractActionTest {
     void shouldFailFastWhenLocatorMissing() {
         assertThrows(CitrusRuntimeException.class,
                 () -> new ExtractAction.Builder().text().variable("text").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().normalizedLocator().variable("norm").build());
+    }
+
+    @Test
+    void shouldExtractPageAndLocatorAriaSnapshotWithAiOptions() {
+        when(browser.page().ariaSnapshot()).thenReturn("- document");
+        new ExtractAction.Builder().ariaSnapshot().variable("defaultPageSnap").build().execute(context);
+        assertEquals("- document", context.getVariable("defaultPageSnap"));
+
+        when(browser.page().ariaSnapshot(any(Page.AriaSnapshotOptions.class)))
+                .thenReturn("- button \"Save\" [ref=e2]");
+        new ExtractAction.Builder()
+                .ariaSnapshot("ai")
+                .boxes(true)
+                .depth(2)
+                .timeout(1200D)
+                .variable("aiPageSnap")
+                .build()
+                .execute(context);
+        assertEquals("- button \"Save\" [ref=e2]", context.getVariable("aiPageSnap"));
+
+        ArgumentCaptor<Page.AriaSnapshotOptions> pageOptions = ArgumentCaptor.forClass(Page.AriaSnapshotOptions.class);
+        verify(browser.page()).ariaSnapshot(pageOptions.capture());
+        assertEquals(AriaSnapshotMode.AI, pageOptions.getValue().mode);
+        assertEquals(Boolean.TRUE, pageOptions.getValue().boxes);
+        assertEquals(Integer.valueOf(2), pageOptions.getValue().depth);
+        assertEquals(Double.valueOf(1200D), pageOptions.getValue().timeout);
+
+        when(locator.ariaSnapshot(any(Locator.AriaSnapshotOptions.class)))
+                .thenReturn("- region \"Form\" [ref=e1]");
+        new ExtractAction.Builder()
+                .locator("#form")
+                .ariaSnapshot(AriaSnapshotMode.AI)
+                .depth(1)
+                .variable("aiLocatorSnap")
+                .build()
+                .execute(context);
+        assertEquals("- region \"Form\" [ref=e1]", context.getVariable("aiLocatorSnap"));
+    }
+
+    @Test
+    void shouldExtractNormalizedLocatorFromRefLocator() {
+        Locator refLocator = mock(Locator.class);
+        Locator normalized = (Locator) Proxy.newProxyInstance(
+                Locator.class.getClassLoader(),
+                new Class<?>[]{Locator.class},
+                (proxy, method, args) -> "toString".equals(method.getName())
+                        ? "getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(\"Submit\"))"
+                        : null);
+        when(browser.page().getByRef("e2")).thenReturn(refLocator);
+        when(refLocator.normalize()).thenReturn(normalized);
+
+        new ExtractAction.Builder()
+                .locator(LocatorSpec.ref("e2"))
+                .normalizedLocator()
+                .variable("normalizedCode")
+                .build()
+                .execute(context);
+
+        assertEquals(
+                "getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(\"Submit\"))",
+                context.getVariable("normalizedCode"));
+    }
+
+    @Test
+    void shouldRejectInvalidAriaSnapshotOptions() {
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().locator(".el").text().ariaMode("ai").variable("out").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().ariaSnapshot("ai").depth(-1).variable("out").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().ariaSnapshot("ai").timeout(-1D).variable("out").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ExtractAction.Builder().ariaSnapshot("unknown").variable("out").build());
     }
 }

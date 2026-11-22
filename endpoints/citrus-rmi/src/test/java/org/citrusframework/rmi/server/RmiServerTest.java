@@ -30,7 +30,6 @@ import org.citrusframework.rmi.message.RmiMessageHeaders;
 import org.citrusframework.rmi.remote.HelloService;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -57,7 +56,6 @@ public class RmiServerTest extends AbstractUnitTest {
     private EndpointAdapter endpointAdapter;
 
     @Test
-    @Disabled("unstable in local environments")
     public void testServiceInvocationWithArgument() throws Exception {
         RmiServer rmiServer = new RmiServer();
         rmiServer.setRemoteInterfaces(List.of(HelloService.class));
@@ -101,7 +99,6 @@ public class RmiServerTest extends AbstractUnitTest {
     }
 
     @Test
-    @Disabled("unstable in local environments")
     public void testServiceInvocationWithResult() throws Exception {
         RmiServer rmiServer = new RmiServer();
         rmiServer.setRemoteInterfaces(List.of(HelloService.class));

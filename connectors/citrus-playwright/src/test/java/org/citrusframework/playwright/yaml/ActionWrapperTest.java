@@ -17,13 +17,16 @@ package org.citrusframework.playwright.yaml;
 
 import java.util.List;
 
+import com.microsoft.playwright.options.AriaSnapshotMode;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.actions.ConsoleAction;
 import org.citrusframework.playwright.actions.CredentialsAction;
 import org.citrusframework.playwright.actions.DropAction;
+import org.citrusframework.playwright.actions.ExtractAction;
 import org.citrusframework.playwright.actions.VerifyAction;
 import org.citrusframework.playwright.actions.NetworkAction;
 import org.citrusframework.playwright.dsl.PageObjectFixtures;
+import org.citrusframework.playwright.model.LocatorSpec;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -330,5 +333,35 @@ class ActionWrapperTest {
 
         assertEquals(Boolean.TRUE, storage.build().getIndexedDB());
         assertEquals(Boolean.TRUE, storage.build().getCredentials());
+    }
+
+    @Test
+    void shouldForwardExtractAriaSnapshotOptionsAndNormalizedLocator() {
+        Extract aiSnap = new Extract();
+        aiSnap.setValue("aria-snapshot");
+        aiSnap.setAriaMode("ai");
+        aiSnap.setBoxes(true);
+        aiSnap.setDepth(2);
+        aiSnap.setTimeout(1500D);
+        aiSnap.setVariable("aiSnap");
+
+        ExtractAction snapAction = aiSnap.build();
+        assertEquals(ExtractAction.Value.ARIA_SNAPSHOT, snapAction.getValue());
+        assertEquals(AriaSnapshotMode.AI, snapAction.getAriaMode());
+        assertEquals(Boolean.TRUE, snapAction.getBoxes());
+        assertEquals(Integer.valueOf(2), snapAction.getDepth());
+        assertEquals(Double.valueOf(1500D), snapAction.getTimeoutMs());
+
+        Extract normalized = new Extract();
+        normalized.setValue("normalized-locator");
+        normalized.setVariable("normCode");
+        Element refElement = new Element();
+        refElement.setRef("e2");
+        normalized.setElement(refElement);
+
+        ExtractAction normAction = normalized.build();
+        assertEquals(ExtractAction.Value.NORMALIZED_LOCATOR, normAction.getValue());
+        assertEquals(LocatorSpec.Type.REF, normAction.getLocator().getType());
+        assertEquals("e2", normAction.getLocator().getSelector());
     }
 }

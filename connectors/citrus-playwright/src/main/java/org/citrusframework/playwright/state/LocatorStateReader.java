@@ -17,6 +17,7 @@
 package org.citrusframework.playwright.state;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.AriaSnapshotMode;
 
 import java.util.List;
 
@@ -163,6 +164,51 @@ public class LocatorStateReader {
      */
     public String ariaSnapshot(Locator locator) {
         return redactor.sanitizeText(locator.ariaSnapshot());
+    }
+
+    /**
+     * Reads Playwright's ARIA snapshot for a locator with optional mode, bounding-box, depth,
+     * and timeout settings.
+     *
+     * @param locator locator to inspect
+     * @param mode snapshot mode ({@code ai} or {@code default}), or {@code null}
+     * @param boxes whether to include bounding-box coordinates, or {@code null}
+     * @param depth maximum ARIA tree depth, or {@code null}
+     * @param timeoutMs timeout in milliseconds, or {@code null}
+     * @return sanitized ARIA snapshot text
+     */
+    public String ariaSnapshot(Locator locator, AriaSnapshotMode mode, Boolean boxes, Integer depth, Double timeoutMs) {
+        if (mode == null && boxes == null && depth == null && timeoutMs == null) {
+            return ariaSnapshot(locator);
+        }
+        Locator.AriaSnapshotOptions options = new Locator.AriaSnapshotOptions();
+        if (mode != null) {
+            options.setMode(mode);
+        }
+        if (boxes != null) {
+            options.setBoxes(boxes);
+        }
+        if (depth != null) {
+            options.setDepth(depth);
+        }
+        if (timeoutMs != null) {
+            options.setTimeout(timeoutMs);
+        }
+        return redactor.sanitizeText(locator.ariaSnapshot(options));
+    }
+
+    /**
+     * Converts a locator to Playwright's normalized Java locator code string via
+     * {@link Locator#normalize()}.
+     *
+     * <p>The returned expression is intended for diagnostics, code generation, and assertion; it
+     * is not round-trip parseable into {@link org.citrusframework.playwright.model.LocatorSpec}.</p>
+     *
+     * @param locator locator to normalize
+     * @return sanitized normalized Java locator string
+     */
+    public String normalizedLocator(Locator locator) {
+        return redactor.sanitizeText(locator.normalize().toString());
     }
 
     private List<String> sanitizeList(List<String> values) {

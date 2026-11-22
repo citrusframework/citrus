@@ -127,6 +127,22 @@ public class CitrusSchemaGeneratorTest {
     }
 
     @Test
+    public void verifyDockerRequiredProperties() throws IOException {
+        JsonNode catalog = JsonSupport.json().readTree(FileUtils.readToString(
+                Resources.create("target/schema/citrus/citrus-catalog-aggregate-test-actions.json")));
+
+        assertRequiredProperties(catalog, "docker:create", "image");
+        assertRequiredProperties(catalog, "docker:inspect", "container");
+        assertRequiredProperties(catalog, "docker:inspectImage", "image");
+        assertRequiredProperties(catalog, "docker:pullImage", "image");
+        assertRequiredProperties(catalog, "docker:remove", "container");
+        assertRequiredProperties(catalog, "docker:removeImage", "image");
+        assertRequiredProperties(catalog, "docker:start", "container");
+        assertRequiredProperties(catalog, "docker:stop", "container");
+        assertRequiredProperties(catalog, "docker:wait", "container");
+    }
+
+    @Test
     public void verifyAggregateTestContainersJson() throws IOException {
         verifyGeneratedFile("citrus-catalog-aggregate-test-containers.json");
     }
@@ -211,6 +227,9 @@ public class CitrusSchemaGeneratorTest {
         assertValidTestCase("""
                 {"name":"PurgeChannelsTest","actions":[{"purgeChannels":{"channel":"testChannel"}}]}
                 """);
+        assertValidTestCase("""
+                {"name":"PlaywrightLocatorAndSnapshotTest","actions":[{"playwright":{"click":{"element":{"role":"button","name":"Apply","within":{"ref":"e2"}}}}},{"playwright":{"extract":{"value":"aria-snapshot","ariaMode":"ai","boxes":true,"depth":2,"timeout":1500,"variable":"snap"}}}]}
+                """);
 
         for (String container : NESTED_ACTION_CONTAINERS) {
             assertValidTestCase(container.formatted(KNOWN_ACTION));
@@ -242,6 +261,14 @@ public class CitrusSchemaGeneratorTest {
         Message generated = new DefaultMessage(FileUtils.readToString(Resources.create("target/schema/citrus/" + fileName)));
         Message control = new DefaultMessage(FileUtils.readToString(Resources.create("control/" + fileName)));
         validator.validateMessage(generated, control, context, new JsonMessageValidationContext());
+    }
+
+    private void assertRequiredProperties(JsonNode catalog, String action, String... requiredProperties) {
+        List<String> required = new ArrayList<>();
+        catalog.path(action).path("propertiesSchema").path("required").forEach(node -> required.add(node.asString()));
+
+        Assertions.assertEquals(List.of(requiredProperties), required,
+                "Unexpected required properties for " + action);
     }
 
     private void verifyCatalogDescriptions(String fileName) throws IOException {

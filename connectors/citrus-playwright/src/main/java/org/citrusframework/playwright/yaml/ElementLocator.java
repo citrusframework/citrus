@@ -1,0 +1,182 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.playwright.yaml;
+
+import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.playwright.model.LocatorSpec;
+
+/**
+ * Base non-recursive locator specification shared by {@link Element} and nested {@code within}
+ * locator scopes so inline JSON schema generation stays free of circular type references.
+ * <p>
+ * As a consequence YAML {@code within} supports a single nesting level. The XML DSL and the
+ * {@link LocatorSpec#within(LocatorSpec)} API allow arbitrary nesting.
+ */
+public class ElementLocator {
+
+    private String css;
+    private String xpath;
+    private String text;
+    private String role;
+    private String name;
+    private String testId;
+    private String ref;
+    private Integer nth;
+    private Boolean first;
+    private Boolean last;
+    private Boolean visible;
+
+    @SchemaProperty(description = "CSS selector for the target element.")
+    public void setCss(String css) {
+        this.css = css;
+    }
+
+    public String getCss() {
+        return css;
+    }
+
+    @SchemaProperty(description = "XPath selector for the target element.")
+    public void setXpath(String xpath) {
+        this.xpath = xpath;
+    }
+
+    public String getXpath() {
+        return xpath;
+    }
+
+    @SchemaProperty(description = "Text content selector for the target element.")
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    @SchemaProperty(description = "ARIA role selector for the target element.")
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    @SchemaProperty(description = "Accessible name filter for role based locators.")
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @SchemaProperty(description = "Test ID selector for the target element.")
+    public void setTestId(String testId) {
+        this.testId = testId;
+    }
+
+    public String getTestId() {
+        return testId;
+    }
+
+    @SchemaProperty(description = "ARIA snapshot element reference selector (for example 'e2' from an AI ARIA snapshot).")
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
+    @SchemaProperty(description = "Selects the nth matching element (zero-based).")
+    public void setNth(Integer nth) {
+        this.nth = nth;
+    }
+
+    public Integer getNth() {
+        return nth;
+    }
+
+    @SchemaProperty(description = "Selects the first matching element.")
+    public void setFirst(Boolean first) {
+        this.first = first;
+    }
+
+    public Boolean getFirst() {
+        return first;
+    }
+
+    @SchemaProperty(description = "Selects the last matching element.")
+    public void setLast(Boolean last) {
+        this.last = last;
+    }
+
+    public Boolean getLast() {
+        return last;
+    }
+
+    @SchemaProperty(description = "Filters to visible elements only.")
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    /**
+     * Converts the locator properties into a {@link LocatorSpec}.
+     * @return locator specification derived from this element locator.
+     */
+    public LocatorSpec toLocatorSpec() {
+        LocatorSpec spec;
+        if (css != null) {
+            spec = LocatorSpec.css(css);
+        } else if (xpath != null) {
+            spec = LocatorSpec.xpath(xpath);
+        } else if (text != null) {
+            spec = LocatorSpec.text(text);
+        } else if (role != null) {
+            spec = LocatorSpec.role(role);
+            if (name != null) {
+                spec.name(name);
+            }
+        } else if (testId != null) {
+            spec = LocatorSpec.testId(testId);
+        } else if (ref != null) {
+            spec = LocatorSpec.ref(ref);
+        } else {
+            throw new CitrusRuntimeException("Missing Playwright locator selector - please provide one of css, xpath, text, role, test-id, or ref");
+        }
+
+        if (Boolean.TRUE.equals(visible)) {
+            spec.visible();
+        }
+        if (nth != null) {
+            spec.nth(nth);
+        }
+        if (Boolean.TRUE.equals(first)) {
+            spec.first();
+        }
+        if (Boolean.TRUE.equals(last)) {
+            spec.last();
+        }
+        return spec;
+    }
+}

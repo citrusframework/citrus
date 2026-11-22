@@ -18,15 +18,18 @@ package org.citrusframework.playwright.actions;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaSnapshotMode;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.endpoint.PlaywrightBrowser;
+import org.citrusframework.playwright.model.LocatorSpec;
 import org.citrusframework.playwright.model.SecretPatternRedactor;
 import org.citrusframework.playwright.state.BrowserStorageStateReader;
 import org.citrusframework.playwright.state.LocatorStateReader;
 import org.citrusframework.playwright.state.ObservabilityStateReader;
 import org.citrusframework.playwright.state.PageStateReader;
+import org.citrusframework.playwright.util.AriaSnapshotModes;
 import org.citrusframework.playwright.util.LocatorResolver;
 import org.citrusframework.util.StringUtils;
 
@@ -61,6 +64,7 @@ public class ExtractAction extends AbstractPlaywrightAction {
         SELECTED_OPTION_TEXT,
         SELECTED_OPTION_VALUES,
         ARIA_SNAPSHOT,
+        NORMALIZED_LOCATOR,
         URL,
         TITLE,
         PAGE_COUNT,
@@ -79,7 +83,7 @@ public class ExtractAction extends AbstractPlaywrightAction {
          */
         boolean requiresLocator() {
             return switch (this) {
-                case URL, TITLE, PAGE_COUNT, FRAME_CONTENT, STORAGE_LOCAL, STORAGE_SESSION, COOKIE,
+                case ARIA_SNAPSHOT, URL, TITLE, PAGE_COUNT, FRAME_CONTENT, STORAGE_LOCAL, STORAGE_SESSION, COOKIE,
                      CONSOLE_MESSAGES, NETWORK_RECORDS, DOWNLOAD_METADATA -> false;
                 default -> true;
             };
@@ -93,6 +97,10 @@ public class ExtractAction extends AbstractPlaywrightAction {
     private final String property;
     private final String key;
     private final String frameSelector;
+    private final AriaSnapshotMode ariaMode;
+    private final Boolean boxes;
+    private final Integer depth;
+    private final Double timeoutMs;
 
     /**
      * Returns the extraction value read by this action.
@@ -104,12 +112,35 @@ public class ExtractAction extends AbstractPlaywrightAction {
     }
 
     /**
+     * Returns the optional locator target for locator-scoped extractions.
+     */
+    public LocatorSpec getLocator() {
+        return locator;
+    }
+
+    /**
      * Returns the name of the variable receiving the extracted value.
      *
      * @return target variable name
      */
     public String getVariable() {
         return variable;
+    }
+
+    public AriaSnapshotMode getAriaMode() {
+        return ariaMode;
+    }
+
+    public Boolean getBoxes() {
+        return boxes;
+    }
+
+    public Integer getDepth() {
+        return depth;
+    }
+
+    public Double getTimeoutMs() {
+        return timeoutMs;
     }
 
     /**
@@ -126,6 +157,10 @@ public class ExtractAction extends AbstractPlaywrightAction {
         this.property = builder.property;
         this.key = builder.key;
         this.frameSelector = builder.frameSelector;
+        this.ariaMode = builder.ariaMode;
+        this.boxes = builder.boxes;
+        this.depth = builder.depth;
+        this.timeoutMs = builder.timeoutMs;
     }
 
     @Override
@@ -154,7 +189,10 @@ public class ExtractAction extends AbstractPlaywrightAction {
             case OPTION_TEXTS -> locatorReader.optionTexts(locator(browser, context));
             case SELECTED_OPTION_TEXT -> locatorReader.selectedOptionText(locator(browser, context));
             case SELECTED_OPTION_VALUES -> locatorReader.selectedOptionValues(locator(browser, context));
-            case ARIA_SNAPSHOT -> locatorReader.ariaSnapshot(locator(browser, context));
+            case ARIA_SNAPSHOT -> locator != null
+                    ? locatorReader.ariaSnapshot(locator(browser, context), ariaMode, boxes, depth, timeoutMs)
+                    : pageReader.ariaSnapshot(page, ariaMode, boxes, depth, timeoutMs);
+            case NORMALIZED_LOCATOR -> locatorReader.normalizedLocator(locator(browser, context));
             case PAGE_COUNT -> pageReader.pageCount(browser);
             case FRAME_CONTENT -> pageReader.frameContent(page, LocatorResolver.resolve(frameSelector, context));
             case STORAGE_LOCAL -> storageReader.localStorage(page, LocatorResolver.resolve(key, context));
@@ -188,6 +226,10 @@ public class ExtractAction extends AbstractPlaywrightAction {
         private String property;
         private String key;
         private String frameSelector;
+        private AriaSnapshotMode ariaMode;
+        private Boolean boxes;
+        private Integer depth;
+        private Double timeoutMs;
 
         /**
          * Extracts the current locator text content.
@@ -334,12 +376,105 @@ public class ExtractAction extends AbstractPlaywrightAction {
         }
 
         /**
-         * Extracts Playwright's ARIA snapshot for the current locator.
+         * Extracts Playwright's ARIA snapshot for the current locator, or for the current page
+         * when no locator is configured.
          *
          * @return this builder
          */
         public Builder ariaSnapshot() {
             this.value = Value.ARIA_SNAPSHOT;
+            return this;
+        }
+
+        /**
+         * Extracts Playwright's ARIA snapshot using the specified snapshot mode ({@code ai} or
+         * {@code default}).
+         *
+         * @param mode snapshot mode
+         * @return this builder
+         */
+        public Builder ariaSnapshot(AriaSnapshotMode mode) {
+            this.value = Value.ARIA_SNAPSHOT;
+            this.ariaMode = mode;
+            return this;
+        }
+
+        /**
+         * Extracts Playwright's ARIA snapshot using the specified snapshot mode name ({@code ai}
+         * or {@code default}).
+         *
+         * @param mode snapshot mode name
+         * @return this builder
+         */
+        public Builder ariaSnapshot(String mode) {
+            this.value = Value.ARIA_SNAPSHOT;
+            this.ariaMode = AriaSnapshotModes.parse(mode);
+            return this;
+        }
+
+        /**
+         * Configures the ARIA snapshot mode ({@code ai} or {@code default}).
+         *
+         * @param mode snapshot mode
+         * @return this builder
+         */
+        public Builder ariaMode(AriaSnapshotMode mode) {
+            this.ariaMode = mode;
+            return this;
+        }
+
+        /**
+         * Configures the ARIA snapshot mode by name ({@code ai} or {@code default}).
+         *
+         * @param mode snapshot mode name
+         * @return this builder
+         */
+        public Builder ariaMode(String mode) {
+            this.ariaMode = AriaSnapshotModes.parse(mode);
+            return this;
+        }
+
+        /**
+         * Includes or omits bounding-box coordinates when extracting an ARIA snapshot.
+         *
+         * @param boxes true to include bounding boxes
+         * @return this builder
+         */
+        public Builder boxes(Boolean boxes) {
+            this.boxes = boxes;
+            return this;
+        }
+
+        /**
+         * Limits the maximum tree depth when extracting an ARIA snapshot.
+         *
+         * @param depth non-negative depth limit
+         * @return this builder
+         */
+        public Builder depth(Integer depth) {
+            this.depth = depth;
+            return this;
+        }
+
+        /**
+         * Sets the timeout in milliseconds when extracting an ARIA snapshot.
+         *
+         * @param timeoutMs timeout in milliseconds
+         * @return this builder
+         */
+        public Builder timeout(Double timeoutMs) {
+            this.timeoutMs = timeoutMs;
+            return this;
+        }
+
+        /**
+         * Extracts Playwright's normalized Java locator code string for the current locator via
+         * {@link Locator#normalize()}.
+         *
+         * @return this builder
+         */
+        public Builder normalizedLocator() {
+            this.value = Value.NORMALIZED_LOCATOR;
             return this;
         }
 
@@ -466,6 +601,15 @@ public class ExtractAction extends AbstractPlaywrightAction {
         public ExtractAction build() {
             if (value.requiresLocator()) {
                 requireLocator();
+            }
+            if ((ariaMode != null || boxes != null || depth != null || timeoutMs != null) && value != Value.ARIA_SNAPSHOT) {
+                throw new CitrusRuntimeException("Playwright ARIA snapshot options (ariaMode, boxes, depth, timeout) are only supported when extracting ariaSnapshot");
+            }
+            if (depth != null && depth < 0) {
+                throw new CitrusRuntimeException("Playwright ARIA snapshot depth must not be negative: " + depth);
+            }
+            if (timeoutMs != null && timeoutMs < 0) {
+                throw new CitrusRuntimeException("Playwright ARIA snapshot timeout must not be negative: " + timeoutMs);
             }
             if (value == Value.CSS_VALUE && !StringUtils.hasText(property)) {
                 throw new CitrusRuntimeException("Missing Playwright CSS property - call cssValue(...) before building extract action");

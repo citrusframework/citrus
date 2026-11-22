@@ -91,7 +91,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
     }
 
     @SchemaProperty(description = "Sets the RMI server URL, including host, port, and service binding.")
-    @XmlAttribute
+    @XmlAttribute(name = "server-url")
     public void setServerUrl(String serverUrl) {
         serverUrl(serverUrl);
     }
@@ -175,7 +175,7 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
     }
 
     @SchemaProperty(description = "Controls whether the RMI server creates a local registry when none is provided.")
-    @XmlAttribute
+    @XmlAttribute(name = "create-registry")
     public void setCreateRegistry(boolean createRegistry) {
         createRegistry(createRegistry);
     }
@@ -189,28 +189,25 @@ public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServe
         return this;
     }
 
-    @SchemaProperty(description = "List of remote interfaces as fully qualified class name.")
+    @SchemaProperty(description = "List of remote interfaces as fully qualified class names, separated by commas.")
+    @XmlAttribute(name = "remote-interfaces")
     @SuppressWarnings("unchecked")
-    public void setRemoteInterfaces(List<String> remoteInterfaces) {
+    public void setRemoteInterfaces(String remoteInterfaces) {
         List<Class<? extends Remote>> interfaces = new ArrayList<>();
 
-        for (String interfaceName : remoteInterfaces) {
+        for (String interfaceName : remoteInterfaces.split(",")) {
             try {
-                Class<?> maybeRemote = Class.forName(interfaceName, false, ClassLoaderHelper.getClassLoader());
+                String trimmedName = interfaceName.trim();
+                Class<?> maybeRemote = Class.forName(trimmedName, false, ClassLoaderHelper.getClassLoader());
                 if (Remote.class.isAssignableFrom(maybeRemote)) {
                     interfaces.add((Class<? extends Remote>) maybeRemote);
                 }
             } catch (ClassNotFoundException e) {
-                throw new CitrusRuntimeException(String.format("Failed to load remote interface '%s'", interfaceName), e);
+                throw new CitrusRuntimeException(String.format("Failed to load remote interface '%s'", interfaceName.trim()), e);
             }
         }
 
         remoteInterfaces(interfaces);
-    }
-
-    @XmlAttribute(name = "remote-interfaces")
-    public void setRemoteInterfaces(String remoteInterfaces) {
-        setRemoteInterfaces(Arrays.asList(remoteInterfaces.split(",")));
     }
 
     /**

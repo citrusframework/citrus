@@ -51,12 +51,12 @@ public class Create implements DockerCommandProvider {
         delegate.attachStdOut(attachStdOut);
     }
 
-    @SchemaProperty(description = "Add capabilities to the container, separated by semicolon")
+    @SchemaProperty(description = "Add capabilities to the container, separated by comma")
     public void setAddCapability(String capabilityAdd) {
         delegate.withParam("capability-add", capabilityAdd);
     }
 
-    @SchemaProperty(description = "Drop capabilities from the container, separated by semicolon")
+    @SchemaProperty(description = "Drop capabilities from the container, separated by comma")
     public void setDropCapability(String capabilityDrop) {
         delegate.withParam("capability-drop", capabilityDrop);
     }
@@ -68,12 +68,12 @@ public class Create implements DockerCommandProvider {
 
     @SchemaProperty(description = "The command to run in the container, arguments separated by semicolon")
     public void setCmd(String cmd) {
-        delegate.cmd(cmd);
+        delegate.withParam("cmd", cmd);
     }
 
     @SchemaProperty(description = "The environment variables of the container, separated by semicolon")
     public void setEnv(String env) {
-        delegate.env(env);
+        delegate.withParam("env", env);
     }
 
     @SchemaProperty(description = "The entry point of the container")
@@ -88,22 +88,22 @@ public class Create implements DockerCommandProvider {
 
     @SchemaProperty(description = "The exposed port specs of the container, separated by semicolon")
     public void setPortSpecs(String portSpecs) {
-        delegate.portSpecs(portSpecs);
+        delegate.withParam("port-specs", portSpecs);
     }
 
     @SchemaProperty(description = "The exposed ports of the container, separated by comma")
     public void setExposedPorts(String exposedPorts) {
-        delegate.exposedPorts(exposedPorts);
+        delegate.withParam("exposed-ports", exposedPorts);
     }
 
     @SchemaProperty(description = "The port bindings of the container, separated by comma")
     public void setPortBindings(String portBindings) {
-        delegate.portBindings(portBindings);
+        delegate.withParam("port-bindings", portBindings);
     }
 
     @SchemaProperty(description = "The volumes of the container, separated by comma")
     public void setVolumes(String volumes) {
-        delegate.volumes(volumes);
+        delegate.withParam("volumes", volumes);
     }
 
     @SchemaProperty(description = "The working directory of the container")

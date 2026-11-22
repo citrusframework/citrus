@@ -59,7 +59,7 @@ class ConsoleActionTest {
     void shouldStartCaptureOnCurrentPage() {
         new ConsoleAction.Builder().capture().build().execute(context);
 
-        verify(browser.page()).onConsoleMessage(any(Consumer.class));
+        verify(browser.page()).onConsoleMessage(any());
     }
 
     @Test
@@ -204,6 +204,7 @@ class ConsoleActionTest {
         assertTrue(exception.getMessage().contains("verification text"));
     }
 
+    @SuppressWarnings("unchecked")
     private void seedConsole(String type, String text) {
         browser.getConsoleCaptureRegistry().capture(browser.page(), 10);
         org.mockito.ArgumentCaptor<Consumer<ConsoleMessage>> captor =

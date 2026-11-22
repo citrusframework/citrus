@@ -18,8 +18,15 @@ package org.citrusframework.playwright.state;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaSnapshotMode;
 import com.microsoft.playwright.options.BoundingBox;
 
 import java.lang.reflect.Proxy;
@@ -27,9 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.model.BoundingBoxResult;
 import org.citrusframework.playwright.model.SecretPatternRedactor;
+import org.citrusframework.playwright.util.AriaSnapshotModes;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class StructuredStateReaderTest {
 
@@ -61,6 +71,63 @@ class StructuredStateReaderTest {
         values.put("boundingBox", null);
 
         assertNull(reader.boundingBox(locator(values)));
+    }
+
+    @Test
+    void shouldReadAriaSnapshotOptionsAndNormalizedLocatorWithRedaction() {
+        SecretPatternRedactor redactor = new SecretPatternRedactor(List.of("secret-ref"));
+        LocatorStateReader locatorReader = new LocatorStateReader(redactor);
+        PageStateReader pageReader = new PageStateReader(redactor);
+
+        Locator mockLocator = mock(Locator.class);
+        Locator normalized = (Locator) Proxy.newProxyInstance(
+                Locator.class.getClassLoader(),
+                new Class<?>[]{Locator.class},
+                (proxy, method, args) -> "toString".equals(method.getName())
+                        ? "getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(\"secret-ref\"))"
+                        : defaultValue(method.getReturnType()));
+
+        when(mockLocator.ariaSnapshot(any(Locator.AriaSnapshotOptions.class)))
+                .thenReturn("- button \"Submit\" [ref=e2] secret-ref");
+        when(mockLocator.normalize()).thenReturn(normalized);
+
+        String locatorSnap = locatorReader.ariaSnapshot(mockLocator, AriaSnapshotMode.AI, true, 2, 1500D);
+        assertEquals("- button \"Submit\" [ref=e2] " + SecretPatternRedactor.MASK, locatorSnap);
+
+        ArgumentCaptor<Locator.AriaSnapshotOptions> locatorOpts = ArgumentCaptor.forClass(Locator.AriaSnapshotOptions.class);
+        verify(mockLocator).ariaSnapshot(locatorOpts.capture());
+        assertEquals(AriaSnapshotMode.AI, locatorOpts.getValue().mode);
+        assertEquals(Boolean.TRUE, locatorOpts.getValue().boxes);
+        assertEquals(Integer.valueOf(2), locatorOpts.getValue().depth);
+        assertEquals(Double.valueOf(1500D), locatorOpts.getValue().timeout);
+
+        assertEquals(
+                "getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(\"" + SecretPatternRedactor.MASK + "\"))",
+                locatorReader.normalizedLocator(mockLocator));
+
+        Page mockPage = mock(Page.class);
+        when(mockPage.ariaSnapshot(any(Page.AriaSnapshotOptions.class)))
+                .thenReturn("- main [ref=e1]: secret-ref");
+
+        String pageSnap = pageReader.ariaSnapshot(mockPage, AriaSnapshotMode.AI, false, 3, 2500D);
+        assertEquals("- main [ref=e1]: " + SecretPatternRedactor.MASK, pageSnap);
+
+        ArgumentCaptor<Page.AriaSnapshotOptions> pageOpts = ArgumentCaptor.forClass(Page.AriaSnapshotOptions.class);
+        verify(mockPage).ariaSnapshot(pageOpts.capture());
+        assertEquals(AriaSnapshotMode.AI, pageOpts.getValue().mode);
+        assertEquals(Boolean.FALSE, pageOpts.getValue().boxes);
+        assertEquals(Integer.valueOf(3), pageOpts.getValue().depth);
+        assertEquals(Double.valueOf(2500D), pageOpts.getValue().timeout);
+    }
+
+    @Test
+    void shouldParseAriaSnapshotModes() {
+        assertNull(AriaSnapshotModes.parse(null));
+        assertNull(AriaSnapshotModes.parse("  "));
+        assertEquals(AriaSnapshotMode.AI, AriaSnapshotModes.parse("ai"));
+        assertEquals(AriaSnapshotMode.AI, AriaSnapshotModes.parse("AI"));
+        assertEquals(AriaSnapshotMode.DEFAULT, AriaSnapshotModes.parse("default"));
+        assertThrows(CitrusRuntimeException.class, () -> AriaSnapshotModes.parse("custom"));
     }
 
     @SuppressWarnings("unchecked")

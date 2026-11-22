@@ -25,7 +25,7 @@ public class InspectImage implements DockerCommandProvider {
 
     private final ImageInspect.Builder delegate = new org.citrusframework.docker.command.ImageInspect.Builder(new DockerExecuteAction.Builder());
 
-    @SchemaProperty(description = "The id of the image to inspect")
+    @SchemaProperty(description = "The id of the image to inspect", required = true)
     public void setImage(String image) {
         delegate.image(image);
     }

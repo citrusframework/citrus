@@ -16,11 +16,15 @@
 
 package org.citrusframework.playwright.yaml;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.playwright.model.LocatorSpec;
 import org.junit.jupiter.api.Test;
+import org.yaml.snakeyaml.Yaml;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -56,5 +60,40 @@ class ElementTest {
 
         assertTrue(spec.isVisible());
         assertEquals(2, spec.getNth());
+    }
+
+    @Test
+    void shouldTranslateRefAndNestedWithin() {
+        Element withinCard = new Element();
+        withinCard.setCss("#card");
+
+        Element element = new Element();
+        element.setRef("e4");
+        element.setWithin(withinCard);
+
+        LocatorSpec spec = element.toLocatorSpec();
+        assertEquals(LocatorSpec.Type.REF, spec.getType());
+        assertEquals("e4", spec.getSelector());
+        assertNotNull(spec.getWithin());
+        assertEquals("#card", spec.getWithin().getSelector());
+
+        CitrusRuntimeException missing = assertThrows(CitrusRuntimeException.class, () -> new Element().toLocatorSpec());
+        assertTrue(missing.getMessage().contains("ref"));
+
+        Element parsed = new Yaml().loadAs("""
+                role: button
+                name: Save
+                visible: true
+                within:
+                  ref: e9
+                """, Element.class);
+        LocatorSpec parsedSpec = parsed.toLocatorSpec();
+        assertEquals(LocatorSpec.Type.ROLE, parsedSpec.getType());
+        assertEquals("button", parsedSpec.getSelector());
+        assertEquals("Save", parsedSpec.getName());
+        assertTrue(parsedSpec.isVisible());
+        assertNotNull(parsedSpec.getWithin());
+        assertEquals(LocatorSpec.Type.REF, parsedSpec.getWithin().getType());
+        assertEquals("e9", parsedSpec.getWithin().getSelector());
     }
 }

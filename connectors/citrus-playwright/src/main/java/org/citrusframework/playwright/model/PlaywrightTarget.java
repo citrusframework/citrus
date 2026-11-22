@@ -189,58 +189,83 @@ public class PlaywrightTarget {
     }
 
     private Locator resolveLocator(Page page) {
-        Locator resolved = switch (locator.getType()) {
-            case CSS -> page.locator(locator.getSelector());
-            case XPATH -> page.locator("xpath=" + locator.getSelector());
-            case TEXT -> page.getByText(locator.getSelector());
-            case TEST_ID -> page.getByTestId(locator.getSelector());
-            case ROLE -> page.getByRole(resolveRole(locator.getSelector()),
-                    new Page.GetByRoleOptions().setName(locator.getName()));
-            case RAW -> locator.getRawLocator().apply(page);
+        return resolveLocator(page, locator);
+    }
+
+    private Locator resolveLocator(Page page, LocatorSpec spec) {
+        Locator resolved = switch (spec.getType()) {
+            case CSS -> page.locator(spec.getSelector());
+            case XPATH -> page.locator("xpath=" + spec.getSelector());
+            case TEXT -> page.getByText(spec.getSelector());
+            case TEST_ID -> page.getByTestId(spec.getSelector());
+            case REF -> page.getByRef(spec.getSelector());
+            case ROLE -> page.getByRole(resolveRole(spec.getSelector()),
+                    new Page.GetByRoleOptions().setName(spec.getName()));
+            case RAW -> spec.getRawLocator().apply(page);
         };
-        return applyPosition(resolved);
+        if (spec.getWithin() != null) {
+            resolved = resolved.within(resolveLocator(page, spec.getWithin()));
+        }
+        return applyModifiers(resolved, spec);
     }
 
     private Locator resolveWithinFrame(FrameLocator frame) {
         if (container != null) {
             return resolveInside(container.resolveWithinFrame(frame));
         }
-        Locator resolved = switch (locator.getType()) {
-            case CSS -> frame.locator(locator.getSelector());
-            case XPATH -> frame.locator("xpath=" + locator.getSelector());
-            case TEXT -> frame.getByText(locator.getSelector());
-            case TEST_ID -> frame.getByTestId(locator.getSelector());
-            case ROLE -> frame.getByRole(resolveRole(locator.getSelector()),
-                    new FrameLocator.GetByRoleOptions().setName(locator.getName()));
+        return resolveWithinFrame(frame, locator);
+    }
+
+    private Locator resolveWithinFrame(FrameLocator frame, LocatorSpec spec) {
+        Locator resolved = switch (spec.getType()) {
+            case CSS -> frame.locator(spec.getSelector());
+            case XPATH -> frame.locator("xpath=" + spec.getSelector());
+            case TEXT -> frame.getByText(spec.getSelector());
+            case TEST_ID -> frame.getByTestId(spec.getSelector());
+            case REF -> frame.locator("aria-ref=" + spec.getSelector());
+            case ROLE -> frame.getByRole(resolveRole(spec.getSelector()),
+                    new FrameLocator.GetByRoleOptions().setName(spec.getName()));
             case RAW -> throw new CitrusRuntimeException("Raw page locators are not supported inside Playwright targets with frame paths");
         };
-        return applyPosition(resolved);
+        if (spec.getWithin() != null) {
+            resolved = resolved.within(resolveWithinFrame(frame, spec.getWithin()));
+        }
+        return applyModifiers(resolved, spec);
     }
 
     private Locator resolveInside(Locator parent) {
-        Locator resolved = switch (locator.getType()) {
-            case CSS -> parent.locator(locator.getSelector());
-            case XPATH -> parent.locator("xpath=" + locator.getSelector());
-            case TEXT -> parent.getByText(locator.getSelector());
-            case TEST_ID -> parent.getByTestId(locator.getSelector());
-            case ROLE -> parent.getByRole(resolveRole(locator.getSelector()),
-                    new Locator.GetByRoleOptions().setName(locator.getName()));
-            case RAW -> throw new CitrusRuntimeException("Raw page locators are not supported inside nested Playwright targets");
-        };
-        return applyPosition(resolved);
+        return resolveInside(parent, locator);
     }
 
-    private Locator applyPosition(Locator resolved) {
-        if (locator.getNth() != null) {
-            return resolved.nth(locator.getNth());
+    private Locator resolveInside(Locator parent, LocatorSpec spec) {
+        Locator resolved = switch (spec.getType()) {
+            case CSS -> parent.locator(spec.getSelector());
+            case XPATH -> parent.locator("xpath=" + spec.getSelector());
+            case TEXT -> parent.getByText(spec.getSelector());
+            case TEST_ID -> parent.getByTestId(spec.getSelector());
+            case REF -> parent.locator("aria-ref=" + spec.getSelector());
+            case ROLE -> parent.getByRole(resolveRole(spec.getSelector()),
+                    new Locator.GetByRoleOptions().setName(spec.getName()));
+            case RAW -> throw new CitrusRuntimeException("Raw page locators are not supported inside nested Playwright targets");
+        };
+        if (spec.getWithin() != null) {
+            resolved = resolved.within(resolveInside(parent, spec.getWithin()));
         }
-        if (locator.isFirst()) {
-            return resolved.first();
+        return applyModifiers(resolved, spec);
+    }
+
+    private static Locator applyModifiers(Locator resolved, LocatorSpec spec) {
+        Locator narrowed = spec.isVisible() ? resolved.visible() : resolved;
+        if (spec.getNth() != null) {
+            return narrowed.nth(spec.getNth());
         }
-        if (locator.isLast()) {
-            return resolved.last();
+        if (spec.isFirst()) {
+            return narrowed.first();
         }
-        return resolved;
+        if (spec.isLast()) {
+            return narrowed.last();
+        }
+        return narrowed;
     }
 
     private static LocatorSpec substitute(LocatorSpec source, String... parameters) {
@@ -251,8 +276,15 @@ public class PlaywrightTarget {
             case ROLE -> LocatorSpec.role(substitute(source.getSelector(), parameters))
                     .name(substitute(source.getName(), parameters));
             case TEST_ID -> LocatorSpec.testId(substitute(source.getSelector(), parameters));
+            case REF -> LocatorSpec.ref(substitute(source.getSelector(), parameters));
             case RAW -> source;
         };
+        if (source.getWithin() != null && target != source) {
+            target.within(substitute(source.getWithin(), parameters));
+        }
+        if (source.isVisible() && target != source) {
+            target.visible();
+        }
         if (source.getNth() != null) {
             target.nth(source.getNth());
         } else if (source.isFirst()) {

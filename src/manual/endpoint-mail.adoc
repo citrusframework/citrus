@@ -449,6 +449,67 @@ public MailServer simpleMailServer() {
 
 The mail server component receives several properties such as *port* or *auto-start* . Citrus starts an in-memory SMTP server that clients can connect to.
 
+[[mail-marshaller-type]]
+=== Mail message data format
+
+The mail client and server exchange mail messages in a specific data format representation. By default, Citrus uses an XML mail message representation where the mail content is converted into a structured XML payload that you can validate in your test case.
+
+If you prefer to use the JSON mail message representation instead, you can set the data format per endpoint with the *marshallerType* option. Supported values are *XML* and *JSON*.
+
+.Citrus Bean
+[source,java,indent=0,role="primary"]
+----
+@BindToRegistry
+public MailServer jsonMailServer() {
+    return new MailServerBuilder()
+            .port(25025L)
+            .autoStart(true)
+            .marshallerType(MessageType.JSON.name())
+            .build();
+}
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+endpoints:
+  - mail:
+      server:
+        name: jsonMailServer
+        port: 25000
+        marshallerType: JSON
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<endpoints>
+  <mail>
+    <server name="jsonMailServer"
+            port="25000"
+            marshaller-type="JSON"/>
+  </mail>
+</endpoints>
+----
+
+The same option is available on the mail client endpoint:
+
+[source,java]
+----
+@BindToRegistry
+public MailClient jsonMailClient() {
+    return new MailClientBuilder()
+            .host("localhost")
+            .port(25025L)
+            .marshallerType(MessageType.JSON.name())
+            .build();
+}
+----
+
+NOTE: The *marshallerType* option and the *marshaller* reference option are mutually exclusive. Setting both options on the same endpoint raises an error. Use the *marshaller* reference option when you need a fully customized marshaller instance and *marshallerType* for the typical XML or JSON data format.
+
+If no marshaller option is set at all, the endpoint uses the global default data format that is defined with the *citrus.mail.marshaller.type* setting (defaults to XML).
+
 In your test case you can then receive the incoming mail messages on the server in order to perform the well known XML validation mechanisms within Citrus. The message header and the payload contain all mail information so you can verify the content with expected templates as usual:
 
 .Java
