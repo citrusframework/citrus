@@ -1166,6 +1166,34 @@
     </http>
   </xsl:template>
 
+  <xsl:template match="http:receive-request">
+    <http>
+      <xsl:copy-of select="@server|@actor"/>
+      <receive-request>
+        <xsl:copy-of select="@timeout"/>
+        <xsl:copy-of select="*[self::http:GET or self::http:POST or self::http:PUT or self::http:DELETE or self::http:HEAD or self::http:OPTIONS or self::http:PATCH or self::http:TRACE]/http:body/@validator"/>
+        <xsl:apply-templates select="http:selector" mode="http"/>
+        <xsl:apply-templates select="http:GET|http:POST|http:PUT|http:DELETE|http:HEAD|http:OPTIONS|http:PATCH|http:TRACE" mode="http-request"/>
+        <xsl:apply-templates select="*[self::http:GET or self::http:POST or self::http:PUT or self::http:DELETE or self::http:HEAD or self::http:OPTIONS or self::http:PATCH or self::http:TRACE]/http:body/http:validate"/>
+        <xsl:apply-templates select="http:extract" mode="http"/>
+      </receive-request>
+    </http>
+  </xsl:template>
+
+  <xsl:template match="http:send-response">
+    <http>
+      <xsl:copy-of select="@server|@actor"/>
+      <xsl:apply-templates select="http:description" mode="ext"/>
+      <send-response>
+        <response>
+          <xsl:copy-of select="http:headers/@status|http:headers/@reason-phrase|http:headers/@version"/>
+          <xsl:call-template name="http-message"/>
+          <xsl:call-template name="http-cookies"/>
+        </response>
+      </send-response>
+    </http>
+  </xsl:template>
+
   <xsl:template match="http:GET|http:POST|http:PUT|http:DELETE|http:HEAD|http:OPTIONS|http:PATCH|http:TRACE" mode="http-request">
     <xsl:element name="{local-name()}">
       <xsl:copy-of select="@path|@context-path"/>

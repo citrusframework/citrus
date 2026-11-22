@@ -568,7 +568,7 @@ It takes care of the structural differences between the two languages, for insta
 * The test meta information `author` and `status` become attributes of the `test` element.
 * Message headers and body are grouped in the `headers` and `body` elements of the message.
 * Message validation, ignore and namespace elements move from the message to the `receive` action.
-* Actions of the Docker, Camel, Selenium, Kubernetes, Http, SOAP web service and JMS modules (e.g. `docker:ping`, `camel:control-bus`, `k8s:list-pods`, `http:send-request`, `ws:send` or `jms:purge-jms-queues`) migrate to the `docker`, `camel`, `selenium`, `kubernetes`, `http`, `soap` and `purge-jms-queues` actions of the XML test language.
+* Actions of the Docker, Camel, Selenium, Kubernetes, Http, SOAP web service and JMS modules (e.g. `docker:ping`, `camel:control-bus`, `k8s:list-pods`, `http:send-request`, `http:receive-request`, `ws:send` or `jms:purge-jms-queues`) migrate to the `docker`, `camel`, `selenium`, `kubernetes`, `http`, `soap` and `purge-jms-queues` actions of the XML test language.
 * The `ws:send` and `ws:receive` actions do not tell whether the endpoint is a client or a server. The migration creates the client actions `send-request` and `receive-response` and adds a `MIGRATION WARNING` so you can switch to the server actions where needed.
 * Kubernetes pods and services created from a template migrate to the `create-resource` action. Kubernetes delete actions that validate the command result and pods or services created from a specification have no counterpart and need manual migration.
 * Nested actions of containers are placed in the `actions` element (or the `when` element of `catch` and `assert`).
