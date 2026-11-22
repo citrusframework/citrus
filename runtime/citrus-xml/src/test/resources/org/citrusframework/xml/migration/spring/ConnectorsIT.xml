@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
+              xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
+              xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ConnectorsIT">
+    <actions>
+      <docker:ping/>
+      <docker:version docker-client="myDockerClient">
+        <docker:description>Check version</docker:description>
+        <docker:expect>
+          <docker:result>
+            <![CDATA[
+              {"Version":"@ignore@"}
+            ]]>
+          </docker:result>
+        </docker:expect>
+      </docker:version>
+      <docker:build tag="citrus:latest" basedir="/tmp" dockerfile="Dockerfile" no-cache="true" quiet="false" remove="true"/>
+      <docker:pull image="busybox" tag="latest" registry="localhost" repository="library"/>
+      <docker:create image="busybox" name="myContainer" cmd="top" attach-stdout="true"/>
+      <docker:start container="myContainer"/>
+      <docker:inspect container="myContainer"/>
+      <docker:inspect image="busybox"/>
+      <docker:stop container="myContainer"/>
+      <docker:remove container="myContainer" force="true"/>
+      <docker:remove image="busybox"/>
+
+      <camel:create-routes camel-context="camelContext">
+        <camel:description>Create routes</camel:description>
+        <routeContext xmlns="http://camel.apache.org/schema/spring">
+          <route id="myRoute">
+            <from uri="direct:news"/>
+            <to uri="mock:news"/>
+          </route>
+        </routeContext>
+      </camel:create-routes>
+      <camel:start-routes>
+        <camel:route id="route_1"/>
+        <camel:route id="route_2"/>
+      </camel:start-routes>
+      <camel:stop-routes camel-context="camelContext">
+        <camel:route id="route_1"/>
+      </camel:stop-routes>
+      <camel:remove-routes>
+        <camel:route id="route_1"/>
+      </camel:remove-routes>
+      <camel:control-bus camel-context="camelContext">
+        <camel:route id="route_1" action="status"/>
+        <camel:result>Stopped</camel:result>
+      </camel:control-bus>
+      <camel:control-bus>
+        <camel:language type="simple">${camelContext.stop()}</camel:language>
+      </camel:control-bus>
+
+      <selenium:start browser="webBrowser"/>
+      <selenium:navigate page="http://localhost:19090"/>
+      <selenium:find>
+        <selenium:description>Find heading</selenium:description>
+        <selenium:element tag-name="h1" text="Welcome!" displayed="true" enabled="true" validate-tag-name="h1">
+          <selenium:attributes>
+            <selenium:attribute name="type" value="heading"/>
+          </selenium:attributes>
+          <selenium:styles>
+            <selenium:style name="font-size" value="40px"/>
+          </selenium:styles>
+        </selenium:element>
+      </selenium:find>
+      <selenium:click>
+        <selenium:element id="open-alert"/>
+      </selenium:click>
+      <selenium:hover>
+        <selenium:element link-text="Say Hello!"/>
+      </selenium:hover>
+      <selenium:alert accept="true">
+        <selenium:alert-text>Hello</selenium:alert-text>
+      </selenium:alert>
+      <selenium:alert accept="false" text="Warning"/>
+      <selenium:page name="userForm" action="setUserName">
+        <selenium:arguments>
+          <selenium:argument>${username}</selenium:argument>
+        </selenium:arguments>
+      </selenium:page>
+      <selenium:set-input value="Citrus">
+        <selenium:element id="username"/>
+      </selenium:set-input>
+      <selenium:check-input checked="true">
+        <selenium:element xpath="//input[@type='checkbox']"/>
+      </selenium:check-input>
+      <selenium:dropdown-select option="adult">
+        <selenium:element id="age"/>
+      </selenium:dropdown-select>
+      <selenium:dropdown-select>
+        <selenium:element css-selector="select.title"/>
+        <selenium:options>
+          <selenium:option>Mr.</selenium:option>
+          <selenium:option>Dr.</selenium:option>
+        </selenium:options>
+      </selenium:dropdown-select>
+      <selenium:wait until="hidden">
+        <selenium:element name="dialog"/>
+      </selenium:wait>
+      <selenium:javascript>
+        <selenium:script>alert('Hello')</selenium:script>
+        <selenium:errors>
+          <selenium:error>Something went wrong</selenium:error>
+        </selenium:errors>
+      </selenium:javascript>
+      <selenium:screenshot output-dir="target" browser="otherBrowser"/>
+      <selenium:open-window name="newWindow"/>
+      <selenium:switch-window name="newWindow"/>
+      <selenium:close-window name="newWindow"/>
+      <selenium:store-file file-path="classpath:download/file.txt"/>
+      <selenium:get-stored-file file-name="file.txt"/>
+      <selenium:clear-cache/>
+      <selenium:stop browser="webBrowser"/>
+    </actions>
+  </testcase>
+</spring:beans>
