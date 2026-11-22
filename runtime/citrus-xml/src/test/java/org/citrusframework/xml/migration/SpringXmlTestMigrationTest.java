@@ -381,6 +381,77 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
     }
 
     @Test
+    public void shouldMigrateConnectorActions() throws Exception {
+        String migrated = migrateTest("ConnectorsIT.xml");
+        Assertions.assertEquals(Collections.emptyList(), SpringXmlTestMigration.getWarnings(migrated));
+        Assertions.assertFalse(migrated.contains("http://www.citrusframework.org/schema/docker/testcase"));
+        Assertions.assertFalse(migrated.contains("http://www.citrusframework.org/schema/camel/testcase"));
+        Assertions.assertFalse(migrated.contains("http://www.citrusframework.org/schema/selenium/testcase"));
+        Document document = parse(migrated);
+
+        String actions = "/t:test/t:actions/";
+        assertXPath(document, "1", "count(" + actions + "t:docker[1]/t:ping)");
+        assertXPath(document, "myDockerClient", actions + "t:docker[2]/@client");
+        assertXPath(document, "Check version", actions + "t:docker[2]/t:description");
+        assertXPath(document, "{\"Version\":\"@ignore@\"}", actions + "t:docker[2]/@result");
+        assertXPath(document, "1", "count(" + actions + "t:docker[2]/t:version)");
+        assertXPath(document, "Dockerfile", actions + "t:docker[3]/t:build-image/@docker-file");
+        assertXPath(document, "true", actions + "t:docker[3]/t:build-image/@no-cache");
+        assertXPath(document, "library", actions + "t:docker[4]/t:pull-image/@repository");
+        assertXPath(document, "top", actions + "t:docker[5]/t:create/@cmd");
+        assertXPath(document, "myContainer", actions + "t:docker[6]/t:start/@container");
+        assertXPath(document, "myContainer", actions + "t:docker[7]/t:inspect/@container");
+        assertXPath(document, "busybox", actions + "t:docker[8]/t:inspect-image/@image");
+        assertXPath(document, "myContainer", actions + "t:docker[9]/t:stop/@container");
+        assertXPath(document, "true", actions + "t:docker[10]/t:remove/@force");
+        assertXPath(document, "busybox", actions + "t:docker[11]/t:remove-image/@image");
+
+        assertXPath(document, "camelContext", actions + "t:camel[1]/@camel-context");
+        assertXPath(document, "Create routes", actions + "t:camel[1]/t:description");
+        assertXPath(document, "myRoute", actions + "t:camel[1]/t:create-routes/*[local-name() = 'routeContext']/*[local-name() = 'route']/@id");
+        assertXPath(document, "2", "count(" + actions + "t:camel[2]/t:start-routes/t:route)");
+        assertXPath(document, "route_1", actions + "t:camel[3]/t:stop-routes/t:route/@id");
+        assertXPath(document, "route_1", actions + "t:camel[4]/t:remove-routes/t:route/@id");
+        assertXPath(document, "status", actions + "t:camel[5]/t:control-bus/t:route/@action");
+        assertXPath(document, "Stopped", actions + "t:camel[5]/t:control-bus/t:result");
+        assertXPath(document, "simple", actions + "t:camel[6]/t:control-bus/t:language/@type");
+        assertXPath(document, "${camelContext.stop()}", actions + "t:camel[6]/t:control-bus/t:language");
+
+        assertXPath(document, "webBrowser", actions + "t:selenium[1]/@browser");
+        assertXPath(document, "1", "count(" + actions + "t:selenium[1]/t:start)");
+        assertXPath(document, "http://localhost:19090", actions + "t:selenium[2]/t:navigate/@page");
+        assertXPath(document, "Find heading", actions + "t:selenium[3]/t:description");
+        assertXPath(document, "h1", actions + "t:selenium[3]/t:find/t:element/@tag-name");
+        assertXPath(document, "Welcome!", actions + "t:selenium[3]/t:find/t:validate/@text");
+        assertXPath(document, "h1", actions + "t:selenium[3]/t:find/t:validate/@tag-name");
+        assertXPath(document, "true", actions + "t:selenium[3]/t:find/t:validate/@displayed");
+        assertXPath(document, "heading", actions + "t:selenium[3]/t:find/t:validate/t:attributes/t:attribute/@value");
+        assertXPath(document, "40px", actions + "t:selenium[3]/t:find/t:validate/t:styles/t:style/@value");
+        assertXPath(document, "open-alert", actions + "t:selenium[4]/t:click/t:element/@id");
+        assertXPath(document, "Say Hello!", actions + "t:selenium[5]/t:hover/t:element/@link-text");
+        assertXPath(document, "Hello", actions + "t:selenium[6]/t:alert/t:text");
+        assertXPath(document, "Warning", actions + "t:selenium[7]/t:alert/t:text");
+        assertXPath(document, "false", actions + "t:selenium[7]/t:alert/@accept");
+        assertXPath(document, "${username}", actions + "t:selenium[8]/t:page/t:arguments/t:argument");
+        assertXPath(document, "Citrus", actions + "t:selenium[9]/t:set-input/@value");
+        assertXPath(document, "//input[@type='checkbox']", actions + "t:selenium[10]/t:check-input/t:element/@xpath");
+        assertXPath(document, "adult", actions + "t:selenium[11]/t:dropdown-select/@option");
+        assertXPath(document, "Dr.", actions + "t:selenium[12]/t:dropdown-select/t:options/t:option[2]");
+        assertXPath(document, "hidden", actions + "t:selenium[13]/t:wait/@until");
+        assertXPath(document, "alert('Hello')", actions + "t:selenium[14]/t:javascript/t:script");
+        assertXPath(document, "Something went wrong", actions + "t:selenium[14]/t:javascript/t:errors/t:error");
+        assertXPath(document, "otherBrowser", actions + "t:selenium[15]/@browser");
+        assertXPath(document, "target", actions + "t:selenium[15]/t:screenshot/@output-dir");
+        assertXPath(document, "newWindow", actions + "t:selenium[16]/t:open-window/@name");
+        assertXPath(document, "newWindow", actions + "t:selenium[17]/t:switch-window/@name");
+        assertXPath(document, "newWindow", actions + "t:selenium[18]/t:close-window/@name");
+        assertXPath(document, "classpath:download/file.txt", actions + "t:selenium[19]/t:store-file/@file-path");
+        assertXPath(document, "file.txt", actions + "t:selenium[20]/t:get-stored-file/@file-name");
+        assertXPath(document, "1", "count(" + actions + "t:selenium[21]/t:clear-cache)");
+        assertXPath(document, "1", "count(" + actions + "t:selenium[22]/t:stop)");
+    }
+
+    @Test
     public void shouldMarkUnsupportedElements() throws Exception {
         String migrated = migrateTest("UnsupportedIT.xml");
 
@@ -412,6 +483,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         Assertions.assertEquals(Collections.emptyList(), result.failed());
         Assertions.assertEquals(List.of(
                         targetDirectory.resolve("ActionsIT.xml"),
+                        targetDirectory.resolve("ConnectorsIT.xml"),
                         targetDirectory.resolve("ContainersIT.xml"),
                         targetDirectory.resolve("ContainersIT-greet.xml"),
                         targetDirectory.resolve("MessagesIT.xml"),
@@ -427,7 +499,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
             Assertions.assertEquals(SpringXmlTestMigration.getWarnings(content), migrated.warnings());
         }
 
-        Assertions.assertEquals(5, result.migrated().get(4).warnings().size());
+        Assertions.assertEquals(5, result.migrated().get(5).warnings().size());
 
         Template template = new XmlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())

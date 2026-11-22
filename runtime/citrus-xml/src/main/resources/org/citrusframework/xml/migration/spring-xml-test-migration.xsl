@@ -21,22 +21,27 @@
   Without parameters the stylesheet migrates the single test case in the source document.
   The parameter "template" selects a template defined in the source document by its name and migrates this template instead.
 
+  Actions of the Docker, Camel and Selenium modules are migrated to the actions of the same modules in the plain XML DSL.
   Elements that have no counterpart in the plain XML DSL are copied as is and are marked with a migration warning comment.
 -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:spring="http://www.springframework.org/schema/beans"
                 xmlns:citrus="http://www.citrusframework.org/schema/testcase"
+                xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
+                xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
+                xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns="http://citrusframework.org/schema/xml/testcase"
-                exclude-result-prefixes="spring citrus">
+                exclude-result-prefixes="spring citrus docker camel selenium">
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes"
               cdata-section-elements="data builder script source xslt value"/>
 
-  <xsl:strip-space elements="spring:* citrus:*"/>
+  <xsl:strip-space elements="spring:* citrus:* docker:* camel:* selenium:*"/>
   <xsl:preserve-space elements="citrus:data citrus:message citrus:value citrus:script citrus:builder citrus:statement
-                                citrus:groovy citrus:xml-data citrus:xslt-data citrus:select citrus:description"/>
+                                citrus:groovy citrus:xml-data citrus:xslt-data citrus:select citrus:description
+                                docker:result camel:language camel:result selenium:script selenium:alert-text"/>
 
   <!-- Name of a template in the source document that should be migrated instead of the test case -->
   <xsl:param name="template" select="''"/>
@@ -864,6 +869,201 @@
         <xsl:with-param name="message">The '<xsl:value-of select="local-name()"/>' container timeout is not supported in the plain XML DSL and has been removed</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
+  </xsl:template>
+
+  <!-- ============================================================== -->
+  <!-- Docker actions                                                 -->
+  <!-- ============================================================== -->
+
+  <xsl:template match="docker:info|docker:ping|docker:version|docker:build|docker:pull|docker:inspect|docker:remove|docker:start|docker:stop|docker:create">
+    <docker>
+      <xsl:if test="@docker-client">
+        <xsl:attribute name="client"><xsl:value-of select="@docker-client"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="docker:expect/docker:result">
+        <xsl:attribute name="result">
+          <xsl:call-template name="trim">
+            <xsl:with-param name="text" select="docker:expect/docker:result"/>
+          </xsl:call-template>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="docker:description" mode="ext"/>
+      <xsl:apply-templates select="." mode="docker-command"/>
+    </docker>
+  </xsl:template>
+
+  <xsl:template match="docker:info|docker:ping|docker:version" mode="docker-command">
+    <xsl:element name="{local-name()}"/>
+  </xsl:template>
+
+  <xsl:template match="docker:build" mode="docker-command">
+    <build-image>
+      <xsl:copy-of select="@tag|@basedir|@no-cache|@quiet|@remove"/>
+      <xsl:if test="@dockerfile">
+        <xsl:attribute name="docker-file"><xsl:value-of select="@dockerfile"/></xsl:attribute>
+      </xsl:if>
+    </build-image>
+  </xsl:template>
+
+  <xsl:template match="docker:pull" mode="docker-command">
+    <pull-image>
+      <xsl:copy-of select="@image|@tag|@registry|@repository"/>
+    </pull-image>
+  </xsl:template>
+
+  <xsl:template match="docker:inspect" mode="docker-command">
+    <xsl:choose>
+      <xsl:when test="@image">
+        <inspect-image image="{@image}"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <inspect>
+          <xsl:copy-of select="@container"/>
+        </inspect>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="docker:remove" mode="docker-command">
+    <xsl:choose>
+      <xsl:when test="@image">
+        <remove-image image="{@image}">
+          <xsl:copy-of select="@force"/>
+        </remove-image>
+      </xsl:when>
+      <xsl:otherwise>
+        <remove>
+          <xsl:copy-of select="@container|@force"/>
+        </remove>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="docker:start|docker:stop" mode="docker-command">
+    <xsl:element name="{local-name()}">
+      <xsl:copy-of select="@container"/>
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="docker:create" mode="docker-command">
+    <create>
+      <xsl:copy-of select="@image|@name|@capability-add|@capability-drop|@attach-stderr|@attach-stdin|@attach-stdout|@domain-name|@cmd|@env|@hostname|@entrypoint|@port-specs|@port-bindings|@exposed-ports|@volumes|@working-dir"/>
+    </create>
+  </xsl:template>
+
+  <!-- ============================================================== -->
+  <!-- Camel actions                                                  -->
+  <!-- ============================================================== -->
+
+  <xsl:template match="camel:create-routes|camel:start-routes|camel:stop-routes|camel:remove-routes|camel:control-bus">
+    <camel>
+      <xsl:copy-of select="@camel-context"/>
+      <xsl:apply-templates select="camel:description" mode="ext"/>
+      <xsl:element name="{local-name()}">
+        <xsl:apply-templates select="*[not(self::camel:description)]" mode="camel"/>
+      </xsl:element>
+    </camel>
+  </xsl:template>
+
+  <xsl:template match="camel:route|camel:language|camel:result" mode="camel">
+    <xsl:element name="{local-name()}">
+      <xsl:copy-of select="@*"/>
+      <xsl:value-of select="."/>
+    </xsl:element>
+  </xsl:template>
+
+  <!-- Embedded Camel route definitions are copied like message payloads -->
+  <xsl:template match="*" mode="camel">
+    <xsl:apply-templates select="." mode="payload"/>
+  </xsl:template>
+
+  <!-- ============================================================== -->
+  <!-- Selenium actions                                               -->
+  <!-- ============================================================== -->
+
+  <xsl:template match="selenium:start|selenium:stop|selenium:clear-cache|selenium:page|selenium:click|selenium:hover|selenium:set-input|selenium:check-input|selenium:dropdown-select|selenium:wait|selenium:javascript|selenium:screenshot|selenium:navigate|selenium:open-window|selenium:close-window|selenium:switch-window|selenium:store-file|selenium:get-stored-file|selenium:alert|selenium:find">
+    <selenium>
+      <xsl:copy-of select="@browser"/>
+      <xsl:apply-templates select="selenium:description" mode="ext"/>
+      <xsl:apply-templates select="." mode="selenium-action"/>
+    </selenium>
+  </xsl:template>
+
+  <xsl:template match="selenium:start|selenium:stop|selenium:clear-cache" mode="selenium-action">
+    <xsl:element name="{local-name()}"/>
+  </xsl:template>
+
+  <xsl:template match="selenium:click|selenium:hover|selenium:set-input|selenium:check-input|selenium:dropdown-select|selenium:wait" mode="selenium-action">
+    <xsl:element name="{local-name()}">
+      <xsl:copy-of select="@*[local-name() != 'browser']"/>
+      <xsl:apply-templates select="selenium:element" mode="selenium-element"/>
+      <xsl:apply-templates select="selenium:options" mode="retarget"/>
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="selenium:page|selenium:navigate|selenium:open-window|selenium:close-window|selenium:switch-window|selenium:store-file|selenium:get-stored-file|selenium:screenshot" mode="selenium-action">
+    <xsl:element name="{local-name()}">
+      <xsl:copy-of select="@*[local-name() != 'browser']"/>
+      <xsl:apply-templates select="selenium:arguments" mode="retarget"/>
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="selenium:javascript" mode="selenium-action">
+    <javascript>
+      <script><xsl:value-of select="selenium:script"/></script>
+      <xsl:apply-templates select="selenium:errors" mode="retarget"/>
+    </javascript>
+  </xsl:template>
+
+  <xsl:template match="selenium:alert" mode="selenium-action">
+    <alert>
+      <xsl:copy-of select="@accept"/>
+      <xsl:if test="@text or selenium:alert-text">
+        <text>
+          <xsl:choose>
+            <xsl:when test="selenium:alert-text"><xsl:value-of select="selenium:alert-text"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="@text"/></xsl:otherwise>
+          </xsl:choose>
+        </text>
+      </xsl:if>
+    </alert>
+  </xsl:template>
+
+  <!-- The Spring XML element holds the locator as well as the expectations, the plain XML DSL separates them -->
+  <xsl:template match="selenium:find" mode="selenium-action">
+    <find>
+      <xsl:apply-templates select="selenium:element" mode="selenium-element"/>
+      <validate>
+        <xsl:copy-of select="selenium:element/@text|selenium:element/@displayed|selenium:element/@enabled"/>
+        <xsl:if test="selenium:element/@validate-tag-name">
+          <xsl:attribute name="tag-name"><xsl:value-of select="selenium:element/@validate-tag-name"/></xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="selenium:element/selenium:attributes|selenium:element/selenium:styles" mode="retarget"/>
+      </validate>
+    </find>
+  </xsl:template>
+
+  <xsl:template match="selenium:element" mode="selenium-element">
+    <element>
+      <xsl:copy-of select="@id|@name|@tag-name|@class-name|@css-selector|@link-text|@xpath"/>
+    </element>
+  </xsl:template>
+
+  <!-- Recreates the element in the plain XML DSL namespace -->
+  <xsl:template match="*" mode="retarget">
+    <xsl:element name="{local-name()}">
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="node()" mode="retarget"/>
+    </xsl:element>
+  </xsl:template>
+
+  <!-- Descriptions of the module namespaces are kept as description element -->
+  <xsl:template match="*" mode="ext">
+    <description>
+      <xsl:call-template name="trim">
+        <xsl:with-param name="text" select="."/>
+      </xsl:call-template>
+    </description>
   </xsl:template>
 
   <!-- ============================================================== -->
