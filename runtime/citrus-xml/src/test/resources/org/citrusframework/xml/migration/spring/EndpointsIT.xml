@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="EndpointsIT">
+    <actions>
+      <k8s:info client="k8sClient">
+        <k8s:description>Kubernetes info</k8s:description>
+        <k8s:validate>
+          <k8s:result>
+            <![CDATA[
+              {"result": {"kind": "Info"}}
+            ]]>
+          </k8s:result>
+        </k8s:validate>
+      </k8s:info>
+      <k8s:create-pod client="k8sClient" namespace="test">
+        <k8s:template file="classpath:templates/pod.yml"/>
+      </k8s:create-pod>
+      <k8s:list-pods client="k8sClient" label="app=todo" namespace="test">
+        <k8s:validate>
+          <k8s:element path="$.result.items.size()" value="1"/>
+          <k8s:element path="$..status.phase" value="Running"/>
+        </k8s:validate>
+      </k8s:list-pods>
+      <k8s:get-pod name="my-pod"/>
+      <k8s:create-service client="k8sClient">
+        <k8s:template file="classpath:templates/service.yml"/>
+      </k8s:create-service>
+      <k8s:list-services label="app=todo"/>
+      <k8s:get-service name="my-service"/>
+      <k8s:list-endpoints/>
+      <k8s:list-events/>
+      <k8s:delete-pod client="k8sClient" label="app=todo"/>
+      <k8s:delete-service name="my-service"/>
+
+      <http:send-request client="httpClient" uri="http://localhost:8080/test" fork="true">
+        <http:POST path="/order">
+          <http:param name="type" value="gold"/>
+          <http:headers content-type="application/xml" accept="application/xml" version="HTTP/1.1">
+            <http:header name="userId" value="1001"/>
+          </http:headers>
+          <http:body name="order" schema-validation="false">
+            <http:data>
+              <![CDATA[
+                <order><id>${id}</id></order>
+              ]]>
+            </http:data>
+            <http:element path="/order/id" value="1001"/>
+          </http:body>
+        </http:POST>
+        <http:extract>
+          <http:header name="Location" variable="location"/>
+        </http:extract>
+      </http:send-request>
+      <http:send-request client="httpClient">
+        <http:GET path="/order/1001"/>
+      </http:send-request>
+      <http:receive-response client="httpClient" timeout="2000">
+        <http:description>Receive order</http:description>
+        <http:headers status="200" reason-phrase="OK" version="HTTP/1.1" ignore-case="false">
+          <http:header name="userId" value="1001"/>
+        </http:headers>
+        <http:body validator="myValidator">
+          <http:payload>
+            <order xmlns="http://citrusframework.org/schema/order">
+              <id>${id}</id>
+            </order>
+          </http:payload>
+          <http:validate path="/order/id" value="1001"/>
+          <http:validate>
+            <http:json-path expression="$.id" value="1001"/>
+            <http:xpath expression="/order/item" value="foo" result-type="string"/>
+            <http:namespace prefix="o" value="http://citrusframework.org/schema/order"/>
+          </http:validate>
+        </http:body>
+        <http:extract>
+          <http:body path="/order/id" variable="orderId"/>
+        </http:extract>
+      </http:receive-response>
+      <http:receive-response client="httpClient" uri="http://localhost:8080/test">
+        <http:headers status="404"/>
+      </http:receive-response>
+
+      <ws:send endpoint="soapClient" soap-action="sayHello" mtom-enabled="false" content-type="text/xml" fork="true">
+        <description>Send SOAP request</description>
+        <message>
+          <data>
+            <![CDATA[
+              <ns:Hello xmlns:ns="http://citrusframework.org/hello">Hi</ns:Hello>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="operation" value="sayHello"/>
+        </header>
+        <ws:attachment content-id="attachment01" content-type="text/plain" charset-name="UTF-8">
+          <ws:data>Attachment content</ws:data>
+        </ws:attachment>
+        <ws:attachment content-id="attachment02" content-type="text/xml">
+          <ws:resource file="classpath:attachment.xml"/>
+        </ws:attachment>
+        <extract>
+          <header name="operation" variable="op"/>
+        </extract>
+      </ws:send>
+      <ws:receive endpoint="soapClient" timeout="3000">
+        <message validator="soapValidator">
+          <payload>
+            <ns:HelloResponse xmlns:ns="http://citrusframework.org/hello">Hello</ns:HelloResponse>
+          </payload>
+          <validate path="//ns:HelloResponse" value="Hello"/>
+        </message>
+        <ws:attachment content-id="attachment01" content-type="text/plain" validator="attachmentValidator">
+          <ws:data>Attachment content</ws:data>
+        </ws:attachment>
+      </ws:receive>
+
+      <jms:purge-jms-queues connection-factory="jmsConnectionFactory" timeout="500" sleep="100">
+        <jms:description>Purge queues</jms:description>
+        <jms:queue name="jms.queue.one"/>
+        <jms:queue ref="queueTwo"/>
+      </jms:purge-jms-queues>
+    </actions>
+  </testcase>
+</spring:beans>

@@ -21,7 +21,8 @@
   Without parameters the stylesheet migrates the single test case in the source document.
   The parameter "template" selects a template defined in the source document by its name and migrates this template instead.
 
-  Actions of the Docker, Camel and Selenium modules are migrated to the actions of the same modules in the plain XML DSL.
+  Actions of the Docker, Camel, Selenium, Kubernetes, Http, SOAP web service and JMS modules are migrated to the actions
+  of the same modules in the plain XML DSL.
   Elements that have no counterpart in the plain XML DSL are copied as is and are marked with a migration warning comment.
 -->
 <xsl:stylesheet version="1.0"
@@ -31,17 +32,22 @@
                 xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
                 xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
                 xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+                xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
+                xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+                xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+                xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns="http://citrusframework.org/schema/xml/testcase"
-                exclude-result-prefixes="spring citrus docker camel selenium">
+                exclude-result-prefixes="spring citrus docker camel selenium k8s http ws jms">
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes"
               cdata-section-elements="data builder script source xslt value"/>
 
-  <xsl:strip-space elements="spring:* citrus:* docker:* camel:* selenium:*"/>
+  <xsl:strip-space elements="spring:* citrus:* docker:* camel:* selenium:* k8s:* http:* ws:* jms:*"/>
   <xsl:preserve-space elements="citrus:data citrus:message citrus:value citrus:script citrus:builder citrus:statement
                                 citrus:groovy citrus:xml-data citrus:xslt-data citrus:select citrus:description
-                                docker:result camel:language camel:result selenium:script selenium:alert-text"/>
+                                docker:result camel:language camel:result selenium:script selenium:alert-text
+                                k8s:result http:data http:script http:description ws:data jms:description"/>
 
   <!-- Name of a template in the source document that should be migrated instead of the test case -->
   <xsl:param name="template" select="''"/>
@@ -233,31 +239,36 @@
 
   <!-- Builds the message with headers, body and path expressions from the Spring XML message and header elements -->
   <xsl:template name="message">
-    <xsl:variable name="body" select="citrus:message/citrus:payload|citrus:message/citrus:data|citrus:message/citrus:resource|citrus:message/citrus:builder"/>
     <xsl:if test="citrus:message or citrus:header">
       <message>
-        <xsl:copy-of select="citrus:message/@name|citrus:message/@type|citrus:message/@data-dictionary|citrus:message/@schema-validation|citrus:message/@schema|citrus:message/@schema-repository"/>
-        <xsl:apply-templates select="citrus:header"/>
-        <xsl:if test="$body">
-          <body>
-            <xsl:apply-templates select="$body" mode="body"/>
-          </body>
-        </xsl:if>
-        <xsl:for-each select="citrus:message/citrus:element">
-          <expression path="{@path}" value="{@value}"/>
-        </xsl:for-each>
+        <xsl:call-template name="message-content"/>
       </message>
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="citrus:payload" mode="body">
+  <!-- Attributes, headers, body and path expressions of a message, shared with the messages of the SOAP web service actions -->
+  <xsl:template name="message-content">
+    <xsl:variable name="body" select="citrus:message/citrus:payload|citrus:message/citrus:data|citrus:message/citrus:resource|citrus:message/citrus:builder"/>
+    <xsl:copy-of select="citrus:message/@name|citrus:message/@type|citrus:message/@data-dictionary|citrus:message/@schema-validation|citrus:message/@schema|citrus:message/@schema-repository"/>
+    <xsl:apply-templates select="citrus:header"/>
+    <xsl:if test="$body">
+      <body>
+        <xsl:apply-templates select="$body" mode="body"/>
+      </body>
+    </xsl:if>
+    <xsl:for-each select="citrus:message/citrus:element">
+      <expression path="{@path}" value="{@value}"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="citrus:payload|http:payload" mode="body">
     <payload>
       <xsl:apply-templates select="*" mode="payload"/>
     </payload>
   </xsl:template>
 
   <!-- the message body data gets trimmed in both test DSLs -->
-  <xsl:template match="citrus:data" mode="body">
+  <xsl:template match="citrus:data|http:data" mode="body">
     <data>
       <xsl:call-template name="trim">
         <xsl:with-param name="text" select="."/>
@@ -265,7 +276,7 @@
     </data>
   </xsl:template>
 
-  <xsl:template match="citrus:resource" mode="body">
+  <xsl:template match="citrus:resource|http:resource" mode="body">
     <resource>
       <xsl:copy-of select="@file|@charset"/>
     </resource>
@@ -316,19 +327,19 @@
     </headers>
   </xsl:template>
 
-  <xsl:template match="citrus:validate">
+  <xsl:template match="citrus:validate|http:validate">
     <validate>
       <xsl:copy-of select="@path|@value|@result-type"/>
-      <xsl:apply-templates select="citrus:script" mode="script"/>
-      <xsl:for-each select="citrus:xpath">
+      <xsl:apply-templates select="*[local-name() = 'script']" mode="script"/>
+      <xsl:for-each select="*[local-name() = 'xpath']">
         <xpath expression="{@expression}" value="{@value}">
           <xsl:copy-of select="@result-type"/>
         </xpath>
       </xsl:for-each>
-      <xsl:for-each select="citrus:json-path">
+      <xsl:for-each select="*[local-name() = 'json-path']">
         <json-path expression="{@expression}" value="{@value}"/>
       </xsl:for-each>
-      <xsl:for-each select="citrus:namespace">
+      <xsl:for-each select="*[local-name() = 'namespace']">
         <namespace prefix="{@prefix}" value="{@value}"/>
       </xsl:for-each>
     </validate>
@@ -1067,12 +1078,277 @@
   </xsl:template>
 
   <!-- ============================================================== -->
+  <!-- Kubernetes actions                                             -->
+  <!-- ============================================================== -->
+
+  <xsl:template match="k8s:info|k8s:list-pods|k8s:list-services|k8s:list-replication-controllers|k8s:list-endpoints|k8s:list-nodes|k8s:list-namespaces|k8s:list-events|k8s:get-pod|k8s:get-service">
+    <kubernetes>
+      <xsl:copy-of select="@client"/>
+      <xsl:apply-templates select="k8s:description" mode="ext"/>
+      <execute>
+        <xsl:element name="{local-name()}">
+          <xsl:copy-of select="@namespace|@name|@label"/>
+          <xsl:if test="k8s:validate/k8s:result">
+            <xsl:attribute name="result">
+              <xsl:call-template name="trim">
+                <xsl:with-param name="text" select="k8s:validate/k8s:result"/>
+              </xsl:call-template>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:for-each select="k8s:validate/k8s:element">
+            <validate path="{@path}" value="{@value}"/>
+          </xsl:for-each>
+        </xsl:element>
+      </execute>
+    </kubernetes>
+  </xsl:template>
+
+  <!--
+    Pods and services that are created from a template file are created as resource. The Spring XML actions do not remove
+    the created resources automatically. Pods and services that are created from a specification or that define a name or
+    label are not supported.
+  -->
+  <xsl:template match="k8s:create-pod[k8s:template and not(@name or @label)]|k8s:create-service[k8s:template and not(@name or @label)]">
+    <kubernetes auto-remove="false">
+      <xsl:copy-of select="@client|@namespace"/>
+      <xsl:apply-templates select="k8s:description" mode="ext"/>
+      <create-resource file="{k8s:template/@file}"/>
+    </kubernetes>
+  </xsl:template>
+
+  <!-- The delete actions of the plain XML DSL are not able to validate the command result -->
+  <xsl:template match="k8s:delete-pod[not(k8s:validate)]|k8s:delete-service[not(k8s:validate)]">
+    <kubernetes>
+      <xsl:copy-of select="@client|@namespace"/>
+      <xsl:apply-templates select="k8s:description" mode="ext"/>
+      <xsl:element name="{local-name()}">
+        <xsl:copy-of select="@name|@label"/>
+      </xsl:element>
+    </kubernetes>
+  </xsl:template>
+
+  <!-- ============================================================== -->
+  <!-- Http actions                                                   -->
+  <!-- ============================================================== -->
+
+  <xsl:template match="http:send-request">
+    <http>
+      <xsl:copy-of select="@client|@actor"/>
+      <send-request>
+        <xsl:copy-of select="@uri|@fork"/>
+        <xsl:apply-templates select="http:GET|http:POST|http:PUT|http:DELETE|http:HEAD|http:OPTIONS|http:PATCH|http:TRACE" mode="http-request"/>
+        <xsl:apply-templates select="http:extract" mode="http"/>
+      </send-request>
+    </http>
+  </xsl:template>
+
+  <xsl:template match="http:receive-response">
+    <xsl:if test="@uri">
+      <xsl:call-template name="warn">
+        <xsl:with-param name="message">The 'uri' attribute of the Http response is not supported in the plain XML DSL and has been removed</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <http>
+      <xsl:copy-of select="@client|@actor"/>
+      <xsl:apply-templates select="http:description" mode="ext"/>
+      <receive-response>
+        <xsl:copy-of select="@timeout"/>
+        <xsl:copy-of select="http:body/@validator"/>
+        <xsl:apply-templates select="http:selector" mode="http"/>
+        <response>
+          <xsl:copy-of select="http:headers/@status|http:headers/@reason-phrase|http:headers/@version"/>
+          <xsl:call-template name="http-message"/>
+          <xsl:call-template name="http-cookies"/>
+        </response>
+        <xsl:apply-templates select="http:body/http:validate"/>
+        <xsl:apply-templates select="http:extract" mode="http"/>
+      </receive-response>
+    </http>
+  </xsl:template>
+
+  <xsl:template match="http:GET|http:POST|http:PUT|http:DELETE|http:HEAD|http:OPTIONS|http:PATCH|http:TRACE" mode="http-request">
+    <xsl:element name="{local-name()}">
+      <xsl:copy-of select="@path|@context-path"/>
+      <xsl:copy-of select="http:headers/@content-type|http:headers/@accept|http:headers/@version"/>
+      <xsl:call-template name="http-message"/>
+      <xsl:for-each select="http:param">
+        <param name="{@name}">
+          <xsl:copy-of select="@value"/>
+        </param>
+      </xsl:for-each>
+      <xsl:call-template name="http-cookies"/>
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template name="http-cookies">
+    <xsl:for-each select="http:headers/http:cookie">
+      <cookie>
+        <xsl:copy-of select="@*"/>
+      </cookie>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Builds the attributes, headers, body and path expressions of a Http request or response -->
+  <xsl:template name="http-message">
+    <xsl:copy-of select="http:body/@name|http:body/@type|http:body/@data-dictionary|http:body/@schema-validation|http:body/@schema|http:body/@schema-repository"/>
+    <xsl:if test="http:headers/http:header">
+      <headers>
+        <xsl:copy-of select="http:headers/@ignore-case"/>
+        <xsl:for-each select="http:headers/http:header">
+          <header name="{@name}" value="{@value}"/>
+        </xsl:for-each>
+      </headers>
+    </xsl:if>
+    <xsl:variable name="body" select="http:body/http:payload|http:body/http:data|http:body/http:resource"/>
+    <xsl:if test="$body">
+      <body>
+        <xsl:apply-templates select="$body" mode="body"/>
+      </body>
+    </xsl:if>
+    <xsl:for-each select="http:body/http:element">
+      <expression path="{@path}" value="{@value}"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="http:selector" mode="http">
+    <selector>
+      <xsl:for-each select="http:element">
+        <element name="{@name}" value="{@value}"/>
+      </xsl:for-each>
+      <xsl:if test="http:value">
+        <value><xsl:value-of select="http:value"/></value>
+      </xsl:if>
+    </selector>
+  </xsl:template>
+
+  <xsl:template match="http:extract" mode="http">
+    <extract>
+      <xsl:for-each select="http:header">
+        <header name="{@name}" variable="{@variable}"/>
+      </xsl:for-each>
+      <xsl:for-each select="http:body">
+        <body path="{@path}" variable="{@variable}">
+          <xsl:copy-of select="@result-type"/>
+        </body>
+      </xsl:for-each>
+    </extract>
+  </xsl:template>
+
+  <!-- ============================================================== -->
+  <!-- SOAP web service actions                                       -->
+  <!-- ============================================================== -->
+
+  <!--
+    The Spring XML actions do not tell whether the endpoint is a client or a server. The actions are migrated as client
+    actions (send request and receive response) and the user is asked to verify this.
+  -->
+  <xsl:template match="ws:send">
+    <xsl:call-template name="soap-warnings"/>
+    <soap>
+      <xsl:copy-of select="@actor"/>
+      <xsl:call-template name="soap-endpoint"/>
+      <xsl:apply-templates select="citrus:description" mode="ext"/>
+      <send-request>
+        <xsl:copy-of select="@fork"/>
+        <message>
+          <xsl:copy-of select="@soap-action|@mtom-enabled|@content-type|@accept"/>
+          <xsl:call-template name="message-content"/>
+          <xsl:apply-templates select="ws:attachment" mode="soap"/>
+        </message>
+        <xsl:apply-templates select="citrus:extract"/>
+      </send-request>
+    </soap>
+  </xsl:template>
+
+  <!-- Ignored paths and namespaces of the received message are not supported by the SOAP receive action of the plain XML DSL -->
+  <xsl:template match="ws:receive[not(citrus:message/citrus:ignore or citrus:message/citrus:namespace)]">
+    <xsl:call-template name="soap-warnings"/>
+    <soap>
+      <xsl:copy-of select="@actor"/>
+      <xsl:call-template name="soap-endpoint"/>
+      <xsl:apply-templates select="citrus:description" mode="ext"/>
+      <receive-response>
+        <xsl:copy-of select="@timeout"/>
+        <xsl:copy-of select="citrus:message/@validator|citrus:message/@validators|citrus:message/@header-validator|citrus:message/@header-validators"/>
+        <xsl:if test="ws:attachment/@validator">
+          <xsl:attribute name="attachment-validator"><xsl:value-of select="ws:attachment/@validator"/></xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="citrus:selector"/>
+        <message>
+          <xsl:copy-of select="@content-type"/>
+          <xsl:call-template name="message-content"/>
+          <xsl:apply-templates select="ws:attachment" mode="soap"/>
+        </message>
+        <xsl:apply-templates select="citrus:message/citrus:validate"/>
+        <xsl:apply-templates select="citrus:extract"/>
+      </receive-response>
+    </soap>
+  </xsl:template>
+
+  <xsl:template name="soap-endpoint">
+    <xsl:if test="@endpoint">
+      <xsl:attribute name="client"><xsl:value-of select="@endpoint"/></xsl:attribute>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="soap-warnings">
+    <xsl:call-template name="warn">
+      <xsl:with-param name="message">The SOAP endpoint of '<xsl:value-of select="name()"/>' has been migrated as client - please use the server and the receive request or send response actions when the endpoint is a server</xsl:with-param>
+    </xsl:call-template>
+    <xsl:if test="self::ws:receive and (@soap-action or @accept)">
+      <xsl:call-template name="warn">
+        <xsl:with-param name="message">The 'soap-action' and 'accept' attributes are not supported by the SOAP response in the plain XML DSL and have been removed</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="ws:attachment/@encoding-type or ws:attachment/@mtom-inline">
+      <xsl:call-template name="warn">
+        <xsl:with-param name="message">The 'encoding-type' and 'mtom-inline' attributes of the SOAP attachment are not supported in the plain XML DSL and have been removed</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="ws:attachment" mode="soap">
+    <attachment>
+      <xsl:copy-of select="@content-id|@content-type"/>
+      <xsl:if test="@charset-name">
+        <xsl:attribute name="charset"><xsl:value-of select="@charset-name"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="ws:data">
+        <content>
+          <xsl:call-template name="trim">
+            <xsl:with-param name="text" select="ws:data"/>
+          </xsl:call-template>
+        </content>
+      </xsl:if>
+      <xsl:for-each select="ws:resource">
+        <resource file="{@file}"/>
+      </xsl:for-each>
+    </attachment>
+  </xsl:template>
+
+  <!-- ============================================================== -->
+  <!-- JMS actions                                                    -->
+  <!-- ============================================================== -->
+
+  <xsl:template match="jms:purge-jms-queues">
+    <purge-jms-queues>
+      <xsl:copy-of select="@connection-factory|@timeout|@sleep"/>
+      <xsl:apply-templates select="jms:description" mode="ext"/>
+      <xsl:for-each select="jms:queue">
+        <queue>
+          <xsl:copy-of select="@name|@ref"/>
+        </queue>
+      </xsl:for-each>
+    </purge-jms-queues>
+  </xsl:template>
+
+  <!-- ============================================================== -->
   <!-- Unsupported elements                                           -->
   <!-- ============================================================== -->
 
   <!--
     Test actions without a plain XML counterpart (e.g. java, input) and actions from other Spring XML namespaces
-    (e.g. http, ws, jms) are copied as is so the information is not lost and the user is able to migrate them manually.
+    (e.g. zookeeper) are copied as is so the information is not lost and the user is able to migrate them manually.
   -->
   <xsl:template match="*">
     <xsl:call-template name="warn">
