@@ -21,6 +21,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
 import org.citrusframework.maven.plugin.stubs.CitrusOpenApiGeneratorMavenProjectStub;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -134,6 +135,11 @@ public class TestApiGeneratorMojoIntegrationTest {
     @BeforeEach
     void beforeEachSetup() throws Exception {
         harness.start();
+    }
+
+    @AfterEach
+    void afterEachCleanup() {
+        harness.stop();
     }
 
     @SuppressWarnings("unchecked")
