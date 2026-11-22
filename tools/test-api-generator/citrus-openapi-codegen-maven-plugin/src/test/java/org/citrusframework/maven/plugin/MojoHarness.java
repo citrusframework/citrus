@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.maven.api.plugin.testing.MojoExtension;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
@@ -24,7 +25,6 @@ import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.Parameter;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptorBuilder;
-import org.apache.maven.plugin.testing.ConfigurationException;
 import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
@@ -50,16 +50,19 @@ import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
  *
  * <p>Only the pieces {@code TestApiGeneratorMojoIntegrationTest} actually needs are ported:
  * container bootstrap with the plugin descriptor, {@code lookupMojo} with POM
- * {@code <configuration>} injection, and {@code newMojoExecution}. Logic mirrors
- * {@code AbstractMojoTestCase} 3.5.1 so scenario behavior is unchanged; the JUnit 5
- * {@code MojoExtension}/{@code InjectMojo} API cannot be used here because the goal's POM
- * varies per parameterized invocation.
+ * {@code <configuration>} injection, and {@code newMojoExecution}. Ported logic mirrors
+ * {@code AbstractMojoTestCase} 3.5.1 so scenario behavior is unchanged. POM configuration
+ * extraction reuses the non-deprecated public helper on {@code MojoExtension}; the annotation
+ * driven {@code InjectMojo} API cannot be used here because the goal's POM varies per
+ * parameterized invocation.
  */
 final class MojoHarness {
 
     private ComponentConfigurator configurator;
 
     private PlexusContainer container;
+
+    private PluginDescriptor pluginDescriptor;
 
     private final Map<String, MojoDescriptor> mojoDescriptors = new HashMap<>();
 
@@ -72,39 +75,63 @@ final class MojoHarness {
                 .setAutoWiring(true)
                 .setName("maven");
 
-        container = new DefaultPlexusContainer(cc);
+        PlexusContainer newContainer = new DefaultPlexusContainer(cc);
+        container = newContainer;
 
-        configurator = container.lookup(ComponentConfigurator.class, "basic");
-        Context context = container.getContext();
-        Map<Object, Object> map = context.getContextData();
+        boolean started = false;
+        try {
+            configurator = newContainer.lookup(ComponentConfigurator.class, "basic");
+            Context context = newContainer.getContext();
+            Map<Object, Object> map = context.getContextData();
 
-        try (InputStream is = getClass().getResourceAsStream("/" + getPluginDescriptorLocation());
-                Reader reader = new BufferedReader(new XmlStreamReader(is));
-                InterpolationFilterReader interpolationReader = new InterpolationFilterReader(reader, map, "${", "}")) {
+            try (InputStream is = getClass().getResourceAsStream("/" + getPluginDescriptorLocation());
+                    Reader reader = new BufferedReader(new XmlStreamReader(is));
+                    InterpolationFilterReader interpolationReader = new InterpolationFilterReader(reader, map, "${", "}")) {
 
-            PluginDescriptor pluginDescriptor = new PluginDescriptorBuilder().build(interpolationReader);
+                pluginDescriptor = new PluginDescriptorBuilder().build(interpolationReader);
 
-            Artifact artifact = new DefaultArtifact(
-                    pluginDescriptor.getGroupId(),
-                    pluginDescriptor.getArtifactId(),
-                    pluginDescriptor.getVersion(),
-                    null,
-                    "jar",
-                    null,
-                    new DefaultArtifactHandler("jar"));
+                Artifact artifact = new DefaultArtifact(
+                        pluginDescriptor.getGroupId(),
+                        pluginDescriptor.getArtifactId(),
+                        pluginDescriptor.getVersion(),
+                        null,
+                        "jar",
+                        null,
+                        new DefaultArtifactHandler("jar"));
 
-            artifact.setFile(getPluginArtifactFile());
-            pluginDescriptor.setPluginArtifact(artifact);
-            pluginDescriptor.setArtifacts(Collections.singletonList(artifact));
+                artifact.setFile(getPluginArtifactFile());
+                pluginDescriptor.setPluginArtifact(artifact);
+                pluginDescriptor.setArtifacts(Collections.singletonList(artifact));
 
-            for (ComponentDescriptor<?> desc : pluginDescriptor.getComponents()) {
-                container.addComponentDescriptor(desc);
+                for (ComponentDescriptor<?> desc : pluginDescriptor.getComponents()) {
+                    newContainer.addComponentDescriptor(desc);
+                }
+
+                for (MojoDescriptor mojoDescriptor : pluginDescriptor.getMojos()) {
+                    mojoDescriptors.put(mojoDescriptor.getGoal(), mojoDescriptor);
+                }
             }
 
-            for (MojoDescriptor mojoDescriptor : pluginDescriptor.getMojos()) {
-                mojoDescriptors.put(mojoDescriptor.getGoal(), mojoDescriptor);
+            started = true;
+        } finally {
+            if (!started) {
+                dispose();
             }
         }
+    }
+
+    void stop() {
+        dispose();
+    }
+
+    private void dispose() {
+        if (container != null) {
+            container.dispose();
+            container = null;
+        }
+        configurator = null;
+        pluginDescriptor = null;
+        mojoDescriptors.clear();
     }
 
     /**
@@ -112,31 +139,29 @@ final class MojoHarness {
      * {@code <configuration>} block parsed from the given pom file.
      */
     <T extends Mojo> T mojo(String goal, File pom) throws Exception {
-        File pluginPom = new File(baseDir(), "pom.xml");
+        requireStarted();
 
-        Xpp3Dom pluginPomDom;
-        try (Reader reader = new XmlStreamReader(pluginPom)) {
-            pluginPomDom = Xpp3DomBuilder.build(reader);
+        Xpp3Dom pomDom;
+        try (Reader reader = new XmlStreamReader(pom)) {
+            pomDom = Xpp3DomBuilder.build(reader);
         }
 
-        String artifactId = pluginPomDom.getChild("artifactId").getValue();
+        PlexusConfiguration pluginConfiguration = new XmlPlexusConfiguration(
+                MojoExtension.extractPluginConfiguration(pluginDescriptor.getArtifactId(), pomDom));
 
-        String groupId = resolveFromRootThenParent(pluginPomDom, "groupId");
-
-        String version = resolveFromRootThenParent(pluginPomDom, "version");
-
-        PlexusConfiguration pluginConfiguration = extractPluginConfiguration(artifactId, pom);
-
-        return lookupMojo(groupId, artifactId, version, goal, pluginConfiguration);
+        return lookupMojo(
+                pluginDescriptor.getGroupId(),
+                pluginDescriptor.getArtifactId(),
+                pluginDescriptor.getVersion(),
+                goal,
+                pluginConfiguration);
     }
 
     @SuppressWarnings("unchecked")
     private <T extends Mojo> T lookupMojo(
             String groupId, String artifactId, String version, String goal, PlexusConfiguration pluginConfiguration)
             throws Exception {
-        if (container == null) {
-            throw new IllegalStateException("container is null, make sure start() is called");
-        }
+        requireStarted();
 
         // pluginkey = groupId : artifactId : version : goal
         T mojo = (T) container.lookup(Mojo.class, groupId + ":" + artifactId + ":" + version + ":" + goal);
@@ -151,7 +176,15 @@ final class MojoHarness {
         return mojo;
     }
 
+    private void requireStarted() {
+        if (container == null || pluginDescriptor == null) {
+            throw new IllegalStateException("container is null, make sure start() is called");
+        }
+    }
+
     MojoExecution execution(String goal) {
+        requireStarted();
+
         MojoDescriptor mojoDescriptor = mojoDescriptors.get(goal);
         Objects.requireNonNull(mojoDescriptor,
                 () -> String.format("The MojoDescriptor for the goal %s cannot be null.", goal));
@@ -200,75 +233,6 @@ final class MojoHarness {
         }
 
         mojoExecution.setConfiguration(finalConfiguration);
-    }
-
-    private PlexusConfiguration extractPluginConfiguration(String artifactId, File pom) throws Exception {
-        try (Reader reader = new XmlStreamReader(pom)) {
-            Xpp3Dom pomDom = Xpp3DomBuilder.build(reader);
-            return extractPluginConfiguration(artifactId, pomDom);
-        }
-    }
-
-    private PlexusConfiguration extractPluginConfiguration(String artifactId, Xpp3Dom pomDom) throws Exception {
-        Xpp3Dom pluginConfigurationElement = null;
-
-        Xpp3Dom buildElement = pomDom.getChild("build");
-        if (buildElement != null) {
-            Xpp3Dom pluginsRootElement = buildElement.getChild("plugins");
-
-            if (pluginsRootElement != null) {
-                Xpp3Dom[] pluginElements = pluginsRootElement.getChildren();
-
-                for (Xpp3Dom pluginElement : pluginElements) {
-                    String pluginElementArtifactId =
-                            pluginElement.getChild("artifactId").getValue();
-
-                    if (pluginElementArtifactId.equals(artifactId)) {
-                        pluginConfigurationElement = pluginElement.getChild("configuration");
-
-                        break;
-                    }
-                }
-
-                if (pluginConfigurationElement == null) {
-                    throw new ConfigurationException("Cannot find a configuration element for a plugin with an "
-                            + "artifactId of " + artifactId + ".");
-                }
-            }
-        }
-
-        if (pluginConfigurationElement == null) {
-            throw new ConfigurationException(
-                    "Cannot find a configuration element for a plugin with an artifactId of " + artifactId + ".");
-        }
-
-        return new XmlPlexusConfiguration(pluginConfigurationElement);
-    }
-
-    /**
-     * Sometimes the parent element might contain the correct value so generalize that access.
-     */
-    private String resolveFromRootThenParent(Xpp3Dom pluginPomDom, String element) throws Exception {
-        Xpp3Dom elementDom = pluginPomDom.getChild(element);
-
-        // parent might have the group Id so resolve it
-        if (elementDom == null) {
-            Xpp3Dom pluginParentDom = pluginPomDom.getChild("parent");
-
-            if (pluginParentDom != null) {
-                elementDom = pluginParentDom.getChild(element);
-
-                if (elementDom == null) {
-                    throw new Exception("unable to determine " + element);
-                }
-
-                return elementDom.getValue();
-            }
-
-            throw new Exception("unable to determine " + element);
-        }
-
-        return elementDom.getValue();
     }
 
     /**
