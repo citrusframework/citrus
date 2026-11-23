@@ -107,6 +107,9 @@ PlainTextMessageValidator validator = new PlainTextMessageValidator();
 validator.setAutoConvertContent(true);
 ----
 
+When `citrus.message.cache.input.stream=false`, auto-conversion reads the original `InputStream` and later consumers
+cannot read it again. The default (`true`) caches the stream, so validation and later consumers each receive a fresh stream.
+
 [[plaintext-validation-whitespaces]]
 === Whitespace characters
 
