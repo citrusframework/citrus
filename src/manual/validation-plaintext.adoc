@@ -94,8 +94,8 @@ file encoding before comparison. The setting is disabled by default.
 .Binary payload auto-conversion settings
 [source,properties]
 ----
-citrus.plaintext.validator.content.auto.conversion=true
-CITRUS_PLAINTEXT_VALIDATOR_CONTENT_AUTO_CONVERSION=true
+citrus.plaintext.validation.content.auto.conversion=true
+CITRUS_PLAINTEXT_VALIDATION_CONTENT_AUTO_CONVERSION=true
 ----
 
 You can also enable it directly on the validator bean:
