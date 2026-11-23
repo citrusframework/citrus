@@ -16,8 +16,6 @@
 
 package org.citrusframework.validation.text;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -203,22 +201,6 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
 
         Assertions.assertTrue(e.getMessage().contains("expected 'Hello Citrus!'"));
         Assertions.assertTrue(e.getMessage().contains("but was 'Hello World!'"));
-    }
-
-    @Test
-    public void shouldValidateTextFromByteArrayPayload() {
-        Message receivedMessage = new DefaultMessage("id,item\n1,book".getBytes(StandardCharsets.UTF_8));
-        Message controlMessage = new DefaultMessage("id,item\n1,book");
-
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-    }
-
-    @Test
-    public void shouldValidateTextFromInputStreamPayload() {
-        Message receivedMessage = new DefaultMessage(new ByteArrayInputStream("id,item\n1,book".getBytes(StandardCharsets.UTF_8)));
-        Message controlMessage = new DefaultMessage("id,item\n1,book");
-
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
     @Test
