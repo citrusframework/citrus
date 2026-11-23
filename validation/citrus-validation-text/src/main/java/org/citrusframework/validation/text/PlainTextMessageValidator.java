@@ -50,8 +50,8 @@ import static org.citrusframework.util.StringUtils.normalizeWhitespace;
  */
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 
-    public static final String AUTO_CONVERSION_PROPERTY = "citrus.plaintext.validator.content.auto.conversion";
-    public static final String AUTO_CONVERSION_ENV = "CITRUS_PLAINTEXT_VALIDATOR_CONTENT_AUTO_CONVERSION";
+    public static final String AUTO_CONVERSION_PROPERTY = "citrus.plaintext.validation.content.auto.conversion";
+    public static final String AUTO_CONVERSION_ENV = "CITRUS_PLAINTEXT_VALIDATION_CONTENT_AUTO_CONVERSION";
     public static final String IGNORE_NEWLINE_TYPE_PROPERTY = "citrus.plaintext.validation.ignore.newline.type";
     public static final String IGNORE_NEWLINE_TYPE_ENV = "CITRUS_PLAINTEXT_VALIDATION_IGNORE_NEWLINE_TYPE";
     public static final String IGNORE_WHITESPACE_PROPERTY = "citrus.plaintext.validation.ignore.whitespace";
