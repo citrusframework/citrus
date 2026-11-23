@@ -878,6 +878,38 @@ actions:
         name: "my-service"
 ----
 
+The delete result can be validated in XML and YAML DSLs. Use `result` for a full JSON result comparison and `validate` for JsonPath expressions on `$.result.success`.
+
+.XML with result validation
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DeleteServiceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+      <kubernetes client="k8sClient" namespace="my-namespace">
+        <delete-service name="my-service" result='{"result":{"kind":"Service","success":true}}'>
+          <validate path="$.result.success" value="true"/>
+        </delete-service>
+      </kubernetes>
+    </actions>
+</test>
+----
+
+.YAML with result validation
+[source,yaml,indent=0,role="secondary"]
+----
+name: DeleteServiceTest
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "my-namespace"
+      deleteService:
+        name: "my-service"
+        result: '{"result":{"kind":"Service","success":true}}'
+        validate:
+          - path: "$.result.success"
+            value: "true"
+----
+
 .Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
