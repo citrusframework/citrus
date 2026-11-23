@@ -54,12 +54,18 @@ public final class FunctionUtils {
             return stringValue;
         }
 
-        if ((stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
+        if ((stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0)) {
             // it is not a function, as it is defined as 'prefix:methodName(arguments)'
             return stringValue;
         }
 
         verifyFunctionCalls(stringValue, context);
+
+        if (stringValue.indexOf(')') < 0) {
+            // no closing parenthesis, but also no unbalanced known function call
+            // (verified above), so leave unregistered function-like text unchanged
+            return stringValue;
+        }
 
         String newString = stringValue;
         var strBuffer = new StringBuilder();
