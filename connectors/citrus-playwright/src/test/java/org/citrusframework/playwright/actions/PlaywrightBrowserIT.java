@@ -828,6 +828,118 @@ class PlaywrightBrowserIT {
         }
     }
 
+    @Test
+    void shouldDriveScreencastStylingCredentialsSignCountShadowPageSourceAndFilteredCookieClear() throws Exception {
+        URL fixture = getClass().getResource("/fixtures/playwright-165.html");
+        Path video = Path.of("target", "playwright", "screencast-styled.webm");
+        Files.deleteIfExists(video);
+
+        PlaywrightBrowser browser = PlaywrightEndpoints.playwright()
+                .browser()
+                .browserType("chromium")
+                .headless(true)
+                .defaultTimeout(5000)
+                .secretPatterns("Direct closed text")
+                .build();
+
+        TestContext context = new TestContext();
+        try {
+            playwright().browser(browser).start().build().execute(context);
+            playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
+
+            // 1. Screencast start with fps + showActions with style & cursor.
+            playwright().browser(browser).screencast()
+                    .start(video.toString())
+                    .size(640, 480)
+                    .fps(15)
+                    .variable("recordedVideoPath")
+                    .build().execute(context);
+            playwright().browser(browser).screencast()
+                    .showActions()
+                    .position("top-right")
+                    .cursor("pointer")
+                    .stylePoint("background: #ff3b30")
+                    .styleHighlight("border: 2px solid #007aff")
+                    .styleTitle("font-size: 18px; color: #ffffff")
+                    .build().execute(context);
+            playwright().browser(browser).click()
+                    .locator(LocatorSpec.role("button").name("Rendered Label"))
+                    .build().execute(context);
+            playwright().browser(browser).screencast().hideActions().build().execute(context);
+            playwright().browser(browser).screencast().stop().build().execute(context);
+
+            assertEquals(video.toString(), context.getVariable("recordedVideoPath"));
+            assertTrue(Files.exists(video), "expected a screencast recording at " + video);
+            assertTrue(Files.size(video) > 0, "expected a non-empty screencast recording");
+
+            // 2. Shadow DOM page-source serialization (light-only default vs includeShadow=true) + redaction.
+            playwright().browser(browser).extract()
+                    .pageSource()
+                    .variable("lightPageHtml")
+                    .build().execute(context);
+            String lightPageHtml = context.getVariable("lightPageHtml");
+            assertFalse(lightPageHtml.contains("shadowrootmode=\"open\""), lightPageHtml);
+            assertFalse(lightPageHtml.contains("<template shadowrootmode=\"open\"><span>Rendered Label</span></template>"),
+                    lightPageHtml);
+            assertTrue(lightPageHtml.contains(SecretPatternRedactor.MASK), lightPageHtml);
+            assertFalse(lightPageHtml.contains("Direct closed text"), lightPageHtml);
+
+            playwright().browser(browser).extract()
+                    .pageSource(true)
+                    .variable("shadowPageHtml")
+                    .build().execute(context);
+            String shadowPageHtml = context.getVariable("shadowPageHtml");
+            assertTrue(shadowPageHtml.contains("<template shadowrootmode=\"open\"><span>Rendered Label</span></template>"),
+                    shadowPageHtml);
+            assertTrue(shadowPageHtml.contains(SecretPatternRedactor.MASK), shadowPageHtml);
+            assertFalse(shadowPageHtml.contains("Direct closed text"), shadowPageHtml);
+
+            // 3. WebAuthn virtual authenticator credential seeding with initial signCount.
+            playwright().browser(browser).credentials().install().build().execute(context);
+            playwright().browser(browser).credentials()
+                    .create("example.com")
+                    .signCount(7)
+                    .build().execute(context);
+            playwright().browser(browser).credentials()
+                    .read("registeredPassId")
+                    .build().execute(context);
+            assertFalse(context.getVariable("registeredPassId").isBlank());
+            assertEquals(7, browser.getCurrentContext().credentials().get().get(0).signCount);
+            playwright().browser(browser).credentials()
+                    .delete("${registeredPassId}")
+                    .build().execute(context);
+            assertTrue(browser.getCurrentContext().credentials().get().isEmpty());
+
+            // 4. Filtered cookie clearing by name, domain, and path.
+            playwright().browser(browser).cookies()
+                    .add(CookieSpec.cookie("keepRoot", "v1").domain("example.com").path("/"))
+                    .build().execute(context);
+            playwright().browser(browser).cookies()
+                    .add(CookieSpec.cookie("dropNamed", "v2").domain("example.com").path("/"))
+                    .build().execute(context);
+            playwright().browser(browser).cookies()
+                    .add(CookieSpec.cookie("dropOrders", "v3").domain("example.com").path("/orders"))
+                    .build().execute(context);
+
+            playwright().browser(browser).cookies()
+                    .clear().name("dropNamed")
+                    .build().execute(context);
+            playwright().browser(browser).cookies().verify("keepRoot", "v1").build().execute(context);
+            playwright().browser(browser).cookies().verify("dropOrders", "v3").build().execute(context);
+            assertThrows(CitrusRuntimeException.class,
+                    () -> playwright().browser(browser).cookies().verify("dropNamed", "v2").build().execute(context));
+
+            playwright().browser(browser).cookies()
+                    .clear().domain("example.com").path("/orders")
+                    .build().execute(context);
+            playwright().browser(browser).cookies().verify("keepRoot", "v1").build().execute(context);
+            assertThrows(CitrusRuntimeException.class,
+                    () -> playwright().browser(browser).cookies().verify("dropOrders", "v3").build().execute(context));
+        } finally {
+            playwright().browser(browser).stop().build().execute(context);
+        }
+    }
+
     /**
      * Checks the RIFF/WEBP container signature so the assertion proves the format, not just that
      * some bytes were written.

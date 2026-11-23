@@ -31,6 +31,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.microsoft.playwright.Screencast;
 import com.microsoft.playwright.ScreencastFrame;
 import com.microsoft.playwright.options.AnnotatePosition;
+import com.microsoft.playwright.options.ScreencastActionStyle;
+import com.microsoft.playwright.options.ScreencastCursor;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -90,6 +92,7 @@ class ScreencastActionTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void shouldShowActionAnnotations() {
         new ScreencastAction.Builder().showActions().position("top-right").fontSize(18)
                 .build().execute(context);
@@ -99,6 +102,100 @@ class ScreencastActionTest {
         verify(screencast).showActions(captor.capture());
         assertEquals(AnnotatePosition.TOP_RIGHT, captor.getValue().position);
         assertEquals("font-size: 18px", captor.getValue().style.title);
+    }
+
+    @Test
+    void shouldStartRecordingWithFps() {
+        ScreencastAction action = new ScreencastAction.Builder()
+                .start("target/playwright/run.webm")
+                .fps(24)
+                .build();
+        assertEquals(Integer.valueOf(24), action.getFps());
+
+        action.execute(context);
+
+        ArgumentCaptor<Screencast.StartOptions> captor = ArgumentCaptor.forClass(Screencast.StartOptions.class);
+        verify(screencast).start(captor.capture());
+        assertEquals(Integer.valueOf(24), captor.getValue().fps);
+    }
+
+    @Test
+    void shouldShowActionAnnotationsWithStyleAndCursor() {
+        context.setVariable("dotColor", "#ff3b30");
+
+        ScreencastAction action = new ScreencastAction.Builder()
+                .showActions()
+                .position("bottom-left")
+                .cursor("pointer")
+                .stylePoint("background: ${dotColor}")
+                .styleHighlight("border: 2px solid #007aff")
+                .styleTitle("font-size: 20px; color: #ffffff")
+                .build();
+        assertEquals(ScreencastCursor.POINTER, action.getCursor());
+        assertEquals("background: ${dotColor}", action.getStylePoint());
+        assertEquals("border: 2px solid #007aff", action.getStyleHighlight());
+        assertEquals("font-size: 20px; color: #ffffff", action.getStyleTitle());
+
+        action.execute(context);
+
+        ArgumentCaptor<Screencast.ShowActionsOptions> captor =
+                ArgumentCaptor.forClass(Screencast.ShowActionsOptions.class);
+        verify(screencast).showActions(captor.capture());
+        assertEquals(AnnotatePosition.BOTTOM_LEFT, captor.getValue().position);
+        assertEquals(ScreencastCursor.POINTER, captor.getValue().cursor);
+        assertEquals("background: #ff3b30", captor.getValue().style.point);
+        assertEquals("border: 2px solid #007aff", captor.getValue().style.highlight);
+        assertEquals("font-size: 20px; color: #ffffff", captor.getValue().style.title);
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    void shouldSupportStyleObjectAndPrecedenceOverDeprecatedFontSize() {
+        context.setVariable("alpha", "0.85");
+        ScreencastActionStyle baseStyle = new ScreencastActionStyle()
+                .setPoint("opacity: ${alpha}")
+                .setHighlight("outline: 1px solid green")
+                .setTitle("font-size: 16px");
+
+        new ScreencastAction.Builder()
+                .showActions()
+                .cursor(ScreencastCursor.NONE)
+                .style(baseStyle)
+                .styleTitle("font-size: 22px")
+                .fontSize(14)
+                .build()
+                .execute(context);
+
+        ArgumentCaptor<Screencast.ShowActionsOptions> captor =
+                ArgumentCaptor.forClass(Screencast.ShowActionsOptions.class);
+        verify(screencast).showActions(captor.capture());
+        assertEquals(ScreencastCursor.NONE, captor.getValue().cursor);
+        assertEquals("opacity: 0.85", captor.getValue().style.point);
+        assertEquals("outline: 1px solid green", captor.getValue().style.highlight);
+        assertEquals("font-size: 22px", captor.getValue().style.title);
+        assertEquals("opacity: ${alpha}", baseStyle.point, "caller style instance must not be mutated");
+    }
+
+    @Test
+    void shouldRejectInvalidFpsStyleAndCursorOptions() {
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().stop().fps(24).build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().start("target/playwright/run.webm").fps(0).build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().start("target/playwright/run.webm").fps(-10).build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().start("target/playwright/run.webm")
+                        .styleTitle("font-size: 18px").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().stop()
+                        .style(new ScreencastActionStyle().setPoint("color: red")).build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().stop().cursor("none").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().showActions().cursor("crosshair").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new ScreencastAction.Builder().showActions().cursor("  ").build());
     }
 
     @Test

@@ -121,6 +121,27 @@ class StructuredStateReaderTest {
     }
 
     @Test
+    void shouldReadPageContentWithShadowSerializationAndRedaction() {
+        SecretPatternRedactor redactor = new SecretPatternRedactor(List.of("secret-ref"));
+        PageStateReader pageReader = new PageStateReader(redactor);
+        Page mockPage = mock(Page.class);
+
+        when(mockPage.content()).thenReturn("<html><body>secret-ref</body></html>");
+        when(mockPage.content(any(Page.ContentOptions.class)))
+                .thenReturn("<html><body><template shadowrootmode=\"open\">secret-ref</template></body></html>");
+
+        assertEquals("<html><body>" + SecretPatternRedactor.MASK + "</body></html>",
+                pageReader.pageContent(mockPage, null));
+        assertEquals(
+                "<html><body><template shadowrootmode=\"open\">" + SecretPatternRedactor.MASK + "</template></body></html>",
+                pageReader.pageContent(mockPage, true));
+
+        ArgumentCaptor<Page.ContentOptions> contentOpts = ArgumentCaptor.forClass(Page.ContentOptions.class);
+        verify(mockPage).content(contentOpts.capture());
+        assertEquals(Boolean.TRUE, contentOpts.getValue().includeShadow);
+    }
+
+    @Test
     void shouldParseAriaSnapshotModes() {
         assertNull(AriaSnapshotModes.parse(null));
         assertNull(AriaSnapshotModes.parse("  "));

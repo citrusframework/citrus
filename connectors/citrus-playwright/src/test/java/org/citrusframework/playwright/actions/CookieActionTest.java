@@ -34,7 +34,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.options.Cookie;
+import org.mockito.ArgumentCaptor;
 
 class CookieActionTest {
 
@@ -70,6 +72,53 @@ class CookieActionTest {
         new CookieAction.Builder().clear().build().execute(context);
 
         verify(browser.context()).clearCookies();
+    }
+
+    @Test
+    void shouldClearCookiesWithFiltersAndVariableResolution() {
+        browser.createContext("admin");
+        context.setVariable("cookieHost", "app.example.com");
+
+        CookieAction filtered = new CookieAction.Builder()
+                .clear()
+                .name("sid")
+                .domain("${cookieHost}")
+                .path("/orders")
+                .build();
+        assertEquals("sid", filtered.getCookieName());
+        assertEquals("${cookieHost}", filtered.getDomain());
+        assertEquals("/orders", filtered.getPath());
+
+        filtered.execute(context);
+
+        ArgumentCaptor<BrowserContext.ClearCookiesOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.ClearCookiesOptions.class);
+        verify(browser.context()).clearCookies(captor.capture());
+        assertEquals("sid", captor.getValue().name);
+        assertEquals("app.example.com", captor.getValue().domain);
+        assertEquals("/orders", captor.getValue().path);
+    }
+
+    @Test
+    void shouldClearNamelessCookieByEmptyNameFilter() {
+        browser.createContext("admin");
+
+        new CookieAction.Builder().clear().name("").build().execute(context);
+
+        ArgumentCaptor<BrowserContext.ClearCookiesOptions> captor =
+                ArgumentCaptor.forClass(BrowserContext.ClearCookiesOptions.class);
+        verify(browser.context()).clearCookies(captor.capture());
+        assertEquals("", captor.getValue().name);
+    }
+
+    @Test
+    void shouldRejectMisplacedClearCookieFilters() {
+        assertThrows(CitrusRuntimeException.class,
+                () -> new CookieAction.Builder().read("sid").domain("example.com").variable("v").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new CookieAction.Builder().verify("sid", "ok").path("/api").build());
+        assertThrows(CitrusRuntimeException.class,
+                () -> new CookieAction.Builder().clear().url("https://example.com").build());
     }
 
     @Test

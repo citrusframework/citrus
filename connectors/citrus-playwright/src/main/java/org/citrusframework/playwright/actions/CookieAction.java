@@ -52,6 +52,8 @@ public class CookieAction extends AbstractPlaywrightAction {
     private final Command command;
     private final CookieSpec cookie;
     private final String name;
+    private final String domain;
+    private final String path;
     private final String expectedValue;
     private final String url;
     private final String variable;
@@ -61,6 +63,8 @@ public class CookieAction extends AbstractPlaywrightAction {
         this.command = builder.command;
         this.cookie = builder.cookie;
         this.name = builder.name;
+        this.domain = builder.domain;
+        this.path = builder.path;
         this.expectedValue = builder.expectedValue;
         this.url = builder.url;
         this.variable = builder.variable;
@@ -76,7 +80,7 @@ public class CookieAction extends AbstractPlaywrightAction {
                         : browser.currentPageIfAvailable().map(Page::url).orElse(null);
                 currentContext.addCookies(List.of(cookie.toCookie(context, defaultUrl)));
             }
-            case CLEAR -> browser.getCurrentContext().clearCookies();
+            case CLEAR -> clearCookies(browser.getCurrentContext(), context);
             case READ -> {
                 Cookie actual = findCookie(browser, context);
                 context.setVariable(variable, actual.value);
@@ -90,6 +94,27 @@ public class CookieAction extends AbstractPlaywrightAction {
                 }
             }
         }
+    }
+
+    private void clearCookies(BrowserContext currentContext, TestContext context) {
+        // NB: name uses a null check (not hasText) so an explicit empty string
+        // still filters for nameless cookies, while an empty domain/path is
+        // never a valid filter and falls back to unfiltered clear.
+        if (name == null && !StringUtils.hasText(domain) && !StringUtils.hasText(path)) {
+            currentContext.clearCookies();
+            return;
+        }
+        BrowserContext.ClearCookiesOptions options = new BrowserContext.ClearCookiesOptions();
+        if (name != null) {
+            options.setName(LocatorResolver.resolve(name, context));
+        }
+        if (StringUtils.hasText(domain)) {
+            options.setDomain(LocatorResolver.resolve(domain, context));
+        }
+        if (StringUtils.hasText(path)) {
+            options.setPath(LocatorResolver.resolve(path, context));
+        }
+        currentContext.clearCookies(options);
     }
 
     private Cookie findCookie(PlaywrightBrowser browser, TestContext context) {
@@ -120,6 +145,14 @@ public class CookieAction extends AbstractPlaywrightAction {
         return name;
     }
 
+    public String getDomain() {
+        return domain;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -135,6 +168,8 @@ public class CookieAction extends AbstractPlaywrightAction {
         private Command command;
         private CookieSpec cookie;
         private String name;
+        private String domain;
+        private String path;
         private String expectedValue;
         private String url;
         private String variable;
@@ -163,12 +198,46 @@ public class CookieAction extends AbstractPlaywrightAction {
         }
 
         /**
-         * Clears all cookies from the current context.
+         * Clears cookies from the current context, optionally narrowed with
+         * {@link #name(String)}, {@link #domain(String)}, and/or {@link #path(String)}.
          *
          * @return this builder
          */
         public Builder clear() {
             this.command = Command.CLEAR;
+            return this;
+        }
+
+        /**
+         * Filters {@link #clear()} by cookie name, or sets the target cookie name.
+         *
+         * @param name cookie name
+         * @return this builder
+         */
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        /**
+         * Filters {@link #clear()} by cookie domain.
+         *
+         * @param domain cookie domain filter
+         * @return this builder
+         */
+        public Builder domain(String domain) {
+            this.domain = domain;
+            return this;
+        }
+
+        /**
+         * Filters {@link #clear()} by cookie path.
+         *
+         * @param path cookie path filter
+         * @return this builder
+         */
+        public Builder path(String path) {
+            this.path = path;
             return this;
         }
 
@@ -234,6 +303,13 @@ public class CookieAction extends AbstractPlaywrightAction {
             }
             if (command == Command.VERIFY && (name == null || expectedValue == null)) {
                 throw new CitrusRuntimeException("Missing Playwright cookie verification name or value");
+            }
+            if ((domain != null || path != null) && command != Command.CLEAR) {
+                throw new CitrusRuntimeException("Playwright cookie domain and path filters only apply to the clear command");
+            }
+            if (StringUtils.hasText(url) && command == Command.CLEAR) {
+                throw new CitrusRuntimeException(
+                        "Playwright cookie clear does not accept url - filter with name, domain, or path instead");
             }
             return new CookieAction(this);
         }

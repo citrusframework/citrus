@@ -82,19 +82,55 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
         delegate.position(position);
     }
 
+    @SchemaProperty(description = "Cursor indicator mode ('none' or 'pointer') for screencast action annotations.")
+    public void setCursor(String cursor) {
+        if (cursor != null) {
+            delegate.cursor(cursor);
+        }
+    }
+
+    @SchemaProperty(description = "CSS style declarations for the screencast action point indicator.")
+    public void setStylePoint(String stylePoint) {
+        delegate.stylePoint(stylePoint);
+    }
+
+    @SchemaProperty(description = "CSS style declarations for the screencast action target highlight box.")
+    public void setStyleHighlight(String styleHighlight) {
+        delegate.styleHighlight(styleHighlight);
+    }
+
+    @SchemaProperty(description = "CSS style declarations for the screencast action title overlay.")
+    public void setStyleTitle(String styleTitle) {
+        delegate.styleTitle(styleTitle);
+    }
+
+    @SuppressWarnings("deprecation")
     @SchemaProperty(description = "Font size for screencast annotations.")
     public void setFontSize(Integer fontSize) {
-        delegate.fontSize(fontSize);
+        if (fontSize != null) {
+            delegate.fontSize(fontSize);
+        }
     }
 
     @SchemaProperty(description = "Duration in seconds for a screencast segment.")
     public void setDuration(Double duration) {
-        delegate.duration(duration);
+        if (duration != null) {
+            delegate.duration(duration);
+        }
+    }
+
+    @SchemaProperty(description = "Frame rate in frames per second for screencast recording.")
+    public void setFps(Integer fps) {
+        if (fps != null) {
+            delegate.fps(fps);
+        }
     }
 
     @SchemaProperty(description = "Screencast video quality.")
     public void setQuality(Integer quality) {
-        delegate.quality(quality);
+        if (quality != null) {
+            delegate.quality(quality);
+        }
     }
 
     @SchemaProperty(description = "Test variable to store screencast output.")

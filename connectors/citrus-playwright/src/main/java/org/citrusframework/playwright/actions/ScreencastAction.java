@@ -25,6 +25,7 @@ import com.microsoft.playwright.Screencast;
 import com.microsoft.playwright.ScreencastFrame;
 import com.microsoft.playwright.options.AnnotatePosition;
 import com.microsoft.playwright.options.ScreencastActionStyle;
+import com.microsoft.playwright.options.ScreencastCursor;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -57,10 +58,16 @@ public class ScreencastAction extends AbstractPlaywrightAction {
     private final Command command;
     private final String path;
     private final Integer quality;
+    private final Integer fps;
     private final Integer sizeWidth;
     private final Integer sizeHeight;
     private final Consumer<ScreencastFrame> onFrame;
     private final AnnotatePosition position;
+    private final ScreencastCursor cursor;
+    private final ScreencastActionStyle style;
+    private final String stylePoint;
+    private final String styleHighlight;
+    private final String styleTitle;
     private final Integer fontSize;
     private final Double duration;
     private final String chapterTitle;
@@ -73,10 +80,16 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         this.command = builder.command;
         this.path = builder.path;
         this.quality = builder.quality;
+        this.fps = builder.fps;
         this.sizeWidth = builder.sizeWidth;
         this.sizeHeight = builder.sizeHeight;
         this.onFrame = builder.onFrame;
         this.position = builder.position;
+        this.cursor = builder.cursor;
+        this.style = builder.style;
+        this.stylePoint = builder.stylePoint;
+        this.styleHighlight = builder.styleHighlight;
+        this.styleTitle = builder.styleTitle;
         this.fontSize = builder.fontSize;
         this.duration = builder.duration;
         this.chapterTitle = builder.chapterTitle;
@@ -89,6 +102,30 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         return command;
     }
 
+    public Integer getFps() {
+        return fps;
+    }
+
+    public ScreencastCursor getCursor() {
+        return cursor;
+    }
+
+    public ScreencastActionStyle getStyle() {
+        return style;
+    }
+
+    public String getStylePoint() {
+        return stylePoint;
+    }
+
+    public String getStyleHighlight() {
+        return styleHighlight;
+    }
+
+    public String getStyleTitle() {
+        return styleTitle;
+    }
+
     @Override
     protected void execute(PlaywrightBrowser browser, TestContext context) {
         Screencast screencast = browser.getCurrentPage().screencast();
@@ -96,7 +133,7 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         switch (command) {
             case START -> startRecording(screencast, context);
             case STOP -> screencast.stop();
-            case SHOW_ACTIONS -> screencast.showActions(showActionsOptions());
+            case SHOW_ACTIONS -> screencast.showActions(showActionsOptions(context));
             case HIDE_ACTIONS -> screencast.hideActions();
             case SHOW_CHAPTER -> screencast.showChapter(
                     LocatorResolver.resolve(chapterTitle, context), showChapterOptions(context));
@@ -118,6 +155,9 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         if (quality != null) {
             options.setQuality(quality);
         }
+        if (fps != null) {
+            options.setFps(fps);
+        }
         if (sizeWidth != null && sizeHeight != null) {
             options.setSize(sizeWidth, sizeHeight);
         }
@@ -132,15 +172,38 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         }
     }
 
-    private Screencast.ShowActionsOptions showActionsOptions() {
+    private Screencast.ShowActionsOptions showActionsOptions(TestContext context) {
         Screencast.ShowActionsOptions options = new Screencast.ShowActionsOptions();
 
         if (position != null) {
             options.setPosition(position);
         }
-        if (fontSize != null) {
-            options.setStyle(new ScreencastActionStyle().setTitle("font-size: %dpx".formatted(fontSize)));
+        if (cursor != null) {
+            options.setCursor(cursor);
         }
+
+        String point = stylePoint != null ? stylePoint : (style != null ? style.point : null);
+        String highlight = styleHighlight != null ? styleHighlight : (style != null ? style.highlight : null);
+        String title = styleTitle != null ? styleTitle : (style != null ? style.title : null);
+        if (title == null && fontSize != null) {
+            title = "font-size: %dpx".formatted(fontSize);
+        }
+        if (point != null || highlight != null || title != null) {
+            ScreencastActionStyle resolvedStyle = new ScreencastActionStyle();
+            if (point != null) {
+                resolvedStyle.setPoint(LocatorResolver.resolve(point, context));
+            }
+            if (highlight != null) {
+                resolvedStyle.setHighlight(LocatorResolver.resolve(highlight, context));
+            }
+            if (title != null) {
+                resolvedStyle.setTitle(LocatorResolver.resolve(title, context));
+            }
+            options.setStyle(resolvedStyle);
+        } else if (style != null) {
+            options.setStyle(new ScreencastActionStyle());
+        }
+
         if (duration != null) {
             options.setDuration(duration);
         }
@@ -188,6 +251,23 @@ public class ScreencastAction extends AbstractPlaywrightAction {
     }
 
     /**
+     * Resolves the DSL screencast cursor names onto the Playwright enum.
+     *
+     * @param cursor cursor name such as {@code none} or {@code pointer}
+     * @return matching screencast cursor
+     */
+    static ScreencastCursor screencastCursor(String cursor) {
+        if (cursor == null || cursor.isBlank()) {
+            throw new CitrusRuntimeException("Unsupported Playwright screencast cursor: " + cursor);
+        }
+        try {
+            return ScreencastCursor.valueOf(cursor.trim().toUpperCase(Locale.ROOT).replace('-', '_'));
+        } catch (IllegalArgumentException e) {
+            throw new CitrusRuntimeException("Unsupported Playwright screencast cursor: " + cursor, e);
+        }
+    }
+
+    /**
      * Fluent builder for screencast recording and annotation commands.
      */
     public static class Builder extends AbstractPlaywrightAction.Builder<ScreencastAction, Builder> {
@@ -195,10 +275,16 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         private Command command;
         private String path;
         private Integer quality;
+        private Integer fps;
         private Integer sizeWidth;
         private Integer sizeHeight;
         private Consumer<ScreencastFrame> onFrame;
         private AnnotatePosition position;
+        private ScreencastCursor cursor;
+        private ScreencastActionStyle style;
+        private String stylePoint;
+        private String styleHighlight;
+        private String styleTitle;
         private Integer fontSize;
         private Double duration;
         private String chapterTitle;
@@ -298,11 +384,85 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         }
 
         /**
+         * Sets the cursor indicator mode drawn for action annotations ({@code none} or
+         * {@code pointer}).
+         *
+         * @param cursor screencast cursor mode
+         * @return this builder
+         */
+        public Builder cursor(ScreencastCursor cursor) {
+            this.cursor = cursor;
+            return this;
+        }
+
+        /**
+         * Sets the cursor indicator mode drawn for action annotations by name ({@code none} or
+         * {@code pointer}).
+         *
+         * @param cursor cursor mode name
+         * @return this builder
+         */
+        public Builder cursor(String cursor) {
+            this.cursor = screencastCursor(cursor);
+            return this;
+        }
+
+        /**
+         * Configures custom CSS style declarations for action annotations (point indicator, target
+         * highlight box, and title overlay). Individual {@link #stylePoint(String)},
+         * {@link #styleHighlight(String)}, and {@link #styleTitle(String)} setters take precedence
+         * over matching fields on this object, and Citrus {@code ${var}} placeholders are resolved
+         * at execution time.
+         *
+         * @param style screencast action style
+         * @return this builder
+         */
+        public Builder style(ScreencastActionStyle style) {
+            this.style = style;
+            return this;
+        }
+
+        /**
+         * Sets CSS declarations for the action point indicator on {@link #showActions()}.
+         *
+         * @param stylePoint CSS declarations, may contain Citrus variables
+         * @return this builder
+         */
+        public Builder stylePoint(String stylePoint) {
+            this.stylePoint = stylePoint;
+            return this;
+        }
+
+        /**
+         * Sets CSS declarations for the target element highlight box on {@link #showActions()}.
+         *
+         * @param styleHighlight CSS declarations, may contain Citrus variables
+         * @return this builder
+         */
+        public Builder styleHighlight(String styleHighlight) {
+            this.styleHighlight = styleHighlight;
+            return this;
+        }
+
+        /**
+         * Sets CSS declarations for the action title overlay on {@link #showActions()}.
+         *
+         * @param styleTitle CSS declarations, may contain Citrus variables
+         * @return this builder
+         */
+        public Builder styleTitle(String styleTitle) {
+            this.styleTitle = styleTitle;
+            return this;
+        }
+
+        /**
          * Sets the annotation font size in pixels.
          *
          * @param fontSize font size
          * @return this builder
+         * @deprecated Use {@link #styleTitle(String)} or {@link #style(ScreencastActionStyle)} instead.
          */
+        @Deprecated
         public Builder fontSize(int fontSize) {
             this.fontSize = fontSize;
             return this;
@@ -351,6 +511,17 @@ public class ScreencastAction extends AbstractPlaywrightAction {
         public Builder size(int width, int height) {
             this.sizeWidth = width;
             this.sizeHeight = height;
+            return this;
+        }
+
+        /**
+         * Sets the recording frame rate in frames per second applied when the recording starts.
+         *
+         * @param fps frame rate in frames per second, must be positive
+         * @return this builder
+         */
+        public Builder fps(int fps) {
+            this.fps = fps;
             return this;
         }
 
@@ -411,6 +582,19 @@ public class ScreencastAction extends AbstractPlaywrightAction {
             }
             if ((sizeWidth != null && sizeWidth <= 0) || (sizeHeight != null && sizeHeight <= 0)) {
                 throw new CitrusRuntimeException("Playwright screencast size must be positive");
+            }
+            if (fps != null && command != Command.START) {
+                throw new CitrusRuntimeException("Playwright screencast fps only applies to the start command");
+            }
+            if (fps != null && fps <= 0) {
+                throw new CitrusRuntimeException("Playwright screencast fps must be positive");
+            }
+            if ((style != null || stylePoint != null || styleHighlight != null || styleTitle != null)
+                    && command != Command.SHOW_ACTIONS) {
+                throw new CitrusRuntimeException("Playwright screencast style only applies to the show-actions command");
+            }
+            if (cursor != null && command != Command.SHOW_ACTIONS) {
+                throw new CitrusRuntimeException("Playwright screencast cursor only applies to the show-actions command");
             }
             return new ScreencastAction(this);
         }

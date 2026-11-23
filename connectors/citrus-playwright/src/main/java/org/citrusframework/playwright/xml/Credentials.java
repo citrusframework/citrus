@@ -72,6 +72,13 @@ public class Credentials extends AbstractPlaywrightAction.Builder<CredentialsAct
         delegate.publicKey(publicKey);
     }
 
+    @XmlAttribute(name = "sign-count")
+    public void setSignCount(Integer signCount) {
+        if (signCount != null) {
+            delegate.signCount(signCount);
+        }
+    }
+
     @Override
     public Credentials description(String description) {
         delegate.description(description);

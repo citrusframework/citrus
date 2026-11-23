@@ -70,6 +70,13 @@ public class Credentials extends AbstractPlaywrightAction.Builder<CredentialsAct
         delegate.publicKey(publicKey);
     }
 
+    @SchemaProperty(description = "Initial signature counter for a created WebAuthn credential.")
+    public void setSignCount(Integer signCount) {
+        if (signCount != null) {
+            delegate.signCount(signCount);
+        }
+    }
+
     @Override
     public Credentials description(String description) {
         delegate.description(description);

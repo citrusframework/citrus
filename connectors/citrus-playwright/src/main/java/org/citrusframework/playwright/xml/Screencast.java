@@ -84,19 +84,55 @@ public class Screencast extends AbstractPlaywrightAction.Builder<ScreencastActio
         delegate.position(position);
     }
 
+    @XmlAttribute
+    public void setCursor(String cursor) {
+        if (cursor != null) {
+            delegate.cursor(cursor);
+        }
+    }
+
+    @XmlAttribute(name = "style-point")
+    public void setStylePoint(String stylePoint) {
+        delegate.stylePoint(stylePoint);
+    }
+
+    @XmlAttribute(name = "style-highlight")
+    public void setStyleHighlight(String styleHighlight) {
+        delegate.styleHighlight(styleHighlight);
+    }
+
+    @XmlAttribute(name = "style-title")
+    public void setStyleTitle(String styleTitle) {
+        delegate.styleTitle(styleTitle);
+    }
+
+    @SuppressWarnings("deprecation")
     @XmlAttribute(name = "font-size")
     public void setFontSize(Integer fontSize) {
-        delegate.fontSize(fontSize);
+        if (fontSize != null) {
+            delegate.fontSize(fontSize);
+        }
     }
 
     @XmlAttribute
     public void setDuration(Double duration) {
-        delegate.duration(duration);
+        if (duration != null) {
+            delegate.duration(duration);
+        }
+    }
+
+    @XmlAttribute
+    public void setFps(Integer fps) {
+        if (fps != null) {
+            delegate.fps(fps);
+        }
     }
 
     @XmlAttribute
     public void setQuality(Integer quality) {
-        delegate.quality(quality);
+        if (quality != null) {
+            delegate.quality(quality);
+        }
     }
 
     @XmlAttribute

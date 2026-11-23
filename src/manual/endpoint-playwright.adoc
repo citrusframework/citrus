@@ -243,6 +243,8 @@ $(playwright().extract().cookie("session").variable("sessionCookie"));
 $(playwright().extract().ariaSnapshot("ai").boxes(true).depth(4).variable("pageAiTree"));
 $(playwright().extract().locator("#card-beta").ariaSnapshot("ai").variable("cardAiTree"));
 $(playwright().extract().locator(LocatorSpec.ref("e2")).normalizedLocator().variable("javaLocator"));
+$(playwright().extract().pageSource().variable("lightHtml"));
+$(playwright().extract().pageSource(true).variable("shadowHtml"));
 ----
 
 `ariaSnapshot(...)` works on the full page (when no locator is set) or on a specific locator. Pass
@@ -251,13 +253,18 @@ $(playwright().extract().locator(LocatorSpec.ref("e2")).normalizedLocator().vari
 `timeout(...)` in milliseconds. `normalizedLocator()` converts a resolved locator (for example a
 transient `ref` locator) into a canonical Playwright Java locator expression via
 `locator.normalize().toString()` for diagnostics or code generation; normalized expressions are
-read-only strings and are not parsed back into `LocatorSpec`.
+read-only strings and are not parsed back into `LocatorSpec`. `pageSource()` extracts the full
+serialized HTML of the current page; pass `pageSource(true)` (or `includeShadow(true)`) to
+serialize open shadow roots inline as declarative `<template shadowrootmode="open">` elements,
+with configured secret patterns redacted before storing the value.
 
 Cookie `read` and `verify` actions inspect all cookies in the current browser context by default.
 Pass `url(...)` (or `url` in XML/YAML) to filter cookies for a specific request URL using strict
 RFC 6265 rules: host-only cookies do not match subdomains, `Path=/api` does not match `/apiv2`,
 and `Path=/foo/` does not match `/foo`. Nameless cookies (`Set-Cookie: token`) are stored and
-queried with an empty cookie name (`""`):
+queried with an empty cookie name (`""`). Cookie `clear` removes every cookie in the context by
+default, or selectively clears matching cookies when narrowed by `name(...)`, `domain(...)`,
+and/or `path(...)`:
 
 [source,java]
 ----
@@ -265,6 +272,7 @@ $(playwright().cookies().verify("session", "abc").url("https://app.example.com/a
 $(playwright().cookies().read("session").url("https://app.example.com/api/orders").variable("sessionCookie"));
 $(playwright().cookies().verify("", "raw-token"));
 $(playwright().extract().cookie("").variable("namelessCookie"));
+$(playwright().cookies().clear().name("session").domain("app.example.com").path("/api"));
 ----
 
 [[playwright-javascript]]
@@ -337,12 +345,21 @@ $(playwright().tracing().startHar("target/playwright/full.har").harContent("embe
 ----
 
 A screencast records the page as a video and can annotate it as a walkthrough. Nothing is
-recorded until the action starts it:
+recorded until the action starts it. `start(...)` accepts optional recording `size(width, height)`,
+`fps(int)`, and `quality(int)`, while `showActions()` accepts annotation `position(...)`,
+`cursor("none" | "pointer")`, `duration(...)`, and CSS styling via `stylePoint(...)`,
+`styleHighlight(...)`, `styleTitle(...)`, or a `ScreencastActionStyle` object (`fontSize(int)`
+remains available as a deprecated shorthand for `styleTitle("font-size: <n>px")`):
 
 [source,java]
 ----
-$(playwright().screencast().start("target/playwright/run.webm"));
-$(playwright().screencast().showActions().position("top-right").fontSize(18));
+$(playwright().screencast().start("target/playwright/run.webm").fps(24));
+$(playwright().screencast().showActions()
+        .position("top-right")
+        .cursor("pointer")
+        .stylePoint("background: #ff3b30")
+        .styleHighlight("border: 2px solid #007aff")
+        .styleTitle("font-size: 18px; color: #ffffff"));
 $(playwright().screencast().showChapter("Checkout").chapterDescription("Applies the coupon"));
 $(playwright().screencast().stop());
 ----
@@ -494,16 +511,18 @@ first request:
 ----
 
 WebAuthn passkeys are driven through a virtual authenticator, so passkey login flows need no
-hardware:
+hardware. `create(...)` seeds a passkey for the relying party origin with optional `id`,
+`userHandle`, `privateKey`, `publicKey`, and initial signature counter `signCount`:
 
 [source,java]
 ----
 $(playwright().credentials().create("example.com")
         .id("${credentialId}").userHandle("${userHandle}")
-        .privateKey("${privateKey}").publicKey("${publicKey}"));
+        .privateKey("${privateKey}").publicKey("${publicKey}")
+        .signCount(5));
 $(playwright().credentials().install());
 $(playwright().credentials().read("storedCredential"));
-$(playwright().credentials().delete("example.com"));
+$(playwright().credentials().delete("${storedCredential}"));
 ----
 
 Only the credential id is written to the test variable. Private key material never reaches the
@@ -868,10 +887,26 @@ actions:
       screencast:
         command: "start"
         path: "target/playwright/run.webm"
+        fps: 24
+
+  - playwright:
+      screencast:
+        command: "show-actions"
+        position: "top-right"
+        cursor: "pointer"
+        style-point: "background: #ff3b30"
+        style-highlight: "border: 2px solid #007aff"
+        style-title: "font-size: 18px"
 
   - playwright:
       credentials:
         command: "install"
+
+  - playwright:
+      credentials:
+        command: "create"
+        origin: "https://example.com"
+        sign-count: 5
 
   - playwright:
       click:
@@ -898,6 +933,19 @@ actions:
         variable: "aiTree"
 
   - playwright:
+      extract:
+        value: "page-source"
+        include-shadow: true
+        variable: "shadowHtml"
+
+  - playwright:
+      cookies:
+        command: "clear"
+        name: "session"
+        domain: "app.example.com"
+        path: "/api"
+
+  - playwright:
       stop: {}
 ----
 
@@ -921,7 +969,7 @@ actions:
 </playwright>
 ----
 
-Supported element action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `screencast`, `credentials`, `drop`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable, plus optional `aria-mode`, `boxes`, `depth`, `timeout` for `aria-snapshot`, and `value="normalized-locator"`). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`), `test-id` or `ref`, optionally scoped inside a nested `within` element and narrowed by `visible`, `nth`, `first` or `last`.
+Supported element action keys: `start`, `stop`, `open`, `navigate` (direction), `click`, `double-click`, `right-click`, `hover`, `focus`, `tap`, `fill`, `clear`, `press`, `check`, `uncheck`, `select`, `upload`, `wait` (condition), `screenshot`, `screencast`, `credentials`, `drop`, `javaScript`/`javascript`, `verify` (check + expected) and `extract` (value + variable, plus optional `aria-mode`, `boxes`, `depth`, `timeout` for `aria-snapshot`, `include-shadow` for `page-source`, and `value="normalized-locator"`). Element locators accept one of `css`, `xpath`, `text`, `role` (plus optional `name`), `test-id` or `ref`, optionally scoped inside a nested `within` element and narrowed by `visible`, `nth`, `first` or `last`.
 
 The YAML DSL supports a single `within` nesting level. Use the XML DSL or the Java API when you need deeper nesting.
 
@@ -948,6 +996,10 @@ The same applies to XML:
 </playwright>
 
 <playwright>
+  <extract value="page-source" include-shadow="true" variable="shadowHtml"/>
+</playwright>
+
+<playwright>
   <screenshot path="target/playwright/screen.webp" quality="50"/>
 </playwright>
 
@@ -958,11 +1010,25 @@ The same applies to XML:
 </playwright>
 
 <playwright>
-  <screencast command="start" path="target/playwright/run.webm"/>
+  <screencast command="start" path="target/playwright/run.webm" fps="24"/>
+</playwright>
+
+<playwright>
+  <screencast command="show-actions" position="top-right" cursor="pointer"
+      style-point="background: #ff3b30" style-highlight="border: 2px solid #007aff"
+      style-title="font-size: 18px"/>
 </playwright>
 
 <playwright>
   <credentials command="install"/>
+</playwright>
+
+<playwright>
+  <credentials command="create" origin="https://example.com" sign-count="5"/>
+</playwright>
+
+<playwright>
+  <cookies command="clear" name="session" domain="app.example.com" path="/api"/>
 </playwright>
 ----
 
@@ -977,6 +1043,7 @@ accept `_` in place of `-`. The attribute or key names are the same in XML and Y
 |`console` |`capture`, `clear`, `report`, `verify-contains` |`text`, `variable`
 |`context` |`create`, `switch`, `close` |`alias`, `storage-state`
 |`cookies` |`add`, `clear`, `read`, `verify` |`name`, `value`, `url`, `domain`, `path`, `expires`, `http-only`, `secure`, `same-site`, `variable`
+|`credentials` |`create`, `install`, `read`, `delete` |`origin`, `id`, `user-handle`, `private-key`, `public-key`, `sign-count`, `variable`
 |`dialog` |`accept`, `dismiss`, `verify-closed` |`prompt-text`, `message`, `type`, `trigger-script`
 |`download` |— |`element`, `trigger-script`, `save-as`, `path-variable`, `filename-variable`
 |`emulate` |— |`width` + `height`, `latitude` + `longitude`, `accuracy`, `color-scheme`, `locale`, `timezone`, `user-agent`, `context`
@@ -987,6 +1054,7 @@ accept `_` in place of `-`. The attribute or key names are the same in XML and Y
 |`page-object` |— |`type`, `method`, `arguments`, `validator`
 |`pdf` |— |`path`, `print-background`, `variable`
 |`permissions` |`grant`, `clear` |`permissions`
+|`screencast` |`start`, `stop`, `show-actions`, `hide-actions`, `show-chapter`, `show-overlay`, `show-overlays`, `hide-overlays` |`path`, `fps`, `quality`, `size-width` + `size-height`, `position`, `cursor`, `style-point`, `style-highlight`, `style-title`, `font-size` (deprecated), `duration`, `title`, `chapter-description`, `html`, `variable`
 |`storage` |`set`, `read`, `verify`, `remove`, `clear`, `save-state`, `restore-state` |`scope` (`local`, `session`), `key`, `value`, `path`, `opfs`, `variable`
 |`tracing` |`start`, `stop`, `start-har`, `stop-har` |`path`, `screenshots`, `snapshots`, `sources`, `aria-snapshots`, `screen-snapshots`, `har-content`, `har-mode`, `har-url-filter`, `variable`
 |===
