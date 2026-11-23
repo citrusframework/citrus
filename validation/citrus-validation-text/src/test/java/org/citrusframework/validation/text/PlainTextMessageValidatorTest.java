@@ -17,6 +17,8 @@
 package org.citrusframework.validation.text;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.UUID;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -250,6 +253,47 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
         autoConvertingValidator.setAutoConvertContent(true);
 
         Assertions.assertTrue(autoConvertingValidator.isAutoConvertContent());
+    }
+
+    @Test
+    public void shouldUseConfiguredFileEncodingForAutoConversion() {
+        System.setProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY, "true");
+        System.setProperty(CitrusSettings.CITRUS_FILE_ENCODING_PROPERTY, "ISO-8859-1");
+        try {
+            PlainTextMessageValidator autoConvertingValidator = new PlainTextMessageValidator();
+            String payload = "id,item\n1,bücher";
+            Message receivedMessage = new DefaultMessage(payload.getBytes(Charset.forName("ISO-8859-1")));
+            Message controlMessage = new DefaultMessage(payload);
+
+            autoConvertingValidator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        } finally {
+            System.clearProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY);
+            System.clearProperty(CitrusSettings.CITRUS_FILE_ENCODING_PROPERTY);
+        }
+    }
+
+    @Test
+    public void shouldFailWithCitrusRuntimeExceptionWhenInputStreamCannotBeRead() {
+        System.setProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY, "true");
+        System.setProperty(CitrusSettings.CACHE_INPUT_STREAM_PROPERTY, "false");
+        try {
+            PlainTextMessageValidator autoConvertingValidator = new PlainTextMessageValidator();
+            Message receivedMessage = new DefaultMessage(new InputStream() {
+                @Override
+                public int read() throws IOException {
+                    throw new IOException("Read failed");
+                }
+            });
+            Message controlMessage = new DefaultMessage("id,item");
+
+            CitrusRuntimeException e = Assertions.assertThrows(CitrusRuntimeException.class, () ->
+                    autoConvertingValidator.validateMessage(receivedMessage, controlMessage, context, validationContext));
+            Assertions.assertTrue(e.getMessage().contains("Failed to convert InputStream message payload to text"));
+            Assertions.assertEquals("Read failed", e.getCause().getMessage());
+        } finally {
+            System.clearProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY);
+            System.clearProperty(CitrusSettings.CACHE_INPUT_STREAM_PROPERTY);
+        }
     }
 
     @Test
