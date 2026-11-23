@@ -252,7 +252,7 @@ public class ZooExecuteAction extends AbstractTestAction {
      * Gets the configured message processors (extractors).
      * Package-private for internal verification; not part of the public API.
      *
-     * @return
+     * @return the list of configured message processors
      */
     List<MessageProcessor> getMessageProcessors() {
         return messageProcessors;

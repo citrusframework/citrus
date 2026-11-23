@@ -16,7 +16,6 @@
 
 package org.citrusframework.zookeeper.yaml;
 
-import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.zookeeper.command.ZooCommand;
 
 public class Info {
