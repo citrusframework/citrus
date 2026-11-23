@@ -17,8 +17,6 @@
 package org.citrusframework.kubernetes.xml;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -98,29 +96,7 @@ public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServic
         return delegate.build();
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
-    public static class Validation {
-
-        @XmlAttribute(required = true)
-        protected String path;
-        @XmlAttribute
-        protected String value;
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
+    public static class Validation extends org.citrusframework.kubernetes.xml.Validation {
     }
 }
