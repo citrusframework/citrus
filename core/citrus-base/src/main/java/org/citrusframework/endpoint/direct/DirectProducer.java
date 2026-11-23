@@ -48,7 +48,7 @@ public class DirectProducer implements Producer {
 
     @Override
     public void send(Message message, TestContext context) {
-        String destinationQueueName = getDestinationQueueName();
+        String destinationQueueName = context.replaceDynamicContentInString(getDestinationQueueName());
 
         logger.debug("Sending message to queue: '{}'", destinationQueueName);
         logger.debug("Message to send is:\n{}", message);
@@ -89,7 +89,7 @@ public class DirectProducer implements Producer {
      */
     protected String getDestinationQueueName() {
         if (endpointConfiguration.getQueue() != null) {
-            return endpointConfiguration.getQueue().toString();
+            return endpointConfiguration.getQueue().getName();
         } else if (StringUtils.hasText(endpointConfiguration.getQueueName())) {
             return endpointConfiguration.getQueueName();
         } else {
@@ -106,7 +106,8 @@ public class DirectProducer implements Producer {
      */
     protected MessageQueue resolveQueueName(String queueName, TestContext context) {
         if (context.getReferenceResolver() != null) {
-            return context.getReferenceResolver().resolve(queueName, MessageQueue.class);
+            return context.getReferenceResolver().resolve(
+                    context.replaceDynamicContentInString(queueName), MessageQueue.class);
         }
 
         throw new CitrusRuntimeException("Unable to resolve message queue - missing proper reference resolver in context");

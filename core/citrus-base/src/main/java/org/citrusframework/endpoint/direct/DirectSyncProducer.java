@@ -59,7 +59,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        String destinationQueueName = getDestinationQueueName();
+        String destinationQueueName = context.replaceDynamicContentInString(getDestinationQueueName());
 
         if (logger.isDebugEnabled()) {
             logger.debug("Sending message to queue: '{}'", destinationQueueName);
@@ -123,7 +123,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
         Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new MessageTimeoutException(timeout, getDestinationQueueName());
+            throw new MessageTimeoutException(timeout, context.replaceDynamicContentInString(getDestinationQueueName()));
         }
 
         return message;
