@@ -31,6 +31,7 @@ import org.citrusframework.openapi.yaml.OpenApi;
 import org.citrusframework.playwright.yaml.Playwright;
 import org.citrusframework.selenium.yaml.Selenium;
 import org.citrusframework.sql.yaml.Plsql;
+import org.citrusframework.zookeeper.yaml.Zookeeper;
 import org.citrusframework.springintegration.yaml.PurgeChannels;
 import org.citrusframework.sql.yaml.Sql;
 import org.citrusframework.testcontainers.yaml.Testcontainers;
@@ -238,6 +239,10 @@ public class TestActions {
 
     @SchemaProperty(kind = GROUP, description = "Playwright test actions.", module = "citrus-playwright")
     public void setPlaywright(Playwright builder) {
+    }
+
+    @SchemaProperty(kind = GROUP, description = "ZooKeeper test actions.", module = "citrus-zookeeper")
+    public void setZookeeper(Zookeeper builder) {
     }
 
     @SchemaProperty(kind = GROUP, description = "Testcontainers test actions.", module = "citrus-testcontainers")
