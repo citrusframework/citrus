@@ -54,12 +54,12 @@ public final class FunctionUtils {
             return stringValue;
         }
 
-        verifyFunctionCalls(stringValue, context);
-
         if ((stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
             // it is not a function, as it is defined as 'prefix:methodName(arguments)'
             return stringValue;
         }
+
+        verifyFunctionCalls(stringValue, context);
 
         String newString = stringValue;
         var strBuffer = new StringBuilder();
