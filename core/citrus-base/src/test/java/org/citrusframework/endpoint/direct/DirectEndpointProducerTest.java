@@ -80,6 +80,25 @@ public class DirectEndpointProducerTest {
     }
 
     @Test
+    public void testSendMessageWithVariableQueueName() {
+        DirectEndpoint endpoint = new DirectEndpoint();
+        endpoint.getEndpointConfiguration().setQueueName("${queueName}");
+
+        context.setVariable("queueName", "testQueue");
+        context.setReferenceResolver(resolver);
+
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        reset(queue, resolver);
+
+        when(resolver.resolve("testQueue", MessageQueue.class)).thenReturn(queue);
+
+        endpoint.createProducer().send(message, context);
+
+        verify(queue).send(any(Message.class));
+    }
+
+    @Test
     public void testSendMessageFailed() {
         DirectEndpoint endpoint = new DirectEndpoint();
 

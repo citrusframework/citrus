@@ -123,6 +123,32 @@ public class DirectEndpointSyncProducerTest {
     }
 
     @Test
+    public void testSendMessageWithVariableQueueName() {
+        DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
+        endpoint.getEndpointConfiguration().setQueueName("${queueName}");
+
+        context.setVariable("queueName", "testQueue");
+        context.setReferenceResolver(resolver);
+
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        Map<String, Object> responseHeaders = new HashMap<>();
+        final Message response = new DefaultMessage("<TestResponse>Hello World!</TestResponse>", responseHeaders);
+
+        reset(queue, resolver);
+
+        when(resolver.resolve("testQueue", MessageQueue.class)).thenReturn(queue);
+        doAnswer(invocation -> {
+            Message request = invocation.getArgument(0);
+            Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
+            ((MessageQueue) request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE)).send(response);
+            return null;
+        }).when(queue).send(any(Message.class));
+
+        endpoint.createProducer().send(message, context);
+    }
+
+    @Test
     public void testSendMessageWithReplyHandler() {
         DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
         endpoint.getEndpointConfiguration().setQueue(queue);
@@ -218,7 +244,7 @@ public class DirectEndpointSyncProducerTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(queue);
-        when(queue.toString()).thenReturn("mockQueue");
+        when(queue.getName()).thenReturn("mockQueue");
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
             Assertions.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));

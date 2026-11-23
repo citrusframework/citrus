@@ -178,6 +178,51 @@ public class DirectEndpointConsumerTest {
     }
 
     @Test
+    public void testReceiveMessageWithVariableQueueName() {
+        DirectEndpoint endpoint = new DirectEndpoint();
+        endpoint.getEndpointConfiguration().setQueueName("${queueName}");
+
+        context.setVariable("queueName", "testQueue");
+        context.setReferenceResolver(resolver);
+
+        Map<String, Object> headers = new HashMap<>();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
+
+        reset(queue, resolver);
+
+        when(resolver.resolve("testQueue", MessageQueue.class)).thenReturn(queue);
+        when(queue.receive(5000L)).thenReturn(message);
+
+        Message receivedMessage = endpoint.createConsumer().receive(context);
+
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals(message.getId(), receivedMessage.getHeader(MessageHeaders.ID));
+    }
+
+    @Test
+    public void testReceiveMessageWithVariableQueueNameAndSelector() {
+        DirectEndpoint endpoint = new DirectEndpoint();
+        endpoint.getEndpointConfiguration().setQueueName("${queueName}");
+
+        context.setVariable("queueName", "testQueue");
+        context.setReferenceResolver(resolver);
+
+        MessageQueue selectableQueue = Mockito.mock(MessageQueue.class);
+        Message message = new DefaultMessage("Hello").setHeader("Operation", "sayHello");
+
+        reset(resolver);
+
+        when(resolver.resolve("testQueue", MessageQueue.class)).thenReturn(selectableQueue);
+        when(selectableQueue.receive(any(DelegatingMessageSelector.class), eq(5000L)))
+                .thenReturn(message);
+
+        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
+
+        Assertions.assertEquals(message.getPayload(), receivedMessage.getPayload());
+        Assertions.assertEquals("sayHello", receivedMessage.getHeader("Operation"));
+    }
+
+    @Test
     public void testReceiveSelectedNoMessageWithTimeout() {
         DirectEndpoint endpoint = new DirectEndpoint();
 
