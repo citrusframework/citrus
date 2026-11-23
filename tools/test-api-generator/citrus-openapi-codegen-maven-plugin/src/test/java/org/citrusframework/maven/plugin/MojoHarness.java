@@ -346,7 +346,7 @@ final class MojoHarness {
                 if (pathSeparator > 0) {
                     value = basedir + expression.substring(pathSeparator);
                 } else {
-                    System.out.println("Got expression '" + expression + "' that was not recognised");
+                    // unrecognised basedir sub-expression — no action needed in test stub
                 }
                 return value;
             } else if ("localRepository".equals(expression)) {
