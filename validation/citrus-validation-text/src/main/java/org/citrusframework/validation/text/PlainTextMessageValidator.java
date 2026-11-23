@@ -16,6 +16,9 @@
 
 package org.citrusframework.validation.text;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.regex.Pattern;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
@@ -46,11 +50,15 @@ import static org.citrusframework.util.StringUtils.normalizeWhitespace;
  */
 public class PlainTextMessageValidator extends DefaultMessageValidator {
 
+    public static final String AUTO_CONVERSION_PROPERTY = "citrus.plaintext.validator.content.auto.conversion";
+    public static final String AUTO_CONVERSION_ENV = "CITRUS_PLAINTEXT_VALIDATOR_CONTENT_AUTO_CONVERSION";
     public static final String IGNORE_NEWLINE_TYPE_PROPERTY = "citrus.plaintext.validation.ignore.newline.type";
     public static final String IGNORE_NEWLINE_TYPE_ENV = "CITRUS_PLAINTEXT_VALIDATION_IGNORE_NEWLINE_TYPE";
     public static final String IGNORE_WHITESPACE_PROPERTY = "citrus.plaintext.validation.ignore.whitespace";
     public static final String IGNORE_WHITESPACE_ENV = "CITRUS_PLAINTEXT_VALIDATION_IGNORE_WHITESPACE";
 
+    private boolean autoConvertContent = parseBoolean(System.getProperty(AUTO_CONVERSION_PROPERTY,
+            System.getenv(AUTO_CONVERSION_ENV) != null ? System.getenv(AUTO_CONVERSION_ENV) : "false"));
     private boolean ignoreNewLineType = parseBoolean(System.getProperty(IGNORE_NEWLINE_TYPE_PROPERTY, System.getenv(IGNORE_NEWLINE_TYPE_ENV) != null ?
             System.getenv(IGNORE_NEWLINE_TYPE_ENV) : "false"));
     private boolean ignoreWhitespace = parseBoolean(System.getProperty(IGNORE_WHITESPACE_PROPERTY, System.getenv(IGNORE_WHITESPACE_ENV) != null ?
@@ -67,8 +75,8 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         logger.debug("Start text message validation");
 
         try {
-            String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim(), ignoreWhitespace, ignoreNewLineType);
-            String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()), ignoreWhitespace, ignoreNewLineType);
+            String resultValue = normalizeWhitespace(getPayload(receivedMessage).trim(), ignoreWhitespace, ignoreNewLineType);
+            String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(getPayload(controlMessage).trim()), ignoreWhitespace, ignoreNewLineType);
 
             controlValue = processIgnoreStatements(controlValue, resultValue);
             controlValue = processVariableStatements(controlValue, resultValue, context);
@@ -85,6 +93,23 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         }
 
         logger.debug("Text validation successful: All values OK");
+    }
+
+    private String getPayload(Message message) {
+        Object payload = message.getPayload();
+        if (autoConvertContent) {
+            if (payload instanceof byte[] bytes) {
+                return new String(bytes, Charset.forName(CitrusSettings.getFileEncoding()));
+            } else if (payload instanceof InputStream inputStream) {
+                try {
+                    return new String(inputStream.readAllBytes(), Charset.forName(CitrusSettings.getFileEncoding()));
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to convert InputStream message payload to text", e);
+                }
+            }
+        }
+
+        return message.getPayload(String.class);
     }
 
     /**
@@ -227,6 +252,20 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
                 .findFirst();
 
         return messageValidationContext.orElseGet(() -> super.findValidationContext(validationContexts));
+    }
+
+    /**
+     * Gets the autoConvertContent.
+     */
+    public boolean isAutoConvertContent() {
+        return autoConvertContent;
+    }
+
+    /**
+     * Sets the autoConvertContent.
+     */
+    public void setAutoConvertContent(boolean autoConvertContent) {
+        this.autoConvertContent = autoConvertContent;
     }
 
     /**

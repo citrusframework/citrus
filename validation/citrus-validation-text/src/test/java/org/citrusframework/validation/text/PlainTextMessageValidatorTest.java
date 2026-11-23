@@ -16,10 +16,14 @@
 
 package org.citrusframework.validation.text;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
@@ -201,6 +205,51 @@ public class PlainTextMessageValidatorTest extends AbstractUnitTest {
 
         Assertions.assertTrue(e.getMessage().contains("expected 'Hello Citrus!'"));
         Assertions.assertTrue(e.getMessage().contains("but was 'Hello World!'"));
+    }
+
+    @Test
+    public void shouldAutoConvertByteArrayPayloadToText() {
+        System.setProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY, "true");
+        try {
+            PlainTextMessageValidator autoConvertingValidator = new PlainTextMessageValidator();
+            Message receivedMessage = new DefaultMessage("id,item\n1,bücher".getBytes(Charset.forName(CitrusSettings.getFileEncoding())));
+            Message controlMessage = new DefaultMessage("id,item\n1,bücher");
+
+            autoConvertingValidator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        } finally {
+            System.clearProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY);
+        }
+    }
+
+    @Test
+    public void shouldAutoConvertInputStreamPayloadToText() {
+        System.setProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY, "true");
+        try {
+            PlainTextMessageValidator autoConvertingValidator = new PlainTextMessageValidator();
+            Message receivedMessage = new DefaultMessage(new ByteArrayInputStream("id,item\n1,bücher".getBytes(Charset.forName(CitrusSettings.getFileEncoding()))));
+            Message controlMessage = new DefaultMessage("id,item\n1,bücher");
+
+            autoConvertingValidator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+        } finally {
+            System.clearProperty(PlainTextMessageValidator.AUTO_CONVERSION_PROPERTY);
+        }
+    }
+
+    @Test
+    public void shouldNotAutoConvertBinaryPayloadByDefault() {
+        Message receivedMessage = new DefaultMessage("id,item\n1,book".getBytes(StandardCharsets.UTF_8));
+        Message controlMessage = new DefaultMessage("id,item\n1,book");
+
+        Assertions.assertThrows(ValidationException.class, () ->
+                new PlainTextMessageValidator().validateMessage(receivedMessage, controlMessage, context, validationContext));
+    }
+
+    @Test
+    public void shouldEnableAutoConversionOnValidatorInstance() {
+        PlainTextMessageValidator autoConvertingValidator = new PlainTextMessageValidator();
+        autoConvertingValidator.setAutoConvertContent(true);
+
+        Assertions.assertTrue(autoConvertingValidator.isAutoConvertContent());
     }
 
     @Test
