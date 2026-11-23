@@ -17,9 +17,25 @@
 package org.citrusframework.api.actions.kubernetes;
 
 import org.citrusframework.TestAction;
+import org.citrusframework.validation.MessageValidator;
+import org.citrusframework.validation.context.ValidationContext;
 
 public interface KubernetesServiceDeleteActionBuilder<T extends TestAction, B extends KubernetesServiceDeleteActionBuilder<T, B>>
         extends KubernetesActionBuilderBase<T, B> {
 
     B service(String serviceName);
+
+    /**
+     * Adds expected command result.
+     */
+    B result(String result);
+
+    /**
+     * Adds JsonPath command result validation.
+     */
+    B validate(String path, Object value);
+
+    B validator(MessageValidator<? extends ValidationContext> validator);
+
+    B pathExpressionValidator(MessageValidator<? extends ValidationContext> validator);
 }

@@ -22,6 +22,9 @@ import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteServiceAction;
 import org.citrusframework.api.yaml.SchemaProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServiceAction, DeleteService> {
 
     private final DeleteServiceAction.Builder delegate = new DeleteServiceAction.Builder();
@@ -29,6 +32,16 @@ public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServic
     @SchemaProperty(description = "Name of the Kubernetes Service to delete.")
     public void setName(String name) {
         this.delegate.service(name);
+    }
+
+    @SchemaProperty(description = "Expected command result as JSON.")
+    public void setResult(String result) {
+        this.delegate.result(result);
+    }
+
+    @SchemaProperty(description = "Path expressions to validate on the command result.")
+    public void setValidate(List<Validation> validations) {
+        validations.forEach(validation -> this.delegate.validate(validation.getPath(), validation.getValue()));
     }
 
     @Override
@@ -64,5 +77,28 @@ public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServic
     @Override
     public DeleteServiceAction doBuild() {
         return delegate.build();
+    }
+
+    public static class Validation {
+        private String path;
+        private String value;
+
+        @SchemaProperty(description = "JsonPath expression to validate.")
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        @SchemaProperty(description = "Expected value for the path expression.")
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 }
