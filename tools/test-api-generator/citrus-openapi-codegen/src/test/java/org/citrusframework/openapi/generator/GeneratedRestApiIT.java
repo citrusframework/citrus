@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.Completable;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;
@@ -68,6 +69,7 @@ import static org.citrusframework.openapi.generator.util.MultipartConverter.mult
 import static org.citrusframework.util.FileUtils.copyToByteArray;
 import static org.citrusframework.util.FileUtils.readToString;
 import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
+import static org.citrusframework.util.TestUtils.waitForCompletion;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -3617,6 +3619,17 @@ class GeneratedRestApiIT {
      */
     @Nested
     class NegativeTests {
+
+        /**
+         * Forked sends may outlive a failed test. Wait for them before the test ends so the next
+         * test's purge can drain their messages deterministically.
+         */
+        @AfterEach
+        void awaitForkedRequests(@CitrusResource TestCaseRunner runner, @CitrusResource TestContext context) {
+            if (runner.getTestCase() instanceof Completable completable) {
+                waitForCompletion(completable, context, 15000L);
+            }
+        }
 
         // One OK test to ensure correctness
         @Test

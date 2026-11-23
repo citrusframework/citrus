@@ -31,7 +31,9 @@
                 schema-validation="false"/>
 
             <http:receive-request server="httpServer">
-                <http:PUT path="/api/v3/ext/pet/tag/1234"/>
+                <http:PUT path="/api/v3/ext/pet/tag/1234">
+                    <http:param name="queryTag" value="queryTag"/>
+                </http:PUT>
             </http:receive-request>
 
             <http:send-response server="httpServer">
