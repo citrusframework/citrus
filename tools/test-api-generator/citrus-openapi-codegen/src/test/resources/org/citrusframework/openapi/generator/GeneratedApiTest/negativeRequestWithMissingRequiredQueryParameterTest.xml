@@ -15,6 +15,10 @@
 >
     <testcase name="negativeRequestWithMissingRequiredQueryParameterTest">
         <actions>
+            <purge-endpoint>
+                <endpoint name="httpServer"/>
+            </purge-endpoint>
+
             <create-variables>
                 <variable name="petId" value="1234" />
             </create-variables>
