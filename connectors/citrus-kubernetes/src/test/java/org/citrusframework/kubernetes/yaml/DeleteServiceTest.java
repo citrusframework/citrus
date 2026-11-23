@@ -88,4 +88,49 @@ public class DeleteServiceTest extends AbstractYamlActionTest {
         service = k8sClient.services().inNamespace(namespace).withName("my-service").get();
         Assertions.assertNull(service);
     }
+
+    @Test
+    public void shouldValidateDeleteServiceResultJson() {
+        String namespace = "test";
+        Service service = new ServiceBuilder()
+                .withNewMetadata()
+                .withName("my-service")
+                .withNamespace(namespace)
+                .endMetadata()
+                .build();
+
+        k8sClient.services()
+                .inNamespace(namespace)
+                .resource(service)
+                .create();
+
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-service-result.citrus.it.yaml");
+
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assertions.assertEquals("DeleteServiceResultTest", result.getName());
+        Assertions.assertTrue(result.getTestResult().isSuccess());
+    }
+
+    @Test
+    public void shouldFailDeleteServiceValidation() {
+        String namespace = "test";
+        Service service = new ServiceBuilder()
+                .withNewMetadata()
+                .withName("my-service")
+                .withNamespace(namespace)
+                .endMetadata()
+                .build();
+
+        k8sClient.services()
+                .inNamespace(namespace)
+                .resource(service)
+                .create();
+
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/yaml/delete-service-invalid.citrus.it.yaml");
+
+        org.citrusframework.exceptions.TestCaseFailedException failure = Assertions.assertThrows(
+                org.citrusframework.exceptions.TestCaseFailedException.class, testLoader::load);
+        Assertions.assertTrue(failure.getMessage().contains("expected 'false' but was 'true'"));
+    }
 }

@@ -98,6 +98,7 @@ public class DeleteServiceAction extends AbstractKubernetesAction {
     private void validateCommandResult(boolean success, TestContext context) {
         if (StringUtils.hasText(commandResult) || !commandResultExpressions.isEmpty()) {
             DeleteResult deleteResult = new DeleteResult();
+            deleteResult.setKind(Service.class.getSimpleName());
             deleteResult.setSuccess(success);
             CommandResult<DeleteResult> result = new CommandResult<>(deleteResult);
 

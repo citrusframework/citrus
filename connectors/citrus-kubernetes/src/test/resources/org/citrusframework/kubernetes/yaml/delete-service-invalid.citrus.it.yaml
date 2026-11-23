@@ -1,0 +1,13 @@
+name: "DeleteServiceInvalidTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      deleteService:
+        name: "my-service"
+        validate:
+          - path: "$.result.success"
+            value: "false"

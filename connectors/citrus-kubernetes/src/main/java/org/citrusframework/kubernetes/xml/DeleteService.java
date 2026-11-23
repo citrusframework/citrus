@@ -47,13 +47,11 @@ public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServic
     @XmlAttribute
     public void setResult(String result) {
         this.result = result;
-        this.delegate.result(result);
     }
 
     @XmlElement(name = "validate")
     public void setValidations(List<Validation> validations) {
         this.validations = validations;
-        validations.forEach(validation -> this.delegate.validate(validation.getPath(), validation.getValue()));
     }
 
     List<Validation> getValidations() {
