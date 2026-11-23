@@ -352,29 +352,7 @@ public class Execute implements TestActionBuilder<KubernetesExecuteAction>, Refe
         }
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
-    public static class Validation {
-
-        @XmlAttribute(required = true)
-        protected String path;
-        @XmlAttribute
-        protected String value;
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
+    public static class Validation extends org.citrusframework.kubernetes.xml.Validation {
     }
 }
