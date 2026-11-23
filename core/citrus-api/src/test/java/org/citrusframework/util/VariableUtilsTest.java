@@ -16,9 +16,13 @@
 
 package org.citrusframework.util;
 
+import org.citrusframework.context.TestContext;
 import org.citrusframework.variable.VariableUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class VariableUtilsTest {
 
@@ -62,5 +66,40 @@ public class VariableUtilsTest {
         Assertions.assertEquals("variable", VariableUtils.cutOffVariablesEscaping("//variable//"));
         Assertions.assertEquals("//incomplete", VariableUtils.cutOffDoubleQuotes("//incomplete"));
         Assertions.assertEquals("incomplete//", VariableUtils.cutOffDoubleQuotes("incomplete//"));
+    }
+
+    @Test
+    public void testReplaceVariablesInStringWithNoVariables() {
+        var context = new TestContext();
+        assertEquals("plain text", VariableUtils.replaceVariablesInString("plain text", context, false));
+        assertEquals("", VariableUtils.replaceVariablesInString("", context, false));
+        assertEquals("no variables here!", VariableUtils.replaceVariablesInString("no variables here!", context, false));
+    }
+
+    @Test
+    public void testReplaceVariablesInString() {
+        var context = new TestContext();
+        context.setVariable("greeting", "Hello");
+        context.setVariable("name", "World");
+
+        assertEquals("Hello", VariableUtils.replaceVariablesInString("${greeting}", context, false));
+        assertEquals("Hello World", VariableUtils.replaceVariablesInString("${greeting} ${name}", context, false));
+        assertEquals("Say Hello to World!", VariableUtils.replaceVariablesInString("Say ${greeting} to ${name}!", context, false));
+    }
+
+    @Test
+    public void testReplaceVariablesInStringWithQuoting() {
+        var context = new TestContext();
+        context.setVariable("value", "foo");
+
+        assertEquals("'foo'", VariableUtils.replaceVariablesInString("${value}", context, true));
+        assertEquals("val='foo'", VariableUtils.replaceVariablesInString("val=${value}", context, true));
+    }
+
+    @Test
+    public void testReplaceVariablesInStringWithUnknownVariable() {
+        var context = new TestContext();
+        assertThrows(Exception.class,
+                () -> VariableUtils.replaceVariablesInString("${unknown}", context, false));
     }
 }

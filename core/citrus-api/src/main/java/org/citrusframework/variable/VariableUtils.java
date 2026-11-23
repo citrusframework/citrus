@@ -136,6 +136,10 @@ public final class VariableUtils {
     * @return
     */
    public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) {
+       if (!str.contains(CitrusSettings.VARIABLE_PREFIX)) {
+           return str;
+       }
+
        var newStr = new StringBuilder();
 
        boolean isVarComplete;
