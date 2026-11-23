@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import jakarta.servlet.http.Cookie;
-import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.Completable;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.actions.ReceiveMessageAction.ReceiveMessageActionBuilder;
@@ -3623,10 +3623,13 @@ class GeneratedRestApiIT {
         /**
          * Forked sends may outlive a failed test. Wait for them before the test ends so the next
          * test's purge can drain their messages deterministically.
+         * Citrus {@code ParameterResolver} also resolves {@code @CitrusResource} on {@code @AfterEach},
+         * including {@code @CitrusTestSource} XML methods. For XML methods the runner holds an empty
+         * test case that is already done, so this is a no-op and the purge below remains the primary isolation.
          */
         @AfterEach
         void awaitForkedRequests(@CitrusResource TestCaseRunner runner, @CitrusResource TestContext context) {
-            if (runner.getTestCase() instanceof Completable completable) {
+            if (runner.getTestCase() instanceof Completable completable && !completable.isDone(context)) {
                 waitForCompletion(completable, context, 15000L);
             }
         }
