@@ -97,6 +97,9 @@ public class CookieAction extends AbstractPlaywrightAction {
     }
 
     private void clearCookies(BrowserContext currentContext, TestContext context) {
+        // NB: name uses a null check (not hasText) so an explicit empty string
+        // still filters for nameless cookies, while an empty domain/path is
+        // never a valid filter and falls back to unfiltered clear.
         if (name == null && !StringUtils.hasText(domain) && !StringUtils.hasText(path)) {
             currentContext.clearCookies();
             return;
