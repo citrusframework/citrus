@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.citrusframework.CitrusVersion;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.citrusframework.jbang.cli.JsonSupport;
@@ -164,13 +165,34 @@ public interface CodeAnalyzer {
     default Map<String, ComponentDefinition> getComponentDefinitions(String kind) {
         try {
             Map<String, ComponentDefinition> components = new HashMap<>();
-            JsonNode raw = JsonSupport.json().readTree(ClassLoaderHelper.getClassLoader().getResourceAsStream("citrus-catalog/citrus/citrus-catalog-aggregate-%s.json".formatted(kind)));
+            String catalogPath = "citrus-catalog/citrus/%s/citrus-catalog-aggregate-%s.json"
+                    .formatted(catalogVersion(), kind);
+            JsonNode raw = JsonSupport.json().readTree(ClassLoaderHelper.getClassLoader().getResourceAsStream(catalogPath));
             raw.propertyNames().forEach(
                     name -> components.put(name, JsonSupport.json().convertValue(raw.get(name), ComponentDefinition.class)));
             return components;
         } catch (JacksonException e) {
             throw new CitrusRuntimeException("Failed to read component aggregate schema definitions of kind '%s'".formatted(kind), e);
         }
+    }
+
+    /**
+     * Provides the Citrus version used to locate catalog resources.
+     */
+    default String citrusVersion() {
+        return CitrusVersion.version();
+    }
+
+    /**
+     * Resolves the catalog version, failing fast when no version is available.
+     */
+    default String catalogVersion() {
+        String version = citrusVersion();
+        if (!StringUtils.hasText(version)) {
+            throw new CitrusRuntimeException(
+                    "Unable to resolve Citrus version for catalog lookup. Ensure META-INF/citrus.version is on the classpath.");
+        }
+        return version;
     }
 
     /**
