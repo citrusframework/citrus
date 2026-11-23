@@ -56,4 +56,36 @@ public class DeleteServiceTest extends AbstractXmlActionTest {
         service = k8sClient.services().inNamespace(namespace).withName("my-service").get();
         Assertions.assertNull(service);
     }
+
+    @Test
+    public void shouldLoadDeleteServiceWithValidation() {
+        String namespace = "test";
+        Service service = new ServiceBuilder()
+                .withNewMetadata()
+                .withName("my-service")
+                .withNamespace(namespace)
+                .endMetadata()
+                .build();
+
+        k8sClient.services()
+                .inNamespace(namespace)
+                .resource(service)
+                .create();
+
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/delete-service-validate.citrus.it.xml");
+
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assertions.assertEquals("DeleteServiceValidateTest", result.getName());
+        Assertions.assertEquals(1L, result.getActionCount());
+        Assertions.assertEquals(DeleteServiceAction.class, result.getTestAction(0).getClass());
+
+        DeleteServiceAction action = (DeleteServiceAction) result.getTestAction(0);
+        Assertions.assertEquals("true", action.getCommandResultExpressions().get("$.result.success"));
+
+        Assertions.assertTrue(result.getTestResult().isSuccess());
+
+        service = k8sClient.services().inNamespace(namespace).withName("my-service").get();
+        Assertions.assertNull(service);
+    }
 }

@@ -17,20 +17,47 @@
 package org.citrusframework.kubernetes.xml;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.DeleteServiceAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement(name = "delete-service")
 public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServiceAction, DeleteService> {
 
     private final DeleteServiceAction.Builder delegate = new DeleteServiceAction.Builder();
 
+    private String result;
+
+    private List<Validation> validations = new ArrayList<>();
+
     @XmlAttribute(required = true)
     public void setName(String name) {
         this.delegate.service(name);
+    }
+
+    @XmlAttribute
+    public void setResult(String result) {
+        this.result = result;
+        this.delegate.result(result);
+    }
+
+    @XmlElement(name = "validate")
+    public void setValidations(List<Validation> validations) {
+        this.validations = validations;
+        validations.forEach(validation -> this.delegate.validate(validation.getPath(), validation.getValue()));
+    }
+
+    List<Validation> getValidations() {
+        return validations;
     }
 
     @Override
@@ -65,6 +92,37 @@ public class DeleteService extends AbstractKubernetesAction.Builder<DeleteServic
 
     @Override
     public DeleteServiceAction doBuild() {
+        if (org.citrusframework.util.StringUtils.hasText(result)) {
+            delegate.result(result);
+        }
+
+        validations.forEach(validation -> delegate.validate(validation.getPath(), validation.getValue()));
         return delegate.build();
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "")
+    public static class Validation {
+
+        @XmlAttribute(required = true)
+        protected String path;
+        @XmlAttribute
+        protected String value;
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
 }
