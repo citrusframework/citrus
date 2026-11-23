@@ -203,18 +203,12 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
-          <xs:complexType>
-            <xs:attribute name="path" type="xs:string" use="required"/>
-            <xs:attribute name="value" type="xs:string" use="required"/>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="validate" type="ValidateCommandResultType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="client" type="xs:string"/>
       <xs:attribute name="name" type="xs:string"/>
       <xs:attribute name="label" type="xs:string"/>
       <xs:attribute name="namespace" type="xs:string"/>
-      <xs:attribute name="result" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
