@@ -282,7 +282,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
         props.put(KRaftConfigs.PROCESS_ROLES_CONFIG, "broker,controller");
         props.put(KRaftConfigs.NODE_ID_CONFIG, nodeId);
-        props.put(ServerConfigs.BROKER_ID_CONFIG, nodeId);
 
         props.put(ReplicationConfigs.INTER_BROKER_LISTENER_NAME_CONFIG, "BROKER");
         props.put(KRaftConfigs.CONTROLLER_LISTENER_NAMES_CONFIG, "CONTROLLER");
