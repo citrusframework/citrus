@@ -120,6 +120,12 @@ public abstract class AbstractDockerActionTest extends AbstractUnitTest {
             CreateContainerResponse createResponse = new CreateContainerResponse();
             createResponse.setId("myContainerId");
             lenient().doAnswer(invocation -> createResponse).when(createCmd).exec();
+            com.github.dockerjava.api.model.HostConfig hostConfig = mock(com.github.dockerjava.api.model.HostConfig.class);
+            lenient().doReturn(hostConfig).when(createCmd).getHostConfig();
+            lenient().doReturn(hostConfig).when(hostConfig).withCapAdd(any(com.github.dockerjava.api.model.Capability[].class));
+            lenient().doReturn(hostConfig).when(hostConfig).withCapDrop(any(com.github.dockerjava.api.model.Capability[].class));
+            lenient().doReturn(hostConfig).when(hostConfig).withPortBindings(any(com.github.dockerjava.api.model.Ports.class));
+            lenient().doReturn(hostConfig).when(hostConfig).withPortBindings(any(com.github.dockerjava.api.model.PortBinding[].class));
             lenient().doReturn(createCmd).when(docker).createContainerCmd(anyString());
 
             BuildImageCmd buildCmd = mock(BuildImageCmd.class);

@@ -23,6 +23,7 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Capability;
 import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Volume;
@@ -57,7 +58,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void executeDockerCommand(DockerClient dockerClient, CreateContainerCmd command, TestContext testContext) {
         if (hasParameter("name")) {
             command.withName(getParameter("name", testContext));
@@ -77,17 +77,17 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
         if (hasParameter("capability-add")) {
             if (getParameters().get("capability-add") instanceof Capability[]) {
-                command.withCapAdd((Capability[]) getParameters().get("capability-add"));
+                getHostConfig(command).withCapAdd((Capability[]) getParameters().get("capability-add"));
             } else {
-                command.withCapAdd(getCapabilities("capability-add", testContext));
+                getHostConfig(command).withCapAdd(getCapabilities("capability-add", testContext));
             }
         }
 
         if (hasParameter("capability-drop")) {
             if (getParameters().get("capability-drop") instanceof Capability[]) {
-                command.withCapAdd((Capability[]) getParameters().get("capability-drop"));
+                getHostConfig(command).withCapDrop((Capability[]) getParameters().get("capability-drop"));
             } else {
-                command.withCapDrop(getCapabilities("capability-drop", testContext));
+                getHostConfig(command).withCapDrop(getCapabilities("capability-drop", testContext));
             }
         }
 
@@ -142,14 +142,14 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
 
         if (hasParameter("port-bindings")) {
             if (getParameters().get("port-bindings") instanceof Ports) {
-                command.withPortBindings((Ports) getParameters().get("port-bindings"));
+                getHostConfig(command).withPortBindings((Ports) getParameters().get("port-bindings"));
             } if (getParameters().get("port-bindings") instanceof PortBinding[]) {
-                command.withPortBindings((PortBinding[]) getParameters().get("port-bindings"));
+                getHostConfig(command).withPortBindings((PortBinding[]) getParameters().get("port-bindings"));
             } else {
-                command.withPortBindings(getPortBindings(getParameter("port-bindings", testContext), exposedPorts, testContext));
+                getHostConfig(command).withPortBindings(getPortBindings(getParameter("port-bindings", testContext), exposedPorts, testContext));
             }
         } else if (exposedPorts.length > 0) {
-            command.withPortBindings(getPortBindings("", exposedPorts, testContext));
+            getHostConfig(command).withPortBindings(getPortBindings("", exposedPorts, testContext));
         }
 
         if (hasParameter("volumes")) {
@@ -175,6 +175,19 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
                 testContext.setVariable(DockerMessageHeaders.CONTAINER_NAME, inspectResponse.getName().substring(1));
             }
         }
+    }
+
+    /**
+     * Gets the host config, creating it if the command mock or implementation returns null.
+     */
+    private HostConfig getHostConfig(CreateContainerCmd command) {
+        HostConfig hostConfig = command.getHostConfig();
+        if (hostConfig == null) {
+            hostConfig = new HostConfig();
+            command.withHostConfig(hostConfig);
+        }
+
+        return hostConfig;
     }
 
     /**
