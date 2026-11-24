@@ -107,7 +107,7 @@ jobs:
         # release artifacts that no CI job uses; javadoc alone took two thirds
         # of this step.
         run: >-
-          ./mvnw --no-transfer-progress -T 4 install -DskipTests
+          ./mvnw --no-transfer-progress install -DskipTests
           -Dmaven.javadoc.skip=true -Dmaven.source.skip=true
           ${MAVEN_PROFILES:+"$MAVEN_PROFILES"}
         env:
@@ -214,7 +214,7 @@ jobs:
         # a failure so the report collects all of them. Javadoc and source
         # jars are skipped as in `compile`.
         run: >-
-          ./mvnw --no-transfer-progress --fail-at-end -T 4 verify
+          ./mvnw --no-transfer-progress --fail-at-end verify
           -Dmaven.javadoc.skip=true -Dmaven.source.skip=true
           -Pplaywright-runtimes -pl "${{ matrix.modules }}"
       - name: Upload test reports
