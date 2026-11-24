@@ -123,10 +123,11 @@ public class DockerTest extends AbstractXmlActionTest {
         verify(command, atLeastOnce()).withEnv("JAVA_HOME=/opt/java", "PATH=/usr/bin");
         verify(command, atLeastOnce()).withPortSpecs("8080", "9090");
         verify(command, atLeastOnce()).withExposedPorts(any(ExposedPort[].class));
-        verify(command, atLeastOnce()).withPortBindings(any(Ports.class));
         verify(command, atLeastOnce()).withVolumes(any(Volume[].class));
-        verify(command, atLeastOnce()).withCapAdd(Capability.NET_ADMIN, Capability.SYS_ADMIN);
-        verify(command, atLeastOnce()).withCapDrop(Capability.MKNOD);
+        verify(command, atLeastOnce()).getHostConfig();
+        verify(command.getHostConfig(), atLeastOnce()).withPortBindings(any(Ports.class));
+        verify(command.getHostConfig(), atLeastOnce()).withCapAdd(Capability.NET_ADMIN, Capability.SYS_ADMIN);
+        verify(command.getHostConfig(), atLeastOnce()).withCapDrop(Capability.MKNOD);
     }
 
     @Test
