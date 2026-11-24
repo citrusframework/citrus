@@ -24,6 +24,9 @@ import org.citrusframework.util.ObjectHelper;
 /**
  * Entry point of the gRPC client test actions.
  */
+// Overrides the API's generic factory methods with the concrete builders; javac reports the
+// unchecked return type conversion against the class, so suppress at class level.
+@SuppressWarnings("unchecked")
 public class GrpcClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements org.citrusframework.api.actions.grpc.GrpcClientActionBuilder<TestAction, GrpcClientActionBuilder> {
 
@@ -42,7 +45,6 @@ public class GrpcClientActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GrpcClientRequestActionBuilder send() {
         GrpcClientRequestActionBuilder builder = new GrpcClientRequestActionBuilder();
         if (client != null) {
@@ -58,7 +60,6 @@ public class GrpcClientActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GrpcClientResponseActionBuilder receive() {
         GrpcClientResponseActionBuilder builder = new GrpcClientResponseActionBuilder();
         if (client != null) {

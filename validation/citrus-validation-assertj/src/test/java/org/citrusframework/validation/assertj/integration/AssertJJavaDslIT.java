@@ -93,6 +93,8 @@ public class AssertJJavaDslIT implements TestActionSupport {
 
     @Test
     @CitrusTest
+    // List.class is intentionally raw: the node-set element type is unknown
+    @SuppressWarnings("unchecked")
     public void shouldRunManualMigrationExamples() {
         runner.run(send(direct)
                 .message()

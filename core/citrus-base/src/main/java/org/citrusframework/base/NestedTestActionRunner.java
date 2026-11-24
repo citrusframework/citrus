@@ -49,6 +49,9 @@ import org.citrusframework.variable.VariableExtractors;
  * {@link TestCaseFailedException}. Finally actions are not handled here. They are forwarded to the outer
  * runner, which places them on the test case exactly as before.
  */
+// Overrides the API's generic factory methods with the concrete builders; javac reports the
+// unchecked return type conversion against the class, so suppress at class level.
+@SuppressWarnings("unchecked")
 public final class NestedTestActionRunner implements GherkinTestActionRunner {
 
     private final TestActionContainer container;

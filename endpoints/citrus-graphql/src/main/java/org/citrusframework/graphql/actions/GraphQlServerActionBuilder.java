@@ -21,6 +21,9 @@ import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.ObjectHelper;
 
+// Overrides the API's generic factory methods with the concrete builders; javac reports the
+// unchecked return type conversion against the class, so suppress at class level.
+@SuppressWarnings("unchecked")
 public class GraphQlServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements org.citrusframework.api.actions.graphql.GraphQlServerActionBuilder<TestAction, GraphQlServerActionBuilder> {
 
@@ -39,7 +42,6 @@ public class GraphQlServerActionBuilder extends AbstractReferenceResolverAwareTe
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GraphQlServerRequestActionBuilder receive() {
         GraphQlServerRequestActionBuilder builder = new GraphQlServerRequestActionBuilder();
         if (server != null) {
@@ -55,7 +57,6 @@ public class GraphQlServerActionBuilder extends AbstractReferenceResolverAwareTe
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GraphQlServerResponseActionBuilder send() {
         GraphQlServerResponseActionBuilder builder = new GraphQlServerResponseActionBuilder();
         if (server != null) {

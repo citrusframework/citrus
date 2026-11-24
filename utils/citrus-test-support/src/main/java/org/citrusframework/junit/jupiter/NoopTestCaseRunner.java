@@ -26,6 +26,9 @@ import org.citrusframework.context.TestContext;
  * Test case runner that only builds test actions instead of executing them. Useful for unit
  * testing TestLoader implementations without running the loaded actions.
  */
+// Inherits an unchecked generic override from DefaultTestCaseRunner; javac reports the
+// unchecked conversion against the subclass, so suppress at class level.
+@SuppressWarnings("unchecked")
 public class NoopTestCaseRunner extends DefaultTestCaseRunner {
 
     public NoopTestCaseRunner(TestContext context) {
