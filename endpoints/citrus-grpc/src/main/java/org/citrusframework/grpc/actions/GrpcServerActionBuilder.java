@@ -25,6 +25,9 @@ import org.citrusframework.util.ObjectHelper;
  * Action builder for gRPC simulator operations. Receives calls made by a client under test and
  * sends responses, stream messages or the final status.
  */
+// Overrides the API's generic factory methods with the concrete builders; javac reports the
+// unchecked return type conversion against the class, so suppress at class level.
+@SuppressWarnings("unchecked")
 public class GrpcServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction>
         implements org.citrusframework.api.actions.grpc.GrpcServerActionBuilder<TestAction, GrpcServerActionBuilder> {
 
@@ -43,7 +46,6 @@ public class GrpcServerActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GrpcServerRequestActionBuilder receive() {
         GrpcServerRequestActionBuilder builder = new GrpcServerRequestActionBuilder();
         if (server != null) {
@@ -59,7 +61,6 @@ public class GrpcServerActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GrpcServerResponseActionBuilder send() {
         GrpcServerResponseActionBuilder builder = new GrpcServerResponseActionBuilder();
         if (server != null) {

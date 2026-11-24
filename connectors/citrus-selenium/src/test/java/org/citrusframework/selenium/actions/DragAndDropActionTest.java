@@ -43,7 +43,8 @@ public class DragAndDropActionTest extends AbstractUnitTest {
 
     @BeforeEach
     public void setup() {
-        reset(webDriver, source, target);
+        reset(webDriver);
+        reset(source, target);
 
         seleniumBrowser.setWebDriver(webDriver);
 

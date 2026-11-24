@@ -45,7 +45,8 @@ public class DoubleClickActionTest extends AbstractUnitTest {
 
     @BeforeEach
     public void setup() {
-        reset(webDriver, element);
+        reset(webDriver);
+        reset(element);
 
         seleniumBrowser.setWebDriver(webDriver);
 
