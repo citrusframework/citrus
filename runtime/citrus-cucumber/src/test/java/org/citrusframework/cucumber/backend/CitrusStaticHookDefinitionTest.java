@@ -64,7 +64,7 @@ public class CitrusStaticHookDefinitionTest {
         CucumberInvocationTargetException exception = Assertions.assertThrows(CucumberInvocationTargetException.class, hook::execute);
 
         Assertions.assertSame(hook, exception.getLocated());
-        Assertions.assertEquals("Suite action failed", exception.getInvocationTargetExceptionCause().getMessage());
+        Assertions.assertEquals("Suite action failed", exception.getCause().getMessage());
     }
 
     @Test
