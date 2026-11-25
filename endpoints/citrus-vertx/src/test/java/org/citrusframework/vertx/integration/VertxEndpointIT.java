@@ -31,6 +31,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class VertxEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "VertxEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "VertxEndpointIT")
     public void testVertxEndpoint() {}
 }
