@@ -36,6 +36,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class FtpFileActionIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "FtpFileActionIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "FtpFileActionIT")
     public void testFileAction() {}
 }

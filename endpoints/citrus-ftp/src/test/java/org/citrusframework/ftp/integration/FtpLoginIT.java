@@ -33,6 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class FtpLoginIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "FtpLoginIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "FtpLoginIT")
     public void testLogin() {}
 }

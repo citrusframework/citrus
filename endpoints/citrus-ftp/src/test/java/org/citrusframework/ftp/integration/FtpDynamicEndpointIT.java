@@ -33,6 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class FtpDynamicEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "FtpDynamicEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "FtpDynamicEndpointIT")
     public void testDynamicEndpoint() {}
 }
