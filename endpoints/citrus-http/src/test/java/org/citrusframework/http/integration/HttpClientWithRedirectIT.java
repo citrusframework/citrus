@@ -30,10 +30,10 @@ import org.springframework.test.context.ContextConfiguration;
 public class HttpClientWithRedirectIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpClientWithRedirectIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpClientWithRedirectIT")
     public void testHttpClientWithRedirect() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpClientWithRedirectDisabledIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpClientWithRedirectDisabledIT")
     public void testHttpClientWithRedirectDisabled() {}
 }

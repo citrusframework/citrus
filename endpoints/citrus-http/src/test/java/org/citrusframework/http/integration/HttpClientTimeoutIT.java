@@ -30,6 +30,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class HttpClientTimeoutIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpClientTimeoutIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpClientTimeoutIT")
     public void testHttpClientTimeout() {}
 }
