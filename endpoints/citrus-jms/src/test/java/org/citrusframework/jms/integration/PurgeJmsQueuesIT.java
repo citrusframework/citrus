@@ -32,6 +32,6 @@ import org.springframework.test.context.ContextConfiguration;
 @Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
 public class PurgeJmsQueuesIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void PurgeJmsQueuesIT() {}
 }
