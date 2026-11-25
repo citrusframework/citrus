@@ -238,8 +238,6 @@ public class CitrusSchemaGeneratorTest {
                 {
                   "name": "OrderServiceIT",
                   "description": "Order service tests",
-                  "variables": [{"name": "baseUrl", "value": "http://localhost:8080"}],
-                  "configuration": {"beans": []},
                   "beforeAll": [{"echo": {"message": "Start order service"}}],
                   "beforeEach": [{"echo": {"message": "Reset orders"}}],
                   "afterEach": [{"echo": {"message": "Clean up"}}],
@@ -280,6 +278,24 @@ public class CitrusSchemaGeneratorTest {
         assertInvalidTestCase("""
                 {"name":"UnknownHookAction","beforeEach":[%s],"tests":[{"name":"ok"}]}
                 """.formatted(UNKNOWN_ACTION));
+    }
+
+    @Test
+    public void verifySingleTestPropertiesAreRejectedAtTheMultiTestRoot() {
+        for (String property : List.of(
+                "\"variables\":[]", "\"endpoints\":[]", "\"configuration\":{}", "\"actions\":[]",
+                "\"finally\":[]", "\"author\":\"Citrus\"", "\"status\":\"FINAL\"")) {
+            assertInvalidTestCase("""
+                    {"name":"mixed","tests":[{"name":"ok"}],%s}
+                    """.formatted(property));
+        }
+
+        assertInvalidTestCase("""
+                {"name":"missingTests","beforeAll":[{"echo":{"message":"setup"}}]}
+                """);
+        assertInvalidTestCase("""
+                {"tests":[]}
+                """);
     }
 
     @Test

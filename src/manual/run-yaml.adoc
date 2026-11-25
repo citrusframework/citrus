@@ -54,16 +54,14 @@ The tests share the `variables`, `endpoints` and `configuration` declared at the
 ----
 name: orders
 description: Order service tests
-variables:
-  - name: orderId
-    value: "1001"
-endpoints:
-  - direct:
-      asynchronous:
-        name: orderEndpoint
-        autoCreateQueue: true
-        queue: multiOrders
 beforeAll:
+  - createVariables:
+      variables:
+        - name: orderId
+          value: "1001"
+  - createEndpoint:
+      name: orderEndpoint
+      type: direct:multiOrders
   - echo:
       message: "Start order service"
 beforeEach:
@@ -110,7 +108,6 @@ The root of a multi-test file accepts these keys, all optional except `tests`:
 
 name:: The name of the file in reports and log messages. Defaults to the file name.
 description:: The description of the file.
-variables, endpoints, configuration:: Shared by all tests of the file. They are set up once, before the first test.
 beforeAll:: Test actions that run once, before the first test.
 beforeEach:: Test actions that run at the start of every test.
 afterEach:: Test actions that run at the end of every test.
@@ -118,36 +115,37 @@ afterAll:: Test actions that run once, after the last test.
 tests:: The tests. Each entry accepts the same keys as a single-test file (`name`, `description`, `author`, `status`, `variables`, `endpoints`, `configuration`, `actions` and `finally`) and needs a `name` that is unique in the file.
 
 As for all other keys, you can write the hooks in camelCase (`beforeAll`) or kebab-case (`before-all`).
-A multi-test file must not have `actions`, `finally`, `author` or `status` at its root, because those belong to the single tests.
+Use `createVariables` and `createEndpoint` in `beforeAll` for shared setup. Use `beforeEach` to set up each test separately.
 
 The tests of a file run one after another in the order they are declared, in this sequence:
 
-. the shared variables, beans and endpoints, then `beforeAll`
+. `beforeAll`
 . for every test: its variables, beans and endpoints, the global before-test actions, `beforeEach`, its actions, its `finally` actions, `afterEach`, the cleanups of the test (for example auto-closed endpoints), the global after-test actions
-. `afterAll`, then the cleanups of the shared setup and of `beforeAll`
+. `afterAll`, then the cleanups registered in the file context
 
 The tests of one file never run at the same time, even when the test runner runs tests in parallel.
 
 *Shared state.* Each test runs with its own test context.
-It starts with the shared variables and every variable that `beforeAll` has set, for example the host and port of a container that `beforeAll` started.
+It starts with its own copy of the variables from `beforeAll`, such as the host and port of a container started by the hook.
 A variable that a test declares with the same name overrides the shared value for this test only.
 Variables that a test creates or changes are not visible to the next test or to `afterAll`.
-Endpoints, beans and containers created by the shared setup or by `beforeAll` stay available to all tests and are cleaned up after `afterAll`.
-Shared values that are objects (for example a list or a map) are shared by reference, so treat them as read-only in the tests.
+Inherited strings that contain variable references or function expressions can be evaluated again when each test starts.
+Objects such as lists or maps are shared by reference. Treat them as read-only in the tests.
+Endpoints and containers created by `beforeAll` can be used by all tests. Their registered cleanups run after `afterAll`.
 
 *Failures.*
 
-* When the shared setup or `beforeAll` fails, none of the tests run: each test is reported as failed with an error that names the file and `beforeAll`. `afterAll` still runs.
+* When `beforeAll` fails, none of the tests run: each test is reported as failed with an error that names the file and `beforeAll`. `afterAll` still runs.
 * When an action, `beforeEach` or `afterEach` fails, only this test fails. Its `finally` actions and `afterEach` still run, and the next test runs normally.
 * When `afterAll` fails, the results of the tests stay as they are, and one extra failed result named `<file name>.afterAll` is reported.
-* A file that has no test, a test without name, two tests with the same name, or `tests` together with root `actions`, `finally`, `author` or `status` is rejected before anything runs, and reported as one failed test named after the file.
+* A file that has no test, a test without name, two tests with the same name, or a root key other than the ones listed above is rejected before anything runs, and reported as one failed test named after the file.
 
 *Disabled tests.* A test with `status: DISABLED` is skipped without its `beforeEach` and `afterEach`.
-When all tests of a file are disabled, the shared setup, `beforeAll` and `afterAll` do not run either.
+When all tests in a file are disabled, Citrus skips `beforeAll` and `afterAll`.
 
 *Test parameters.* When a parameterized test or a data provider runs a multi-test file (see link:#run-yaml-data-driven[Data-driven tests]), every invocation runs the whole file.
-The parameters are set as variables before the shared variables, so the shared setup, `beforeAll`, all tests and `afterAll` see them.
-A shared variable or a test variable with the same name takes precedence over the parameter.
+Citrus sets the parameters as variables before `beforeAll`, so every hook and test can use them.
+A value set by `beforeAll` overrides a parameter with the same name. A test's own definition takes precedence within that test.
 
 *Reporting.* The Citrus reports list every test of a multi-test file with its own result.
 How the test runner counts the tests depends on how the file is run:

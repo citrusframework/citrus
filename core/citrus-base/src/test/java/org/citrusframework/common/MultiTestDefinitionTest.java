@@ -36,7 +36,7 @@ class MultiTestDefinitionTest {
         definition.validate("orders");
 
         Assertions.assertEquals(List.of("ok", "error"), definition.getTestNames());
-        Assertions.assertEquals("orders", definition.getShared().getName());
+        Assertions.assertEquals("orders", definition.getName());
     }
 
     @Test

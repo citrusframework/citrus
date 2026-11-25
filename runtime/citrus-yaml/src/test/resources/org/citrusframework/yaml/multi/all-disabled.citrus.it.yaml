@@ -15,9 +15,6 @@
 #
 
 name: allDisabled
-variables:
-  - name: user
-    value: alice
 beforeAll:
   - action:
       ref: beforeAll

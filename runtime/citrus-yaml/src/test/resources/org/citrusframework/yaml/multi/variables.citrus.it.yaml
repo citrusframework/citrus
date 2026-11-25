@@ -15,18 +15,18 @@
 #
 
 name: variables
-variables:
-  - name: user
-    value: alice
-configuration:
-  beans:
-    - name: sharedBean
-      type: java.util.ArrayList
 beforeAll:
   - createVariables:
       variables:
+        - name: user
+          value: alice
         - name: brokerUrl
           value: "tcp://localhost:61616"
+afterAll:
+  - action:
+      ref: recordUser
+  - action:
+      ref: recordOrderIdKnown
 tests:
   - name: a
     actions:
@@ -36,6 +36,8 @@ tests:
           ref: recordBrokerUrl
       - createVariables:
           variables:
+            - name: user
+              value: changed
             - name: orderId
               value: "1"
   - name: b
@@ -51,5 +53,3 @@ tests:
     actions:
       - action:
           ref: recordUser
-      - action:
-          ref: recordSharedBean

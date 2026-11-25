@@ -39,7 +39,6 @@ public final class MultiTestDefinition {
 
     private final String name;
     private final String description;
-    private final DefaultTestCase shared;
     private final List<TestActionBuilder<?>> beforeAll;
     private final List<TestActionBuilder<?>> beforeEach;
     private final List<TestActionBuilder<?>> afterEach;
@@ -49,7 +48,6 @@ public final class MultiTestDefinition {
     private MultiTestDefinition(Builder builder) {
         this.name = builder.name;
         this.description = builder.description;
-        this.shared = builder.shared;
         this.beforeAll = Collections.unmodifiableList(new ArrayList<>(builder.beforeAll));
         this.beforeEach = Collections.unmodifiableList(new ArrayList<>(builder.beforeEach));
         this.afterEach = Collections.unmodifiableList(new ArrayList<>(builder.afterEach));
@@ -102,13 +100,6 @@ public final class MultiTestDefinition {
         return description;
     }
 
-    /**
-     * Gets the shared declarations: a test case holding only the shared variables, endpoints and beans.
-     */
-    public DefaultTestCase getShared() {
-        return shared;
-    }
-
     public List<TestActionBuilder<?>> getBeforeAll() {
         return beforeAll;
     }
@@ -136,7 +127,6 @@ public final class MultiTestDefinition {
 
         private String name;
         private String description;
-        private DefaultTestCase shared = new DefaultTestCase();
         private final List<TestActionBuilder<?>> beforeAll = new ArrayList<>();
         private final List<TestActionBuilder<?>> beforeEach = new ArrayList<>();
         private final List<TestActionBuilder<?>> afterEach = new ArrayList<>();
@@ -150,11 +140,6 @@ public final class MultiTestDefinition {
 
         public Builder description(String description) {
             this.description = description;
-            return this;
-        }
-
-        public Builder shared(DefaultTestCase shared) {
-            this.shared = shared;
             return this;
         }
 
@@ -188,13 +173,7 @@ public final class MultiTestDefinition {
             return this;
         }
 
-        /**
-         * Builds the definition. The shared declarations are named after the definition.
-         */
         public MultiTestDefinition build() {
-            if (name != null) {
-                shared.setName(name);
-            }
             return new MultiTestDefinition(this);
         }
     }

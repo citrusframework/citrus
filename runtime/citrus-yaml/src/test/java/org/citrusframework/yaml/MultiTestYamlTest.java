@@ -59,7 +59,6 @@ class MultiTestYamlTest {
         bind("recordUser", context -> steps.add("user=" + context.getVariable("user")));
         bind("recordBrokerUrl", context -> steps.add("brokerUrl=" + context.getVariable("brokerUrl")));
         bind("recordOrderIdKnown", context -> steps.add("orderIdKnown=" + context.getVariables().containsKey("orderId")));
-        bind("recordSharedBean", context -> steps.add("sharedBean=" + context.getReferenceResolver().isResolvable("sharedBean")));
         bind("failWhenBroken", context -> {
             if ("broken".equals(context.getVariable("mode"))) {
                 throw new CitrusRuntimeException("broken");
@@ -93,12 +92,12 @@ class MultiTestYamlTest {
     }
 
     @Test
-    void shouldShareVariablesAndBeans() {
+    void shouldCopyBeforeAllVariablesPerTest() {
         loader("variables").load();
 
         Assertions.assertEquals(List.of("user=alice", "brokerUrl=tcp://localhost:61616",
                 "user=bob", "orderIdKnown=false",
-                "user=alice", "sharedBean=true"), steps);
+                "user=alice", "user=alice", "orderIdKnown=false"), steps);
     }
 
     @Test
@@ -148,7 +147,7 @@ class MultiTestYamlTest {
     }
 
     @Test
-    void shouldNotRunSharedSetupWhenAllTestsAreDisabled() {
+    void shouldNotRunFileHooksWhenAllTestsAreDisabled() {
         YamlTestLoader loader = loader("all-disabled");
 
         loader.load();
@@ -163,6 +162,14 @@ class MultiTestYamlTest {
         assertRejected("missing-name", "Multi-test file 'missingName' has a test without name at position 2");
         assertRejected("tests-with-actions", "Multi-test file 'mixed' must not combine 'tests' with 'actions'");
         assertRejected("tests-with-status", "Multi-test file 'mixedStatus' must not combine 'tests' with 'status'");
+        Assertions.assertEquals(List.of(), steps);
+    }
+
+    @Test
+    void shouldRejectSharedDeclarationsAtTheRoot() {
+        for (String key : List.of("variables", "endpoints", "configuration")) {
+            assertRejected("tests-with-" + key, "Multi-test file 'mixed' must not combine 'tests' with '" + key + "'");
+        }
         Assertions.assertEquals(List.of(), steps);
     }
 

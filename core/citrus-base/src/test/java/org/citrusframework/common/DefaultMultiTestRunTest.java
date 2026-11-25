@@ -34,8 +34,6 @@ import org.citrusframework.TestParameterAware;
 import org.citrusframework.TestResult;
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.junit.jupiter.api.Assertions;
@@ -129,11 +127,10 @@ class DefaultMultiTestRunTest {
     @Test
     void shouldOverrideSharedVariablePerTest() {
         DefaultMultiTestRun run = run(() -> {
-            DefaultTestCase shared = new DefaultTestCase();
-            shared.getVariableDefinitions().put("user", "alice");
             DefaultTestCase b = test("b", recordVariable("b", "user"));
-            b.getVariableDefinitions().put("user", "bob");
-            return file().shared(shared)
+            b.getVariableDefinitions().put("alias", "bob");
+            b.getVariableDefinitions().put("user", "${alias}");
+            return file().beforeAll(List.of(setVariable("user", "alice")))
                     .test(test("a", recordVariable("a", "user")))
                     .test(b)
                     .test(test("c", recordVariable("c", "user")))
@@ -143,6 +140,19 @@ class DefaultMultiTestRunTest {
         runAll(run);
 
         Assertions.assertEquals(List.of("a=alice", "finally-a", "b=bob", "finally-b", "c=alice", "finally-c"), steps);
+    }
+
+    @Test
+    void shouldResolveInheritedExpressionsAsVariableDefinitions() {
+        DefaultMultiTestRun run = run(() -> file()
+                .beforeAll(List.of(setVariable("user", "alice"), setVariable("greeting", "Hello ${user}")))
+                .afterAll(List.of(recordVariable("afterAll", "greeting")))
+                .test(test("a", recordVariable("a", "greeting")))
+                .build());
+
+        runAll(run);
+
+        Assertions.assertEquals(List.of("a=Hello alice", "finally-a", "afterAll=Hello ${user}"), steps);
     }
 
     @Test
@@ -168,17 +178,14 @@ class DefaultMultiTestRunTest {
     }
 
     @Test
-    void shouldLetFileVariablesWinOverHostArguments() {
+    void shouldLetBeforeAllVariablesWinOverHostArguments() {
         Consumer<TestCase> parameters = testCase -> ((TestParameterAware) testCase)
                 .setParameters(new String[] { "env" }, new Object[] { "dev" });
 
         DefaultMultiTestRun run = run(() -> {
-            DefaultTestCase shared = new DefaultTestCase();
-            shared.getVariableDefinitions().put("env", "local");
             DefaultTestCase b = test("b", recordVariable("b", "env"));
             b.getVariableDefinitions().put("env", "own");
-            return file().shared(shared)
-                    .beforeAll(List.of(recordVariable("beforeAll", "env")))
+            return file().beforeAll(List.of(setVariable("env", "local"), recordVariable("beforeAll", "env")))
                     .test(test("a", recordVariable("a", "env")))
                     .test(b)
                     .build();
@@ -276,31 +283,6 @@ class DefaultMultiTestRunTest {
     }
 
     @Test
-    void shouldFailEveryTestWhenSharedEndpointFails() {
-        DefaultMultiTestRun run = run(() -> {
-            DefaultTestCase shared = new DefaultTestCase();
-            shared.getEndpoints().add(new EndpointBuilder<Endpoint>() {
-                @Override
-                public boolean supports(Class<?> endpointType) {
-                    return false;
-                }
-
-                @Override
-                public Endpoint build() {
-                    throw new CitrusRuntimeException("endpoint failed");
-                }
-            });
-            return file().shared(shared).afterAll(List.of(record("afterAll"))).test(test("a", record("a"))).build();
-        });
-
-        TestCaseFailedException error = Assertions.assertThrows(TestCaseFailedException.class, () -> run.runTest(0));
-        run.close();
-
-        Assertions.assertEquals("beforeAll of 'orders' failed", error.getMessage());
-        Assertions.assertEquals(List.of("afterAll"), steps);
-    }
-
-    @Test
     void shouldFailOnlyTheTestWhoseBeforeEachFails() {
         DefaultMultiTestRun run = run(() -> file()
                 .beforeEach(List.of(failWhenBroken()))
@@ -393,16 +375,13 @@ class DefaultMultiTestRunTest {
     }
 
     @Test
-    void shouldNotRunSharedSetupWhenAllTestsAreDisabled() {
+    void shouldNotRunFileHooksWhenAllTestsAreDisabled() {
         DefaultMultiTestRun run = run(() -> {
-            DefaultTestCase shared = new DefaultTestCase();
-            shared.getVariableDefinitions().put("user", "alice");
             DefaultTestCase a = test("a", record("a"));
             a.getMetaInfo().setStatus(TestCaseMetaInfo.Status.DISABLED);
             DefaultTestCase b = test("b", record("b"));
             b.getMetaInfo().setStatus(TestCaseMetaInfo.Status.DISABLED);
-            return file().shared(shared)
-                    .beforeAll(List.of(record("beforeAll")))
+            return file().beforeAll(List.of(setVariable("user", "alice"), record("beforeAll")))
                     .afterAll(List.of(record("afterAll")))
                     .test(a)
                     .test(b)

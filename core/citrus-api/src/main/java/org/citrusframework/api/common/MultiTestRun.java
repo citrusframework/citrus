@@ -21,7 +21,7 @@ import java.util.List;
 import org.citrusframework.TestCase;
 
 /**
- * One execution of a multi-test source. The shared declarations and beforeAll run before the first
+ * One execution of a multi-test source. The beforeAll hook runs before the first
  * enabled test case, afterAll and the file-level cleanups run on {@link #close()}. The run executes one
  * test case at a time and is not reusable.
  *
@@ -43,11 +43,11 @@ public interface MultiTestRun extends AutoCloseable {
 
     /**
      * Runs the test case with the given index together with its beforeEach and afterEach actions.
-     * Runs the shared declarations and beforeAll first when no enabled test case has run yet.
+     * Runs beforeAll first when no enabled test case has run yet.
      * @param index the position of the test case in declaration order.
      * @return the finished test case.
      * @throws org.citrusframework.exceptions.TestCaseFailedException when the test case failed,
-     * also when the shared declarations or beforeAll failed.
+     * also when beforeAll failed.
      */
     TestCase runTest(int index);
 
@@ -59,7 +59,7 @@ public interface MultiTestRun extends AutoCloseable {
     List<TestCase> getTestCases();
 
     /**
-     * Runs afterAll and the file-level cleanups once, if the shared declarations ran. Calling it again has
+     * Runs afterAll and the file-level cleanups once, if beforeAll was started. Calling it again has
      * no effect.
      * @throws org.citrusframework.exceptions.CitrusRuntimeException when afterAll or a cleanup failed.
      */

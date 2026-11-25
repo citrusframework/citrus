@@ -52,6 +52,7 @@ public class CitrusSchemaGenerator {
 
     private static final String DEFINITIONS = "definitions";
     private static final String REQUIRED = "required";
+    private static final String PROPERTIES = "properties";
     private static final String ANY_OF = "anyOf";
     private static final String NAME = "name";
     private static final String TESTS = "tests";
@@ -212,8 +213,8 @@ public class CitrusSchemaGenerator {
 
     /**
      * The test file root accepts a single test (requires name) and a multi-test file (requires tests). The root name
-     * stays optional when tests are present, so it falls back to the file name. Combination rules (e.g. tests together
-     * with actions) are enforced by the test loader.
+     * stays optional when tests are present, so it falls back to the file name. Each form permits only its own
+     * root properties, while sharing the definitions for name, description and test actions.
      */
     static void allowMultiTestRoot(JsonNode jsonSchema) {
         if (!(jsonSchema instanceof ObjectNode root) || !(root.path(REQUIRED) instanceof ArrayNode required)) {
@@ -231,8 +232,19 @@ public class CitrusSchemaGenerator {
         }
 
         ArrayNode anyOf = root.putArray(ANY_OF);
-        anyOf.addObject().putArray(REQUIRED).add(NAME);
-        anyOf.addObject().putArray(REQUIRED).add(TESTS);
+        addRootVariant(anyOf, NAME, TESTS, "beforeAll", "beforeEach", "afterEach", "afterAll");
+        addRootVariant(anyOf, TESTS, "author", "status", "variables", "endpoints", "configuration", "actions", "finally");
+
+        ((ObjectNode) root.path(PROPERTIES).path(TESTS)).put("minItems", 1);
+    }
+
+    private static void addRootVariant(ArrayNode variants, String required, String... forbiddenProperties) {
+        ObjectNode variant = variants.addObject();
+        variant.putArray(REQUIRED).add(required);
+        ObjectNode properties = variant.putObject(PROPERTIES);
+        for (String property : forbiddenProperties) {
+            properties.put(property, false);
+        }
     }
 
     private static void writeFile(Path dir, String name, String content) throws IOException {

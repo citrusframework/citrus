@@ -15,12 +15,10 @@
 #
 
 name: receiveInBeforeEach
-endpoints:
-  - direct:
-      asynchronous:
-        name: inbox
-        autoCreateQueue: true
-        queue: multiInbox
+beforeAll:
+  - createEndpoint:
+      name: inbox
+      type: direct:multiInbox
 beforeEach:
   - send:
       endpoint: inbox

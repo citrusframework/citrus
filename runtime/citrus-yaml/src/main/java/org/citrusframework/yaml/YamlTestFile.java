@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.base.DefaultTestCase;
@@ -29,8 +30,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 /**
  * Root type of a YAML test file. A file without the keys {@code tests}, {@code beforeAll}, {@code beforeEach},
  * {@code afterEach} and {@code afterAll} is a single test case, exactly as {@link YamlTestCase}. A file with a
- * {@code tests} list holds several test cases that share the root {@code variables}, {@code endpoints} and
- * {@code configuration} and the four hooks.
+ * {@code tests} list holds several test cases that share setup and teardown through the four hooks.
  *
  * @since 5.3
  */
@@ -41,6 +41,9 @@ public class YamlTestFile extends YamlTestCase {
 
     private final List<String> singleTestKeys = new ArrayList<>();
 
+    private List<Variable> rootVariables;
+    private boolean hasRootVariables;
+    private boolean multiTest;
     private List<Entry> tests;
     private List<TestActions> beforeAll;
     private List<TestActions> beforeEach;
@@ -72,6 +75,36 @@ public class YamlTestFile extends YamlTestCase {
     }
 
     @Override
+    public void setVariables(List<Variable> variables) {
+        singleTestKeys.add("variables");
+        // Only evaluate root variable scripts after the file has been identified as a single test.
+        this.rootVariables = variables;
+        this.hasRootVariables = true;
+    }
+
+    @Override
+    public TestCase getTestCase() {
+        if (hasRootVariables && !multiTest) {
+            super.setVariables(rootVariables);
+            hasRootVariables = false;
+            rootVariables = null;
+        }
+        return super.getTestCase();
+    }
+
+    @Override
+    public void setEndpoints(List<Endpoint> endpoints) {
+        singleTestKeys.add("endpoints");
+        super.setEndpoints(endpoints);
+    }
+
+    @Override
+    public void setConfiguration(Configuration configuration) {
+        singleTestKeys.add("configuration");
+        super.setConfiguration(configuration);
+    }
+
+    @Override
     public void setActions(List<TestActions> actions) {
         singleTestKeys.add("actions");
         super.setActions(actions);
@@ -85,26 +118,31 @@ public class YamlTestFile extends YamlTestCase {
 
     @SchemaProperty(description = "The test cases of a multi-test file.")
     public void setTests(List<Entry> tests) {
+        this.multiTest = true;
         this.tests = tests;
     }
 
     @SchemaProperty(description = "Test actions that run once before the first test of the file.")
     public void setBeforeAll(List<TestActions> actions) {
+        this.multiTest = true;
         this.beforeAll = actions;
     }
 
     @SchemaProperty(description = "Test actions that run at the start of every test of the file.")
     public void setBeforeEach(List<TestActions> actions) {
+        this.multiTest = true;
         this.beforeEach = actions;
     }
 
     @SchemaProperty(description = "Test actions that run at the end of every test of the file.")
     public void setAfterEach(List<TestActions> actions) {
+        this.multiTest = true;
         this.afterEach = actions;
     }
 
     @SchemaProperty(description = "Test actions that run once after the last test of the file.")
     public void setAfterAll(List<TestActions> actions) {
+        this.multiTest = true;
         this.afterAll = actions;
     }
 
@@ -113,7 +151,7 @@ public class YamlTestFile extends YamlTestCase {
      * @return true when the file declares tests or one of the hooks.
      */
     public boolean isMultiTest() {
-        return tests != null || beforeAll != null || beforeEach != null || afterEach != null || afterAll != null;
+        return multiTest;
     }
 
     /**
@@ -133,7 +171,6 @@ public class YamlTestFile extends YamlTestCase {
         MultiTestDefinition.Builder builder = new MultiTestDefinition.Builder()
                 .name(fileName)
                 .description(description)
-                .shared((DefaultTestCase) getTestCase())
                 .beforeAll(builders(beforeAll))
                 .beforeEach(builders(beforeEach))
                 .afterEach(builders(afterEach))

@@ -75,6 +75,7 @@ public class YamlTestNGEngineTest {
         });
         engine.run();
     }
+
     @Test
     public void testRunMultiTestSource() {
         TestRunConfiguration configuration = new TestRunConfiguration();

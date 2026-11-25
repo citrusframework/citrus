@@ -76,7 +76,7 @@ public class Test {
 
     @SchemaProperty(
             metadata = { @SchemaProperty.MetaData(key = "$comment", value = "group:tests" ) },
-            description = "The tests of a multi-test file. They share the variables, endpoints, configuration and hooks of the file.")
+            description = "The tests of a multi-test file. They share setup and teardown through the file hooks.")
     public void setTests(List<TestEntry> tests) {
     }
 

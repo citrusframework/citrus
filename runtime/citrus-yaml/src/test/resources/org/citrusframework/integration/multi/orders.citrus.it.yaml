@@ -16,16 +16,14 @@
 
 name: orders
 description: Order service tests
-variables:
-  - name: orderId
-    value: "1001"
-endpoints:
-  - direct:
-      asynchronous:
-        name: orderEndpoint
-        autoCreateQueue: true
-        queue: multiOrders
 beforeAll:
+  - createVariables:
+      variables:
+        - name: orderId
+          value: "1001"
+  - createEndpoint:
+      name: orderEndpoint
+      type: direct:multiOrders
   - echo:
       message: "Start order service"
 beforeEach:

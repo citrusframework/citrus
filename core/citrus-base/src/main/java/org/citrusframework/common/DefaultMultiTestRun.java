@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Runs the test cases of a multi-test source one at a time. The shared declarations and beforeAll run once on
+ * Runs the test cases of a multi-test source one at a time. beforeAll runs once on
  * the file context, before the first enabled test case. Each test case runs as a normal {@link DefaultTestCase}
  * with its own test context, with beforeEach in front of its actions and afterEach behind its finally actions.
  * afterAll and the cleanups registered on the file context run on {@link #close()}.
@@ -70,12 +70,13 @@ public class DefaultMultiTestRun implements MultiTestRun {
     private boolean started;
     private boolean closed;
     private Throwable beforeAllError;
+    private Map<String, Object> fileVariables;
 
     /**
      * Constructor with the first parse of the source and the parser used for each test case.
-     * @param definition the first, validated parse providing names, shared declarations, beforeAll and afterAll.
+     * @param definition the first, validated parse providing names, beforeAll and afterAll.
      * @param parser supplies a new parse of the source for each test case.
-     * @param fileContext the test context of the source: shared declarations and the hooks beforeAll/afterAll run on it.
+     * @param fileContext the test context on which beforeAll and afterAll run.
      * @param citrusContext the Citrus context creating a new test context per test case.
      * @param testClass the test class reported for each test case.
      * @param packageName the package name reported for each test case.
@@ -130,11 +131,18 @@ public class DefaultMultiTestRun implements MultiTestRun {
         parsed.getAfterEach().forEach(test::addFinalAction);
 
         prepare(test);
-        test.setSharedVariables(sharedState());
+        Map<String, Object> variables = new LinkedHashMap<>(fileVariables);
+        Map<String, Object> testVariables = test.getVariableDefinitions();
+        // Keep the declaration order of test variables, even when they override file variables.
+        variables.keySet().removeAll(testVariables.keySet());
+        variables.putAll(testVariables);
+        test.setVariableDefinitions(variables);
 
         TestContext context = citrusContext.createTestContext();
+        // Inherited expressions can reference other file variables regardless of map iteration order.
+        context.addVariables(fileVariables);
         injectReferenceResolver(test.getActionBuilders(), context.getReferenceResolver());
-        injectReferenceResolver(parsed.getAfterEach(), context.getReferenceResolver());
+        injectReferenceResolver(test.getFinalActionBuilders(), context.getReferenceResolver());
 
         testCases.add(test);
         TestCaseFailedException failure = null;
@@ -211,19 +219,26 @@ public class DefaultMultiTestRun implements MultiTestRun {
     }
 
     /**
-     * Runs the shared declarations and beforeAll on the file context. A failure is kept and reported for each
+     * Runs beforeAll on the file context. A failure is kept and reported for each
      * enabled test case.
      */
     private void runBeforeAll() {
         logger.info("Running beforeAll of '{}'", name);
 
-        DefaultTestCase shared = definition.getShared();
-        prepare(shared);
-
         try {
-            shared.initializeTestResources(fileContext);
+            DefaultTestCase file = new DefaultTestCase();
+            file.setName(name);
+            prepare(file);
+
+            fileContext.setVariable(CitrusSettings.getTestNameVariable(), file.getName());
+            fileContext.setVariable(CitrusSettings.getTestPackageVariable(), file.getPackageName());
+            file.getParameters().forEach(fileContext::setVariable);
+
             injectReferenceResolver(definition.getBeforeAll(), fileContext.getReferenceResolver());
             executeActions(definition.getBeforeAll(), fileContext);
+            fileVariables = new LinkedHashMap<>(fileContext.getVariables());
+            fileVariables.remove(CitrusSettings.getTestNameVariable());
+            fileVariables.remove(CitrusSettings.getTestPackageVariable());
             logger.info("Finished beforeAll of '{}'", name);
         } catch (Exception | Error e) {
             beforeAllError = e;
@@ -242,7 +257,7 @@ public class DefaultMultiTestRun implements MultiTestRun {
     }
 
     /**
-     * Reports the given test case as failed without running it, because the shared declarations or beforeAll failed.
+     * Reports the given test case as failed without running it, because beforeAll failed.
      */
     private TestCaseFailedException reportNotRun(DefaultTestCase test) {
         prepare(test);
@@ -280,16 +295,6 @@ public class DefaultMultiTestRun implements MultiTestRun {
         if (packageName != null) {
             test.setPackageName(packageName);
         }
-    }
-
-    /**
-     * Snapshot of the file context variables, without the variables that identify the running test.
-     */
-    private Map<String, Object> sharedState() {
-        Map<String, Object> variables = new LinkedHashMap<>(fileContext.getVariables());
-        variables.remove(CitrusSettings.getTestNameVariable());
-        variables.remove(CitrusSettings.getTestPackageVariable());
-        return variables;
     }
 
     private static boolean isDisabled(TestCase test) {
