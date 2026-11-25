@@ -30,12 +30,12 @@ import org.springframework.test.context.ContextConfiguration;
 public class KafkaEndpointXmlIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointIT_singleMessage")
+    @CitrusTestSource(type = TestLoader.XML, name = "KafkaEndpointIT_singleMessage")
     public void singleKafkaMessage() {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointIT_selectiveMessage")
+    @CitrusTestSource(type = TestLoader.XML, name = "KafkaEndpointIT_selectiveMessage")
     public void selectiveKafkaMessage() {
     }
 }
