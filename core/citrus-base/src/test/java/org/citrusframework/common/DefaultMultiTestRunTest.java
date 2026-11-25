@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -194,6 +195,29 @@ class DefaultMultiTestRunTest {
         runAll(run);
 
         Assertions.assertEquals(List.of("beforeAll=local", "a=local", "finally-a", "b=own", "finally-b"), steps);
+    }
+
+    @Test
+    void shouldKeepBeforeAllVariablesIsolatedAcrossConcurrentRuns() throws Exception {
+        TestActionBuilder<?> overlapBeforeAll = rendezvous(new CountDownLatch(2));
+        TestActionBuilder<?> overlapTestActions = rendezvous(new CountDownLatch(2));
+        DefaultMultiTestRun dev = concurrentRun("dev", overlapBeforeAll, overlapTestActions);
+        DefaultMultiTestRun staging = concurrentRun("staging", overlapBeforeAll, overlapTestActions);
+
+        try (var executor = Executors.newFixedThreadPool(2)) {
+            var devResult = executor.submit(() -> runAll(dev));
+            var stagingResult = executor.submit(() -> runAll(staging));
+
+            Assertions.assertEquals(List.of(), devResult.get(25, TimeUnit.SECONDS));
+            Assertions.assertEquals(List.of(), stagingResult.get(25, TimeUnit.SECONDS));
+        }
+
+        for (String name : List.of("dev", "staging")) {
+            List<String> recorded = steps.stream().filter(step -> step.startsWith(name + "-")).toList();
+            Assertions.assertEquals(List.of(name + "-parameter=" + name, name + "-override=test-" + name,
+                    name + "-changed=changed-" + name, name + "-next=file-" + name, name + "-afterAll=file-" + name),
+                    recorded);
+        }
     }
 
     @Test
@@ -392,6 +416,38 @@ class DefaultMultiTestRunTest {
 
         Assertions.assertEquals(List.of(), steps);
         Assertions.assertFalse(fileContext.getVariables().containsKey("user"));
+    }
+
+    private DefaultMultiTestRun concurrentRun(String name, TestActionBuilder<?> overlapBeforeAll,
+                                              TestActionBuilder<?> overlapTestActions) {
+        Supplier<MultiTestDefinition> parser = () -> {
+            DefaultTestCase first = test(name + "-first", recordVariable(name + "-override", "env"),
+                    setVariable("env", "changed-" + name), overlapTestActions, recordVariable(name + "-changed", "env"));
+            first.getVariableDefinitions().put("env", "test-" + name);
+            return file().name(name)
+                    .beforeAll(List.of(recordVariable(name + "-parameter", "env"),
+                            setVariable("env", "file-" + name), overlapBeforeAll))
+                    .test(first)
+                    .test(test(name + "-second", recordVariable(name + "-next", "env")))
+                    .afterAll(List.of(recordVariable(name + "-afterAll", "env")))
+                    .build();
+        };
+        Consumer<TestCase> parameters = testCase -> ((TestParameterAware) testCase)
+                .setParameters(new String[] { "env" }, new Object[] { name });
+        return new DefaultMultiTestRun(parser.get(), parser, citrusContext.createTestContext(), citrusContext,
+                DefaultMultiTestRunTest.class, "org.example", List.of(parameters));
+    }
+
+    private static TestActionBuilder<?> rendezvous(CountDownLatch bothRuns) {
+        return () -> context -> {
+            bothRuns.countDown();
+            try {
+                Assertions.assertTrue(bothRuns.await(10, TimeUnit.SECONDS), "Both runs must reach this action");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new AssertionError("Interrupted while waiting for the other run", e);
+            }
+        };
     }
 
     private DefaultMultiTestRun run(Supplier<MultiTestDefinition> parser) {
