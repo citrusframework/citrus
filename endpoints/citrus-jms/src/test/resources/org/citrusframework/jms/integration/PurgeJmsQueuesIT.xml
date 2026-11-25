@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
-              http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd">
-
-    <testcase name="PurgeJmsQueuesIT">
-		<meta-info>
-			<author>Christoph Deppisch</author>
-			<creationdate>2008-04-25</creationdate>
-			<status>FINAL</status>
-			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
-		</meta-info>
-
-        <description>
-          It might be essential to purge some jms queues before or during the test case.
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Christoph Deppisch" name="PurgeJmsQueuesIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>It might be essential to purge some jms queues before or during the test case.
           The bean org.citrusframework.jms.actions.PurgeJmsQueuesAction offers this functionality.
 
           In this example we do not inherit the functionality from a service bean in the
@@ -33,39 +16,34 @@
 
           Note that usually all jms queues are cleaned at the beginning of the test suite by default.
           It is also possible to clean all queues by default before every test case is started. All these basic
-          configurations are done in the Spring application context, where the test suite itself is configured.
-        </description>
-        <actions>
-            <jms:purge-jms-queues>
-                <jms:queue name="Citrus.Queue.Dummy"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.Out"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.Out"/>
-                <jms:queue name="Citrus.Queue.Dummy.Three.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.Three.Out"/>
-            </jms:purge-jms-queues>
-
-            <jms:purge-jms-queues connection-factory="connectionFactory" timeout="150">
-                <jms:queue name="Citrus.Queue.Dummy"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.Out"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.Out"/>
-                <jms:queue name="Citrus.Queue.Dummy.Three.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.Three.Out"/>
-            </jms:purge-jms-queues>
-
-            <jms:purge-jms-queues>
-                <jms:queue ref="testQueue1"/>
-                <jms:queue ref="testQueue2"/>
-                <jms:queue ref="testQueue3"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.One.Out"/>
-                <jms:queue name="Citrus.Queue.Dummy.Three.In"/>
-                <jms:queue name="Citrus.Queue.Dummy.Three.Out"/>
-            </jms:purge-jms-queues>
-        </actions>
-    </testcase>
-
-</spring:beans>
+          configurations are done in the Spring application context, where the test suite itself is configured.</description>
+  <actions>
+    <purge-jms-queues>
+      <queue name="Citrus.Queue.Dummy"/>
+      <queue name="Citrus.Queue.Dummy.One.In"/>
+      <queue name="Citrus.Queue.Dummy.One.Out"/>
+      <queue name="Citrus.Queue.Dummy.One.In"/>
+      <queue name="Citrus.Queue.Dummy.One.Out"/>
+      <queue name="Citrus.Queue.Dummy.Three.In"/>
+      <queue name="Citrus.Queue.Dummy.Three.Out"/>
+    </purge-jms-queues>
+    <purge-jms-queues connection-factory="connectionFactory" timeout="150">
+      <queue name="Citrus.Queue.Dummy"/>
+      <queue name="Citrus.Queue.Dummy.One.In"/>
+      <queue name="Citrus.Queue.Dummy.One.Out"/>
+      <queue name="Citrus.Queue.Dummy.One.In"/>
+      <queue name="Citrus.Queue.Dummy.One.Out"/>
+      <queue name="Citrus.Queue.Dummy.Three.In"/>
+      <queue name="Citrus.Queue.Dummy.Three.Out"/>
+    </purge-jms-queues>
+    <purge-jms-queues>
+      <queue ref="testQueue1"/>
+      <queue ref="testQueue2"/>
+      <queue ref="testQueue3"/>
+      <queue name="Citrus.Queue.Dummy.One.In"/>
+      <queue name="Citrus.Queue.Dummy.One.Out"/>
+      <queue name="Citrus.Queue.Dummy.Three.In"/>
+      <queue name="Citrus.Queue.Dummy.Three.Out"/>
+    </purge-jms-queues>
+  </actions>
+</test>
