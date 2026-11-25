@@ -672,11 +672,10 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         String migrated = migrateTest("UnsupportedIT.xml");
 
         List<String> warnings = SpringXmlTestMigration.getWarnings(migrated);
-        Assertions.assertEquals(4, warnings.size());
+        Assertions.assertEquals(3, warnings.size());
         Assertions.assertEquals("Unsupported test action 'java' (http://www.citrusframework.org/schema/testcase) has been copied as is - please migrate it manually", warnings.get(0));
         Assertions.assertEquals("Unsupported test action 'input' (http://www.citrusframework.org/schema/testcase) has been copied as is - please migrate it manually", warnings.get(1));
-        Assertions.assertEquals("The 'iterate' container timeout is not supported in the plain XML DSL and has been removed", warnings.get(2));
-        Assertions.assertEquals("Unable to convert wait timeout of '${waitTime}' seconds - please set the timeout in milliseconds manually", warnings.get(3));
+        Assertions.assertEquals("Unable to convert wait timeout of '${waitTime}' seconds - please set the timeout in milliseconds manually", warnings.get(2));
 
         Document document = parse(migrated);
         assertXPath(document, "sayHello", "/t:test/t:actions/s:java/s:method/@name");
@@ -684,7 +683,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         assertXPath(document, "zookeeperClient", "/t:test/t:actions/t:zookeeper/@client");
         assertXPath(document, "1", "count(/t:test/t:actions/t:zookeeper/t:info)");
         assertXPath(document, "i lt 3", "/t:test/t:actions/t:iterate/@condition");
-        assertXPath(document, "false", "boolean(/t:test/t:actions/t:iterate/@timeout)");
+        assertXPath(document, "PT10S", "/t:test/t:actions/t:iterate/@timeout");
         assertXPath(document, "false", "boolean(/t:test/t:actions/t:wait-for/@timeout)");
     }
 
@@ -716,7 +715,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
             Assertions.assertEquals(SpringXmlTestMigration.getWarnings(content), migrated.warnings());
         }
 
-        Assertions.assertEquals(4, result.migrated().get(6).warnings().size());
+        Assertions.assertEquals(3, result.migrated().get(6).warnings().size());
 
         Template template = new XmlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())

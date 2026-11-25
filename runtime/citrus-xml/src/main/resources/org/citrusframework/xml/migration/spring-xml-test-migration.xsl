@@ -766,9 +766,8 @@
   </xsl:template>
 
   <xsl:template match="citrus:iterate">
-    <xsl:call-template name="unsupported-timeout"/>
     <iterate>
-      <xsl:copy-of select="@condition|@index|@step"/>
+      <xsl:copy-of select="@condition|@index|@step|@timeout"/>
       <xsl:if test="@start">
         <xsl:attribute name="startsWith"><xsl:value-of select="@start"/></xsl:attribute>
       </xsl:if>
@@ -780,9 +779,8 @@
   </xsl:template>
 
   <xsl:template match="citrus:repeat-until-true">
-    <xsl:call-template name="unsupported-timeout"/>
     <repeat until="{@condition}">
-      <xsl:copy-of select="@index"/>
+      <xsl:copy-of select="@index|@timeout"/>
       <xsl:apply-templates select="citrus:description"/>
       <actions>
         <xsl:call-template name="nested-actions"/>
@@ -791,9 +789,8 @@
   </xsl:template>
 
   <xsl:template match="citrus:repeat-onerror-until-true">
-    <xsl:call-template name="unsupported-timeout"/>
     <repeat-on-error until="{@condition}">
-      <xsl:copy-of select="@index|@auto-sleep"/>
+      <xsl:copy-of select="@index|@auto-sleep|@timeout"/>
       <xsl:apply-templates select="citrus:description"/>
       <actions>
         <xsl:call-template name="nested-actions"/>
@@ -874,14 +871,6 @@
         </action>
       </xsl:for-each>
     </wait-for>
-  </xsl:template>
-
-  <xsl:template name="unsupported-timeout">
-    <xsl:if test="@timeout">
-      <xsl:call-template name="warn">
-        <xsl:with-param name="message">The '<xsl:value-of select="local-name()"/>' container timeout is not supported in the plain XML DSL and has been removed</xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
   </xsl:template>
 
   <!-- ============================================================== -->

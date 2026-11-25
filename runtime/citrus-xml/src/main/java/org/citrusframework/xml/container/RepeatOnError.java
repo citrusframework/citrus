@@ -16,6 +16,8 @@
 
 package org.citrusframework.xml.container;
 
+import java.time.Duration;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -65,6 +67,11 @@ public class RepeatOnError implements TestActionBuilder<org.citrusframework.cont
     @XmlAttribute(name = "auto-sleep")
     public void setAutoSleepSnakeCase(long milliseconds) {
         setAutoSleep(milliseconds);
+    }
+
+    @XmlAttribute
+    public void setTimeout(String timeout) {
+        builder.timeout(Duration.parse(timeout));
     }
 
     @XmlAttribute

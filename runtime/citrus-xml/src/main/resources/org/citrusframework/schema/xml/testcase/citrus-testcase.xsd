@@ -1954,6 +1954,7 @@
     <xs:attribute name="index" type="xs:string"/>
     <xs:attribute name="startsWith" type="xs:int"/>
     <xs:attribute name="step" type="xs:int"/>
+    <xs:attribute name="timeout" type="xs:string"/>
     <xs:attribute name="times" type="xs:int"/>
   </xs:complexType>
 
@@ -1985,6 +1986,7 @@
     </xs:sequence>
     <xs:attribute name="index" type="xs:string"/>
     <xs:attribute name="startsWith" type="xs:int"/>
+    <xs:attribute name="timeout" type="xs:string"/>
     <xs:attribute name="times" type="xs:int"/>
     <xs:attribute name="until" type="xs:string"/>
   </xs:complexType>
@@ -1998,6 +2000,7 @@
     <xs:attribute name="auto-sleep" type="xs:long"/>
     <xs:attribute name="index" type="xs:string"/>
     <xs:attribute name="startsWith" type="xs:int"/>
+    <xs:attribute name="timeout" type="xs:string"/>
     <xs:attribute name="times" type="xs:int"/>
     <xs:attribute name="until" type="xs:string"/>
   </xs:complexType>
