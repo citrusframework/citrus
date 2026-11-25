@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class KubernetesSendReceiveIT extends AbstractKubernetesIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "KubernetesSendReceiveIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "KubernetesSendReceiveIT")
     public void kubernetesSendReceiveIT() {
     }
 }

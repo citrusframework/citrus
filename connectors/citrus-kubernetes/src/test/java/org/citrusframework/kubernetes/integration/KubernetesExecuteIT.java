@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class KubernetesExecuteIT extends AbstractKubernetesIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "KubernetesExecuteIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "KubernetesExecuteIT")
     public void kubernetesExecuteIT() {
     }
 }
