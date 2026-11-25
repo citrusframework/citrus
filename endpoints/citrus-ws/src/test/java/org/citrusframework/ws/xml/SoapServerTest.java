@@ -156,6 +156,30 @@ public class SoapServerTest extends AbstractXmlActionTest {
         Assertions.assertEquals("UTF-8", send.getAttachments().get(1).getCharsetName());
     }
 
+    @Test
+    public void shouldLoadSoapServerEndpointActions() throws IOException {
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/xml/soap-server-endpoint.citrus.it.xml");
+
+        context.getReferenceResolver().bind("soapServer", soapServer);
+        context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());
+        context.getMessageValidatorRegistry().addMessageValidator("validator", new DefaultTextEqualsMessageValidator());
+        context.getReferenceResolver().bind("soapAttachmentValidator", new SimpleSoapAttachmentValidator());
+
+        endpointAdapter.handleMessage(createSoapMessage());
+
+        testLoader.load();
+
+        TestCase result = testLoader.getTestCase();
+        Assertions.assertEquals("SoapServerEndpointTest", result.getName());
+        Assertions.assertEquals(2L, result.getActionCount());
+
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("soap:receive-request", result.getTestAction(0).getName());
+
+        Assertions.assertEquals(SendSoapMessageAction.class, result.getTestAction(1).getClass());
+        Assertions.assertEquals("soap:send-response", result.getTestAction(1).getName());
+    }
+
     private SoapMessage createSoapMessage(SoapAttachment... attachments) {
         SoapMessage message = new SoapMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .contentType("application/xml");

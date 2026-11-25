@@ -194,6 +194,32 @@ public class SoapClientTest extends AbstractXmlActionTest {
     }
 
     @Test
+    public void shouldLoadSoapEndpointActions() throws IOException {
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/xml/soap-endpoint.citrus.it.xml");
+
+        context.getReferenceResolver().bind("soapClient", soapClient);
+        context.getReferenceResolver().bind("soapServer", soapServer);
+
+        context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());
+        context.getMessageValidatorRegistry().addMessageValidator("validator", new DefaultTextEqualsMessageValidator());
+        context.getReferenceResolver().bind("soapAttachmentValidator", new SimpleSoapAttachmentValidator());
+
+        responses.add(createSoapMessage());
+
+        testLoader.load();
+
+        TestCase result = testLoader.getTestCase();
+        Assertions.assertEquals("SoapEndpointTest", result.getName());
+        Assertions.assertEquals(2L, result.getActionCount());
+
+        Assertions.assertEquals(SendSoapMessageAction.class, result.getTestAction(0).getClass());
+        Assertions.assertEquals("soap:send-request", result.getTestAction(0).getName());
+
+        Assertions.assertEquals(ReceiveSoapMessageAction.class, result.getTestAction(1).getClass());
+        Assertions.assertEquals("soap:receive-response", result.getTestAction(1).getName());
+    }
+
+    @Test
     public void shouldLookupTestActionBuilder() {
         Assertions.assertTrue(XmlTestActionBuilder.lookup("soap").isPresent());
         Assertions.assertEquals(Soap.class, XmlTestActionBuilder.lookup("soap").get().getClass());

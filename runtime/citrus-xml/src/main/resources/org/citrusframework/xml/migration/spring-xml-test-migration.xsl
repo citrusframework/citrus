@@ -1273,10 +1273,6 @@
   <!-- SOAP web service actions                                       -->
   <!-- ============================================================== -->
 
-  <!--
-    The Spring XML actions do not tell whether the endpoint is a client or a server. The actions are migrated as client
-    actions (send request and receive response) and the user is asked to verify this.
-  -->
   <xsl:template match="ws:send">
     <xsl:call-template name="soap-warnings"/>
     <soap>
@@ -1322,14 +1318,11 @@
 
   <xsl:template name="soap-endpoint">
     <xsl:if test="@endpoint">
-      <xsl:attribute name="client"><xsl:value-of select="@endpoint"/></xsl:attribute>
+      <xsl:attribute name="endpoint"><xsl:value-of select="@endpoint"/></xsl:attribute>
     </xsl:if>
   </xsl:template>
 
   <xsl:template name="soap-warnings">
-    <xsl:call-template name="warn">
-      <xsl:with-param name="message">The SOAP endpoint of '<xsl:value-of select="name()"/>' has been migrated as client - please use the server and the receive request or send response actions when the endpoint is a server</xsl:with-param>
-    </xsl:call-template>
     <xsl:if test="self::ws:receive and (@soap-action or @accept)">
       <xsl:call-template name="warn">
         <xsl:with-param name="message">The 'soap-action' and 'accept' attributes are not supported by the SOAP response in the plain XML DSL and have been removed</xsl:with-param>

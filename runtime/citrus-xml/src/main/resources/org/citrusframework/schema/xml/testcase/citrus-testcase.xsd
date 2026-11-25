@@ -3591,6 +3591,7 @@
     <xs:attribute name="actor" type="xs:string"/>
     <xs:attribute name="client" type="xs:string"/>
     <xs:attribute name="server" type="xs:string"/>
+    <xs:attribute name="endpoint" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="SoapMessageType">

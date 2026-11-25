@@ -59,6 +59,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     private String description;
     private String actor;
+    private String endpoint;
 
     private ReferenceResolver referenceResolver;
 
@@ -80,6 +81,11 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @XmlAttribute(name = "server")
     public void setSoapServer(String soapServer) {
         builder = new SoapActionBuilder().server(soapServer);
+    }
+
+    @XmlAttribute(name = "endpoint")
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
     @XmlElement(name = "send-request")
@@ -497,20 +503,26 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return (SoapClientActionBuilder) builder;
         }
 
+        if (builder == null && endpoint != null) {
+            builder = new SoapActionBuilder().client(endpoint);
+            return (SoapClientActionBuilder) builder;
+        }
+
         throw new CitrusRuntimeException(String.format("Failed to convert '%s' to soap client action builder",
                 Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 
-    /**
-     * Converts current builder to client builder.
-     * @return
-     */
     private SoapServerActionBuilder asServerBuilder() {
         if (builder instanceof SoapServerActionBuilder) {
             return (SoapServerActionBuilder) builder;
         }
 
-        throw new CitrusRuntimeException(String.format("Failed to convert '%s' to soap client action builder",
+        if (builder == null && endpoint != null) {
+            builder = new SoapActionBuilder().server(endpoint);
+            return (SoapServerActionBuilder) builder;
+        }
+
+        throw new CitrusRuntimeException(String.format("Failed to convert '%s' to soap server action builder",
                 Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 
