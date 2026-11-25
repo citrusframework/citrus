@@ -26,6 +26,7 @@ class MigrationResourcesTest {
     private MigrationResources createResources() {
         MigrationResources resources = new MigrationResources();
         resources.migrationData = new MigrationData();
+        resources.springBeanXmlDslMigrationData = new SpringBeanXmlDslMigrationData();
         return resources;
     }
 
@@ -81,5 +82,41 @@ class MigrationResourcesTest {
         assertThat(result.text()).contains("citrus-junit-jupiter");
         assertThat(result.text()).contains("camel().cli()");
         assertThat(result.text()).contains("citrus.camel.cli.version");
+    }
+
+    @Test
+    void shouldGetSpringBeanXmlDslMigrationGuide() {
+        MigrationResources resources = createResources();
+
+        TextResourceContents result = resources.citrus_docs_spring_bean_xml_dsl_migration();
+
+        assertThat(result).isNotNull();
+        assertThat(result.uri()).isEqualTo("citrus://docs/spring-bean-xml-dsl-migration");
+        assertThat(result.text()).contains("\"javaSteps\"");
+        assertThat(result.text()).contains("\"dependencies\"");
+        assertThat(result.text()).contains("\"springRemovalSteps\"");
+        assertThat(result.text()).contains("\"xmlTransformations\"");
+        assertThat(result.text()).contains("\"knownLimitations\"");
+    }
+
+    @Test
+    void shouldContainBindToRegistryInfo() {
+        MigrationResources resources = createResources();
+
+        TextResourceContents result = resources.citrus_docs_spring_bean_xml_dsl_migration();
+
+        assertThat(result.text()).contains("@BindToRegistry");
+        assertThat(result.text()).contains("@CitrusEndpoint");
+        assertThat(result.text()).contains("@CitrusSupport");
+    }
+
+    @Test
+    void shouldContainTestLoaderChange() {
+        MigrationResources resources = createResources();
+
+        TextResourceContents result = resources.citrus_docs_spring_bean_xml_dsl_migration();
+
+        assertThat(result.text()).contains("TestLoader.SPRING");
+        assertThat(result.text()).contains("TestLoader.XML");
     }
 }
