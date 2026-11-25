@@ -25,6 +25,10 @@ import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.command.WaitContainerCmd;
 import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
+import com.github.dockerjava.api.model.Capability;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import com.github.dockerjava.api.model.WaitResponse;
@@ -120,12 +124,12 @@ public abstract class AbstractDockerActionTest extends AbstractUnitTest {
             CreateContainerResponse createResponse = new CreateContainerResponse();
             createResponse.setId("myContainerId");
             lenient().doAnswer(invocation -> createResponse).when(createCmd).exec();
-            com.github.dockerjava.api.model.HostConfig hostConfig = mock(com.github.dockerjava.api.model.HostConfig.class);
+            HostConfig hostConfig = mock(HostConfig.class);
             lenient().doReturn(hostConfig).when(createCmd).getHostConfig();
-            lenient().doReturn(hostConfig).when(hostConfig).withCapAdd(any(com.github.dockerjava.api.model.Capability[].class));
-            lenient().doReturn(hostConfig).when(hostConfig).withCapDrop(any(com.github.dockerjava.api.model.Capability[].class));
-            lenient().doReturn(hostConfig).when(hostConfig).withPortBindings(any(com.github.dockerjava.api.model.Ports.class));
-            lenient().doReturn(hostConfig).when(hostConfig).withPortBindings(any(com.github.dockerjava.api.model.PortBinding[].class));
+            lenient().doReturn(hostConfig).when(hostConfig).withCapAdd(any(Capability[].class));
+            lenient().doReturn(hostConfig).when(hostConfig).withCapDrop(any(Capability[].class));
+            lenient().doReturn(hostConfig).when(hostConfig).withPortBindings(any(Ports.class));
+            lenient().doReturn(hostConfig).when(hostConfig).withPortBindings(any(PortBinding[].class));
             lenient().doReturn(createCmd).when(docker).createContainerCmd(anyString());
 
             BuildImageCmd buildCmd = mock(BuildImageCmd.class);

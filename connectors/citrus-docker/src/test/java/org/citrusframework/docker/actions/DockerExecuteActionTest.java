@@ -22,12 +22,16 @@ import java.util.UUID;
 
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.BuildResponseItem;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.api.model.WaitResponse;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.docker.client.DockerClient;
+import org.citrusframework.docker.command.ContainerCreate;
 import org.citrusframework.docker.command.Info;
 import org.citrusframework.docker.message.DockerMessageHeaders;
 import org.citrusframework.spi.Resources;
@@ -156,6 +160,32 @@ public class DockerExecuteActionTest extends AbstractUnitTest implements TestAct
         Assertions.assertEquals(response, action.getCommand().getCommandResult());
         Assertions.assertEquals(response.getId(), context.getVariable(DockerMessageHeaders.CONTAINER_ID));
 
+    }
+
+    @Test
+    public void testCreateWithPortsInstance() {
+        CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
+        HostConfig hostConfig = Mockito.mock(HostConfig.class);
+        CreateContainerResponse response = new CreateContainerResponse();
+        response.setId(UUID.randomUUID().toString());
+
+        reset(dockerClient, command);
+
+        when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
+        when(command.getHostConfig()).thenReturn(hostConfig);
+        when(command.exec()).thenReturn(response);
+
+        Ports ports = new Ports();
+        ports.bind(ExposedPort.tcp(8080), Ports.Binding.bindPort(80));
+
+        ContainerCreate create = new ContainerCreate().image("image_create").name("myContainer");
+        create.getParameters().put("port-bindings", ports);
+
+        DockerExecuteAction action = docker.client(client).command(create).build();
+        action.execute(context);
+
+        verify(hostConfig, times(1)).withPortBindings(any(Ports.class));
+        verify(hostConfig).withPortBindings(same(ports));
     }
 
     @Test

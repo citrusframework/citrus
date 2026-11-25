@@ -143,7 +143,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         if (hasParameter("port-bindings")) {
             if (getParameters().get("port-bindings") instanceof Ports) {
                 getHostConfig(command).withPortBindings((Ports) getParameters().get("port-bindings"));
-            } if (getParameters().get("port-bindings") instanceof PortBinding[]) {
+            } else if (getParameters().get("port-bindings") instanceof PortBinding[]) {
                 getHostConfig(command).withPortBindings((PortBinding[]) getParameters().get("port-bindings"));
             } else {
                 getHostConfig(command).withPortBindings(getPortBindings(getParameter("port-bindings", testContext), exposedPorts, testContext));
