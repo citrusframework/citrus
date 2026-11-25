@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class HttpClientIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpClientIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpClientIT")
     public void testHttpClient() {}
 }

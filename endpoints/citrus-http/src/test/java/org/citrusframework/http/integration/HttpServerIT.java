@@ -34,7 +34,7 @@ public class HttpServerIT {
     public void testHttpServer() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpServerStandaloneIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpServerStandaloneIT")
     public void serverStandaloneIT() {}
 
     @Test
@@ -46,6 +46,6 @@ public class HttpServerIT {
     public void parallelRequestsEndpointUriIT() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpParallelRequest_3_IT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpParallelRequest_3_IT")
     public void parallelRequestsIT() {}
 }

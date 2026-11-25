@@ -1,88 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
-                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
-    <testcase name="HttpServerStandaloneIT">
-      <meta-info>
-        <author>Unknown</author>
-        <creationdate>2008-04-25</creationdate>
-        <status>FINAL</status>
-        <last-updated-by>Unknown</last-updated-by>
-        <last-updated-on>2008-04-25T00:00:00</last-updated-on>
-      </meta-info>
-
-      <description>
-        The simple HttpServer implementation is launched and requests are sent to the server destination.
-      </description>
-
-      <variables>
-        <variable name="custom_header_id" value="123456789"/>
-      </variables>
-    
-      <actions>
-        <http:send-request client="httpStandaloneClient">
-          <http:POST>
-            <http:headers>
-              <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-            </http:headers>
-            <http:body>
-              <http:data>
-                <![CDATA[
-                  <testRequestMessage>
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Unknown" name="HttpServerStandaloneIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>The simple HttpServer implementation is launched and requests are sent to the server destination.</description>
+  <variables>
+    <variable name="custom_header_id" value="123456789"/>
+  </variables>
+  <actions>
+    <http client="httpStandaloneClient">
+      <send-request>
+        <POST>
+          <headers>
+            <header name="CustomHeaderId" value="${custom_header_id}"/>
+          </headers>
+          <body>
+            <data><![CDATA[<testRequestMessage>
                     <text>Hello HttpServer</text>
-                  </testRequestMessage>
-                ]]>
-              </http:data>
-            </http:body>
-          </http:POST>
-        </http:send-request>
-
-        <http:receive-response client="httpStandaloneClient">
-          <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-          <http:body>
-            <http:data>
-              <![CDATA[
-                <testResponseMessage>
+                  </testRequestMessage>]]></data>
+          </body>
+        </POST>
+      </send-request>
+    </http>
+    <http client="httpStandaloneClient">
+      <receive-response>
+        <response reason-phrase="OK" status="200" version="HTTP/1.1">
+          <body>
+            <data><![CDATA[<testResponseMessage>
                 <text>Hello TestFramework</text>
-                </testResponseMessage>
-              ]]>
-            </http:data>
-          </http:body>
-        </http:receive-response>
-
-        <http:send-request client="httpStandaloneClient">
-          <http:POST>
-            <http:headers>
-              <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-            </http:headers>
-            <http:body>
-              <http:data>
-                <![CDATA[
-                  <moreRequestMessage>
+                </testResponseMessage>]]></data>
+          </body>
+        </response>
+      </receive-response>
+    </http>
+    <http client="httpStandaloneClient">
+      <send-request>
+        <POST>
+          <headers>
+            <header name="CustomHeaderId" value="${custom_header_id}"/>
+          </headers>
+          <body>
+            <data><![CDATA[<moreRequestMessage>
                     <text>Hello HttpServer</text>
-                  </moreRequestMessage>
-                ]]>
-              </http:data>
-            </http:body>
-          </http:POST>
-        </http:send-request>
-
-        <http:receive-response client="httpStandaloneClient">
-          <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-          <http:body>
-            <http:data>
-              <![CDATA[
-                <testResponseMessage>
+                  </moreRequestMessage>]]></data>
+          </body>
+        </POST>
+      </send-request>
+    </http>
+    <http client="httpStandaloneClient">
+      <receive-response>
+        <response reason-phrase="OK" status="200" version="HTTP/1.1">
+          <body>
+            <data><![CDATA[<testResponseMessage>
                 <text>Hello TestFramework</text>
-                </testResponseMessage>
-              ]]>
-            </http:data>
-          </http:body>
-        </http:receive-response>
-      </actions>
-    </testcase>
-</spring:beans>
+                </testResponseMessage>]]></data>
+          </body>
+        </response>
+      </receive-response>
+    </http>
+  </actions>
+</test>

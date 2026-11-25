@@ -1,122 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
-                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
-  <testcase name="HttpParallelRequest_3_IT">
-    <meta-info>
-      <author>Christoph Deppisch</author>
-      <creationdate>2015-03-19</creationdate>
-      <status>FINAL</status>
-      <last-updated-by>Christoph Deppisch</last-updated-by>
-      <last-updated-on>2015-03-19T00:00:00</last-updated-on>
-    </meta-info>
-
-    <description>
-      The simple HttpServer implementation is launched and requests are sent in parallel to the server destination.
-    </description>
-
-    <variables>
-      <variable name="custom_header_id" value="123456789"/>
-    </variables>
-
-    <actions>
-        <parallel>
-          <sequential>
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Christoph Deppisch" name="HttpParallelRequest_3_IT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>The simple HttpServer implementation is launched and requests are sent in parallel to the server destination.</description>
+  <variables>
+    <variable name="custom_header_id" value="123456789"/>
+  </variables>
+  <actions>
+    <parallel>
+      <actions>
+        <sequential>
+          <actions>
             <echo>
               <message>Sending request message #1</message>
             </echo>
-
-            <http:send-request client="httpStandaloneClient" fork="true">
-              <http:POST>
-                <http:headers>
-                  <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-                </http:headers>
-                <http:body>
-                  <http:data>
-                    <![CDATA[
-                      <testRequestMessage>
+            <http client="httpStandaloneClient">
+              <send-request fork="true">
+                <POST>
+                  <headers>
+                    <header name="CustomHeaderId" value="${custom_header_id}"/>
+                  </headers>
+                  <body>
+                    <data><![CDATA[<testRequestMessage>
                         <text>Hello HttpServer</text>
-                      </testRequestMessage>
-                    ]]>
-                  </http:data>
-                </http:body>
-              </http:POST>
-              <http:extract>
-                <http:header name="citrus_message_id" variable="request#1"/>
-              </http:extract>
-            </http:send-request>
-          </sequential>
-
-          <sequential>
+                      </testRequestMessage>]]></data>
+                  </body>
+                </POST>
+                <extract>
+                  <header name="citrus_message_id" variable="request#1"/>
+                </extract>
+              </send-request>
+            </http>
+          </actions>
+        </sequential>
+        <sequential>
+          <actions>
             <echo>
               <message>Sending request message #2</message>
             </echo>
-
-            <http:send-request client="httpStandaloneClient" fork="true">
-              <http:POST>
-                <http:headers>
-                  <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-                </http:headers>
-                <http:body>
-                  <http:data>
-                    <![CDATA[
-                      <testRequestMessage>
+            <http client="httpStandaloneClient">
+              <send-request fork="true">
+                <POST>
+                  <headers>
+                    <header name="CustomHeaderId" value="${custom_header_id}"/>
+                  </headers>
+                  <body>
+                    <data><![CDATA[<testRequestMessage>
                         <text>Hello HttpServer</text>
-                      </testRequestMessage>
-                    ]]>
-                  </http:data>
-                </http:body>
-              </http:POST>
-              <http:extract>
-                <http:header name="citrus_message_id" variable="request#2"/>
-              </http:extract>
-            </http:send-request>
-          </sequential>
-        </parallel>
-
-        <http:receive-response client="httpStandaloneClient">
-          <http:selector>
-            <http:element name="citrus_message_id" value="${request#1}"/>
-          </http:selector>
-          <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-          <http:body>
-            <http:data>
-              <![CDATA[
-                <testResponseMessage>
+                      </testRequestMessage>]]></data>
+                  </body>
+                </POST>
+                <extract>
+                  <header name="citrus_message_id" variable="request#2"/>
+                </extract>
+              </send-request>
+            </http>
+          </actions>
+        </sequential>
+      </actions>
+    </parallel>
+    <http client="httpStandaloneClient">
+      <receive-response>
+        <selector>
+          <element name="citrus_message_id" value="${request#1}"/>
+        </selector>
+        <response reason-phrase="OK" status="200" version="HTTP/1.1">
+          <body>
+            <data><![CDATA[<testResponseMessage>
                 <text>Hello TestFramework</text>
-                </testResponseMessage>
-              ]]>
-            </http:data>
-          </http:body>
-        </http:receive-response>
-
-        <echo>
-          <message>Successfully received response message #1</message>
-        </echo>
-
-        <http:receive-response client="httpStandaloneClient">
-          <http:selector>
-            <http:element name="citrus_message_id" value="${request#2}"/>
-          </http:selector>
-          <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
-          <http:body>
-            <http:data>
-              <![CDATA[
-                <testResponseMessage>
+                </testResponseMessage>]]></data>
+          </body>
+        </response>
+      </receive-response>
+    </http>
+    <echo>
+      <message>Successfully received response message #1</message>
+    </echo>
+    <http client="httpStandaloneClient">
+      <receive-response>
+        <selector>
+          <element name="citrus_message_id" value="${request#2}"/>
+        </selector>
+        <response reason-phrase="OK" status="200" version="HTTP/1.1">
+          <body>
+            <data><![CDATA[<testResponseMessage>
                 <text>Hello TestFramework</text>
-                </testResponseMessage>
-              ]]>
-            </http:data>
-          </http:body>
-        </http:receive-response>
-
-        <echo>
-          <message>Successfully received response message #2</message>
-        </echo>
-    </actions>
-  </testcase>
-</spring:beans>
+                </testResponseMessage>]]></data>
+          </body>
+        </response>
+      </receive-response>
+    </http>
+    <echo>
+      <message>Successfully received response message #2</message>
+    </echo>
+  </actions>
+</test>

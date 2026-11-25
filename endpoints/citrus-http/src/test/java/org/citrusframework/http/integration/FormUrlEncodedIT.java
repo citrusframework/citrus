@@ -30,11 +30,11 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class FormUrlEncodedIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_PlainText_IT")
+    @CitrusTestSource(type = TestLoader.XML, name = "FormUrlEncoded_PlainText_IT")
     public void formUrlEncodedPlainText() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_FormData_IT")
+    @CitrusTestSource(type = TestLoader.XML, name = "FormUrlEncoded_FormData_IT")
     public void formUrlEncodedFormData() {}
 
 }
