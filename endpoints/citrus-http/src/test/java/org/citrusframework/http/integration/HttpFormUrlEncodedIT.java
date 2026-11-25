@@ -30,6 +30,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class HttpFormUrlEncodedIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpFormUrlEncodedIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpFormUrlEncodedIT")
     public void testHttpFormUrlEncoded() {}
 }

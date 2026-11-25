@@ -29,6 +29,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Isolated("HTTP ITs share singleton endpoints and Citrus Spring context state under parallel classes")
 public class HttpMessageControllerIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void HttpMessageControllerIT() {}
 }

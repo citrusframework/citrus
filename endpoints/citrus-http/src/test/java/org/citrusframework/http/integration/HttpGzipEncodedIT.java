@@ -30,6 +30,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class HttpGzipEncodedIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpGzipEncodedIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpGzipEncodedIT")
     public void testHttpGzipEncoded() {}
 }
