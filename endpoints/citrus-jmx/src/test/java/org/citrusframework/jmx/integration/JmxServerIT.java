@@ -33,6 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JmxServerIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmxServerIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmxServerIT")
     public void jmxServerTest() {}
 }

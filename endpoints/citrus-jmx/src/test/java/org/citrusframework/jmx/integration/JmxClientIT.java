@@ -31,6 +31,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JmxClientIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmxClientIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmxClientIT")
     public void jmxClientTest() {}
 }
