@@ -31,6 +31,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class RmiDynamicEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "RmiDynamicEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "RmiDynamicEndpointIT")
     public void testDynamicEndpoint() {}
 }

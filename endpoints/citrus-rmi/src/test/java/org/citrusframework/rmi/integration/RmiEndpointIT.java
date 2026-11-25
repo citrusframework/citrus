@@ -31,12 +31,12 @@ import org.springframework.test.context.ContextConfiguration;
 public class RmiEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "RmiClientIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "RmiClientIT")
     public void testClientXml() {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "RmiServerIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "RmiServerIT")
     public void testServerXml() {
     }
 }
