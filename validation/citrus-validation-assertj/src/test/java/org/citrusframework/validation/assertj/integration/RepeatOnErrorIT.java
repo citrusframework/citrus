@@ -28,6 +28,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class RepeatOnErrorIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void RepeatOnErrorIT() {}
 }

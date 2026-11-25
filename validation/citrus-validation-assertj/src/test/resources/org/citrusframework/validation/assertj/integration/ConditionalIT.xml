@@ -1,34 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-  <testcase name="ConditionalIT">
-    <meta-info>
-      <author>Citrus</author>
-      <creationdate>2026-10-06</creationdate>
-      <status>FINAL</status>
-      <last-updated-by>Citrus</last-updated-by>
-      <last-updated-on>2026-10-06T00:00:00</last-updated-on>
-    </meta-info>
-
-    <description>Conditional with @assertj()@ expressions</description>
-
-    <variables>
-      <variable name="failMessage" value="Something went wrong!"/>
-      <variable name="shouldExecute" value="true"/>
-      <variable name="number" value="10"/>
-    </variables>
-
-    <actions>
-      <conditional expression="@assertj('${shouldExecute}', 'asBoolean().isFalse()')@">
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Citrus" name="ConditionalIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Conditional with @assertj()@ expressions</description>
+  <variables>
+    <variable name="failMessage" value="Something went wrong!"/>
+    <variable name="shouldExecute" value="true"/>
+    <variable name="number" value="10"/>
+  </variables>
+  <actions>
+    <conditional when="@assertj('${shouldExecute}', 'asBoolean().isFalse()')@">
+      <actions>
         <fail message="${failMessage}"/>
-      </conditional>
-
-      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
-        <when>
-          <conditional expression="@assertj('${number}', 'asInt().isEqualTo(10)')@">
+      </actions>
+    </conditional>
+    <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+      <when>
+        <conditional when="@assertj('${number}', 'asInt().isEqualTo(10)')@">
+          <actions>
             <fail message="${failMessage}"/>
-          </conditional>
-        </when>
-      </assert>
-    </actions>
-  </testcase>
-</spring:beans>
+          </actions>
+        </conditional>
+      </when>
+    </assert>
+  </actions>
+</test>
