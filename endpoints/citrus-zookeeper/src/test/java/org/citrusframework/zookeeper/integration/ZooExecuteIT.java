@@ -37,6 +37,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class ZooExecuteIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "ZooExecuteIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "ZooExecuteIT")
     public void zookeeperTest() {}
 }
