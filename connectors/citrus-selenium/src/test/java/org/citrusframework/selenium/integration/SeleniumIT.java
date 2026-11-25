@@ -34,7 +34,7 @@ import org.springframework.test.context.ContextConfiguration;
 public class SeleniumIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void SeleniumIT() {
     }
 }
