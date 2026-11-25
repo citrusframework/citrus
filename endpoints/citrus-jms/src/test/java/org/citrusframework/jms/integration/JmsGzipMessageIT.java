@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JmsGzipMessageIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsGzipMessageIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmsGzipMessageIT")
     public void testGzipMessage() {}
 }

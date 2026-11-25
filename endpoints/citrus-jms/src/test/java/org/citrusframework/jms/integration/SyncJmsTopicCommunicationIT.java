@@ -22,7 +22,7 @@ import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.citrusframework.api.common.TestLoader.SPRING;
+import static org.citrusframework.api.common.TestLoader.XML;
 import org.junit.jupiter.api.parallel.Isolated;
 
 /**
@@ -34,6 +34,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class SyncJmsTopicCommunicationIT {
 
     @Test
-    @CitrusTestSource(type = SPRING)
+    @CitrusTestSource(type = XML)
     public void SyncJmsTopicCommunicationIT() {}
 }

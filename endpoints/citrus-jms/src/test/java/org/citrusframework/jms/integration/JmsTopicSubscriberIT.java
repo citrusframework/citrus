@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JmsTopicSubscriberIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsTopicSubscriberIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmsTopicSubscriberIT")
     public void testJmsTopicSubscriber() {}
 }

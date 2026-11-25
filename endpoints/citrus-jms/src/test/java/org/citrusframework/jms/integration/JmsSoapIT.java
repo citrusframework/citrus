@@ -33,6 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JmsSoapIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsSoapIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmsSoapIT")
     public void testJmsSoap() {}
 }
