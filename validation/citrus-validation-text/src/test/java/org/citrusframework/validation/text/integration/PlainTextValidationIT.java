@@ -32,6 +32,6 @@ import org.springframework.test.context.ContextConfiguration;
 @Isolated("Shares the Spring-cached application context and its in-memory helloQueue with other ITs")
 public class PlainTextValidationIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void PlainTextValidationIT() {}
 }
