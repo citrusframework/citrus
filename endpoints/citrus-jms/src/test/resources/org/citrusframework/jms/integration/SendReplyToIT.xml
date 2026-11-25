@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-    <testcase name="SendReplyToIT">
-		<meta-info>
-			<author>Christoph Deppisch</author>
-			<creationdate>2008-04-25</creationdate>
-			<status>FINAL</status>
-			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
-		</meta-info>
-		
-        <description>
-			The test suit supports synchronous communication. On the one hand you can specify a replyToQueue
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Christoph Deppisch" name="SendReplyToIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>The test suit supports synchronous communication. On the one hand you can specify a replyToQueue
 			in your sender bean, so that the receiver directly answeres to this queue. This example can be found in
 			the file SendWithReplyToQueueTest.xml. In this case the testsuite defines the replyToQueue.
 			
@@ -36,19 +26,22 @@
 			information, because it automatically checks for temporary reply queues.
 			
 			The only additional property for synchronous commnuication is given in the third bean, that tries to send the synchronous answer
-			to the temporary queue. The property "destination" is set to the constant ${REPLY_TO_QUEUE} which holds the dynamic queue name.
-		</description>
-        <variables>
-            <variable name="operation" value="GetDate"/>
-            <variable name="conversationId" value="123456789"/>
-        </variables>
-        <actions>
-            <parallel>
-              <send endpoint="syncGetDateRequestSender">
-                  <message>
-                      <data>
-                      <![CDATA[
-                          <GetDateRequestMessage>
+			to the temporary queue. The property "destination" is set to the constant ${REPLY_TO_QUEUE} which holds the dynamic queue name.</description>
+  <variables>
+    <variable name="operation" value="GetDate"/>
+    <variable name="conversationId" value="123456789"/>
+  </variables>
+  <actions>
+    <parallel>
+      <actions>
+        <send endpoint="syncGetDateRequestSender">
+          <message>
+            <headers>
+              <header name="Operation" value="${operation}"/>
+              <header name="ConversationId" value="${conversationId}"/>
+            </headers>
+            <body>
+              <data><![CDATA[<GetDateRequestMessage>
                             <MessageHeader>
                               <ConversationId>_</ConversationId>
                               <Timestamp>citrus:currentDate()</Timestamp>
@@ -56,26 +49,24 @@
                             <MessageBody>
                               <Format>yyyy-mm-dd</Format>
                             </MessageBody>
-                          </GetDateRequestMessage>
-                      ]]>
-                      </data>
-                      <element path="ConversationId" value="${conversationId}"/>
-                  </message>
-                  <header>
-                      <element name="Operation" value="${operation}"/>
-                      <element name="ConversationId" value="${conversationId}"/>
-                  </header>
-                  <extract>
-                      <header name="citrus_message_id" variable="syncRequestCorrelatorId"></header>
-                  </extract>
-              </send>
-              
-              <sequential>
-                <receive endpoint="syncGetDateRequestReceiver">
-                    <message validator="defaultXmlMessageValidator">
-                        <data>
-                        <![CDATA[
-	                        <GetDateRequestMessage>
+                          </GetDateRequestMessage>]]></data>
+            </body>
+            <expression path="ConversationId" value="${conversationId}"/>
+          </message>
+          <extract>
+            <header name="citrus_message_id" variable="syncRequestCorrelatorId"/>
+          </extract>
+        </send>
+        <sequential>
+          <actions>
+            <receive endpoint="syncGetDateRequestReceiver" validator="defaultXmlMessageValidator">
+              <message>
+                <headers>
+                  <header name="Operation" value="${operation}"/>
+                  <header name="ConversationId" value="${conversationId}"/>
+                </headers>
+                <body>
+                  <data><![CDATA[<GetDateRequestMessage>
 	                            <MessageHeader>
 	                                <ConversationId>${conversationId}</ConversationId>
 	                                <Timestamp>citrus:currentDate()</Timestamp>
@@ -83,21 +74,18 @@
 	                            <MessageBody>
 	                                <Format>yyyy-mm-dd</Format>
 	                            </MessageBody>
-	                        </GetDateRequestMessage>    
-                        ]]>
-                        </data>
-                    </message>
-                    <header>
-                        <element name="Operation" value="${operation}"/>
-                        <element name="ConversationId" value="${conversationId}"/>
-                    </header>
-                </receive>
-
-                <send endpoint="syncGetDateRequestReceiver">
-                    <message>
-                        <data>
-                        <![CDATA[
-	                        <GetDateResponseMessage>
+	                        </GetDateRequestMessage>]]></data>
+                </body>
+              </message>
+            </receive>
+            <send endpoint="syncGetDateRequestReceiver">
+              <message>
+                <headers>
+                  <header name="Operation" value="${operation}"/>
+                  <header name="ConversationId" value="${conversationId}"/>
+                </headers>
+                <body>
+                  <data><![CDATA[<GetDateResponseMessage>
 	                            <MessageHeader>
 	                                <ConversationId>_</ConversationId>
 	                                <Timestamp>citrus:currentDate()</Timestamp>
@@ -105,25 +93,22 @@
 	                            <MessageBody>
 	                                <Value>citrus:currentDate()</Value>
 	                            </MessageBody>
-	                        </GetDateResponseMessage>  
-                        ]]>
-                        </data>
-                        <element path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
-                    </message>
-                    <header>
-                        <element name="Operation" value="${operation}"/>
-                        <element name="ConversationId" value="${conversationId}"/>
-                    </header>
-                </send>
-                
-                <receive endpoint="syncGetDateRequestSender" timeout="5000">
-                    <selector>
-                        <element name="citrus_message_id" value="${syncRequestCorrelatorId}"/>
-                    </selector>
-                    <message>
-                        <data>
-                        <![CDATA[
-                            <GetDateResponseMessage>
+	                        </GetDateResponseMessage>]]></data>
+                </body>
+                <expression path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
+              </message>
+            </send>
+            <receive endpoint="syncGetDateRequestSender" timeout="5000">
+              <selector>
+                <element name="citrus_message_id" value="${syncRequestCorrelatorId}"/>
+              </selector>
+              <message>
+                <headers>
+                  <header name="Operation" value="${operation}"/>
+                  <header name="ConversationId" value="${conversationId}"/>
+                </headers>
+                <body>
+                  <data><![CDATA[<GetDateResponseMessage>
                                 <MessageHeader>
                                     <ConversationId>_</ConversationId>
                                     <Timestamp>citrus:currentDate()</Timestamp>
@@ -131,18 +116,14 @@
                                 <MessageBody>
                                     <Value>citrus:currentDate()</Value>
                                 </MessageBody>
-                            </GetDateResponseMessage>
-                        ]]>
-                        </data>
-                        <element path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
-                    </message>
-                    <header>
-                        <element name="Operation" value="${operation}"/>
-                        <element name="ConversationId" value="${conversationId}"/>
-                    </header>
-                </receive> 
-              </sequential>
-            </parallel>
-        </actions>
-    </testcase>
-</spring:beans>
+                            </GetDateResponseMessage>]]></data>
+                </body>
+                <expression path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
+              </message>
+            </receive>
+          </actions>
+        </sequential>
+      </actions>
+    </parallel>
+  </actions>
+</test>

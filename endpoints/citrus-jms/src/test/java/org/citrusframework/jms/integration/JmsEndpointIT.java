@@ -30,6 +30,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class JmsEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmsEndpointIT")
     public void testJmsEndpoint() {}
 }

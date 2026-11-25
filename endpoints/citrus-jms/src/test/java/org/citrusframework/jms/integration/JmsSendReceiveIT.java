@@ -29,6 +29,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
 public class JmsSendReceiveIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void JmsSendReceiveIT() {}
 }

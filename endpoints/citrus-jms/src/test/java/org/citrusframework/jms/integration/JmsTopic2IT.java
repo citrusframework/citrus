@@ -32,6 +32,6 @@ import org.springframework.test.context.ContextConfiguration;
 @Isolated("Shares embedded Artemis broker on fixed tcp://localhost:61616 with static queues/topics")
 public class JmsTopic2IT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsTopic2IT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmsTopic2IT")
     public void JmsTopic2IT() {}
 }

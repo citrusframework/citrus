@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JmsSyncEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsSyncEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmsSyncEndpointIT")
     public void testJmsSyncEndpoint() {}
 }
