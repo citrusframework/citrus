@@ -33,6 +33,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class WebServiceEndpointFactoryIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void WebServiceEndpointFactoryIT() {}
 }
