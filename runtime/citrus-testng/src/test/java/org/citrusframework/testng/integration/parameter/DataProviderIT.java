@@ -27,7 +27,7 @@ import org.testng.annotations.*;
  */
 public class DataProviderIT extends TestNGCitrusSpringSupport {
 
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     @CitrusParameters( "message" )
     @Test(dataProvider = "citrusDataProvider")
     public void DataProviderIT(String message) {
@@ -42,7 +42,7 @@ public class DataProviderIT extends TestNGCitrusSpringSupport {
         };
     }
 
-    @CitrusTestSource(type = TestLoader.SPRING, name = "DataProviderIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "DataProviderIT")
     @CitrusParameters( "message" )
     @Test(dataProvider = "namedDataProvider")
     public void DataProviderNameIT(String message) {

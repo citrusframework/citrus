@@ -34,7 +34,7 @@ public class ParameterIT extends TestNGCitrusSpringSupport {
 
     @Test(dataProvider = "someDataProvider")
     @CitrusParameters({"someVariable"})
-    @CitrusTestSource(type = TestLoader.SPRING, name = "TestParameterIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "TestParameterIT")
     @SuppressWarnings("unused")
     public void test(String someVariable) {
     }

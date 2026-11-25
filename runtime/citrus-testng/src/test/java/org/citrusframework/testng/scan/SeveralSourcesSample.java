@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 public class SeveralSourcesSample extends org.citrusframework.testng.spring.TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, sources = {
+    @CitrusTestSource(type = TestLoader.XML, sources = {
             "classpath:org/citrusframework/testng/integration/actions/EchoActionIT.xml",
             "classpath:org/citrusframework/testng/integration/actions/CreateVariablesIT.xml" })
     public void severalSourcesIT() {}

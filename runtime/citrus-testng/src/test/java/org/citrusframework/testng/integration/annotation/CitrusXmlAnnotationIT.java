@@ -27,15 +27,15 @@ import org.testng.annotations.Test;
 @Test
 public class CitrusXmlAnnotationIT extends TestNGCitrusSpringSupport {
 
-    @CitrusTestSource(type = TestLoader.SPRING, name = { "SampleIT" })
+    @CitrusTestSource(type = TestLoader.XML, name = { "SampleIT" })
     public void CitrusXmlAnnotation_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.SPRING, name = { "EchoActionIT", "FailActionIT" }, packageName = "org.citrusframework.testng.integration.actions")
+    @CitrusTestSource(type = TestLoader.XML, name = { "EchoActionIT", "FailActionIT" }, packageName = "org.citrusframework.testng.integration.actions")
     public void CitrusXmlAnnotation_2_IT() {}
 
-    @CitrusTestSource(type = TestLoader.SPRING, packageScan = "org.citrusframework.testng.integration.functions")
+    @CitrusTestSource(type = TestLoader.XML, packageScan = "org.citrusframework.testng.integration.functions")
     public void CitrusXmlAnnotation_3_IT() {}
 
-    @CitrusTestSource(type = TestLoader.SPRING, sources = { "classpath:org/citrusframework/testng/integration/actions/CreateVariablesIT.xml" })
+    @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/testng/integration/actions/CreateVariablesIT.xml" })
     public void CitrusXmlAnnotation_4_IT() {}
 }

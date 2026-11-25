@@ -27,6 +27,6 @@ import org.testng.annotations.Test;
 public class DateRangeValidationMatcherIT  extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void DateRangeValidationMatcherIT() {}
 }

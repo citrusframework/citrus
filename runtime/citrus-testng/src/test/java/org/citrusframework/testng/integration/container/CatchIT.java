@@ -26,6 +26,6 @@ import org.testng.annotations.Test;
  */
 public class CatchIT extends TestNGCitrusSpringSupport {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void CatchIT() {}
 }

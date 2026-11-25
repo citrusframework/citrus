@@ -24,6 +24,6 @@ import org.testng.annotations.Test;
 public class AsyncIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void AsyncIT() {}
 }

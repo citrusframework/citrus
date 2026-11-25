@@ -26,6 +26,6 @@ import org.testng.annotations.Test;
  */
 public class TimerIT extends TestNGCitrusSpringSupport {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void TimerIT() {}
 }

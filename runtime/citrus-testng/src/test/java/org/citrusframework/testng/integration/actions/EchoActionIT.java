@@ -27,6 +27,6 @@ import org.testng.annotations.Test;
 @Test
 public class EchoActionIT extends TestNGCitrusSpringSupport {
 
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void EchoActionIT() {}
 }
