@@ -16,6 +16,7 @@
 
 package org.citrusframework.mcp;
 
+import io.quarkiverse.mcp.server.Resource;
 import io.quarkiverse.mcp.server.ResourceTemplate;
 import io.quarkiverse.mcp.server.ResourceTemplateArg;
 import io.quarkiverse.mcp.server.TextResourceContents;
@@ -27,6 +28,9 @@ public class MigrationResources {
 
     @Inject
     MigrationData migrationData;
+
+    @Inject
+    SpringBeanXmlDslMigrationData springBeanXmlDslMigrationData;
 
     @ResourceTemplate(uriTemplate = "citrus://docs/migration-guide/{version}",
             name = "citrus_docs_migration_guide",
@@ -51,6 +55,24 @@ public class MigrationResources {
 
             return new TextResourceContents(uri,
                     JsonSupport.json().writeValueAsString(guide), "application/json");
+        } catch (Throwable ex) {
+            return error(uri, ex.getMessage());
+        }
+    }
+
+    @Resource(uri = "citrus://docs/spring-bean-xml-dsl-migration",
+            name = "citrus_docs_spring_bean_xml_dsl_migration",
+            title = "Spring Bean XML to XML DSL Migration Guide",
+            description = "Guide for migrating Citrus test cases from Spring Bean XML format to the plain XML DSL. " +
+                    "Covers Java class annotation changes, Maven dependencies, XML transformations, " +
+                    "optional full Spring removal with @BindToRegistry/@CitrusEndpoint, and known limitations.",
+            mimeType = "application/json")
+    public TextResourceContents citrus_docs_spring_bean_xml_dsl_migration() {
+        String uri = "citrus://docs/spring-bean-xml-dsl-migration";
+
+        try {
+            return new TextResourceContents(uri,
+                    JsonSupport.json().writeValueAsString(springBeanXmlDslMigrationData.getGuide()), "application/json");
         } catch (Throwable ex) {
             return error(uri, ex.getMessage());
         }

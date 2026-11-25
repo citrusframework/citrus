@@ -17,8 +17,10 @@ The MCP server exposes Citrus framework capabilities through standardized tools 
 * Documentation tools
     ** **Documentation index**: Query all available documentation files with filter criteria
     ** **Documentation**: Access AsciiDoc documentation for specific Citrus components
-* Migration resources
+* Migration tools and resources
+    ** **Spring Bean XML Migration**: Migrate Spring Bean XML test cases to the plain XML DSL (batch or single content)
     ** **Migration Guides**: Retrieve structured version migration guides with package renames, Maven dependency changes, API changes, and SPI changes
+    ** **Spring Bean XML Migration Guide**: Access the structured guide for Spring Bean XML to XML DSL migration including Java changes, dependencies, and known limitations
 * Settings resources
     ** **Settings Catalog**: Browse all available Citrus system property and environment variable settings by group or module
 
@@ -389,6 +391,59 @@ Retrieves documentation content for a specific component.
 }
 ----
 
+[[citrus-mcp-server-tools-migration]]
+=== Migration Tools
+
+==== Batch Migrate Spring Bean XML to XML DSL
+
+Migrates Citrus Spring Bean XML test cases to the plain XML DSL in batch.
+Accepts a source path (single file or directory) and a target directory.
+
+**Parameters:**
+* `source` (required): Path to the Spring Bean XML test file or directory to migrate
+* `target` (required): Path to the target directory for migrated XML files
+
+**Returns:**
+* `migrated`: List of successfully migrated files with source path, target path, and any warnings
+* `skipped`: List of skipped file paths (non-XML files or files that don't match Spring Bean XML format)
+* `failed`: List of files that failed migration with source path and error message
+
+**Example Response:**
+[source,json]
+----
+{
+  "migrated": [
+    {
+      "source": "/tests/spring/MyTest.xml",
+      "target": "/tests/xml/MyTest.xml",
+      "warnings": []
+    }
+  ],
+  "skipped": ["/tests/spring/README.md"],
+  "failed": []
+}
+----
+
+==== Migrate Spring Bean XML Content to XML DSL
+
+Migrates a single Citrus Spring Bean XML test case provided as inline string content to the plain XML DSL.
+
+**Parameters:**
+* `content` (required): The Spring Bean XML test case content to migrate
+
+**Returns:**
+* `content`: The migrated XML DSL content
+* `warnings`: List of migration warnings (e.g., unsupported elements)
+
+**Example Response:**
+[source,json]
+----
+{
+  "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test name=\"MyTest\" ...>...</test>",
+  "warnings": []
+}
+----
+
 [[citrus-mcp-server-resources]]
 == Resources
 
@@ -471,6 +526,45 @@ The guide covers package renames, Maven artifact renames, dependency upgrades, A
   ],
   "spiChanges": [
     { "serviceFile": "META-INF/services/org.citrusframework.CitrusContext", "implementation": "...", "changeType": "new" }
+  ]
+}
+----
+
+=== Spring Bean XML to XML DSL Migration Guide
+
+**URI:** `citrus://docs/spring-bean-xml-dsl-migration`
+
+Provides a structured guide for migrating Citrus test cases from Spring Bean XML format to the plain XML DSL.
+Covers Java test class annotation changes, Maven dependencies, XML transformations performed by the migration tool, optional full Spring removal with `@BindToRegistry` / `@CitrusEndpoint`, and known limitations.
+
+**MIME Type:** `application/json`
+
+**Response structure:**
+[source,json]
+----
+{
+  "description": "Spring Bean XML to plain XML DSL migration guide ...",
+  "javaSteps": [
+    {
+      "title": "Change test loader type",
+      "description": "Change @CitrusTestSource(type = TestLoader.SPRING) to ...",
+      "before": "@CitrusTestSource(type = TestLoader.SPRING)",
+      "after": "@CitrusTestSource(type = TestLoader.XML)",
+      "note": "Keep @CitrusSpringSupport and @ContextConfiguration unchanged ...",
+      "optional": false
+    }
+  ],
+  "dependencies": [
+    { "groupId": "org.citrusframework", "artifactId": "citrus-xml", "scope": "test", "note": "..." }
+  ],
+  "springRemovalSteps": [
+    { "title": "Replace @CitrusSpringSupport with @CitrusSupport", "description": "...", "optional": true }
+  ],
+  "xmlTransformations": [
+    { "springBeanXml": "<spring:beans> wrapping <testcase>", "plainXmlDsl": "<test> root element" }
+  ],
+  "knownLimitations": [
+    { "title": "<input> action", "description": "Interactive user input action is not supported ..." }
   ]
 }
 ----
@@ -607,6 +701,14 @@ Tools can query documentation resources to:
 
 * Display contextual help for components
 * Search documentation by component type and name
+
+=== Spring Bean XML to XML DSL Migration
+
+AI assistants can use the migration tools and resources to:
+
+* Automatically migrate Spring Bean XML test files to the plain XML DSL (single file, directory, or inline content)
+* Read the structured migration guide for Java annotation changes, Maven dependencies, and known limitations
+* Handle incremental migration where some test methods stay on `TestLoader.SPRING`
 
 === Version Migration
 
