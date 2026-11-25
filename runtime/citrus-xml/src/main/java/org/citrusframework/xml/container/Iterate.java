@@ -16,6 +16,8 @@
 
 package org.citrusframework.xml.container;
 
+import java.time.Duration;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -54,6 +56,11 @@ public class Iterate implements TestActionBuilder<org.citrusframework.container.
     @XmlAttribute
     public void setTimes(int times) {
         builder.times(times);
+    }
+
+    @XmlAttribute
+    public void setTimeout(String timeout) {
+        builder.timeout(Duration.parse(timeout));
     }
 
     @XmlAttribute
