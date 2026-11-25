@@ -28,6 +28,6 @@ import org.junit.jupiter.api.Test;
 public class DockerExecuteIT extends AbstractDockerIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "DockerExecuteIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "DockerExecuteIT")
     public void dockerInfoTest() {}
 }
