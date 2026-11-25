@@ -1,671 +1,583 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd
-              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-
-  <testcase name="ServerSoapFaultIT">
-    <meta-info>
-      <author>Christoph Deppisch</author>
-      <creationdate>2010-02-09</creationdate>
-      <status>FINAL</status>
-      <last-updated-by>Christoph Deppisch</last-updated-by>
-      <last-updated-on>2010-02-09T00:00:00</last-updated-on>
-    </meta-info>
-
-    <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
-    </variables>
-
-    <actions>
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request">
-          <ws:when>
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Christoph Deppisch" name="ServerSoapFaultIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <variables>
+    <variable name="correlationId" value="citrus:randomNumber(10)"/>
+    <variable name="messageId" value="citrus:randomNumber(10)"/>
+    <variable name="user" value="Christoph"/>
+  </variables>
+  <actions>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request">
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-          </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                     <ns0:Text>Invalid request</ns0:Text>
-                  </ns0:FaultDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </ns0:FaultDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-
-      <echo>
-        <message>Test Soap fault actor support</message>
-      </echo>
-
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request"
-                   fault-actor="SERVER">
-            <ws:when>
+      </actions>
+    </parallel>
+    <echo>
+      <message>Test Soap fault actor support</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-actor="SERVER" fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request">
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-            </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-actor>SERVER</ws:fault-actor>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-actor="SERVER" fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                     <ns0:Text>Invalid request</ns0:Text>
-                  </ns0:FaultDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </ns0:FaultDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-
-      <echo>
-        <message>Test XML Soap fault validation</message>
-      </echo>
-
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request"
-                   fault-validator="xmlSoapFaultValidator">
-          <ws:fault-detail>
-            <![CDATA[
-              <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+      </actions>
+    </parallel>
+    <echo>
+      <message>Test XML Soap fault validation</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request" validator="xmlSoapFaultValidator">
+            <fault-detail>
+              <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                 <ns0:MessageId>${messageId}</ns0:MessageId>
                 <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                 <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                 <ns0:Text>Invalid request</ns0:Text>
-              </ns0:FaultDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:when>
+              </ns0:FaultDetail>]]></content>
+            </fault-detail>
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-          </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                     <ns0:Text>Invalid request</ns0:Text>
-                  </ns0:FaultDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </ns0:FaultDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-
-      <echo>
-        <message>Test XML schema validation skip</message>
-      </echo>
-
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request"
-                   fault-validator="xmlSoapFaultValidator">
-          <ws:fault-detail schema-validation="false">
-            <![CDATA[
-              <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+      </actions>
+    </parallel>
+    <echo>
+      <message>Test XML schema validation skip</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request" validator="xmlSoapFaultValidator">
+            <fault-detail schema-validation="false">
+              <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                 <ns0:MessageId>${messageId}</ns0:MessageId>
                 <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                 <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                 <ns0:Text>Invalid request</ns0:Text>
                 <ns0:Reason>Client</ns0:Reason>
-              </ns0:FaultDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:when>
+              </ns0:FaultDetail>]]></content>
+            </fault-detail>
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-          </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                     <ns0:Text>Invalid request</ns0:Text>
                     <ns0:Reason>Client</ns0:Reason>
-                  </ns0:FaultDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </ns0:FaultDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-
-      <echo>
-        <message>Test explicit XML schema repository</message>
-      </echo>
-
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request"
-                   fault-validator="xmlSoapFaultValidator">
-          <ws:fault-detail schema-repository="helloSchemaRepository">
-            <![CDATA[
-              <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+      </actions>
+    </parallel>
+    <echo>
+      <message>Test explicit XML schema repository</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request" validator="xmlSoapFaultValidator">
+            <fault-detail>
+              <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                 <ns0:MessageId>${messageId}</ns0:MessageId>
                 <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                 <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                 <ns0:Text>Invalid request</ns0:Text>
                 <ns0:Reason>Client</ns0:Reason>
-              </ns0:FaultDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:when>
+              </ns0:FaultDetail>]]></content>
+            </fault-detail>
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-          </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                     <ns0:Text>Invalid request</ns0:Text>
                     <ns0:Reason>Client</ns0:Reason>
-                  </ns0:FaultDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </ns0:FaultDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-
-      <echo>
-        <message>Test explicit XML schema instance</message>
-      </echo>
-
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request"
-                   fault-validator="xmlSoapFaultValidator">
-          <ws:fault-detail schema="helloSchemaExtended">
-            <![CDATA[
-              <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+      </actions>
+    </parallel>
+    <echo>
+      <message>Test explicit XML schema instance</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request" validator="xmlSoapFaultValidator">
+            <fault-detail>
+              <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                 <ns0:MessageId>${messageId}</ns0:MessageId>
                 <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                 <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                 <ns0:Text>Invalid request</ns0:Text>
                 <ns0:Reason>Client</ns0:Reason>
-              </ns0:FaultDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:when>
+              </ns0:FaultDetail>]]></content>
+            </fault-detail>
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-          </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                     <ns0:Text>Invalid request</ns0:Text>
                     <ns0:Reason>Client</ns0:Reason>
-                  </ns0:FaultDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </ns0:FaultDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-
-      <echo>
-        <message>Test XML multiple soap fault detail elements validation</message>
-      </echo>
-
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request"
-                   fault-validator="xmlSoapFaultValidator">
-          <ws:fault-detail>
-            <![CDATA[
-              <ErrorDetail>
+      </actions>
+    </parallel>
+    <echo>
+      <message>Test XML multiple soap fault detail elements validation</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request" validator="xmlSoapFaultValidator">
+            <fault-detail>
+              <content><![CDATA[<ErrorDetail>
                 <ErrorCode>TEC-1000</ErrorCode>
                 <Text>Invalid request</Text>
-              </ErrorDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:fault-detail>
-            <![CDATA[
-              <MessageDetail>
+              </ErrorDetail>]]></content>
+            </fault-detail>
+            <fault-detail>
+              <content><![CDATA[<MessageDetail>
                 <MessageId>${messageId}</MessageId>
                 <CorrelationId>${correlationId}</CorrelationId>
-              </MessageDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:when>
+              </MessageDetail>]]></content>
+            </fault-detail>
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-          </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ErrorDetail>
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ErrorDetail>
                     <ErrorCode>TEC-1000</ErrorCode>
                     <Text>Invalid request</Text>
-                  </ErrorDetail>
-                ]]>
-              </ws:fault-detail>
-              <ws:fault-detail>
-                <![CDATA[
-                  <MessageDetail>
+                  </ErrorDetail>]]></content>
+                  </fault-detail>
+                  <fault-detail>
+                    <content><![CDATA[<MessageDetail>
                     <MessageId>${messageId}</MessageId>
                     <CorrelationId>${correlationId}</CorrelationId>
-                  </MessageDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </MessageDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-
-      <echo>
-        <message>Test XML multiple soap fault detail elements with separate schema validation settings</message>
-      </echo>
-
-      <parallel>
-        <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
-                   fault-string="Invalid request"
-                   fault-validator="xmlSoapFaultValidator">
-          <ws:fault-detail>
-            <![CDATA[
-              <ErrorDetail>
+      </actions>
+    </parallel>
+    <echo>
+      <message>Test XML multiple soap fault detail elements with separate schema validation settings</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap client="helloSoapClient">
+          <assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000" fault-string="Invalid request" validator="xmlSoapFaultValidator">
+            <fault-detail>
+              <content><![CDATA[<ErrorDetail>
                 <ErrorCode>TEC-1000</ErrorCode>
                 <Text>Invalid request</Text>
-              </ErrorDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:fault-detail schema-validation="false">
-            <![CDATA[
-              <MessageDetail xmlns="http://citrusframework.org/schemas/unknown">
+              </ErrorDetail>]]></content>
+            </fault-detail>
+            <fault-detail schema-validation="false">
+              <content><![CDATA[<MessageDetail xmlns="http://citrusframework.org/schemas/unknown">
                 <MessageId>${messageId}</MessageId>
                 <CorrelationId>${correlationId}</CorrelationId>
-              </MessageDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:fault-detail schema="helloSchemaExtended">
-            <![CDATA[
-              <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+              </MessageDetail>]]></content>
+            </fault-detail>
+            <fault-detail>
+              <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                 <ns0:MessageId>${messageId}</ns0:MessageId>
                 <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                 <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                 <ns0:Text>Invalid request</ns0:Text>
                 <ns0:Reason>Client</ns0:Reason>
-              </ns0:FaultDetail>
-            ]]>
-          </ws:fault-detail>
-          <ws:when>
+              </ns0:FaultDetail>]]></content>
+            </fault-detail>
+            <when>
               <send endpoint="helloSoapClient">
                 <message>
-                  <data>
-                    <![CDATA[
-                      <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <body>
+                    <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                         <ns0:MessageId>${messageId}</ns0:MessageId>
                         <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                         <ns0:User>${user}</ns0:User>
                         <ns0:Text>Hello WebServer</ns0:Text>
-                      </ns0:HelloRequest>
-                    ]]>
-                  </data>
+                      </ns0:HelloRequest>]]></data>
+                  </body>
                 </message>
               </send>
-          </ws:when>
-        </ws:assert-fault>
-
+            </when>
+          </assert-fault>
+        </soap>
         <sequential>
-          <receive endpoint="soapRequestEndpoint">
-            <message schema-validation="false">
-              <data>
-                <![CDATA[
-                  <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <actions>
+            <receive endpoint="soapRequestEndpoint">
+              <message schema-validation="false">
+                <body>
+                  <data><![CDATA[<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:User>${user}</ns0:User>
                     <ns0:Text>Hello WebServer</ns0:Text>
-                  </ns0:HelloRequest>
-                ]]>
-              </data>
-            </message>
-            <extract>
-              <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
-            </extract>
-          </receive>
-
-          <ws:send-fault endpoint="soapResponseEndpoint">
-            <ws:fault>
-              <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
-              <ws:fault-string>Invalid request</ws:fault-string>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ErrorDetail>
+                  </ns0:HelloRequest>]]></data>
+                </body>
+              </message>
+              <extract>
+                <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
+              </extract>
+            </receive>
+            <soap server="soapResponseEndpoint">
+              <send-fault>
+                <message fault-code="{http://citrusframework.org/faults}citrus-ns:TEC-1000" fault-string="Invalid request">
+                  <headers>
+                    <header name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
+                  </headers>
+                  <fault-detail>
+                    <content><![CDATA[<ErrorDetail>
                     <ErrorCode>TEC-1000</ErrorCode>
                     <Text>Invalid request</Text>
-                  </ErrorDetail>
-                ]]>
-              </ws:fault-detail>
-              <ws:fault-detail>
-                <![CDATA[
-                  <MessageDetail xmlns="http://citrusframework.org/schemas/unknown">
+                  </ErrorDetail>]]></content>
+                  </fault-detail>
+                  <fault-detail>
+                    <content><![CDATA[<MessageDetail xmlns="http://citrusframework.org/schemas/unknown">
                     <MessageId>${messageId}</MessageId>
                     <CorrelationId>${correlationId}</CorrelationId>
-                  </MessageDetail>
-                ]]>
-              </ws:fault-detail>
-              <ws:fault-detail>
-                <![CDATA[
-                  <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
+                  </MessageDetail>]]></content>
+                  </fault-detail>
+                  <fault-detail>
+                    <content><![CDATA[<ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd">
                     <ns0:MessageId>${messageId}</ns0:MessageId>
                     <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
                     <ns0:ErrorCode>TEC-1000</ns0:ErrorCode>
                     <ns0:Text>Invalid request</ns0:Text>
                     <ns0:Reason>Client</ns0:Reason>
-                  </ns0:FaultDetail>
-                ]]>
-              </ws:fault-detail>
-            </ws:fault>
-            <ws:header>
-              <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
-            </ws:header>
-          </ws:send-fault>
+                  </ns0:FaultDetail>]]></content>
+                  </fault-detail>
+                </message>
+              </send-fault>
+            </soap>
+          </actions>
         </sequential>
-      </parallel>
-    </actions>
-  </testcase>
-</spring:beans>
+      </actions>
+    </parallel>
+  </actions>
+</test>
