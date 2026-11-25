@@ -1328,11 +1328,6 @@
         <xsl:with-param name="message">The 'soap-action' and 'accept' attributes are not supported by the SOAP response in the plain XML DSL and have been removed</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-    <xsl:if test="ws:attachment/@encoding-type or ws:attachment/@mtom-inline">
-      <xsl:call-template name="warn">
-        <xsl:with-param name="message">The 'encoding-type' and 'mtom-inline' attributes of the SOAP attachment are not supported in the plain XML DSL and have been removed</xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template match="ws:assert-fault">
@@ -1403,6 +1398,7 @@
 
   <xsl:template match="ws:fault-detail" mode="soap-fault-detail">
     <fault-detail>
+      <xsl:copy-of select="@schema-validation"/>
       <xsl:choose>
         <xsl:when test="@file">
           <resource file="{@file}"/>
@@ -1420,7 +1416,7 @@
 
   <xsl:template match="ws:attachment" mode="soap">
     <attachment>
-      <xsl:copy-of select="@content-id|@content-type"/>
+      <xsl:copy-of select="@content-id|@content-type|@mtom-inline|@encoding-type"/>
       <xsl:if test="@charset-name">
         <xsl:attribute name="charset"><xsl:value-of select="@charset-name"/></xsl:attribute>
       </xsl:if>

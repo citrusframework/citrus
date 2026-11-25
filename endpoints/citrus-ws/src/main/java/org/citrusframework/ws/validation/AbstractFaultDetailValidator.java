@@ -62,10 +62,11 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
             String controlDetailString = controlDetailElements.get(i);
 
             SoapFaultDetailValidationContext.Builder detailValidationContext;
-            if (validationContext.getValidationContexts() == null || validationContext.getValidationContexts().isEmpty()) {
+            if (validationContext.getValidationContexts() == null || validationContext.getValidationContexts().isEmpty()
+                    || i >= validationContext.getValidationContexts().size()) {
                 detailValidationContext = new SoapFaultDetailValidationContext.Builder();
             } else {
-                detailValidationContext = validationContext.getValidationContexts().get(i++);
+                detailValidationContext = validationContext.getValidationContexts().get(i);
             }
 
             validateFaultDetailString(XMLUtils.omitXmlDeclaration(receivedDetailString),
