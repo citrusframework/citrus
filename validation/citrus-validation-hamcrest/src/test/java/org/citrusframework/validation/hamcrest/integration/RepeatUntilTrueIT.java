@@ -31,7 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 public class RepeatUntilTrueIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void RepeatUntilTrueIT() {
     }
 }
