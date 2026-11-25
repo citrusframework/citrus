@@ -144,6 +144,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                     soapAttachment.setCharsetName(attachment.getCharset());
                 }
                 soapAttachment.setContent(attachment.getContent());
+                if (attachment.getMtomInline() != null) {
+                    soapAttachment.setMtomInline(attachment.getMtomInline());
+                }
+                if (attachment.getEncodingType() != null) {
+                    soapAttachment.setEncodingType(attachment.getEncodingType());
+                }
                 requestBuilder.message().attachment(soapAttachment);
             }
         }
@@ -190,6 +196,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                     soapAttachment.setCharsetName(attachment.getCharset());
                 }
                 soapAttachment.setContent(attachment.getContent());
+                if (attachment.getMtomInline() != null) {
+                    soapAttachment.setMtomInline(attachment.getMtomInline());
+                }
+                if (attachment.getEncodingType() != null) {
+                    soapAttachment.setEncodingType(attachment.getEncodingType());
+                }
                 responseBuilder.message().attachment(soapAttachment);
             }
 
@@ -266,6 +278,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                     soapAttachment.setCharsetName(attachment.getCharset());
                 }
                 soapAttachment.setContent(attachment.getContent());
+                if (attachment.getMtomInline() != null) {
+                    soapAttachment.setMtomInline(attachment.getMtomInline());
+                }
+                if (attachment.getEncodingType() != null) {
+                    soapAttachment.setEncodingType(attachment.getEncodingType());
+                }
                 requestBuilder.message().attachment(soapAttachment);
             }
         }
@@ -342,6 +360,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                     soapAttachment.setCharsetName(attachment.getCharset());
                 }
                 soapAttachment.setContent(attachment.getContent());
+                if (attachment.getMtomInline() != null) {
+                    soapAttachment.setMtomInline(attachment.getMtomInline());
+                }
+                if (attachment.getEncodingType() != null) {
+                    soapAttachment.setEncodingType(attachment.getEncodingType());
+                }
                 responseBuilder.message().attachment(soapAttachment);
             }
         }
@@ -411,6 +435,12 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
                     soapAttachment.setCharsetName(attachment.getCharset());
                 }
                 soapAttachment.setContent(attachment.getContent());
+                if (attachment.getMtomInline() != null) {
+                    soapAttachment.setMtomInline(attachment.getMtomInline());
+                }
+                if (attachment.getEncodingType() != null) {
+                    soapAttachment.setEncodingType(attachment.getEncodingType());
+                }
                 responseBuilder.message().attachment(soapAttachment);
             }
         }
@@ -437,6 +467,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             assertFault.faultActor(soapFault.faultActor);
         }
 
+        boolean hasPerDetailValidation = soapFault.getFaultDetails().stream()
+                .anyMatch(d -> d.getSchemaValidation() != null);
         for (SoapFaultDetail faultDetail : soapFault.getFaultDetails()) {
             if (faultDetail.content != null) {
                 assertFault.faultDetail(faultDetail.getContent().trim());
@@ -444,6 +476,14 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
             if (faultDetail.getResource() != null) {
                 assertFault.faultDetailResource(faultDetail.getResource().getFile());
+            }
+
+            if (hasPerDetailValidation) {
+                var detailContext = new org.citrusframework.validation.context.ws.SoapFaultDetailValidationContext.Builder();
+                if (faultDetail.getSchemaValidation() != null) {
+                    detailContext.schemaValidation(faultDetail.getSchemaValidation());
+                }
+                assertFault.validateDetail(detailContext);
             }
         }
 
@@ -1010,6 +1050,10 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             private String contentType;
             @XmlAttribute(name = "charset")
             private String charset;
+            @XmlAttribute(name = "mtom-inline")
+            private Boolean mtomInline;
+            @XmlAttribute(name = "encoding-type")
+            private String encodingType;
             @XmlElement
             private String content;
             @XmlElement
@@ -1045,6 +1089,22 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
             public void setCharset(String charset) {
                 this.charset = charset;
+            }
+
+            public Boolean getMtomInline() {
+                return mtomInline;
+            }
+
+            public void setMtomInline(Boolean mtomInline) {
+                this.mtomInline = mtomInline;
+            }
+
+            public String getEncodingType() {
+                return encodingType;
+            }
+
+            public void setEncodingType(String encodingType) {
+                this.encodingType = encodingType;
             }
 
             public Resource getResource() {
@@ -1242,10 +1302,20 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             "resource"
     })
     public static class SoapFaultDetail {
+        @XmlAttribute(name = "schema-validation")
+        protected Boolean schemaValidation;
         @XmlElement
         protected String content;
         @XmlElement
         protected Resource resource;
+
+        public Boolean getSchemaValidation() {
+            return schemaValidation;
+        }
+
+        public void setSchemaValidation(Boolean schemaValidation) {
+            this.schemaValidation = schemaValidation;
+        }
 
         public void setContent(String content) {
             this.content = content;

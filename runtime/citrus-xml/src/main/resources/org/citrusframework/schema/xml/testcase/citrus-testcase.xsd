@@ -3611,6 +3611,8 @@
               <xs:attribute name="content-id" type="xs:string"/>
               <xs:attribute name="content-type" type="xs:string"/>
               <xs:attribute name="charset" type="xs:string"/>
+              <xs:attribute name="mtom-inline" type="xs:boolean"/>
+              <xs:attribute name="encoding-type" type="xs:string"/>
             </xs:complexType>
           </xs:element>
         </xs:sequence>
@@ -3656,6 +3658,7 @@
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
+              <xs:attribute name="schema-validation" type="xs:boolean"/>
             </xs:complexType>
           </xs:element>
         </xs:sequence>
