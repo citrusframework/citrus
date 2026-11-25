@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class SshServerErrorIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "SshServerErrorIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "SshServerErrorIT")
     public void testSshServerError() {}
 }
