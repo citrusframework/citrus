@@ -49,7 +49,7 @@ public class HttpHandleCookiesIT implements TestActionSupport {
     private HttpServer httpServer;
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpCookiesIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpCookiesIT")
     public void testCookies() {}
 
     @Test

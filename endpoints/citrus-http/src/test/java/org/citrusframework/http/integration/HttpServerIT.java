@@ -30,7 +30,7 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class HttpServerIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpServerIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "HttpServerIT")
     public void testHttpServer() {}
 
     @Test
