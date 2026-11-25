@@ -35,7 +35,7 @@ import org.springframework.test.context.ContextConfiguration;
 public class ChannelEndpointFactoryIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "ChannelEndpointFactoryIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "ChannelEndpointFactoryIT")
     public void testChannelEndpointFactory(@CitrusResource TestCaseRunner runner) {}
 }
 

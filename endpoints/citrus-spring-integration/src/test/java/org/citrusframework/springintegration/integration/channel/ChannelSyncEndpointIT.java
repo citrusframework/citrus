@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class ChannelSyncEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "ChannelSyncEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "ChannelSyncEndpointIT")
     public void testChannelSyncEndpoint(@CitrusResource TestCaseRunner runner) {}
 }

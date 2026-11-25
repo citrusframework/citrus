@@ -1,359 +1,366 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-    <testcase name="MessageChannelIT">
-		<meta-info>
-			<author>Christoph Deppisch</author>
-			<creationdate>2012-05-03</creationdate>
-			<status>FINAL</status>
-			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2012-05-03T00:00:00</last-updated-on>
-		</meta-info>
-    
-        <description>Test sends messages to a message channel and receives these messages with
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Christoph Deppisch" name="MessageChannelIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Test sends messages to a message channel and receives these messages with
         message selectors in reverse order.</description>
-		
-        <actions>
-            <send endpoint="channelRequestSender">
-                <message>
-                    <data>Hello Citrus</data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </send>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <data>Goodbye Citrus</data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </send>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="Operation" value="sayGoodbye"/>
-                </selector>
-                <message type="plaintext">
-                    <data>Goodbye Citrus</data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </receive>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="Operation" value="sayHello"/>
-                </selector>
-                <message type="plaintext">
-                    <data>Hello Citrus</data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </receive>
-            
-            <echo>
-                <message>Test root qname message selector</message>
-            </echo>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </send>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </send>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="root-qname" value="GoodbyeMessage"/>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </receive>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="root-qname" value="HelloMessage"/>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </receive>
-            
-            <echo>
-                <message>Test root qname message selector with namespaces</message>
-            </echo>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <HelloMessage xmlns="http://citrusframework.org/helloschema">Hello Citrus</HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </send>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <GoodbyeMessage xmlns="http://citrusframework.org/goodbyeschema">Goodbye Citrus</GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </send>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="root-qname" value="{http://citrusframework.org/goodbyeschema}GoodbyeMessage"/>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <GoodbyeMessage xmlns="http://citrusframework.org/goodbyeschema">Goodbye Citrus</GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </receive>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="root-qname" value="{http://citrusframework.org/helloschema}HelloMessage"/>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <HelloMessage xmlns="http://citrusframework.org/helloschema">Hello Citrus</HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </receive>
-            
-            <echo>
-                <message>Test xpath message selector</message>
-            </echo>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
-                            <ns:text language="eng">
-                                <ns:value>Hello Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Hallo Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Hola Citrus</ns:value>
-                            </ns:text>
-                        </ns:HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </send>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
-                            <ns:text language="eng">
-                                <ns:value>Goodbye Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Auf Wiedersehen Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Adios Citrus</ns:value>
-                            </ns:text>
-                        </ns:GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </send>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="xpath://ns:GoodbyeMessage/ns:text[@language='eng']/ns:value" value="Goodbye Citrus"/>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
-                            <ns:text language="eng">
-                                <ns:value>Goodbye Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Auf Wiedersehen Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Adios Citrus</ns:value>
-                            </ns:text>
-                        </ns:GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </receive>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <element name="xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value" value="Hello Citrus"/>
-                    <element name="xpath://ns:HelloMessage/ns:text[@language='de']/ns:value" value="Hallo Citrus"/>
-                    <element name="xpath://ns:HelloMessage/ns:text[@language='esp']/ns:value" value="Hola Citrus"/>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
-                            <ns:text language="eng">
-                                <ns:value>Hello Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Hallo Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Hola Citrus</ns:value>
-                            </ns:text>
-                        </ns:HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </receive>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
-                            <ns:text language="eng">
-                                <ns:value>Hello Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Hallo Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Hola Citrus</ns:value>
-                            </ns:text>
-                        </ns:HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </send>
-            
-            <send endpoint="channelRequestSender">
-                <message>
-                    <payload>
-                        <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
-                            <ns:text language="eng">
-                                <ns:value>Goodbye Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Auf Wiedersehen Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Adios Citrus</ns:value>
-                            </ns:text>
-                        </ns:GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </send>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <value>
+  <actions>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data>Hello Citrus</data>
+        </body>
+      </message>
+    </send>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <data>Goodbye Citrus</data>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="Operation" value="sayGoodbye"/>
+      </selector>
+      <message type="plaintext">
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <data>Goodbye Citrus</data>
+        </body>
+      </message>
+    </receive>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="Operation" value="sayHello"/>
+      </selector>
+      <message type="plaintext">
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data>Hello Citrus</data>
+        </body>
+      </message>
+    </receive>
+    <echo>
+      <message>Test root qname message selector</message>
+    </echo>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="root-qname" value="GoodbyeMessage"/>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="root-qname" value="HelloMessage"/>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+    <echo>
+      <message>Test root qname message selector with namespaces</message>
+    </echo>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <HelloMessage xmlns="http://citrusframework.org/helloschema">Hello Citrus</HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <GoodbyeMessage xmlns="http://citrusframework.org/goodbyeschema">Goodbye Citrus</GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="root-qname" value="{http://citrusframework.org/goodbyeschema}GoodbyeMessage"/>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <GoodbyeMessage xmlns="http://citrusframework.org/goodbyeschema">Goodbye Citrus</GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="root-qname" value="{http://citrusframework.org/helloschema}HelloMessage"/>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <HelloMessage xmlns="http://citrusframework.org/helloschema">Hello Citrus</HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+    <echo>
+      <message>Test xpath message selector</message>
+    </echo>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
+              <ns:text language="eng">
+                <ns:value>Hello Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Hallo Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Hola Citrus</ns:value>
+              </ns:text>
+            </ns:HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
+              <ns:text language="eng">
+                <ns:value>Goodbye Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Auf Wiedersehen Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Adios Citrus</ns:value>
+              </ns:text>
+            </ns:GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="xpath://ns:GoodbyeMessage/ns:text[@language='eng']/ns:value" value="Goodbye Citrus"/>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
+              <ns:text language="eng">
+                <ns:value>Goodbye Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Auf Wiedersehen Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Adios Citrus</ns:value>
+              </ns:text>
+            </ns:GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <element name="xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value" value="Hello Citrus"/>
+        <element name="xpath://ns:HelloMessage/ns:text[@language='de']/ns:value" value="Hallo Citrus"/>
+        <element name="xpath://ns:HelloMessage/ns:text[@language='esp']/ns:value" value="Hola Citrus"/>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
+              <ns:text language="eng">
+                <ns:value>Hello Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Hallo Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Hola Citrus</ns:value>
+              </ns:text>
+            </ns:HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
+              <ns:text language="eng">
+                <ns:value>Hello Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Hallo Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Hola Citrus</ns:value>
+              </ns:text>
+            </ns:HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <send endpoint="channelRequestSender">
+      <message>
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
+              <ns:text language="eng">
+                <ns:value>Goodbye Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Auf Wiedersehen Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Adios Citrus</ns:value>
+              </ns:text>
+            </ns:GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <value>
                         xpath://ns:GoodbyeMessage/ns:text[@language='eng']/ns:value='Goodbye Citrus'
                     </value>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
-                            <ns:text language="eng">
-                                <ns:value>Goodbye Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Auf Wiedersehen Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Adios Citrus</ns:value>
-                            </ns:text>
-                        </ns:GoodbyeMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayGoodbye"/>
-                </header>
-            </receive>
-            
-            <receive endpoint="channelResponseReceiver">
-                <selector>
-                    <value>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayGoodbye"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
+              <ns:text language="eng">
+                <ns:value>Goodbye Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Auf Wiedersehen Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Adios Citrus</ns:value>
+              </ns:text>
+            </ns:GoodbyeMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+    <receive endpoint="channelResponseReceiver">
+      <selector>
+        <value>
                       xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value='Hello Citrus' AND
                       xpath://ns:HelloMessage/ns:text[@language='de']/ns:value='Hallo Citrus' AND
                       xpath://ns:HelloMessage/ns:text[@language='esp']/ns:value='Hola Citrus'
                     </value>
-                </selector>
-                <message schema-validation="false">
-                    <payload>
-                        <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
-                            <ns:text language="eng">
-                                <ns:value>Hello Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="de">
-                                <ns:value>Hallo Citrus</ns:value>
-                            </ns:text>
-                            <ns:text language="esp">
-                                <ns:value>Hola Citrus</ns:value>
-                            </ns:text>
-                        </ns:HelloMessage>
-                    </payload>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                </header>
-            </receive>
-        </actions>
-    </testcase>
-</spring:beans>
+      </selector>
+      <message schema-validation="false">
+        <headers>
+          <header name="Operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
+              <ns:text language="eng">
+                <ns:value>Hello Citrus</ns:value>
+              </ns:text>
+              <ns:text language="de">
+                <ns:value>Hallo Citrus</ns:value>
+              </ns:text>
+              <ns:text language="esp">
+                <ns:value>Hola Citrus</ns:value>
+              </ns:text>
+            </ns:HelloMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+  </actions>
+</test>
