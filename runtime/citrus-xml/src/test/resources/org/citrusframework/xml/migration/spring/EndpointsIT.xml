@@ -138,6 +138,51 @@
         </ws:attachment>
       </ws:receive>
 
+      <ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1000"
+                       fault-string="Invalid request"
+                       fault-actor="SERVER"
+                       fault-validator="xmlSoapFaultValidator">
+        <ws:fault-detail>
+          <![CDATA[
+            <ErrorDetail><ErrorCode>TEC-1000</ErrorCode></ErrorDetail>
+          ]]>
+        </ws:fault-detail>
+        <ws:fault-detail file="classpath:fault-detail.xml"/>
+        <ws:when>
+          <send endpoint="helloSoapClient">
+            <message>
+              <data>
+                <![CDATA[
+                  <Request>Hello</Request>
+                ]]>
+              </data>
+            </message>
+          </send>
+        </ws:when>
+      </ws:assert-fault>
+
+      <ws:send-fault endpoint="soapResponseEndpoint">
+        <ws:fault>
+          <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
+          <ws:fault-string>Invalid request</ws:fault-string>
+          <ws:fault-actor>SERVER</ws:fault-actor>
+          <ws:fault-detail>
+            <![CDATA[
+              <FaultDetail><Code>TEC-1000</Code></FaultDetail>
+            ]]>
+          </ws:fault-detail>
+        </ws:fault>
+        <ws:header>
+          <ws:element name="operation" value="faultResponse"/>
+        </ws:header>
+      </ws:send-fault>
+
+      <k8s:delete-service client="k8sClient" name="my-service">
+        <k8s:validate>
+          <k8s:element path="$.result.success" value="true"/>
+        </k8s:validate>
+      </k8s:delete-service>
+
       <jms:purge-jms-queues connection-factory="jmsConnectionFactory" timeout="500" sleep="100">
         <jms:description>Purge queues</jms:description>
         <jms:queue name="jms.queue.one"/>

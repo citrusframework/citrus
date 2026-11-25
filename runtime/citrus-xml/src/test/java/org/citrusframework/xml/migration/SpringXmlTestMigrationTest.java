@@ -387,6 +387,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         Assertions.assertFalse(migrated.contains("http://www.citrusframework.org/schema/docker/testcase"));
         Assertions.assertFalse(migrated.contains("http://www.citrusframework.org/schema/camel/testcase"));
         Assertions.assertFalse(migrated.contains("http://www.citrusframework.org/schema/selenium/testcase"));
+        Assertions.assertFalse(migrated.contains("http://www.citrusframework.org/schema/zookeeper/testcase"));
         Document document = parse(migrated);
 
         String actions = "/t:test/t:actions/";
@@ -449,6 +450,24 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         assertXPath(document, "file.txt", actions + "t:selenium[20]/t:get-stored-file/@file-name");
         assertXPath(document, "1", "count(" + actions + "t:selenium[21]/t:clear-cache)");
         assertXPath(document, "1", "count(" + actions + "t:selenium[22]/t:stop)");
+
+        assertXPath(document, "zookeeperClient", actions + "t:zookeeper[1]/@client");
+        assertXPath(document, "{\"responseData\":{\"state\":\"@ignore@\"}}", actions + "t:zookeeper[1]/@result");
+        assertXPath(document, "1", "count(" + actions + "t:zookeeper[1]/t:info)");
+        assertXPath(document, "$.responseData.state", actions + "t:zookeeper[1]/t:validate/@path");
+        assertXPath(document, "CONNECTED", actions + "t:zookeeper[1]/t:validate/@value");
+        assertXPath(document, "$.responseData.sessionId", actions + "t:zookeeper[1]/t:extract/@path");
+        assertXPath(document, "sessionId", actions + "t:zookeeper[1]/t:extract/@variable");
+        assertXPath(document, "/node", actions + "t:zookeeper[2]/t:create/@path");
+        assertXPath(document, "Some Data", actions + "t:zookeeper[2]/t:create/@data");
+        assertXPath(document, "OPEN_ACL_UNSAFE", actions + "t:zookeeper[2]/t:create/@acl");
+        assertXPath(document, "PERSISTENT", actions + "t:zookeeper[2]/t:create/@mode");
+        assertXPath(document, "/node", actions + "t:zookeeper[3]/t:exists/@path");
+        assertXPath(document, "/node", actions + "t:zookeeper[4]/t:get/@path");
+        assertXPath(document, "New Data", actions + "t:zookeeper[5]/t:set/@data");
+        assertXPath(document, "1", "count(" + actions + "t:zookeeper[6]/t:children)");
+        assertXPath(document, "/node", actions + "t:zookeeper[7]/t:delete/@path");
+        assertXPath(document, "1", actions + "t:zookeeper[7]/t:delete/@version");
     }
 
     @Test
@@ -462,7 +481,8 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         Assertions.assertEquals(List.of(
                 "The 'uri' attribute of the Http response is not supported in the plain XML DSL and has been removed",
                 "The SOAP endpoint of 'ws:send' has been migrated as client - please use the server and the receive request or send response actions when the endpoint is a server",
-                "The SOAP endpoint of 'ws:receive' has been migrated as client - please use the server and the receive request or send response actions when the endpoint is a server"
+                "The SOAP endpoint of 'ws:receive' has been migrated as client - please use the server and the receive request or send response actions when the endpoint is a server",
+                "The result validation of 'k8s:delete-service' is not supported by the delete action in the plain XML DSL and has been removed"
         ), SpringXmlTestMigration.getWarnings(migrated));
         Document document = parse(migrated);
 
@@ -531,6 +551,26 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         assertXPath(document, "attachmentValidator", actions + "t:soap[2]/t:receive-response/@attachment-validator");
         assertXPath(document, "Hello", actions + "t:soap[2]/t:receive-response/t:message/t:body/t:payload/*[local-name() = 'HelloResponse']");
         assertXPath(document, "Hello", actions + "t:soap[2]/t:receive-response/t:validate/@value");
+
+        assertXPath(document, "helloSoapClient", actions + "t:soap[3]/@client");
+        assertXPath(document, "{http://citrusframework.org/faults}TEC-1000", actions + "t:soap[3]/t:assert-fault/@fault-code");
+        assertXPath(document, "Invalid request", actions + "t:soap[3]/t:assert-fault/@fault-string");
+        assertXPath(document, "SERVER", actions + "t:soap[3]/t:assert-fault/@fault-actor");
+        assertXPath(document, "xmlSoapFaultValidator", actions + "t:soap[3]/t:assert-fault/@validator");
+        assertXPath(document, "true", "contains(" + actions + "t:soap[3]/t:assert-fault/t:fault-detail[1]/t:content, 'TEC-1000')");
+        assertXPath(document, "classpath:fault-detail.xml", actions + "t:soap[3]/t:assert-fault/t:fault-detail[2]/t:resource/@file");
+        assertXPath(document, "1", "count(" + actions + "t:soap[3]/t:assert-fault/t:when/t:send)");
+
+        assertXPath(document, "soapResponseEndpoint", actions + "t:soap[4]/@server");
+        assertXPath(document, "{http://citrusframework.org/faults}citrus-ns:TEC-1000", actions + "t:soap[4]/t:send-fault/t:message/@fault-code");
+        assertXPath(document, "Invalid request", actions + "t:soap[4]/t:send-fault/t:message/@fault-string");
+        assertXPath(document, "SERVER", actions + "t:soap[4]/t:send-fault/t:message/@fault-actor");
+        assertXPath(document, "true", "contains(" + actions + "t:soap[4]/t:send-fault/t:message/t:fault-detail/t:content, 'TEC-1000')");
+        assertXPath(document, "faultResponse", actions + "t:soap[4]/t:send-fault/t:message/t:headers/t:header/@value");
+
+        assertXPath(document, "k8sClient", actions + "t:kubernetes[12]/@client");
+        assertXPath(document, "my-service", actions + "t:kubernetes[12]/t:delete-service/@name");
+        assertXPath(document, "0", "count(" + actions + "t:kubernetes[12]//t:validate)");
 
         assertXPath(document, "jmsConnectionFactory", actions + "t:purge-jms-queues/@connection-factory");
         assertXPath(document, "500", actions + "t:purge-jms-queues/@timeout");
@@ -633,17 +673,17 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         String migrated = migrateTest("UnsupportedIT.xml");
 
         List<String> warnings = SpringXmlTestMigration.getWarnings(migrated);
-        Assertions.assertEquals(5, warnings.size());
+        Assertions.assertEquals(4, warnings.size());
         Assertions.assertEquals("Unsupported test action 'java' (http://www.citrusframework.org/schema/testcase) has been copied as is - please migrate it manually", warnings.get(0));
         Assertions.assertEquals("Unsupported test action 'input' (http://www.citrusframework.org/schema/testcase) has been copied as is - please migrate it manually", warnings.get(1));
-        Assertions.assertEquals("Unsupported test action 'zookeeper:info' (http://www.citrusframework.org/schema/zookeeper/testcase) has been copied as is - please migrate it manually", warnings.get(2));
-        Assertions.assertEquals("The 'iterate' container timeout is not supported in the plain XML DSL and has been removed", warnings.get(3));
-        Assertions.assertEquals("Unable to convert wait timeout of '${waitTime}' seconds - please set the timeout in milliseconds manually", warnings.get(4));
+        Assertions.assertEquals("The 'iterate' container timeout is not supported in the plain XML DSL and has been removed", warnings.get(2));
+        Assertions.assertEquals("Unable to convert wait timeout of '${waitTime}' seconds - please set the timeout in milliseconds manually", warnings.get(3));
 
         Document document = parse(migrated);
         assertXPath(document, "sayHello", "/t:test/t:actions/s:java/s:method/@name");
         assertXPath(document, "answer", "/t:test/t:actions/s:input/@variable");
-        assertXPath(document, "zookeeperClient", "/t:test/t:actions/zk:info/@zookeeper-client");
+        assertXPath(document, "zookeeperClient", "/t:test/t:actions/t:zookeeper/@client");
+        assertXPath(document, "1", "count(/t:test/t:actions/t:zookeeper/t:info)");
         assertXPath(document, "i lt 3", "/t:test/t:actions/t:iterate/@condition");
         assertXPath(document, "false", "boolean(/t:test/t:actions/t:iterate/@timeout)");
         assertXPath(document, "false", "boolean(/t:test/t:actions/t:wait-for/@timeout)");
@@ -677,7 +717,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
             Assertions.assertEquals(SpringXmlTestMigration.getWarnings(content), migrated.warnings());
         }
 
-        Assertions.assertEquals(5, result.migrated().get(6).warnings().size());
+        Assertions.assertEquals(4, result.migrated().get(6).warnings().size());
 
         Template template = new XmlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())

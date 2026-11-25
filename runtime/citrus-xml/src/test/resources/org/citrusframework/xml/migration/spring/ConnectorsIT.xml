@@ -20,6 +20,7 @@
               xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
               xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
               xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+              xmlns:zookeeper="http://www.citrusframework.org/schema/zookeeper/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
@@ -134,6 +135,32 @@
       <selenium:get-stored-file file-name="file.txt"/>
       <selenium:clear-cache/>
       <selenium:stop browser="webBrowser"/>
+
+      <zookeeper:info zookeeper-client="zookeeperClient">
+        <zookeeper:expect>
+          <zookeeper:result>
+            <![CDATA[
+              {"responseData":{"state":"@ignore@"}}
+            ]]>
+          </zookeeper:result>
+        </zookeeper:expect>
+        <zookeeper:validate>
+          <zookeeper:json-path expression="$.responseData.state" value="CONNECTED"/>
+        </zookeeper:validate>
+        <zookeeper:extract>
+          <zookeeper:message path="$.responseData.sessionId" variable="sessionId"/>
+        </zookeeper:extract>
+      </zookeeper:info>
+      <zookeeper:create zookeeper-client="zookeeperClient" path="/node" acl="OPEN_ACL_UNSAFE" mode="PERSISTENT">
+        <zookeeper:data>Some Data</zookeeper:data>
+      </zookeeper:create>
+      <zookeeper:exists zookeeper-client="zookeeperClient" path="/node"/>
+      <zookeeper:get zookeeper-client="zookeeperClient" path="/node"/>
+      <zookeeper:set zookeeper-client="zookeeperClient" path="/node">
+        <zookeeper:data>New Data</zookeeper:data>
+      </zookeeper:set>
+      <zookeeper:children zookeeper-client="zookeeperClient" path="/node"/>
+      <zookeeper:delete zookeeper-client="zookeeperClient" path="/node" version="1"/>
     </actions>
   </testcase>
 </spring:beans>
