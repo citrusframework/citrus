@@ -1,30 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-                                  http://www.citrusframework.org/schema/camel/testcase http://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase.xsd
-                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-
-  <testcase name="CamelRouteDefinitionIT">
-    <meta-info>
-      <author>Christoph Deppisch</author>
-      <creationdate>2014-06-07</creationdate>
-      <status>FINAL</status>
-      <last-updated-by>Christoph Deppisch</last-updated-by>
-      <last-updated-on>2014-06-07T00:00:00</last-updated-on>
-    </meta-info>
-
-    <description>Test creates Camel routes on the fly and uses them in test.</description>
-
-    <actions>
-      <echo>
-        <message>Create Camel news route</message>
-      </echo>
-
-      <camel:create-routes camel-context="camelContext">
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Christoph Deppisch" name="CamelRouteDefinitionIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Test creates Camel routes on the fly and uses them in test.</description>
+  <actions>
+    <echo>
+      <message>Create Camel news route</message>
+    </echo>
+    <camel camel-context="camelContext">
+      <create-routes>
         <routeContext xmlns="http://camel.apache.org/schema/spring">
           <route id="myRoute">
             <from uri="direct:dynamic-news"/>
@@ -35,63 +17,63 @@
             <to uri="seda:big-news"/>
           </route>
         </routeContext>
-      </camel:create-routes>
-
-      <echo>
-        <message>Invoke Camel news route with some message</message>
-      </echo>
-
-      <send endpoint="camel:direct:dynamic-news">
-        <message type="plaintext">
+      </create-routes>
+    </camel>
+    <echo>
+      <message>Invoke Camel news route with some message</message>
+    </echo>
+    <send endpoint="camel:direct:dynamic-news">
+      <message type="plaintext">
+        <body>
           <data>News from Citrus! Today is citrus:currentDate()</data>
-        </message>
-      </send>
-
-      <echo>
-        <message>Receive Camel route out message</message>
-      </echo>
-
-      <receive endpoint="camel:seda:big-news">
-        <message type="plaintext">
+        </body>
+      </message>
+    </send>
+    <echo>
+      <message>Receive Camel route out message</message>
+    </echo>
+    <receive endpoint="camel:seda:big-news">
+      <message type="plaintext">
+        <headers>
+          <header name="headline" value="This is BIG news!"/>
+        </headers>
+        <body>
           <data>News from Citrus! Today is citrus:currentDate()</data>
-        </message>
-        <header>
-          <element name="headline" value="This is BIG news!"/>
-        </header>
-      </receive>
-    </actions>
-
-    <finally>
-      <echo>
-        <message>Stop Camel route</message>
-      </echo>
-
-      <camel:stop-routes camel-context="camelContext">
-        <camel:route id="myRoute"/>
-      </camel:stop-routes>
-
-      <echo>
-        <message>Validate that route was stopped</message>
-      </echo>
-
-      <camel:control-bus camel-context="camelContext">
-        <camel:route id="myRoute" action="status"/>
-        <camel:result>Stopped</camel:result>
-      </camel:control-bus>
-
-      <camel:control-bus camel-context="camelContext">
-        <camel:language type="simple">${camelContext.getRouteStatus('myRoute')}</camel:language>
-        <camel:result>Stopped</camel:result>
-      </camel:control-bus>
-
-      <echo>
-        <message>Remove Camel route</message>
-      </echo>
-
-      <camel:remove-routes camel-context="camelContext">
-        <camel:route id="myRoute"/>
-      </camel:remove-routes>
-    </finally>
-
-  </testcase>
-</spring:beans>
+        </body>
+      </message>
+    </receive>
+  </actions>
+  <finally>
+    <echo>
+      <message>Stop Camel route</message>
+    </echo>
+    <camel camel-context="camelContext">
+      <stop-routes>
+        <route id="myRoute"/>
+      </stop-routes>
+    </camel>
+    <echo>
+      <message>Validate that route was stopped</message>
+    </echo>
+    <camel camel-context="camelContext">
+      <control-bus>
+        <route action="status" id="myRoute"/>
+        <result>Stopped</result>
+      </control-bus>
+    </camel>
+    <camel camel-context="camelContext">
+      <control-bus>
+        <language type="simple">${camelContext.getRouteStatus('myRoute')}</language>
+        <result>Stopped</result>
+      </control-bus>
+    </camel>
+    <echo>
+      <message>Remove Camel route</message>
+    </echo>
+    <camel camel-context="camelContext">
+      <remove-routes>
+        <route id="myRoute"/>
+      </remove-routes>
+    </camel>
+  </finally>
+</test>

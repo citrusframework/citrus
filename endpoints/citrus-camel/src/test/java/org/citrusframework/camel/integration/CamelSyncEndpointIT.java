@@ -35,6 +35,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class CamelSyncEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "CamelSyncEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "CamelSyncEndpointIT")
     public void testCamelSyncEndpoint(@CitrusResource TestCaseRunner runner) {}
 }

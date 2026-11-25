@@ -35,6 +35,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class CamelEndpointExceptionIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "CamelEndpointExceptionIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "CamelEndpointExceptionIT")
     public void testCamelEndpointException(@CitrusResource TestCaseRunner runner) {}
 }

@@ -33,6 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class CamelRouteDefinitionIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "CamelRouteDefinitionIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "CamelRouteDefinitionIT")
     public void testCamelRouteDefinition(@CitrusResource TestCaseRunner runner) {}
 }

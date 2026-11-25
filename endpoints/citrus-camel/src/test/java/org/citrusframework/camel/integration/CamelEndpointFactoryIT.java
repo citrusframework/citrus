@@ -33,6 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class CamelEndpointFactoryIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "CamelEndpointFactoryIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "CamelEndpointFactoryIT")
     public void testCamelEndpointFactory(@CitrusResource TestCaseRunner runner) {}
 }
