@@ -32,22 +32,22 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Isolated
 public class WebServiceServerIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void WebServiceServer_1_IT() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void WebServiceServer_2_IT() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void WebServiceServer_3_IT() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void WebServiceServer_4_IT() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void WebServiceServer_5_IT() {}
 }
