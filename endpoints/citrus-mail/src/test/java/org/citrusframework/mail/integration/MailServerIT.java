@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class MailServerIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void MailServerIT() {}
 }
