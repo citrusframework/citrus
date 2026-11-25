@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class KafkaMessageHeadersIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaMessageHeadersIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "KafkaMessageHeadersIT")
     public void testKafkaMessageHeaders() {}
 }
