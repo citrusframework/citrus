@@ -32,14 +32,14 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Isolated
 public class SendSoapMessageWithAttachmentIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void SendSoapMessageWithAttachmentIT() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void SendSoapMessageWithMtomAttachmentIT() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void SendSoapMessageWithAttachmentInTemplateIT() {}
 }

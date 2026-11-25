@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" global-context="false" name="upload-image-file" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <actions>
+    <soap endpoint="echoSoapClient">
+      <send-request>
+        <message mtom-enabled="true">
+          <body>
+            <data><![CDATA[<image:addImage xmlns:image="http://citrusframework.org/imageService/">
+              <isbn>1234</isbn>
+              <image>cid:IMAGE</image>
+              <icon></icon>
+            </image:addImage>]]></data>
+          </body>
+          <attachment content-id="IMAGE" content-type="application/octet-stream">
+            <resource file="${paramImageFile}"/>
+          </attachment>
+        </message>
+      </send-request>
+    </soap>
+    <soap endpoint="echoSoapClient">
+      <receive-response>
+        <message schema-repository="imageServiceSchemaRepository">
+          <body>
+            <data><![CDATA[<image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
+              <success>true</success>
+            </image:addImageResponse>]]></data>
+          </body>
+        </message>
+      </receive-response>
+    </soap>
+  </actions>
+</template>

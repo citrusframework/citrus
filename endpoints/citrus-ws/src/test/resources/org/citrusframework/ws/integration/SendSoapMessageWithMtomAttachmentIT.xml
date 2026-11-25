@@ -1,232 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
-                                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
-
-    <testcase name="SendSoapMessageWithMtomAttachmentIT">
-        <meta-info>
-            <author>Reinhard Steiner</author>
-            <creationdate>2015-01-12</creationdate>
-            <status>FINAL</status>
-        </meta-info>
-
-        <description>Sending SOAP messages with mtom attachments</description>
-
-        <variables>
-            <variable name="test" value="This string should not be inserted into binary SOAP attachments"/>
-            <variable name="imageFile" value="classpath:org/citrusframework/ws/soapImage.txt"/>
-            <variable name="iconFile" value="classpath:org/citrusframework/ws/soapIcon.txt"/>
-        </variables>
-
-        <actions>
-
-            <echo>
-                <message>Test: sending single mtom attachment</message>
-            </echo>
-
-            <parallel>
-            	<ws:send endpoint="echoSoapClient" mtom-enabled="true">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <image:addImage xmlns:image="http://citrusframework.org/imageService/">
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Reinhard Steiner" name="SendSoapMessageWithMtomAttachmentIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Sending SOAP messages with mtom attachments</description>
+  <variables>
+    <variable name="test" value="This string should not be inserted into binary SOAP attachments"/>
+    <variable name="imageFile" value="classpath:org/citrusframework/ws/soapImage.txt"/>
+    <variable name="iconFile" value="classpath:org/citrusframework/ws/soapIcon.txt"/>
+  </variables>
+  <actions>
+    <echo>
+      <message>Test: sending single mtom attachment</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap endpoint="echoSoapClient">
+          <send-request>
+            <message mtom-enabled="true">
+              <body>
+                <data><![CDATA[<image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon></icon>
-                                </image:addImage>
-                            ]]>
-                        </data>
-                    </message>
-                    <ws:attachment content-id="IMAGE" content-type="application/octet-stream">
-                        <ws:resource file="${imageFile}"/>
-                    </ws:attachment>
-                </ws:send>
-
-                <sequential>
-                    <ws:receive endpoint="echoSoapServer">
-                        <message schema-validation="false">
-                            <data>
-                                <![CDATA[
-                                    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
+                                </image:addImage>]]></data>
+              </body>
+              <attachment content-id="IMAGE" content-type="application/octet-stream">
+                <resource file="${imageFile}"/>
+              </attachment>
+            </message>
+          </send-request>
+        </soap>
+        <sequential>
+          <actions>
+            <soap endpoint="echoSoapServer">
+              <receive-response>
+                <message schema-validation="false">
+                  <body>
+                    <data><![CDATA[<image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
                                         <icon></icon>
-                                    </image:addImage>
-                                ]]>
-                            </data>
-                        </message>
-                        <ws:attachment content-id="IMAGE" content-type="application/octet-stream">
-                            <ws:resource file="${imageFile}"/>
-                        </ws:attachment>
-                    </ws:receive>
-
-                    <ws:send endpoint="echoSoapServer">
-                        <message>
-                            <data>
-                                <![CDATA[
-                                    <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
-                                        <success>true</success>
-                                    </image:addImageResponse>
-                                ]]>
-                            </data>
-                        </message>
-                    </ws:send>
-                </sequential>
-            </parallel>
-
-            <ws:receive endpoint="echoSoapClient">
-                <message schema-repository="imageServiceSchemaRepository">
-                    <data>
-                        <![CDATA[
-                            <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
-                                <success>true</success>
-                            </image:addImageResponse>
-                        ]]>
-                    </data>
+                                    </image:addImage>]]></data>
+                  </body>
+                  <attachment content-id="IMAGE" content-type="application/octet-stream">
+                    <resource file="${imageFile}"/>
+                  </attachment>
                 </message>
-            </ws:receive>
-
-            <echo>
-                <message>Test: sending two mtom attachments</message>
-            </echo>
-
-            <parallel>
-            	<ws:send endpoint="echoSoapClient" mtom-enabled="true">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <image:addImage xmlns:image="http://citrusframework.org/imageService/">
+              </receive-response>
+            </soap>
+            <soap endpoint="echoSoapServer">
+              <send-request>
+                <message>
+                  <body>
+                    <data><![CDATA[<image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
+                                        <success>true</success>
+                                    </image:addImageResponse>]]></data>
+                  </body>
+                </message>
+              </send-request>
+            </soap>
+          </actions>
+        </sequential>
+      </actions>
+    </parallel>
+    <soap endpoint="echoSoapClient">
+      <receive-response>
+        <message schema-repository="imageServiceSchemaRepository">
+          <body>
+            <data><![CDATA[<image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
+                                <success>true</success>
+                            </image:addImageResponse>]]></data>
+          </body>
+        </message>
+      </receive-response>
+    </soap>
+    <echo>
+      <message>Test: sending two mtom attachments</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap endpoint="echoSoapClient">
+          <send-request>
+            <message mtom-enabled="true">
+              <body>
+                <data><![CDATA[<image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon>cid:ICON</icon>
-                                </image:addImage>
-                            ]]>
-                        </data>
-                    </message>
-                    <ws:attachment content-id="IMAGE" content-type="application/octet-stream">
-                        <ws:resource file="${imageFile}"/>
-                    </ws:attachment>
-                    <ws:attachment content-id="ICON" content-type="application/octet-stream">
-                        <ws:resource file="${iconFile}"/>
-                    </ws:attachment>
-                </ws:send>
-
-                <sequential>
-                    <ws:receive endpoint="echoSoapServer">
-                        <message schema-validation="false">
-                            <data>
-                                <![CDATA[
-                                    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
+                                </image:addImage>]]></data>
+              </body>
+              <attachment content-id="IMAGE" content-type="application/octet-stream">
+                <resource file="${imageFile}"/>
+              </attachment>
+              <attachment content-id="ICON" content-type="application/octet-stream">
+                <resource file="${iconFile}"/>
+              </attachment>
+            </message>
+          </send-request>
+        </soap>
+        <sequential>
+          <actions>
+            <soap endpoint="echoSoapServer">
+              <receive-response>
+                <message schema-validation="false">
+                  <body>
+                    <data><![CDATA[<image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
                                         <icon><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:ICON"/></icon>
-                                    </image:addImage>
-                                ]]>
-                            </data>
-                        </message>
-                        <ws:attachment content-id="IMAGE" content-type="application/octet-stream">
-                            <ws:resource file="${imageFile}"/>
-                        </ws:attachment>
-                        <ws:attachment content-id="ICON" content-type="application/octet-stream">
-                            <ws:resource file="${iconFile}"/>
-                        </ws:attachment>
-                    </ws:receive>
-
-                    <ws:send endpoint="echoSoapServer">
-                        <message>
-                            <data>
-                                <![CDATA[
-                                    <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
-                                        <success>true</success>
-                                    </image:addImageResponse>
-                                ]]>
-                            </data>
-                        </message>
-                    </ws:send>
-                </sequential>
-            </parallel>
-
-            <ws:receive endpoint="echoSoapClient">
-                <message schema-repository="imageServiceSchemaRepository">
-                    <data>
-                        <![CDATA[
-                            <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
-                                <success>true</success>
-                            </image:addImageResponse>
-                        ]]>
-                    </data>
+                                    </image:addImage>]]></data>
+                  </body>
+                  <attachment content-id="IMAGE" content-type="application/octet-stream">
+                    <resource file="${imageFile}"/>
+                  </attachment>
+                  <attachment content-id="ICON" content-type="application/octet-stream">
+                    <resource file="${iconFile}"/>
+                  </attachment>
                 </message>
-            </ws:receive>
-
-            <echo>
-                <message>Test: sending two mtom inline attachments</message>
-            </echo>
-
-            <parallel>
-            	<ws:send endpoint="echoSoapClient" mtom-enabled="true">
-                    <message>
-                        <data>
-                            <![CDATA[
-                                <image:addImage xmlns:image="http://citrusframework.org/imageService/">
+              </receive-response>
+            </soap>
+            <soap endpoint="echoSoapServer">
+              <send-request>
+                <message>
+                  <body>
+                    <data><![CDATA[<image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
+                                        <success>true</success>
+                                    </image:addImageResponse>]]></data>
+                  </body>
+                </message>
+              </send-request>
+            </soap>
+          </actions>
+        </sequential>
+      </actions>
+    </parallel>
+    <soap endpoint="echoSoapClient">
+      <receive-response>
+        <message schema-repository="imageServiceSchemaRepository">
+          <body>
+            <data><![CDATA[<image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
+                                <success>true</success>
+                            </image:addImageResponse>]]></data>
+          </body>
+        </message>
+      </receive-response>
+    </soap>
+    <echo>
+      <message>Test: sending two mtom inline attachments</message>
+    </echo>
+    <parallel>
+      <actions>
+        <soap endpoint="echoSoapClient">
+          <send-request>
+            <message mtom-enabled="true">
+              <body>
+                <data><![CDATA[<image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon>cid:ICON</icon>
-                                </image:addImage>
-                            ]]>
-                        </data>
-                    </message>
-                    <ws:attachment content-id="IMAGE" content-type="application/octet-stream" mtom-inline="true" encoding-type="base64Binary">
-                        <ws:resource file="${imageFile}"/>
-                    </ws:attachment>
-                    <ws:attachment content-id="ICON" content-type="application/octet-stream" mtom-inline="true" encoding-type="hexBinary">
-                        <ws:resource file="${iconFile}"/>
-                    </ws:attachment>
-                </ws:send>
-
-                <sequential>
-                    <ws:receive endpoint="echoSoapServer">
-                        <message schema-repository="imageServiceSchemaRepository">
-                            <data>
-                                <![CDATA[
-                                    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
+                                </image:addImage>]]></data>
+              </body>
+              <attachment content-id="IMAGE" content-type="application/octet-stream" encoding-type="base64Binary" mtom-inline="true">
+                <resource file="${imageFile}"/>
+              </attachment>
+              <attachment content-id="ICON" content-type="application/octet-stream" encoding-type="hexBinary" mtom-inline="true">
+                <resource file="${iconFile}"/>
+              </attachment>
+            </message>
+          </send-request>
+        </soap>
+        <sequential>
+          <actions>
+            <soap endpoint="echoSoapServer">
+              <receive-response>
+                <message schema-repository="imageServiceSchemaRepository">
+                  <body>
+                    <data><![CDATA[<image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50ISBWYXJpYWJsZXMgJHt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==</image>
                                         <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E7421205661726961626C657320247B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
-                                    </image:addImage>
-                                ]]>
-                            </data>
-                        </message>
-                    </ws:receive>
-
-                    <ws:send endpoint="echoSoapServer">
-                        <message>
-                            <data>
-                                <![CDATA[
-                                    <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
-                                        <success>true</success>
-                                    </image:addImageResponse>
-                                ]]>
-                            </data>
-                        </message>
-                    </ws:send>
-                </sequential>
-            </parallel>
-
-            <ws:receive endpoint="echoSoapClient">
-                <message schema-repository="imageServiceSchemaRepository">
-                    <data>
-                        <![CDATA[
-                            <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
-                                <success>true</success>
-                            </image:addImageResponse>
-                        ]]>
-                    </data>
+                                    </image:addImage>]]></data>
+                  </body>
                 </message>
-            </ws:receive>
-        </actions>
-    </testcase>
-</spring:beans>
+              </receive-response>
+            </soap>
+            <soap endpoint="echoSoapServer">
+              <send-request>
+                <message>
+                  <body>
+                    <data><![CDATA[<image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
+                                        <success>true</success>
+                                    </image:addImageResponse>]]></data>
+                  </body>
+                </message>
+              </send-request>
+            </soap>
+          </actions>
+        </sequential>
+      </actions>
+    </parallel>
+    <soap endpoint="echoSoapClient">
+      <receive-response>
+        <message schema-repository="imageServiceSchemaRepository">
+          <body>
+            <data><![CDATA[<image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
+                                <success>true</success>
+                            </image:addImageResponse>]]></data>
+          </body>
+        </message>
+      </receive-response>
+    </soap>
+  </actions>
+</test>

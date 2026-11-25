@@ -32,6 +32,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Isolated
 public class WsAddressingIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void WsAddressingIT() {}
 }
