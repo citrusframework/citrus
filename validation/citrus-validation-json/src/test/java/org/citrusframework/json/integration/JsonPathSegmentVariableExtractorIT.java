@@ -30,6 +30,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class JsonPathSegmentVariableExtractorIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void JsonPathSegmentVariableExtractorIT() {}
 }
