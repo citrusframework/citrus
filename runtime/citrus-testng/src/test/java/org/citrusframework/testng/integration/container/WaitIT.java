@@ -59,6 +59,6 @@ public class WaitIT extends TestNGCitrusSpringSupport {
     }
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "WaitIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "WaitIT")
     public void waitIT() {}
 }

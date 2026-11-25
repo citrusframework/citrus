@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 public class UuidV4ValidationMatcherIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void UuidV4ValidationMatcherIT() {
     }
 }

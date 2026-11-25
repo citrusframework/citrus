@@ -30,6 +30,6 @@ import org.testng.annotations.Test;
  */
 public class GlobalVariablesIT extends TestNGCitrusSpringSupport {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void GlobalVariablesIT() {}
 }
