@@ -21,7 +21,7 @@
   Without parameters the stylesheet migrates the single test case in the source document.
   The parameter "template" selects a template defined in the source document by its name and migrates this template instead.
 
-  Actions of the Docker, Camel, Selenium, Kubernetes, Http, SOAP web service and JMS modules are migrated to the actions
+  Actions of the Docker, Camel, Selenium, Kubernetes, Http, SOAP web service, JMS and Zookeeper modules are migrated to the actions
   of the same modules in the plain XML DSL.
   Elements that have no counterpart in the plain XML DSL are copied as is and are marked with a migration warning comment.
 -->
@@ -36,18 +36,20 @@
                 xmlns:http="http://www.citrusframework.org/schema/http/testcase"
                 xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
                 xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
+                xmlns:zookeeper="http://www.citrusframework.org/schema/zookeeper/testcase"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns="http://citrusframework.org/schema/xml/testcase"
-                exclude-result-prefixes="spring citrus docker camel selenium k8s http ws jms">
+                exclude-result-prefixes="spring citrus docker camel selenium k8s http ws jms zookeeper">
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes"
-              cdata-section-elements="data builder script source xslt value"/>
+              cdata-section-elements="data builder script source xslt value content"/>
 
-  <xsl:strip-space elements="spring:* citrus:* docker:* camel:* selenium:* k8s:* http:* ws:* jms:*"/>
+  <xsl:strip-space elements="spring:* citrus:* docker:* camel:* selenium:* k8s:* http:* ws:* jms:* zookeeper:*"/>
   <xsl:preserve-space elements="citrus:data citrus:message citrus:value citrus:script citrus:builder citrus:statement
                                 citrus:groovy citrus:xml-data citrus:xslt-data citrus:select citrus:description
                                 docker:result camel:language camel:result selenium:script selenium:alert-text
-                                k8s:result http:data http:script http:description ws:data jms:description"/>
+                                k8s:result http:data http:script http:description ws:data jms:description
+                                zookeeper:data zookeeper:result zookeeper:description"/>
 
   <!-- Name of a template in the source document that should be migrated instead of the test case -->
   <xsl:param name="template" select="''"/>
@@ -1117,7 +1119,12 @@
   </xsl:template>
 
   <!-- The delete actions of the plain XML DSL are not able to validate the command result -->
-  <xsl:template match="k8s:delete-pod[not(k8s:validate)]|k8s:delete-service[not(k8s:validate)]">
+  <xsl:template match="k8s:delete-pod|k8s:delete-service">
+    <xsl:if test="k8s:validate">
+      <xsl:call-template name="warn">
+        <xsl:with-param name="message">The result validation of '<xsl:value-of select="name()"/>' is not supported by the delete action in the plain XML DSL and has been removed</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
     <kubernetes>
       <xsl:copy-of select="@client|@namespace"/>
       <xsl:apply-templates select="k8s:description" mode="ext"/>
@@ -1335,6 +1342,89 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="ws:assert-fault">
+    <soap>
+      <xsl:copy-of select="@actor"/>
+      <xsl:attribute name="client">
+        <xsl:choose>
+          <xsl:when test="ws:when//*[@endpoint]"><xsl:value-of select="ws:when//*[@endpoint][1]/@endpoint"/></xsl:when>
+          <xsl:otherwise>soapClient</xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:apply-templates select="citrus:description" mode="ext"/>
+      <assert-fault>
+        <xsl:copy-of select="@fault-code|@fault-string|@fault-actor"/>
+        <xsl:if test="@fault-validator">
+          <xsl:attribute name="validator"><xsl:value-of select="@fault-validator"/></xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="ws:fault-detail" mode="soap-fault-detail"/>
+        <when>
+          <xsl:apply-templates select="ws:when/*"/>
+        </when>
+      </assert-fault>
+    </soap>
+  </xsl:template>
+
+  <xsl:template match="ws:send-fault">
+    <soap>
+      <xsl:copy-of select="@actor"/>
+      <xsl:if test="@endpoint">
+        <xsl:attribute name="server"><xsl:value-of select="@endpoint"/></xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="citrus:description" mode="ext"/>
+      <send-fault>
+        <message>
+          <xsl:if test="ws:fault/ws:fault-code">
+            <xsl:attribute name="fault-code">
+              <xsl:call-template name="trim">
+                <xsl:with-param name="text" select="ws:fault/ws:fault-code"/>
+              </xsl:call-template>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="ws:fault/ws:fault-string">
+            <xsl:attribute name="fault-string">
+              <xsl:call-template name="trim">
+                <xsl:with-param name="text" select="ws:fault/ws:fault-string"/>
+              </xsl:call-template>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="ws:fault/ws:fault-actor">
+            <xsl:attribute name="fault-actor">
+              <xsl:call-template name="trim">
+                <xsl:with-param name="text" select="ws:fault/ws:fault-actor"/>
+              </xsl:call-template>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="ws:header">
+            <headers>
+              <xsl:for-each select="ws:header/ws:element">
+                <header name="{@name}" value="{@value}"/>
+              </xsl:for-each>
+            </headers>
+          </xsl:if>
+          <xsl:apply-templates select="ws:fault/ws:fault-detail" mode="soap-fault-detail"/>
+        </message>
+      </send-fault>
+    </soap>
+  </xsl:template>
+
+  <xsl:template match="ws:fault-detail" mode="soap-fault-detail">
+    <fault-detail>
+      <xsl:choose>
+        <xsl:when test="@file">
+          <resource file="{@file}"/>
+        </xsl:when>
+        <xsl:when test="normalize-space(.)">
+          <content>
+            <xsl:call-template name="trim">
+              <xsl:with-param name="text" select="."/>
+            </xsl:call-template>
+          </content>
+        </xsl:when>
+      </xsl:choose>
+    </fault-detail>
+  </xsl:template>
+
   <xsl:template match="ws:attachment" mode="soap">
     <attachment>
       <xsl:copy-of select="@content-id|@content-type"/>
@@ -1371,12 +1461,48 @@
   </xsl:template>
 
   <!-- ============================================================== -->
+  <!-- Zookeeper actions                                              -->
+  <!-- ============================================================== -->
+
+  <xsl:template match="zookeeper:info|zookeeper:create|zookeeper:delete|zookeeper:exists|zookeeper:get|zookeeper:set|zookeeper:children">
+    <zookeeper>
+      <xsl:if test="@zookeeper-client">
+        <xsl:attribute name="client"><xsl:value-of select="@zookeeper-client"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="zookeeper:expect/zookeeper:result">
+        <xsl:attribute name="result">
+          <xsl:call-template name="trim">
+            <xsl:with-param name="text" select="zookeeper:expect/zookeeper:result"/>
+          </xsl:call-template>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="zookeeper:description" mode="ext"/>
+      <xsl:element name="{local-name()}">
+        <xsl:copy-of select="@path|@acl|@mode|@version"/>
+        <xsl:if test="zookeeper:data">
+          <xsl:attribute name="data">
+            <xsl:call-template name="trim">
+              <xsl:with-param name="text" select="zookeeper:data"/>
+            </xsl:call-template>
+          </xsl:attribute>
+        </xsl:if>
+      </xsl:element>
+      <xsl:for-each select="zookeeper:validate/zookeeper:json-path">
+        <validate path="{@expression}" value="{@value}"/>
+      </xsl:for-each>
+      <xsl:for-each select="zookeeper:extract/zookeeper:message">
+        <extract path="{@path}" variable="{@variable}"/>
+      </xsl:for-each>
+    </zookeeper>
+  </xsl:template>
+
+  <!-- ============================================================== -->
   <!-- Unsupported elements                                           -->
   <!-- ============================================================== -->
 
   <!--
     Test actions without a plain XML counterpart (e.g. java, input) and actions from other Spring XML namespaces
-    (e.g. zookeeper) are copied as is so the information is not lost and the user is able to migrate them manually.
+    are copied as is so the information is not lost and the user is able to migrate them manually.
   -->
   <xsl:template match="*">
     <xsl:call-template name="warn">

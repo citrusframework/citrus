@@ -579,7 +579,7 @@ Templates defined in a Spring bean XML test are migrated to separate template fi
 Please make these templates available to the `apply-template` action, for instance with the `file` attribute (see link:#run-xml-templates[XML templates]).
 
 The migration copies elements that have no counterpart in the XML test language as they are and marks them with a `MIGRATION WARNING` comment.
-This applies to the `java` and `input` actions and to the test actions from other Spring bean XML namespaces that have no XML test language counterpart (e.g. `zookeeper`).
+This applies to the `java` and `input` actions and to any test actions from other Spring bean XML namespaces that have no XML test language counterpart.
 The tool prints all warnings, so you know which parts of the test need manual migration.
 
 TIP: You can also run the migration programmatically.

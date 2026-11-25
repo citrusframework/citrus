@@ -1568,6 +1568,7 @@
         <xs:element ref="tns:testcontainers"/>
         <xs:element ref="tns:playwright"/>
         <xs:element ref="tns:docker"/>
+        <xs:element ref="tns:zookeeper"/>
         <xs:any namespace="##other" processContents="lax"/>
       </xs:choice>
     </xs:sequence>
@@ -2185,6 +2186,7 @@
   <xs:element name="jbang" type="tns:JBang"/>
   <xs:element name="kubernetes" type="tns:Kubernetes"/>
   <xs:element name="docker" type="tns:Docker"/>
+  <xs:element name="zookeeper" type="tns:Zookeeper"/>
   <xs:element name="knative" type="tns:Knative"/>
   <xs:element name="testcontainers" type="tns:Testcontainers"/>
   <xs:element name="playwright" type="tns:Playwright"/>
@@ -6177,5 +6179,66 @@
     <xs:attribute name="first" type="xs:boolean"/>
     <xs:attribute name="last" type="xs:boolean"/>
     <xs:attribute name="visible" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="Zookeeper">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="info">
+          <xs:complexType/>
+        </xs:element>
+        <xs:element name="create">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+            <xs:attribute name="data" type="xs:string"/>
+            <xs:attribute name="mode" type="xs:string"/>
+            <xs:attribute name="acl" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="delete">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+            <xs:attribute name="version" type="xs:int"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="exists">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="get">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="set">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+            <xs:attribute name="data" type="xs:string"/>
+            <xs:attribute name="version" type="xs:int"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="children">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+      <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="path" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="extract" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="path" type="xs:string" use="required"/>
+          <xs:attribute name="variable" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="client" type="xs:string"/>
+    <xs:attribute name="result" type="xs:string"/>
   </xs:complexType>
 </xs:schema>
