@@ -28,10 +28,10 @@ import org.springframework.test.context.ContextConfiguration;
 public class WebSocketEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "WebSocketEndpoint_1_IT")
+    @CitrusTestSource(type = TestLoader.XML, name = "WebSocketEndpoint_1_IT")
     public void testWebSocketEndpoint1() {}
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "WebSocketEndpoint_2_IT")
+    @CitrusTestSource(type = TestLoader.XML, name = "WebSocketEndpoint_2_IT")
     public void testWebSocketEndpoint2() {}
 }
