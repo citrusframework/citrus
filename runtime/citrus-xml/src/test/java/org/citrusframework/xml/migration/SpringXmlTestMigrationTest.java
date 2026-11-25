@@ -480,8 +480,6 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
 
         Assertions.assertEquals(List.of(
                 "The 'uri' attribute of the Http response is not supported in the plain XML DSL and has been removed",
-                "The SOAP endpoint of 'ws:send' has been migrated as client - please use the server and the receive request or send response actions when the endpoint is a server",
-                "The SOAP endpoint of 'ws:receive' has been migrated as client - please use the server and the receive request or send response actions when the endpoint is a server",
                 "The result validation of 'k8s:delete-service' is not supported by the delete action in the plain XML DSL and has been removed"
         ), SpringXmlTestMigration.getWarnings(migrated));
         Document document = parse(migrated);
@@ -535,7 +533,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         assertXPath(document, "o", actions + "t:http[3]/t:receive-response/t:validate[2]/t:namespace/@prefix");
         assertXPath(document, "orderId", actions + "t:http[3]/t:receive-response/t:extract/t:body/@variable");
 
-        assertXPath(document, "soapClient", actions + "t:soap[1]/@client");
+        assertXPath(document, "soapClient", actions + "t:soap[1]/@endpoint");
         assertXPath(document, "Send SOAP request", actions + "t:soap[1]/t:description");
         assertXPath(document, "true", actions + "t:soap[1]/t:send-request/@fork");
         assertXPath(document, "sayHello", actions + "t:soap[1]/t:send-request/t:message/@soap-action");
@@ -546,6 +544,7 @@ public class SpringXmlTestMigrationTest extends AbstractXmlActionTest {
         assertXPath(document, "Attachment content", actions + "t:soap[1]/t:send-request/t:message/t:attachment[1]/t:content");
         assertXPath(document, "classpath:attachment.xml", actions + "t:soap[1]/t:send-request/t:message/t:attachment[2]/t:resource/@file");
         assertXPath(document, "op", actions + "t:soap[1]/t:send-request/t:extract/t:header/@variable");
+        assertXPath(document, "soapClient", actions + "t:soap[2]/@endpoint");
         assertXPath(document, "3000", actions + "t:soap[2]/t:receive-response/@timeout");
         assertXPath(document, "soapValidator", actions + "t:soap[2]/t:receive-response/@validator");
         assertXPath(document, "attachmentValidator", actions + "t:soap[2]/t:receive-response/@attachment-validator");
