@@ -32,6 +32,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
 public class ValidateSqlResultSetIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void ValidateSqlResultSetIT() {}
 }
