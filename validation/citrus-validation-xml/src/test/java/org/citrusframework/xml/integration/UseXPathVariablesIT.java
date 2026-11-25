@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
 public class UseXPathVariablesIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void UseXPathVariablesIT() {}
 }

@@ -1,309 +1,251 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-    <testcase name="ValidateXmlCombinedIT">
-		<meta-info>
-			<author>Christoph Deppisch</author>
-			<creationdate>2010-12-17</creationdate>
-			<status>FINAL</status>
-			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2010-12-17T00:00:00</last-updated-on>
-		</meta-info>
-
-        <variables>
-            <variable name="correlationId" value="citrus:randomNumber(10)"/>
-            <variable name="messageId" value="citrus:randomNumber(10)"/>
-            <variable name="user" value="Citrus"/>
-        </variables>
-        <actions>
-            <echo>
-                <message>Test: Success with multiple validation mechanisms all together</message>
-            </echo>
-
-            <send endpoint="helloEndpoint">
-                <description>
-                    Send asynchronous hello request: Citrus -> HelloService
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+<test xmlns="http://citrusframework.org/schema/xml/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" author="Christoph Deppisch" name="ValidateXmlCombinedIT" status="FINAL" xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <variables>
+    <variable name="correlationId" value="citrus:randomNumber(10)"/>
+    <variable name="messageId" value="citrus:randomNumber(10)"/>
+    <variable name="user" value="Citrus"/>
+  </variables>
+  <actions>
+    <echo>
+      <message>Test: Success with multiple validation mechanisms all together</message>
+    </echo>
+    <send endpoint="helloEndpoint">
+      <description>Send asynchronous hello request: Citrus -&gt; HelloService</description>
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+          <header name="CorrelationId" value="${correlationId}"/>
+        </headers>
+        <body>
+          <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello Citrus</Text>
-                           </HelloRequest>
-                        ]]>
-                    </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-            </send>
-
-            <receive endpoint="helloEndpoint">
-                <message>
-                    <data>
-                        <![CDATA[
-                            <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                           </HelloRequest>]]></data>
+        </body>
+      </message>
+    </send>
+    <receive endpoint="helloEndpoint">
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+          <header name="CorrelationId" value="${correlationId}"/>
+        </headers>
+        <body>
+          <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>Citrus</User>
                                <Text>Hello ${user}</Text>
-                           </HelloRequest>
-                        ]]>
-                    </data>
-                    <validate>
-                        <script type="groovy">
+                           </HelloRequest>]]></data>
+        </body>
+      </message>
+      <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+      <validate>
+        <script type="groovy">
                             assert root.Text == 'Hello ${user}'
                         </script>
-                        <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
-                        <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
-                        <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
-                    </validate>
-                    <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-            </receive>
-
-            <echo>
-                <message>Test: Failure because of XML template data validation</message>
-            </echo>
-
-            <send endpoint="helloEndpoint">
-                <description>
-                    Send asynchronous hello request: Citrus -> HelloService
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+        <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
+        <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
+        <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
+      </validate>
+    </receive>
+    <echo>
+      <message>Test: Failure because of XML template data validation</message>
+    </echo>
+    <send endpoint="helloEndpoint">
+      <description>Send asynchronous hello request: Citrus -&gt; HelloService</description>
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+          <header name="CorrelationId" value="${correlationId}"/>
+        </headers>
+        <body>
+          <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello Citrus</Text>
-                           </HelloRequest>
-                        ]]>
-                    </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-            </send>
-
-            <assert exception="org.citrusframework.exceptions.ValidationException">
-                <when>
-                  <receive endpoint="helloEndpoint">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                           </HelloRequest>]]></data>
+        </body>
+      </message>
+    </send>
+    <assert exception="org.citrusframework.exceptions.ValidationException">
+      <when>
+        <receive endpoint="helloEndpoint">
+          <message>
+            <headers>
+              <header name="Operation" value="sayHello"/>
+              <header name="CorrelationId" value="${correlationId}"/>
+            </headers>
+            <body>
+              <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                      <MessageId>${messageId}</MessageId>
                                      <CorrelationId>${correlationId}</CorrelationId>
                                      <User>Wrong User</User>
                                      <Text>Hello ${user}</Text>
-                                 </HelloRequest>
-                              ]]>
-                          </data>
-                          <validate>
-                              <script type="groovy">
+                                 </HelloRequest>]]></data>
+            </body>
+          </message>
+          <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+          <validate>
+            <script type="groovy">
                                   assert root.Text == 'Hello ${user}'
                               </script>
-                              <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
-                              <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
-                              <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
-                          </validate>
-                          <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
-                      </message>
-                      <header>
-                          <element name="Operation" value="sayHello"/>
-                          <element name="CorrelationId" value="${correlationId}"/>
-                      </header>
-                  </receive>
-                </when>
-            </assert>
-
-            <echo>
-                <message>Test: Failure because of XML groovy script validation</message>
-            </echo>
-
-            <send endpoint="helloEndpoint">
-                <description>
-                    Send asynchronous hello request: Citrus -> HelloService
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+            <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
+          </validate>
+        </receive>
+      </when>
+    </assert>
+    <echo>
+      <message>Test: Failure because of XML groovy script validation</message>
+    </echo>
+    <send endpoint="helloEndpoint">
+      <description>Send asynchronous hello request: Citrus -&gt; HelloService</description>
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+          <header name="CorrelationId" value="${correlationId}"/>
+        </headers>
+        <body>
+          <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello Citrus</Text>
-                           </HelloRequest>
-                        ]]>
-                    </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-            </send>
-
-            <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
-                <when>
-                  <receive endpoint="helloEndpoint">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                           </HelloRequest>]]></data>
+        </body>
+      </message>
+    </send>
+    <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+      <when>
+        <receive endpoint="helloEndpoint">
+          <message>
+            <headers>
+              <header name="Operation" value="sayHello"/>
+              <header name="CorrelationId" value="${correlationId}"/>
+            </headers>
+            <body>
+              <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                      <MessageId>${messageId}</MessageId>
                                      <CorrelationId>${correlationId}</CorrelationId>
                                      <User>Citrus</User>
                                      <Text>Hello ${user}</Text>
-                                 </HelloRequest>
-                              ]]>
-                          </data>
-                          <validate>
-                              <script type="groovy">
+                                 </HelloRequest>]]></data>
+            </body>
+          </message>
+          <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+          <validate>
+            <script type="groovy">
                                   assert root.Text == 'Something else'
                               </script>
-                              <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
-                              <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
-                              <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
-                          </validate>
-                          <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
-                      </message>
-                      <header>
-                          <element name="Operation" value="sayHello"/>
-                          <element name="CorrelationId" value="${correlationId}"/>
-                      </header>
-                  </receive>
-                </when>
-            </assert>
-
-            <echo>
-                <message>Test: Failure because of XML xpath validation</message>
-            </echo>
-
-            <send endpoint="helloEndpoint">
-                <description>
-                    Send asynchronous hello request: Citrus -> HelloService
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+            <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
+          </validate>
+        </receive>
+      </when>
+    </assert>
+    <echo>
+      <message>Test: Failure because of XML xpath validation</message>
+    </echo>
+    <send endpoint="helloEndpoint">
+      <description>Send asynchronous hello request: Citrus -&gt; HelloService</description>
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+          <header name="CorrelationId" value="${correlationId}"/>
+        </headers>
+        <body>
+          <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello Citrus</Text>
-                           </HelloRequest>
-                        ]]>
-                    </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-            </send>
-
-            <assert exception="org.citrusframework.exceptions.ValidationException">
-                <when>
-                  <receive endpoint="helloEndpoint">
-                      <message>
-                          <data>
-                              <![CDATA[
-                                  <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                           </HelloRequest>]]></data>
+        </body>
+      </message>
+    </send>
+    <assert exception="org.citrusframework.exceptions.ValidationException">
+      <when>
+        <receive endpoint="helloEndpoint">
+          <message>
+            <headers>
+              <header name="Operation" value="sayHello"/>
+              <header name="CorrelationId" value="${correlationId}"/>
+            </headers>
+            <body>
+              <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                      <MessageId>${messageId}</MessageId>
                                      <CorrelationId>${correlationId}</CorrelationId>
                                      <User>Citrus</User>
                                      <Text>Hello ${user}</Text>
-                                 </HelloRequest>
-                              ]]>
-                          </data>
-                          <validate>
-                              <script type="groovy">
+                                 </HelloRequest>]]></data>
+            </body>
+          </message>
+          <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+          <validate>
+            <script type="groovy">
                                   assert root.Text == 'Hello ${user}'
                               </script>
-                              <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
-                              <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
-                              <xpath expression="/pfx:HelloRequest/pfx:Text" value="Something else"/>
-                          </validate>
-                          <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
-                      </message>
-                      <header>
-                          <element name="Operation" value="sayHello"/>
-                          <element name="CorrelationId" value="${correlationId}"/>
-                      </header>
-                  </receive>
-                </when>
-            </assert>
-
-            <echo>
-              <message>Test: Failure because of message header validation</message>
-            </echo>
-
-            <send endpoint="helloEndpoint">
-              <description>
-                Send asynchronous hello request: Citrus -> HelloService
-              </description>
-              <message>
-                <data>
-                  <![CDATA[
-                     <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+            <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:Text" value="Something else"/>
+          </validate>
+        </receive>
+      </when>
+    </assert>
+    <echo>
+      <message>Test: Failure because of message header validation</message>
+    </echo>
+    <send endpoint="helloEndpoint">
+      <description>Send asynchronous hello request: Citrus -&gt; HelloService</description>
+      <message>
+        <headers>
+          <header name="Operation" value="sayHello"/>
+          <header name="CorrelationId" value="${correlationId}"/>
+        </headers>
+        <body>
+          <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                          <MessageId>${messageId}</MessageId>
                          <CorrelationId>${correlationId}</CorrelationId>
                          <User>${user}</User>
                          <Text>Hello Citrus</Text>
-                     </HelloRequest>
-                  ]]>
-                </data>
-              </message>
-              <header>
-                <element name="Operation" value="sayHello"/>
-                <element name="CorrelationId" value="${correlationId}"/>
-              </header>
-            </send>
-
-            <assert exception="org.citrusframework.exceptions.ValidationException">
-                <when>
-                  <receive endpoint="helloEndpoint">
-                    <message>
-                      <data>
-                        <![CDATA[
-                            <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                     </HelloRequest>]]></data>
+        </body>
+      </message>
+    </send>
+    <assert exception="org.citrusframework.exceptions.ValidationException">
+      <when>
+        <receive endpoint="helloEndpoint">
+          <message>
+            <headers>
+              <header name="Operation" value="wrongOperation"/>
+              <header name="CorrelationId" value="${correlationId}"/>
+            </headers>
+            <body>
+              <data><![CDATA[<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>Citrus</User>
                                <Text>Hello ${user}</Text>
-                           </HelloRequest>
-                        ]]>
-                      </data>
-                      <validate>
-                        <script type="groovy">
+                           </HelloRequest>]]></data>
+            </body>
+          </message>
+          <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+          <validate>
+            <script type="groovy">
                           assert root.Text == 'Hello ${user}'
                         </script>
-                        <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
-                        <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
-                        <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
-                      </validate>
-                      <namespace prefix="pfx" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
-                    </message>
-                    <header>
-                      <element name="Operation" value="wrongOperation"/>
-                      <element name="CorrelationId" value="${correlationId}"/>
-                    </header>
-                  </receive>
-                </when>
-            </assert>
-        </actions>
-    </testcase>
-</spring:beans>
+            <xpath expression="/pfx:HelloRequest/pfx:MessageId" value="${messageId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:CorrelationId" value="${correlationId}"/>
+            <xpath expression="/pfx:HelloRequest/pfx:Text" value="citrus:concat('Hello ', ${user})"/>
+          </validate>
+        </receive>
+      </when>
+    </assert>
+  </actions>
+</test>
