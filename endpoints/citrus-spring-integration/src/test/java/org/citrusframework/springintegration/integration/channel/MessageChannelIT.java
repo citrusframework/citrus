@@ -29,6 +29,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 public class MessageChannelIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void MessageChannelIT(@CitrusResource TestCaseRunner runner) {}
 }
