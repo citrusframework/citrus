@@ -31,6 +31,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JmxDynamicEndpointIT {
 
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING, name = "JmxDynamicEndpointIT")
+    @CitrusTestSource(type = TestLoader.XML, name = "JmxDynamicEndpointIT")
     public void jmxDynamicEndpointTest() {}
 }
