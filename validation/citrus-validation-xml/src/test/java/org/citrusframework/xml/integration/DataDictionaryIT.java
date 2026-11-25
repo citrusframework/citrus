@@ -27,6 +27,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
 public class DataDictionaryIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void DataDictionaryIT() {}
 }

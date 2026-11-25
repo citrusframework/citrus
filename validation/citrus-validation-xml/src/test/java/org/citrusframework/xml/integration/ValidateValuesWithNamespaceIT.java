@@ -30,6 +30,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
 public class ValidateValuesWithNamespaceIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void ValidateValuesWithNamespaceIT() {}
 }

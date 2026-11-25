@@ -27,6 +27,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
 public class XmlFunctionsIT {
     @Test
-    @CitrusTestSource(type = TestLoader.SPRING)
+    @CitrusTestSource(type = TestLoader.XML)
     public void XmlFunctionsIT() {}
 }
