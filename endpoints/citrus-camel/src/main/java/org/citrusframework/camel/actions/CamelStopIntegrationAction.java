@@ -17,6 +17,9 @@
 package org.citrusframework.camel.actions;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.citrusframework.api.actions.camel.CamelIntegrationStopActionBuilder;
 import org.citrusframework.context.TestContext;
@@ -33,16 +36,16 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(CamelStopIntegrationAction.class);
 
-    /** Route id */
-    private final String integrationName;
+    private static final long DEFAULT_STOP_TIMEOUT = 60000L;
 
-    /**
-     * Default constructor.
-     */
+    private final String integrationName;
+    private final long stopTimeout;
+
     public CamelStopIntegrationAction(Builder builder) {
         super("stop", builder);
 
         this.integrationName = builder.integrationName;
+        this.stopTimeout = builder.stopTimeout;
     }
 
     @Override
@@ -65,16 +68,18 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
                 pid = context.getVariable(pidKey, Long.class);
             } else {
                 pid = findIntegrationByName(name);
+                if (pid == null) {
+                    logger.info("Camel integration '{}' not found - may have already exited", name);
+                    return;
+                }
             }
 
             camelCli().stop(pid);
 
             String processKey = "%s:%d".formatted(processKeyPrefix, pid);
             if (context.getVariables().containsKey(processKey)) {
-                // check if process is still alive
                 ProcessAndOutput pao = context.getVariable(processKey, ProcessAndOutput.class);
                 if (pao.getProcess().isAlive()) {
-                    // Check if there is a descendant process to be stopped
                     List<Long> descendants = pao.getDescendants();
                     for (Long descendantPid : descendants) {
                         camelCli().stop(descendantPid);
@@ -83,19 +88,42 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
                 }
             }
 
+            waitForProcessExit(pid, name);
+
             logger.info("Stopped Camel integration '%s' (%s)".formatted(name, pid));
         }
+    }
+
+    private void waitForProcessExit(Long pid, String name) {
+        ProcessHandle.of(pid).ifPresent(handle -> {
+            try {
+                handle.onExit().get(stopTimeout, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e) {
+                throw new CitrusRuntimeException(
+                        "Camel integration '%s' (pid %d) did not stop within %d ms".formatted(name, pid, stopTimeout));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new CitrusRuntimeException(
+                        "Interrupted while waiting for Camel integration '%s' (pid %d) to stop".formatted(name, pid), e);
+            } catch (ExecutionException e) {
+                // process exited, which is what we wanted
+            }
+        });
     }
 
     private Long findIntegrationByName(String name) {
         return camelCli().getAll().stream()
                 .filter(props -> name.equals(props.get("name")) && !props.getOrDefault("pid", "").isBlank())
                 .map(props -> Long.valueOf(props.get("pid"))).findFirst()
-                .orElseThrow(() -> new CitrusRuntimeException(String.format("Camel integration '%s' not found", name)));
+                .orElse(null);
     }
 
     public String getIntegrationName() {
         return integrationName;
+    }
+
+    public long getStopTimeout() {
+        return stopTimeout;
     }
 
     /**
@@ -105,6 +133,7 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
             implements CamelIntegrationStopActionBuilder<CamelStopIntegrationAction, Builder> {
 
         private String integrationName = "*";
+        private long stopTimeout = DEFAULT_STOP_TIMEOUT;
 
         @Override
         public Builder integration(String name) {
@@ -115,6 +144,11 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
         @Override
         public Builder integrationName(String name) {
             this.integrationName = name;
+            return this;
+        }
+
+        public Builder stopTimeout(long timeout) {
+            this.stopTimeout = timeout;
             return this;
         }
 

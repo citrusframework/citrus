@@ -304,14 +304,21 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
             executeFinalActions(context);
 
-            if (contextException != null) {
-                throw new TestCaseFailedException(contextException);
+            if (context.hasExceptions()) {
+                if (contextException != null || (testResult != null && testResult.isFailed())) {
+                    // Test already failed — attach final action errors as suppressed
+                    Throwable originalCause = contextException != null ? contextException : testResult.getCause();
+                    if (originalCause != null) {
+                        context.getExceptions().forEach(originalCause::addSuppressed);
+                    }
+                    context.getExceptions().clear();
+                } else {
+                    contextException = context.getExceptions().remove(0);
+                    testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
+                }
             }
 
-            if (context.hasExceptions()) {
-                // finally test actions raised exceptions
-                contextException = context.getExceptions().remove(0);
-                testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
+            if (contextException != null) {
                 throw new TestCaseFailedException(contextException);
             }
         } catch (final TestCaseFailedException e) {

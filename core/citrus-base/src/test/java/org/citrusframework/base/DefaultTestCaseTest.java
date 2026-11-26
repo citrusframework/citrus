@@ -302,6 +302,45 @@ public class DefaultTestCaseTest extends UnitTestSupport implements TestActionSu
     }
 
     @Test
+    public void testFirstFailureWinsWhenFinalActionAlsoFails() {
+        CitrusRuntimeException originalCause = new CitrusRuntimeException("Original test failure");
+        CitrusRuntimeException finalActionCause = new CitrusRuntimeException("Final action failure");
+
+        TestAction testActionMock = mock();
+        doThrow(originalCause).when(testActionMock).execute(context);
+        fixture.addTestAction(testActionMock);
+
+        TestAction finalActionMock = mock();
+        doThrow(finalActionCause).when(finalActionMock).execute(context);
+        fixture.addFinalAction(finalActionMock);
+
+        assertThrows(TestCaseFailedException.class, () -> fixture.doExecute(context));
+        // finish() does not re-throw because the test has already failed
+        fixture.finish(context);
+
+        assertThat(fixture.getTestResult().isFailed()).isTrue();
+        assertThat(fixture.getTestResult().getCause()).isSameAs(originalCause);
+        assertThat(fixture.getTestResult().getErrorMessage()).isEqualTo("Original test failure");
+        assertThat(originalCause.getSuppressed()).hasSize(1);
+        assertThat(originalCause.getSuppressed()[0].getCause()).isSameAs(finalActionCause);
+    }
+
+    @Test
+    public void testFinalActionFailureStillFailsSuccessfulTest() {
+        CitrusRuntimeException finalActionCause = new CitrusRuntimeException("Final action failure");
+
+        TestAction finalActionMock = mock();
+        doThrow(finalActionCause).when(finalActionMock).execute(context);
+        fixture.addFinalAction(finalActionMock);
+
+        fixture.doExecute(context);
+        assertThrows(TestCaseFailedException.class, () -> fixture.finish(context));
+
+        assertThat(fixture.getTestResult().isFailed()).isTrue();
+        assertThat(fixture.getTestResult().getCause().getCause()).isSameAs(finalActionCause);
+    }
+
+    @Test
     public void testListenerEventOnTestSkipped() {
         TestCaseMetaInfo testCaseMetaInfoMock = new TestCaseMetaInfo();
         testCaseMetaInfoMock.setStatus(Status.DISABLED);
