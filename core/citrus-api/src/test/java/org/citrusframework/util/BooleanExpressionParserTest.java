@@ -67,11 +67,29 @@ public class BooleanExpressionParserTest {
     }
 
     @Test
+    public void testExpressionParserWithDoubleEquals() {
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("1 == 1"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("1 == 2"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(1 == 1) and (2 == 2)"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("true == true"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("true == false"));
+    }
+
+    @Test
+    public void testExpressionParserWithNotEquals() {
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("1 != 2"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("1 != 1"));
+        Assertions.assertTrue(BooleanExpressionParser.evaluate("(1 != 2) and (3 != 4)"));
+        Assertions.assertFalse(BooleanExpressionParser.evaluate("(1 != 1) or (2 != 2)"));
+    }
+
+    @Test
     public void testExpressionParserWithUnknownOperator() {
         try {
             BooleanExpressionParser.evaluate("wahr");
         } catch(final CitrusRuntimeException e) {
-            Assertions.assertEquals("Unknown operator 'wahr'", e.getLocalizedMessage());
+            Assertions.assertTrue(e.getLocalizedMessage().startsWith("Unknown operator 'wahr'"));
+            Assertions.assertTrue(e.getLocalizedMessage().contains("use one of:"));
             return;
         }
 

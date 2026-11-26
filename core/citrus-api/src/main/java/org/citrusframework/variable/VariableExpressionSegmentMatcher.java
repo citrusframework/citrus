@@ -123,6 +123,11 @@ public class VariableExpressionSegmentMatcher {
      */
     private int currentSegmentIndex = -1;
 
+    /**
+     * 1-based counter tracking which segment in the expression we are currently on.
+     */
+    private int currentSegmentNumber = 0;
+
     public VariableExpressionSegmentMatcher(String variableExpression) {
         this.variableExpression = variableExpression;
         totalSegmentCount =  totalSegmentCount(variableExpression);
@@ -158,6 +163,7 @@ public class VariableExpressionSegmentMatcher {
 
         currentSegmentExpression = null;
         currentSegmentIndex = -1;
+        currentSegmentNumber++;
 
         if (matches) {
             if (!Optional.ofNullable(matcher.group(JSON_PATH_GROUP)).orElse("").isEmpty()) {
@@ -203,5 +209,13 @@ public class VariableExpressionSegmentMatcher {
      */
     public int getSegmentIndex() {
         return currentSegmentIndex;
+    }
+
+    /**
+     * Obtain the 1-based segment number of the current match in the variable expression.
+     * @return
+     */
+    public int getSegmentNumber() {
+        return currentSegmentNumber;
     }
 }

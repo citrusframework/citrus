@@ -106,19 +106,13 @@ public class SegmentVariableExtractorRegistry {
          */
         private void handleMatchFailure(VariableExpressionSegmentMatcher matcher) {
             String exceptionMessage;
-            if (matcher.getTotalSegmentCount() == 1) {
-                exceptionMessage = String.format("Unknown variable '%s'" ,
+            if (matcher.getTotalSegmentCount() == 1 || matcher.getSegmentNumber() == 1) {
+                exceptionMessage = String.format("Unknown variable '%s'",
                         matcher.getVariableExpression());
             } else {
-                if (matcher.getSegmentIndex() == 1) {
-                    exceptionMessage = String.format("Unknown variable for first segment '%s' " +
-                                    "of variable expression '%s'",
-                            matcher.getSegmentExpression(), matcher.getVariableExpression());
-                } else {
-                    exceptionMessage = String.format("Unknown segment-value for segment '%s' " +
-                                    "of variable expression '%s'",
-                            matcher.getSegmentExpression(), matcher.getVariableExpression());
-                }
+                exceptionMessage = String.format("Unknown segment-value for segment '%s' " +
+                                "of variable expression '%s'",
+                        matcher.getSegmentExpression(), matcher.getVariableExpression());
             }
             throw new CitrusRuntimeException(exceptionMessage);
         }
