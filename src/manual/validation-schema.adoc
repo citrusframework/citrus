@@ -171,6 +171,10 @@ Depending on the type of message you want to validate, there are different attem
 given message. The XML schema repository will apply a mapping strategy that decides which schema should verify the current
 message. Citrus knows multiple mapping strategies that you can review in chapter link:#xml-schema-validation[XML schema validation].
 
+You can enable schema validation for both `send` and `receive` messages without setting an explicit `schema` or
+`schema-repository`. Set `schema-validation="true"` in the XML DSL or `schemaValidation: true` in the YAML DSL.
+Citrus then selects from the available schema repositories using the mapping strategies for the message format.
+
 As a user you always have the chance to explicitly pick the right schema definition for a `receive` operation. You can overrule
 all schema mapping strategies in Citrus by directly setting the desired schema in your receiving message action.
 
