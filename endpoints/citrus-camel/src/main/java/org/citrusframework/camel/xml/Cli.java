@@ -36,6 +36,8 @@ import org.citrusframework.camel.cli.CamelCliSettings;
         "stop",
         "custom",
         "verify",
+        "watch",
+        "unwatch",
 })
 public class Cli {
 
@@ -65,6 +67,12 @@ public class Cli {
 
     @XmlElement
     protected Kubernetes kubernetes;
+
+    @XmlElement(name = "watch")
+    protected Watch watch;
+
+    @XmlElement(name = "unwatch")
+    protected Unwatch unwatch;
 
     public void setCamelVersion(String camelVersion) {
         this.camelVersion = camelVersion;
@@ -136,6 +144,63 @@ public class Cli {
 
     public void setKubernetes(Kubernetes kubernetes) {
         this.kubernetes = kubernetes;
+    }
+
+    public Watch getWatch() {
+        return watch;
+    }
+
+    public void setWatch(Watch watch) {
+        this.watch = watch;
+    }
+
+    public Unwatch getUnwatch() {
+        return unwatch;
+    }
+
+    public void setUnwatch(Unwatch unwatch) {
+        this.unwatch = unwatch;
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "")
+    public static class Watch {
+        @XmlAttribute
+        protected String integration;
+
+        @XmlAttribute(name = "auto-remove")
+        protected boolean autoRemove = true;
+
+        public String getIntegration() {
+            return integration;
+        }
+
+        public void setIntegration(String integration) {
+            this.integration = integration;
+        }
+
+        public boolean isAutoRemove() {
+            return autoRemove;
+        }
+
+        public void setAutoRemove(boolean autoRemove) {
+            this.autoRemove = autoRemove;
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "")
+    public static class Unwatch {
+        @XmlAttribute
+        protected String integration;
+
+        public String getIntegration() {
+            return integration;
+        }
+
+        public void setIntegration(String integration) {
+            this.integration = integration;
+        }
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

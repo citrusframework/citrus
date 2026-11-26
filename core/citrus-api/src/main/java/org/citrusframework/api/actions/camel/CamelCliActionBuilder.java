@@ -66,4 +66,14 @@ public interface CamelCliActionBuilder<T extends TestAction, B extends CamelCliA
      * Perform actions related to Camel CLI commands.
      */
     CamelCliCmdActionBuilder<?, ?> cmd();
+
+    /**
+     * Watch a Camel integration process for unexpected exit.
+     */
+    TestActionBuilder<?> watch();
+
+    /**
+     * Remove the exit watcher for a Camel integration process.
+     */
+    TestActionBuilder<?> unwatch();
 }

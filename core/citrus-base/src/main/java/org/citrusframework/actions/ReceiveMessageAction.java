@@ -202,7 +202,14 @@ public class ReceiveMessageAction extends AbstractTestAction implements MessageA
         }
 
         if (receivedMessage == null) {
-            throw new CitrusRuntimeException("Failed to receive message - message is not available");
+            CitrusRuntimeException messageNotAvailableException = new CitrusRuntimeException("Failed to receive message - message is not available");
+            // preserve exceptions that have been raised while the receiving action was waiting for the message
+            if (context.hasExceptions()) {
+                CitrusRuntimeException existing = context.getExceptions().removeFirst();
+                existing.addSuppressed(messageNotAvailableException);
+                throw existing;
+            }
+            throw messageNotAvailableException;
         }
 
         //validate the message
