@@ -98,6 +98,20 @@ public class CamelCliActionBuilder extends AbstractReferenceResolverAwareTestAct
     }
 
     @Override
+    public CamelWatchIntegrationAction.Builder watch() {
+        CamelWatchIntegrationAction.Builder builder = new CamelWatchIntegrationAction.Builder();
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
+    public CamelUnwatchIntegrationAction.Builder unwatch() {
+        CamelUnwatchIntegrationAction.Builder builder = new CamelUnwatchIntegrationAction.Builder();
+        this.delegate = builder;
+        return builder;
+    }
+
+    @Override
     public CamelKubernetesPluginActionBuilder kubernetes() {
         CamelKubernetesPluginActionBuilder builder = new CamelKubernetesPluginActionBuilder();
         this.delegate = builder;

@@ -55,11 +55,19 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
     public void doExecute(TestContext context) {
         String name = context.replaceDynamicContentInString(integrationName);
 
+        if (context.getVariables().containsKey(CamelIntegrationExitWatcher.CONTEXT_VARIABLE)) {
+            CamelIntegrationExitWatcher watcher = context.getVariable(
+                    CamelIntegrationExitWatcher.CONTEXT_VARIABLE, CamelIntegrationExitWatcher.class);
+            if (name.equals("*")) {
+                watcher.unwatchAll();
+            } else {
+                watcher.unwatch(name);
+            }
+        }
+
         if (name.equals("*")) {
             logger.info("Stopping all Camel integrations ...");
-
             camelCli().stop();
-
             logger.info("Stopped all Camel integrations");
         } else {
             logger.info("Stopping Camel integration '%s' ...".formatted(name));

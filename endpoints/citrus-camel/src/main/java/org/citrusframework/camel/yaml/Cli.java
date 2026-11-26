@@ -34,7 +34,9 @@ import org.citrusframework.camel.actions.CamelKubernetesVerifyIntegrationAction;
 import org.citrusframework.camel.actions.CamelRunIntegrationAction;
 import org.citrusframework.camel.actions.CamelRunTestVariables;
 import org.citrusframework.camel.actions.CamelStopIntegrationAction;
+import org.citrusframework.camel.actions.CamelUnwatchIntegrationAction;
 import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
+import org.citrusframework.camel.actions.CamelWatchIntegrationAction;
 import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resources;
@@ -104,6 +106,16 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
     @SchemaProperty(kind = GROUP, group = CAMEL_CLI_GROUP, description = "Camel Kubernetes plugin related operations.")
     public void setKubernetes(Kubernetes kubernetes) {
         this.builder = kubernetes.getBuilder();
+    }
+
+    @SchemaProperty(kind = ACTION, group = CAMEL_CLI_GROUP, description = "Watches a Camel integration process for unexpected exit.")
+    public void setWatch(Watch watch) {
+        this.builder = watch.getBuilder();
+    }
+
+    @SchemaProperty(kind = ACTION, group = CAMEL_CLI_GROUP, description = "Removes the exit watcher for a Camel integration process.")
+    public void setUnwatch(Unwatch unwatch) {
+        this.builder = unwatch.getBuilder();
     }
 
     @Override
@@ -1535,4 +1547,40 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
         }
     }
 
+    public static class Watch implements CamelActionBuilderWrapper<CamelWatchIntegrationAction.Builder> {
+
+        private final CamelWatchIntegrationAction.Builder builder = new CamelWatchIntegrationAction.Builder();
+
+        @SchemaProperty(description = "Camel integration name to watch.")
+        public void setIntegration(String integrationName) {
+            builder.integrationName(integrationName);
+        }
+
+        @SchemaProperty(advanced = true, description = "When enabled an unwatch action is automatically registered as a finally-action.", defaultValue = "true")
+        public void setAutoRemove(boolean enabled) {
+            builder.autoRemove(enabled);
+        }
+
+        @Override
+        public CamelWatchIntegrationAction.Builder getBuilder() {
+            return builder;
+        }
+    }
+
+    public static class Unwatch implements CamelActionBuilderWrapper<CamelUnwatchIntegrationAction.Builder> {
+
+        private final CamelUnwatchIntegrationAction.Builder builder = new CamelUnwatchIntegrationAction.Builder();
+
+        @SchemaProperty(description = "Camel integration name to unwatch. Use '*' to unwatch all.")
+        public void setIntegration(String integrationName) {
+            builder.integrationName(integrationName);
+        }
+
+        @Override
+        public CamelUnwatchIntegrationAction.Builder getBuilder() {
+            return builder;
+        }
+    }
+
 }
+

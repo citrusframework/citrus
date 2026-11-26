@@ -1,0 +1,27 @@
+name: "CamelCliWatchTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      cli:
+        run:
+          integration:
+            name: "hello-yaml"
+            file: "classpath:org/citrusframework/camel/integration/route.yaml"
+            systemProperties:
+              properties:
+                - name: greeting
+                  value: Hello Camel
+  - camel:
+      cli:
+        watch:
+          integration: "hello-yaml"
+  - camel:
+      cli:
+        unwatch:
+          integration: "hello-yaml"
+finally:
+  - camel:
+      cli:
+        stop:
+          integration: "hello-yaml"

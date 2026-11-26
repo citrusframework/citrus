@@ -509,6 +509,17 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                         .workingDir(cli.getKubernetes().getDelete().getWorkingDir());
                 this.builder = builder;
             }
+        } else if (cli.getWatch() != null) {
+            CamelWatchIntegrationAction.Builder builder = new CamelWatchIntegrationAction.Builder()
+                    .integrationName(cli.getWatch().getIntegration())
+                    .autoRemove(cli.getWatch().isAutoRemove());
+            this.builder = builder;
+        } else if (cli.getUnwatch() != null) {
+            CamelUnwatchIntegrationAction.Builder builder = new CamelUnwatchIntegrationAction.Builder();
+            if (cli.getUnwatch().getIntegration() != null) {
+                builder.integrationName(cli.getUnwatch().getIntegration());
+            }
+            this.builder = builder;
         }
 
         if (this.builder instanceof AbstractCamelCliAction.Builder<?, ?> camelBuilder) {
