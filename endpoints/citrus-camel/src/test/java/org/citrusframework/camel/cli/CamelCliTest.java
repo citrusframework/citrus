@@ -109,6 +109,23 @@ public class CamelCliTest {
         Assertions.assertDoesNotThrow(() -> new CamelCli(launcher).stop());
     }
 
+    @Test
+    public void shouldReportTimeoutExitCodeForStopByPid() {
+        mockStopResult(124);
+        CitrusRuntimeException error = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> new CamelCli(launcher).stop(42L));
+        Assertions.assertTrue(error.getMessage().contains("did not stop within the timeout"));
+        Assertions.assertTrue(error.getMessage().contains("pid 42"));
+    }
+
+    @Test
+    public void shouldReportTimeoutExitCodeForStopAll() {
+        mockStopAllResult(124);
+        CitrusRuntimeException error = Assertions.assertThrows(CitrusRuntimeException.class,
+                () -> new CamelCli(launcher).stop());
+        Assertions.assertTrue(error.getMessage().contains("did not stop within the timeout"));
+    }
+
     private void mockStopResult(int exitCode) {
         when(launcher.run("stop", "42")).thenReturn(pao);
         when(pao.getProcess()).thenReturn(process);
