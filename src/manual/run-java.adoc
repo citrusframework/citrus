@@ -404,6 +404,16 @@ not account the traditional finally block actions then. Good news is whatever la
 
 The `finally` block is executed safely even in case some previous test action raises an error for some reason.
 
+==== Error handling in finally blocks
+
+When the test has already failed before the `finally` block runs, any error raised by a finally action is attached as a
+_suppressed_ exception (`Throwable.addSuppressed`) on the original failure. The test result — including the summary line,
+JUnit failure, and flow report — always names the first failure that caused the test to fail, not the cleanup error.
+
+This prevents cleanup failures (e.g. stopping an integration that has already exited) from hiding the real test failure.
+
+When the test was successful and a finally action fails, the finally action error becomes the test failure as before.
+
 [[java-test-behaviors]]
 === Test behaviors
 

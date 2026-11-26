@@ -242,6 +242,13 @@ In the example the first action creates an entry in the database using an *_INSE
 To be sure that the entry in the database is deleted after the test, the finally section contains the respective *_DELETE_* statement that is always
 executed regardless the test case state (successful or failed).
 
+==== Error handling in finally blocks
+
+When the test has already failed before the `finally` block runs, any error raised by a finally action is attached as a
+_suppressed_ exception on the original failure. The test result always names the first failure, not the cleanup error.
+
+When the test was successful and a finally action fails, the finally action error becomes the test failure as before.
+
 [[run-spring-xml-test-variables-cdata]]
 === Variables with CDATA sections
 
