@@ -26,18 +26,23 @@ import java.util.function.Supplier;
 
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.Completable;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.api.common.MultiTestRun;
 import org.citrusframework.base.DefaultTestCase;
+import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.report.TestListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.SimpleReferenceResolver;
+import org.citrusframework.util.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +69,10 @@ public class DefaultMultiTestRun implements MultiTestRun {
     private final Class<?> testClass;
     private final String packageName;
     private final List<Consumer<TestCase>> configurers;
+    private final ReferenceResolver parentResolver;
+    private final ReferenceResolver runResolver;
+    private final EndpointFactory parentEndpointFactory;
+    private final EndpointFactory runEndpointFactory;
 
     private final List<TestCase> testCases = new ArrayList<>();
 
@@ -93,6 +102,11 @@ public class DefaultMultiTestRun implements MultiTestRun {
         this.testClass = testClass;
         this.packageName = packageName;
         this.configurers = List.copyOf(configurers);
+        this.parentResolver = fileContext.getReferenceResolver();
+        this.runResolver = new RunReferenceResolver(parentResolver);
+        this.parentEndpointFactory = fileContext.getEndpointFactory();
+        this.runEndpointFactory = parentEndpointFactory != null && parentEndpointFactory.getClass() == DefaultEndpointFactory.class
+                ? new DefaultEndpointFactory() : parentEndpointFactory;
     }
 
     @Override
@@ -131,14 +145,11 @@ public class DefaultMultiTestRun implements MultiTestRun {
         parsed.getAfterEach().forEach(test::addFinalAction);
 
         prepare(test);
-        Map<String, Object> variables = new LinkedHashMap<>(fileVariables);
-        Map<String, Object> testVariables = test.getVariableDefinitions();
-        // Keep the declaration order of test variables, even when they override file variables.
-        variables.keySet().removeAll(testVariables.keySet());
-        variables.putAll(testVariables);
-        test.setVariableDefinitions(variables);
+        test.setVariableDefinitions(mergeVariableDefinitions(test));
 
         TestContext context = citrusContext.createTestContext();
+        context.setReferenceResolver(runResolver);
+        context.setEndpointFactory(runEndpointFactory);
         // Inherited expressions can reference other file variables regardless of map iteration order.
         context.addVariables(fileVariables);
         injectReferenceResolver(test.getActionBuilders(), context.getReferenceResolver());
@@ -165,6 +176,24 @@ public class DefaultMultiTestRun implements MultiTestRun {
         }
 
         return test;
+    }
+
+    private Map<String, Object> mergeVariableDefinitions(DefaultTestCase test) {
+        Map<String, Object> variables = new LinkedHashMap<>();
+        Map<String, Object> testVariables = test.getVariableDefinitions();
+        // Startup reapplies host parameters. Restore overridden values before resolving other inherited definitions.
+        test.getParameters().forEach((key, value) -> {
+            if (fileVariables.containsKey(key) && !testVariables.containsKey(key)) {
+                variables.put(key, fileVariables.get(key));
+            }
+        });
+        fileVariables.forEach((key, value) -> {
+            if (!testVariables.containsKey(key)) {
+                variables.put(key, value);
+            }
+        });
+        variables.putAll(testVariables);
+        return variables;
     }
 
     @Override
@@ -201,6 +230,22 @@ public class DefaultMultiTestRun implements MultiTestRun {
             }
         }
 
+        try {
+            if (runEndpointFactory != parentEndpointFactory) {
+                runEndpointFactory.destroy();
+            }
+        } catch (Exception | Error e) {
+            errors.add(e);
+        }
+        try {
+            runResolver.destroy();
+        } catch (Exception | Error e) {
+            errors.add(e);
+        } finally {
+            fileContext.setReferenceResolver(parentResolver);
+            fileContext.setEndpointFactory(parentEndpointFactory);
+        }
+
         if (errors.isEmpty()) {
             logger.info("Finished afterAll of '{}'", name);
             return;
@@ -226,6 +271,8 @@ public class DefaultMultiTestRun implements MultiTestRun {
         logger.info("Running beforeAll of '{}'", name);
 
         try {
+            fileContext.setReferenceResolver(runResolver);
+            fileContext.setEndpointFactory(runEndpointFactory);
             DefaultTestCase file = new DefaultTestCase();
             file.setName(name);
             prepare(file);
@@ -305,10 +352,29 @@ public class DefaultMultiTestRun implements MultiTestRun {
      * Builds and executes the given actions in order. Errors the actions only add to the context fail as well.
      */
     private static void executeActions(List<TestActionBuilder<?>> builders, TestContext context) {
-        for (TestActionBuilder<?> builder : builders) {
-            TestAction action = builder.build();
-            if (!action.isDisabled(context)) {
-                action.execute(context);
+        List<Completable> completion = new ArrayList<>();
+        Throwable failure = null;
+        try {
+            for (TestActionBuilder<?> builder : builders) {
+                TestAction action = builder.build();
+                if (!action.isDisabled(context)) {
+                    if (action instanceof Completable completable) {
+                        completion.add(completable);
+                    }
+                    action.execute(context);
+                }
+            }
+        } catch (RuntimeException | Error e) {
+            failure = e;
+            throw e;
+        } finally {
+            try {
+                TestUtils.waitForCompletion(ctx -> completion.stream().allMatch(action -> action.isDone(ctx)), context);
+            } catch (RuntimeException | Error e) {
+                if (failure == null) {
+                    throw e;
+                }
+                failure.addSuppressed(e);
             }
         }
 
@@ -324,5 +390,56 @@ public class DefaultMultiTestRun implements MultiTestRun {
                 .filter(ReferenceResolverAware.class::isInstance)
                 .map(ReferenceResolverAware.class::cast)
                 .forEach(builder -> builder.setReferenceResolver(referenceResolver));
+    }
+
+    /** A run owns new bindings and can still resolve resources registered by the host. */
+    private static final class RunReferenceResolver extends SimpleReferenceResolver {
+
+        private final ReferenceResolver parent;
+
+        private RunReferenceResolver(ReferenceResolver parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public <T> T resolve(Class<T> type) {
+            return resolveAll(type).values().stream().findFirst().orElseGet(() -> super.resolve(type));
+        }
+
+        @Override
+        public Object resolve(String name) {
+            return resolve(name, Object.class);
+        }
+
+        @Override
+        public <T> T resolve(String name, Class<T> type) {
+            return super.isResolvable(name) ? super.resolve(name, type) : parent.resolve(name, type);
+        }
+
+        @Override
+        public <T> Map<String, T> resolveAll(Class<T> type) {
+            Map<String, T> references = new LinkedHashMap<>(super.resolveAll(type));
+            parent.resolveAll(type).forEach((name, value) -> {
+                if (!super.isResolvable(name)) {
+                    references.put(name, value);
+                }
+            });
+            return references;
+        }
+
+        @Override
+        public boolean isResolvable(String name) {
+            return super.isResolvable(name) || parent.isResolvable(name);
+        }
+
+        @Override
+        public boolean isResolvable(Class<?> type) {
+            return !resolveAll(type).isEmpty();
+        }
+
+        @Override
+        public boolean isResolvable(String name, Class<?> type) {
+            return super.isResolvable(name) ? super.isResolvable(name, type) : parent.isResolvable(name, type);
+        }
     }
 }

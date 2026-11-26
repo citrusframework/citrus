@@ -131,7 +131,10 @@ A variable that a test declares with the same name overrides the shared value fo
 Variables that a test creates or changes are not visible to the next test or to `afterAll`.
 Inherited strings that contain variable references or function expressions can be evaluated again when each test starts.
 Objects such as lists or maps are shared by reference. Treat them as read-only in the tests.
-Endpoints and containers created by `beforeAll` can be used by all tests. Their registered cleanups run after `afterAll`.
+Endpoints and containers created by `beforeAll` can be used by all tests in the file.
+Each file invocation has its own registry for new bindings and can still look up resources registered by the host.
+With the default endpoint factory, different file invocations can reuse the same endpoint name for separate endpoints.
+Citrus waits for asynchronous `beforeAll` actions before starting the tests and for asynchronous `afterAll` actions before running file cleanups.
 
 *Failures.*
 

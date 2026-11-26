@@ -33,8 +33,11 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestParameterAware;
 import org.citrusframework.TestResult;
+import org.citrusframework.actions.AbstractAsyncTestAction;
+import org.citrusframework.actions.CreateEndpointAction;
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.junit.jupiter.api.Assertions;
@@ -218,6 +221,85 @@ class DefaultMultiTestRunTest {
                     name + "-changed=changed-" + name, name + "-next=file-" + name, name + "-afterAll=file-" + name),
                     recorded);
         }
+    }
+
+    @Test
+    void shouldResolveInheritedExpressionsAgainstFileOverridesOfHostParameters() {
+        Consumer<TestCase> parameters = testCase -> ((TestParameterAware) testCase)
+                .setParameters(new String[] { "env" }, new Object[] { "host" });
+        DefaultMultiTestRun run = run(() -> file()
+                .beforeAll(List.of(setVariable("env", "file"), setVariable("greeting", "${env}")))
+                .test(test("a", recordVariable("env", "env"), recordVariable("greeting", "greeting")))
+                .build(), List.of(parameters));
+
+        Assertions.assertEquals(List.of(), runAll(run));
+        Assertions.assertEquals(List.of("env=file", "greeting=file", "finally-a"), steps);
+    }
+
+    @Test
+    void shouldIsolateEndpointsAcrossOverlappingFileRuns() {
+        Supplier<MultiTestDefinition> a = () -> endpointFile("queueA");
+        Supplier<MultiTestDefinition> b = () -> endpointFile("queueB");
+
+        try (var first = run(a); var second = new DefaultMultiTestRun(b.get(), b, citrusContext.createTestContext(),
+                citrusContext, DefaultMultiTestRunTest.class, "org.example", List.of())) {
+            first.runTest(0);
+            second.runTest(0);
+            first.close();
+            second.runTest(1);
+        }
+
+        Assertions.assertEquals(List.of("queueA=queueA", "queueB=queueB", "queueB=queueB"),
+                steps.stream().filter(step -> step.startsWith("queue")).toList());
+        Assertions.assertFalse(citrusContext.getReferenceResolver().isResolvable("sharedEndpoint"));
+    }
+
+    @Test
+    void shouldWaitForAsynchronousFileHooksBeforeTestsAndCleanup() {
+        DefaultMultiTestRun run = run(() -> file()
+                .beforeAll(List.of(asyncVariable("ready", "yes"), cleanup("cleanup")))
+                .afterAll(List.<TestActionBuilder<?>>of(asyncVariable("closed", "yes"),
+                        (TestActionBuilder<TestAction>) () -> context -> context.doFinally(recordVariable("cleanup", "closed"))))
+                .test(test("a", recordVariable("test", "ready")))
+                .build());
+
+        Assertions.assertEquals(List.of(), runAll(run));
+        Assertions.assertEquals(List.of("test=yes", "finally-a", "cleanup", "cleanup=yes"), steps);
+    }
+
+    private MultiTestDefinition endpointFile(String queue) {
+        TestActionBuilder<?> checkEndpoint = () -> context -> steps.add(queue + "=" + context.getReferenceResolver()
+                .resolve("sharedEndpoint", DirectEndpoint.class).getEndpointConfiguration().getQueueName());
+        return file().name(queue)
+                .beforeAll(List.of(CreateEndpointAction.Builder.createEndpoint()
+                        .type("direct:" + queue).endpointName("sharedEndpoint")))
+                .test(test("first", checkEndpoint))
+                .test(test("second", checkEndpoint))
+                .build();
+    }
+
+    private static TestActionBuilder<?> asyncVariable(String name, String value) {
+        return () -> new AbstractAsyncTestAction() {
+            private final CountDownLatch waiting = new CountDownLatch(1);
+
+            @Override
+            public void doExecuteAsync(TestContext context) {
+                try {
+                    if (waiting.await(2, TimeUnit.SECONDS)) {
+                        context.setVariable(name, value);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new AssertionError(e);
+                }
+            }
+
+            @Override
+            public boolean isDone(TestContext context) {
+                waiting.countDown();
+                return super.isDone(context);
+            }
+        };
     }
 
     @Test
