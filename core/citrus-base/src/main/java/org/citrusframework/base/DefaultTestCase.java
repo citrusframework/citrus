@@ -82,8 +82,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     private Map<String, Object> variableDefinitions = new LinkedHashMap<>();
 
-    private Map<String, Object> inheritedVariables = Map.of();
-
     /**
      * Adhoc endpoint definitions that create endpoints as part of the test.
      */
@@ -184,12 +182,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
             traceVariables("Global", context);
             initializeTestParameters(parameters, context);
-            if (!inheritedVariables.isEmpty()) {
-                context.addVariables(inheritedVariables);
-                Map<String, Object> inheritedDefinitions = new LinkedHashMap<>(inheritedVariables);
-                inheritedDefinitions.keySet().removeAll(variableDefinitions.keySet());
-                initializeTestVariables(inheritedDefinitions, context);
-            }
             initializeTestVariables(variableDefinitions, context);
             traceVariables("Test", context);
             initializeBeans(beanDefinitions, context);
@@ -582,14 +574,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     public void setVariableDefinitions(final Map<String, Object> variableDefinitions) {
         this.variableDefinitions = variableDefinitions;
-    }
-
-    /**
-     * Sets the file-level snapshot for a multi-test child. Inherited expressions are resolved against
-     * the snapshot after host parameters and before the child's own variable definitions.
-     */
-    public void setInheritedVariables(Map<String, Object> inheritedVariables) {
-        this.inheritedVariables = new LinkedHashMap<>(inheritedVariables);
     }
 
     @Override

@@ -18,11 +18,9 @@ package org.citrusframework.common;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -34,11 +32,9 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.api.common.MultiTestRun;
-import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.base.endpoint.DefaultEndpointFactory;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
@@ -74,7 +70,7 @@ public class DefaultMultiTestRun implements MultiTestRun {
     private final String packageName;
     private final List<Consumer<TestCase>> configurers;
     private final ReferenceResolver parentResolver;
-    private final RunReferenceResolver runResolver;
+    private final ReferenceResolver runResolver;
     private final EndpointFactory parentEndpointFactory;
     private final EndpointFactory runEndpointFactory;
 
@@ -110,12 +106,7 @@ public class DefaultMultiTestRun implements MultiTestRun {
         this.runResolver = new RunReferenceResolver(parentResolver);
         this.parentEndpointFactory = fileContext.getEndpointFactory();
         this.runEndpointFactory = parentEndpointFactory != null && parentEndpointFactory.getClass() == DefaultEndpointFactory.class
-                ? new DefaultEndpointFactory() {
-                    @Override
-                    public void destroyEndpoint(Endpoint endpoint) {
-                        runResolver.destroyOwned(endpoint);
-                    }
-                } : parentEndpointFactory;
+                ? new DefaultEndpointFactory() : parentEndpointFactory;
     }
 
     @Override
@@ -154,11 +145,13 @@ public class DefaultMultiTestRun implements MultiTestRun {
         parsed.getAfterEach().forEach(test::addFinalAction);
 
         prepare(test);
-        test.setInheritedVariables(fileVariables);
+        test.setVariableDefinitions(mergeVariableDefinitions(test));
 
         TestContext context = citrusContext.createTestContext();
         context.setReferenceResolver(runResolver);
         context.setEndpointFactory(runEndpointFactory);
+        // Inherited expressions can reference other file variables regardless of map iteration order.
+        context.addVariables(fileVariables);
         injectReferenceResolver(test.getActionBuilders(), context.getReferenceResolver());
         injectReferenceResolver(test.getFinalActionBuilders(), context.getReferenceResolver());
 
@@ -183,6 +176,24 @@ public class DefaultMultiTestRun implements MultiTestRun {
         }
 
         return test;
+    }
+
+    private Map<String, Object> mergeVariableDefinitions(DefaultTestCase test) {
+        Map<String, Object> variables = new LinkedHashMap<>();
+        Map<String, Object> testVariables = test.getVariableDefinitions();
+        // Startup reapplies host parameters. Restore overridden values before resolving other inherited definitions.
+        test.getParameters().forEach((key, value) -> {
+            if (fileVariables.containsKey(key) && !testVariables.containsKey(key)) {
+                variables.put(key, fileVariables.get(key));
+            }
+        });
+        fileVariables.forEach((key, value) -> {
+            if (!testVariables.containsKey(key)) {
+                variables.put(key, value);
+            }
+        });
+        variables.putAll(testVariables);
+        return variables;
     }
 
     @Override
@@ -385,10 +396,6 @@ public class DefaultMultiTestRun implements MultiTestRun {
     private static final class RunReferenceResolver extends SimpleReferenceResolver {
 
         private final ReferenceResolver parent;
-        private final Set<ShutdownPhase> borrowed = Collections.synchronizedSet(
-                Collections.newSetFromMap(new IdentityHashMap<>()));
-        private final Set<ShutdownPhase> destroyed = Collections.synchronizedSet(
-                Collections.newSetFromMap(new IdentityHashMap<>()));
 
         private RunReferenceResolver(ReferenceResolver parent) {
             this.parent = parent;
@@ -396,17 +403,17 @@ public class DefaultMultiTestRun implements MultiTestRun {
 
         @Override
         public <T> T resolve(Class<T> type) {
-            return super.isResolvable(type) ? super.resolve(type) : borrow(parent.resolve(type));
+            return resolveAll(type).values().stream().findFirst().orElseGet(() -> super.resolve(type));
         }
 
         @Override
         public Object resolve(String name) {
-            return super.isResolvable(name) ? super.resolve(name) : borrow(parent.resolve(name));
+            return resolve(name, Object.class);
         }
 
         @Override
         public <T> T resolve(String name, Class<T> type) {
-            return super.isResolvable(name) ? super.resolve(name, type) : borrow(parent.resolve(name, type));
+            return super.isResolvable(name) ? super.resolve(name, type) : parent.resolve(name, type);
         }
 
         @Override
@@ -414,7 +421,7 @@ public class DefaultMultiTestRun implements MultiTestRun {
             Map<String, T> references = new LinkedHashMap<>(super.resolveAll(type));
             parent.resolveAll(type).forEach((name, value) -> {
                 if (!super.isResolvable(name)) {
-                    references.put(name, borrow(value));
+                    references.put(name, value);
                 }
             });
             return references;
@@ -427,44 +434,12 @@ public class DefaultMultiTestRun implements MultiTestRun {
 
         @Override
         public boolean isResolvable(Class<?> type) {
-            return super.isResolvable(type) || parent.isResolvable(type);
+            return !resolveAll(type).isEmpty();
         }
 
         @Override
         public boolean isResolvable(String name, Class<?> type) {
             return super.isResolvable(name) ? super.isResolvable(name, type) : parent.isResolvable(name, type);
-        }
-
-        private <T> T borrow(T value) {
-            if (value instanceof ShutdownPhase resource) {
-                borrowed.add(resource);
-            }
-            return value;
-        }
-
-        private void destroyOwned(Object value) {
-            if (value instanceof ShutdownPhase resource && !borrowed.contains(resource) && destroyed.add(resource)) {
-                resource.destroy();
-            }
-        }
-
-        @Override
-        public void destroy() {
-            CitrusRuntimeException failure = null;
-            for (ShutdownPhase resource : super.resolveAll(ShutdownPhase.class).values()) {
-                try {
-                    destroyOwned(resource);
-                } catch (RuntimeException | Error e) {
-                    if (failure == null) {
-                        failure = new CitrusRuntimeException("Failed to shut down a multi-test resource", e);
-                    } else {
-                        failure.addSuppressed(e);
-                    }
-                }
-            }
-            if (failure != null) {
-                throw failure;
-            }
         }
     }
 }
