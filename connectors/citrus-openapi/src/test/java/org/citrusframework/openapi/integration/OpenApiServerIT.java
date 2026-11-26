@@ -24,7 +24,6 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.dsl.TestActionSupport;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
@@ -42,6 +41,7 @@ import org.citrusframework.validation.context.json.JsonPathMessageValidationCont
 import org.citrusframework.validation.context.json.JsonPathMessageValidationContext;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Named;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -57,7 +57,6 @@ import org.springframework.test.context.ContextConfiguration;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, Config.class})
@@ -200,7 +199,7 @@ public class OpenApiServerIT implements TestActionSupport {
                           "status": "available"
                         }
                 """);
-        assertThrows(TestCaseFailedException.class, () -> runner.then(getPetByIdResponseBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(getPetByIdResponseBuilder));
     }
 
     @CitrusTest
@@ -316,7 +315,7 @@ public class OpenApiServerIT implements TestActionSupport {
                 .receive()
                 .response(OK));
         } else {
-            assertThrows(TestCaseFailedException.class, () -> runner.then(sendMessageActionBuilder));
+            runner.then(assertException().exception(CitrusRuntimeException.class).when(sendMessageActionBuilder));
         }
     }
 
@@ -342,7 +341,7 @@ public class OpenApiServerIT implements TestActionSupport {
             .send("getPetById", OK.name())
             .autoFill(AutoFillType.NONE);
 
-        assertThrows(TestCaseFailedException.class, () -> runner.then(sendMessageActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(sendMessageActionBuilder));
     }
 
     @CitrusTest
@@ -363,7 +362,7 @@ public class OpenApiServerIT implements TestActionSupport {
             .server(httpServer)
             .receive("addPet");
 
-        assertThrows(TestCaseFailedException.class, () -> runner.then(addPetBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(addPetBuilder));
     }
 
     @CitrusTest
@@ -465,7 +464,7 @@ public class OpenApiServerIT implements TestActionSupport {
                   ],
                   "status": "@assertThat(anyOf(equalTo('available'), equalTo('pending'), equalTo('sold')))@"
                 }""");
-        assertThrows(TestCaseFailedException.class, () -> runner.then(receiveActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(receiveActionBuilder));
     }
 
     @CitrusTest
@@ -520,7 +519,7 @@ public class OpenApiServerIT implements TestActionSupport {
             .validate(Builder.jsonPath().expression("$.name",
                 "other name"));
 
-        assertThrows(TestCaseFailedException.class, () -> runner.then(receiveActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(receiveActionBuilder));
     }
 
     private void shouldExecuteAddPet(OpenApiSpecification openApiSpecification, String requestFile,
@@ -558,7 +557,7 @@ public class OpenApiServerIT implements TestActionSupport {
                 .response(HttpStatus.CREATED));
 
         } else {
-            assertThrows(TestCaseFailedException.class, () -> runner.then(receiveActionBuilder));
+            runner.then(assertException().exception(CitrusRuntimeException.class).when(receiveActionBuilder));
         }
     }
 

@@ -10,9 +10,13 @@
       </meta-info>
 
       <actions>
-        <echo>
-          <message>This test should fail because of unknown variable ${foo}</message>
-        </echo>
+        <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+          <when>
+            <echo>
+              <message>This test should fail because of unknown variable ${foo}</message>
+            </echo>
+          </when>
+        </assert>
       </actions>
     </testcase>
 </spring:beans>

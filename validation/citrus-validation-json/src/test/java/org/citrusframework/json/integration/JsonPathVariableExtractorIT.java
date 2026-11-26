@@ -24,7 +24,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
@@ -33,10 +32,9 @@ import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Assertions;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 3.3.1
@@ -90,7 +88,7 @@ public class JsonPathVariableExtractorIT implements TestActionSupport {
                 .body(JSON_BODY)
         );
 
-        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
+        runner.$(assertException().exception(CitrusRuntimeException.class).when(receive(direct)
                 .message()
                 .body(JSON_BODY)
                 .extract(extractor().jsonPath().expression("$.wrong", "user"))

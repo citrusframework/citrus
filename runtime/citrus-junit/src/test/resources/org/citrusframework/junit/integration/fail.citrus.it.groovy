@@ -16,4 +16,8 @@
 
 package org.citrusframework.junit.integration
 
-$(fail("Should fail"))
+import org.citrusframework.exceptions.CitrusRuntimeException
+
+$(assertException()
+    .exception(CitrusRuntimeException)
+    .when(fail("Should fail")))

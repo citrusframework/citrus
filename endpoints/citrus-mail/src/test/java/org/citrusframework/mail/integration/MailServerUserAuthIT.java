@@ -31,9 +31,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @CitrusSpringSupport
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @Isolated("ITs share mail servers on fixed ports 25025/25050/25075 with GreenMail state")
@@ -64,13 +61,12 @@ public class MailServerUserAuthIT implements TestActionSupport {
     @Test
     @CitrusTest
     public void shouldFailOnUnauthenticatedUsers(@CitrusResource TestCaseRunner runner) {
-        CitrusRuntimeException e = assertThrows(CitrusRuntimeException.class, () ->
-            runner.run(send()
-                .endpoint("unauthorizedMailClient")
+        runner.run(assertException()
+                .exception(CitrusRuntimeException.class)
+                .message("Failed to send mail message!")
+                .when(send()
+                    .endpoint("unauthorizedMailClient")
                     .message(MailMessage.request("foo@citrusframework.org", "bar@citrusframework.org", "Important!")
-                            .body("Hello from foo-user!"))
-            )
-        );
-        assertEquals("Failed to send mail message!", e.getMessage());
+                            .body("Hello from foo-user!"))));
     }
 }

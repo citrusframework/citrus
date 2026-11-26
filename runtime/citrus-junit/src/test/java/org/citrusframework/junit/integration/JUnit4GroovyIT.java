@@ -19,7 +19,6 @@ package org.citrusframework.junit.integration;
 import org.citrusframework.junit.ShouldFailGroup;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.junit.JUnit4CitrusSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -50,7 +49,7 @@ public class JUnit4GroovyIT extends JUnit4CitrusSupport {
     public void JUnit4Groovy_4_IT() {
     }
 
-    @Test(expected = TestCaseFailedException.class)
+    @Test
     @Category( ShouldFailGroup.class )
     @CitrusTestSource(type = TestLoader.GROOVY, name = "fail.citrus.it")
     public void JUnit4Groovy_5_IT() {

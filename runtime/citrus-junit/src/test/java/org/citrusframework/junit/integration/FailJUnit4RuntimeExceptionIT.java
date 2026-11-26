@@ -16,19 +16,23 @@
 
 package org.citrusframework.junit.integration;
 
+import org.citrusframework.TestAction;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.junit.ShouldFailGroup;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-public class FailJUnit4RuntimeExceptionIT extends JUnit4CitrusSpringSupport {
+public class FailJUnit4RuntimeExceptionIT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
-    @Test(expected = TestCaseFailedException.class)
+    @Test
     @Category( ShouldFailGroup.class )
     @CitrusTest
     public void failTest() {
-        throw new RuntimeException("This test should fail because of runtime exception");
+        run(assertException().exception(RuntimeException.class)
+                .action((TestAction) ctx -> {
+                    throw new RuntimeException("This test should fail because of runtime exception");
+                }));
     }
 }

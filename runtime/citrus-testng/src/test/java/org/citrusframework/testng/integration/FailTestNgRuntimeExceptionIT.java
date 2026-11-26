@@ -16,16 +16,20 @@
 
 package org.citrusframework.testng.integration;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
-public class FailTestNgRuntimeExceptionIT extends TestNGCitrusSupport {
+public class FailTestNgRuntimeExceptionIT extends TestNGCitrusSupport implements TestActionSupport {
 
-    @Test(groups = "org.citrusframework.testng.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
+    @Test(groups = "org.citrusframework.testng.ShouldFailGroup")
     @CitrusTest
     public void shouldFail() {
-        throw new RuntimeException("This test should fail because of runtime exception");
+        run(assertException().exception(RuntimeException.class)
+                .action((TestAction) ctx -> {
+                    throw new RuntimeException("This test should fail because of runtime exception");
+                }));
     }
 }

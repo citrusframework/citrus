@@ -16,15 +16,37 @@
 
 package org.citrusframework.testng.integration.container;
 
+import org.citrusframework.Completable;
+import org.citrusframework.TestAction;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.TestActionSupport;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-public class AsyncFailIT extends TestNGCitrusSpringSupport {
+import static org.citrusframework.util.TestUtils.waitForCompletion;
 
-    @Test(groups = "org.citrusframework.testng.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
+public class AsyncFailIT extends TestNGCitrusSpringSupport implements TestActionSupport {
+
+    @Test(groups = "org.citrusframework.testng.ShouldFailGroup")
     @CitrusTestSource(type = TestLoader.XML)
-    public void AsyncFailIT() {}
+    public void AsyncFailIT(@Optional @CitrusResource TestCaseRunner runner,
+                            @Optional @CitrusResource TestContext context) {
+        waitForCompletion((Completable) runner.getTestCase(), context);
+
+        assertException().exception(CitrusRuntimeException.class)
+                .action((TestAction) ctx -> {
+                    if (!ctx.hasExceptions()) {
+                        throw new AssertionError("Expected async failure in test context");
+                    }
+                    throw ctx.getExceptions().remove(0);
+                })
+                .build()
+                .execute(context);
+    }
 }
