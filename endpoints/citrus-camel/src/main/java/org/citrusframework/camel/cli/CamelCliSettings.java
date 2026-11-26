@@ -111,6 +111,13 @@ public final class CamelCliSettings {
     private static final String WAIT_FOR_RUNNING_STATE_ENV_FALLBACK = JBANG_ENV_PREFIX + "WAIT_FOR_RUNNING_STATE";
     private static final String WAIT_FOR_RUNNING_STATE_DEFAULT = "true";
 
+    @CitrusConfigProperty(description = "When set to true the stop action waits for the integration to reach stopped state before returning.", type = "java.lang.Boolean", defaultValue = "true")
+    private static final String WAIT_FOR_STOPPED_STATE_PROPERTY = CLI_PROPERTY_PREFIX + "wait.for.stopped.state";
+    private static final String WAIT_FOR_STOPPED_STATE_ENV = CLI_ENV_PREFIX + "WAIT_FOR_STOPPED_STATE";
+    private static final String WAIT_FOR_STOPPED_STATE_PROPERTY_FALLBACK = JBANG_PROPERTY_PREFIX + "wait.for.stopped.state";
+    private static final String WAIT_FOR_STOPPED_STATE_ENV_FALLBACK = JBANG_ENV_PREFIX + "WAIT_FOR_STOPPED_STATE";
+    private static final String WAIT_FOR_STOPPED_STATE_DEFAULT = "true";
+
     @CitrusConfigProperty(description = "When set to true the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.", type = "java.lang.Boolean", defaultValue = "true")
     private static final String AUTO_SET_PROPERTIES_PROPERTY = CLI_PROPERTY_PREFIX + "run.auto.set.properties";
     private static final String AUTO_SET_PROPERTIES_ENV = CLI_ENV_PREFIX + "RUN_AUTO_SET_PROPERTIES";
@@ -292,6 +299,15 @@ public final class CamelCliSettings {
         return Boolean.parseBoolean(Optional.ofNullable(resolve(WAIT_FOR_RUNNING_STATE_PROPERTY, WAIT_FOR_RUNNING_STATE_ENV,
                 WAIT_FOR_RUNNING_STATE_PROPERTY_FALLBACK, WAIT_FOR_RUNNING_STATE_ENV_FALLBACK))
                 .orElse(WAIT_FOR_RUNNING_STATE_DEFAULT));
+    }
+
+    /**
+     * When set to true the stop action waits for the integration to reach stopped state before returning.
+     */
+    public static boolean isWaitForStoppedState() {
+        return Boolean.parseBoolean(Optional.ofNullable(resolve(WAIT_FOR_STOPPED_STATE_PROPERTY, WAIT_FOR_STOPPED_STATE_ENV,
+                WAIT_FOR_STOPPED_STATE_PROPERTY_FALLBACK, WAIT_FOR_STOPPED_STATE_ENV_FALLBACK))
+                .orElse(WAIT_FOR_STOPPED_STATE_DEFAULT));
     }
 
     /**

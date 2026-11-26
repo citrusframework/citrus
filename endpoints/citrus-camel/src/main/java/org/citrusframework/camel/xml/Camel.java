@@ -256,7 +256,8 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             this.builder = builder;
         } else if (cli.getStop() != null) {
             CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder()
-                    .integrationName(cli.getStop().getIntegration());
+                    .integrationName(cli.getStop().getIntegration())
+                    .waitForStoppedState(cli.getStop().isWaitForStoppedState());
             this.builder = builder;
         }  else if (cli.getCustom() != null) {
             CamelCustomizedRunIntegrationAction.Builder builder = new CamelCustomizedRunIntegrationAction.Builder()
