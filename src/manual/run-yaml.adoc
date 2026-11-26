@@ -47,7 +47,7 @@ actions:
 
 One YAML file can hold several tests that share their setup, for example a success path and some error paths of the same feature.
 A file whose root has a `tests` list is a multi-test file.
-The tests share the `variables`, `endpoints` and `configuration` declared at the root, and four hooks run around them, much like the `@BeforeAll`, `@BeforeEach`, `@AfterEach` and `@AfterAll` methods of a JUnit test class.
+The tests share their setup and teardown through four hooks, much like the `@BeforeAll`, `@BeforeEach`, `@AfterEach` and `@AfterAll` methods of a JUnit test class.
 
 .orders.citrus.it.yaml
 [source,yaml]
