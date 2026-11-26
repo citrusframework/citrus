@@ -54,6 +54,18 @@ public class SendTest extends AbstractXmlActionTest {
     private final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings();
 
     @Test
+    public void shouldEnableSchemaValidationWithoutSchema() {
+        Send send = new Send();
+        org.citrusframework.xml.actions.Message message = new org.citrusframework.xml.actions.Message();
+        message.setSchemaValidation(true);
+        send.setMessage(message);
+
+        SendMessageAction action = send.build();
+
+        Assertions.assertTrue(action.isSchemaValidation());
+    }
+
+    @Test
     public void shouldLoadSend() throws IOException {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/send.citrus.it.xml");
 

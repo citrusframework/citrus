@@ -55,7 +55,7 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
                     .schemaValidation(message.isSchemaValidation() == null || message.isSchemaValidation())
                     .schema(message.schema)
                     .schemaRepository(message.schemaRepository);
-        } else if (message.isSchemaValidation() != null && !message.isSchemaValidation()) {
+        } else if (message.isSchemaValidation() != null) {
             builder.message().schemaValidation(message.isSchemaValidation());
         }
     }

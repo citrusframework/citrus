@@ -53,6 +53,18 @@ public class SendTest extends AbstractYamlActionTest {
     private final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings();
 
     @Test
+    public void shouldEnableSchemaValidationWithoutSchema() {
+        Send send = new Send();
+        org.citrusframework.yaml.actions.Message message = new org.citrusframework.yaml.actions.Message();
+        message.setSchemaValidation(true);
+        send.setMessage(message);
+
+        SendMessageAction action = send.build();
+
+        Assertions.assertTrue(action.isSchemaValidation());
+    }
+
+    @Test
     public void shouldLoadSend() throws IOException {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/send.citrus.it.yaml");
 

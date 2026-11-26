@@ -73,6 +73,23 @@ public class ReceiveTest extends AbstractXmlActionTest {
     final MessageValidator<?> defaultMessageValidator = Mockito.mock(MessageValidator.class);
 
     @Test
+    public void shouldAddMessageValidationContextWhenSchemaValidationEnabledWithoutSchema() {
+        Receive receive = new Receive();
+        org.citrusframework.xml.actions.Message message = new org.citrusframework.xml.actions.Message();
+        message.setSchemaValidation(true);
+        receive.setMessage(message);
+
+        ReceiveMessageAction action = receive.build();
+        DefaultMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(DefaultMessageValidationContext.class::isInstance)
+                .map(DefaultMessageValidationContext.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Expected default message validation context"));
+
+        Assertions.assertTrue(validationContext.isSchemaValidationEnabled());
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     public void shouldLoadReceive() throws IOException {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/receive.citrus.it.xml");

@@ -72,6 +72,23 @@ public class ReceiveTest extends AbstractYamlActionTest {
     final MessageValidator<?> defaultMessageValidator = Mockito.mock(MessageValidator.class);
 
     @Test
+    public void shouldAddMessageValidationContextWhenSchemaValidationEnabledWithoutSchema() {
+        Receive receive = new Receive();
+        org.citrusframework.yaml.actions.Message message = new org.citrusframework.yaml.actions.Message();
+        message.setSchemaValidation(true);
+        receive.setMessage(message);
+
+        ReceiveMessageAction action = receive.build();
+        DefaultMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(DefaultMessageValidationContext.class::isInstance)
+                .map(DefaultMessageValidationContext.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Expected default message validation context"));
+
+        Assertions.assertTrue(validationContext.isSchemaValidationEnabled());
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     public void shouldLoadReceive() throws IOException {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/receive.citrus.it.yaml");

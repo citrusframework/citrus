@@ -267,7 +267,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
                         .schemaValidation(message.isSchemaValidation() == null || message.isSchemaValidation())
                         .schema(message.schema)
                         .schemaRepository(message.schemaRepository);
-            } else if (message.isSchemaValidation() != null && !message.isSchemaValidation()) {
+            } else if (message.isSchemaValidation() != null) {
                 getMessageValidationContext().schemaValidation(message.isSchemaValidation());
             }
         }
