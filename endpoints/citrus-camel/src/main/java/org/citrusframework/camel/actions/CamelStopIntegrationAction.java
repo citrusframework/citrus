@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.citrusframework.api.actions.camel.CamelIntegrationStopActionBuilder;
+import org.citrusframework.camel.cli.CamelCliSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.jbang.ProcessAndOutput;
@@ -39,12 +40,14 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
     private static final long DEFAULT_STOP_TIMEOUT = 60000L;
 
     private final String integrationName;
+    private final boolean waitForStoppedState;
     private final long stopTimeout;
 
     public CamelStopIntegrationAction(Builder builder) {
         super("stop", builder);
 
         this.integrationName = builder.integrationName;
+        this.waitForStoppedState = builder.waitForStoppedState;
         this.stopTimeout = builder.stopTimeout;
     }
 
@@ -88,13 +91,15 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
                 }
             }
 
-            waitForProcessExit(pid, name);
+            if (waitForStoppedState) {
+                waitForStoppedState(pid, name);
+            }
 
             logger.info("Stopped Camel integration '%s' (%s)".formatted(name, pid));
         }
     }
 
-    private void waitForProcessExit(Long pid, String name) {
+    private void waitForStoppedState(Long pid, String name) {
         ProcessHandle.of(pid).ifPresent(handle -> {
             try {
                 handle.onExit().get(stopTimeout, TimeUnit.MILLISECONDS);
@@ -122,6 +127,10 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
         return integrationName;
     }
 
+    public boolean isWaitForStoppedState() {
+        return waitForStoppedState;
+    }
+
     public long getStopTimeout() {
         return stopTimeout;
     }
@@ -133,6 +142,7 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
             implements CamelIntegrationStopActionBuilder<CamelStopIntegrationAction, Builder> {
 
         private String integrationName = "*";
+        private boolean waitForStoppedState = CamelCliSettings.isWaitForStoppedState();
         private long stopTimeout = DEFAULT_STOP_TIMEOUT;
 
         @Override
@@ -144,6 +154,11 @@ public class CamelStopIntegrationAction extends AbstractCamelCliAction {
         @Override
         public Builder integrationName(String name) {
             this.integrationName = name;
+            return this;
+        }
+
+        public Builder waitForStoppedState(boolean enabled) {
+            this.waitForStoppedState = enabled;
             return this;
         }
 

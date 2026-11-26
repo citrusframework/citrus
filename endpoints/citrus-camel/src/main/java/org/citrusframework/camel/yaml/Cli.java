@@ -374,6 +374,11 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
             builder.integrationName(integrationName);
         }
 
+        @SchemaProperty(advanced = true, description = "Wait for the integration to reach stopped state.", defaultValue = "true")
+        public void setWaitForStoppedState(boolean enabled) {
+            builder.waitForStoppedState(enabled);
+        }
+
         @Override
         public CamelStopIntegrationAction.Builder getBuilder() {
             return builder;

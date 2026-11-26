@@ -511,12 +511,23 @@ public class Cli {
         @XmlAttribute
         protected String integration;
 
+        @XmlAttribute(name = "wait-for-stopped-state")
+        protected boolean waitForStoppedState = CamelCliSettings.isWaitForStoppedState();
+
         public void setIntegration(String integration) {
             this.integration = integration;
         }
 
         public String getIntegration() {
             return integration;
+        }
+
+        public boolean isWaitForStoppedState() {
+            return waitForStoppedState;
+        }
+
+        public void setWaitForStoppedState(boolean waitForStoppedState) {
+            this.waitForStoppedState = waitForStoppedState;
         }
     }
 
