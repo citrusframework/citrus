@@ -129,7 +129,7 @@ The tests of one file never run at the same time, even when the test runner runs
 It starts with its own copy of the variables from `beforeAll`, such as the host and port of a container started by the hook.
 A variable that a test declares with the same name overrides the shared value for this test only.
 Variables that a test creates or changes are not visible to the next test or to `afterAll`.
-Inherited strings that contain variable references or function expressions can be evaluated again when each test starts.
+Inherited strings that contain variable references or function expressions can be evaluated again against file-level values before the test applies its own variable definitions.
 Objects such as lists or maps are shared by reference. Treat them as read-only in the tests.
 Endpoints and containers created by `beforeAll` can be used by all tests in the file.
 Each file invocation has its own registry for new bindings and can still look up resources registered by the host.

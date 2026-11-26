@@ -216,10 +216,10 @@ public final class CitrusExtensionHelper {
     }
 
     /**
-     * Gets base key for store.
+     * Gets the store key prefix for this test invocation.
      */
     public static String getBaseKey(ExtensionContext extensionContext) {
-        return extensionContext.getRequiredTestClass().getName() + "." + extensionContext.getRequiredTestMethod().getName() + "#";
+        return extensionContext.getUniqueId() + "#";
     }
 
     /**

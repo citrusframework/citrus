@@ -16,13 +16,22 @@
 
 package org.citrusframework.integration;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import org.citrusframework.CitrusContext;
+import org.citrusframework.TestAction;
 import org.citrusframework.annotations.CitrusParameters;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -31,7 +40,32 @@ import org.junit.jupiter.params.provider.CsvSource;
  * and afterAll as test variable.
  */
 @CitrusSupport
-public class YamlMultiTestParameterizedIT {
+@Execution(ExecutionMode.CONCURRENT)
+public class YamlMultiTestParameterizedIT implements CitrusExtension.TestListener {
+
+    private static CountDownLatch overlappingFileHooks;
+
+    @BeforeAll
+    static void resetOverlapCheck() {
+        overlappingFileHooks = new CountDownLatch(2);
+    }
+
+    @Override
+    public void before(CitrusContext citrusContext) {
+        citrusContext.getReferenceResolver().bind("awaitBothParameterizedRows", (TestAction) context -> {
+            if (!Boolean.parseBoolean(System.getProperty("junit.jupiter.execution.parallel.enabled", "true"))) {
+                return;
+            }
+            overlappingFileHooks.countDown();
+            try {
+                Assertions.assertTrue(overlappingFileHooks.await(5, TimeUnit.SECONDS),
+                        "Both parameterized invocations must reach beforeAll");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new AssertionError("Interrupted while waiting for the other invocation", e);
+            }
+        });
+    }
 
     @CitrusResource
     private TestContext context;

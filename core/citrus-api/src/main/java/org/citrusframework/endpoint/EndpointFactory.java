@@ -68,4 +68,15 @@ public interface EndpointFactory extends ShutdownPhase {
      * @return
      */
     Endpoint create(String endpointName, CitrusEndpoint endpointConfig, Class<?> endpointType, TestContext context);
+    /**
+     * Shuts down an endpoint managed by this factory. Scoped factories may coordinate shutdown
+     * with other cleanup paths that refer to the same endpoint.
+     * @param endpoint the endpoint to shut down.
+     */
+    default void destroyEndpoint(Endpoint endpoint) {
+        if (endpoint instanceof ShutdownPhase destroyable) {
+            destroyable.destroy();
+        }
+    }
+
 }

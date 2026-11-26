@@ -152,9 +152,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
                     if (autoRemove) {
                         context.doFinally(() -> ctx -> {
                             logger.info("Stopping and removing endpoint '{}' due to auto remove setting", endpoint.getName());
-                            if (endpoint instanceof ShutdownPhase destroyable) {
-                                destroyable.destroy();
-                            }
+                            destroyEndpoint(endpoint);
 
                             synchronized (endpointCache) {
                                 endpointCache.remove(cachedEndpointName);
@@ -186,10 +184,10 @@ public class DefaultEndpointFactory implements EndpointFactory {
     @Override
     public void destroy() {
         endpointCache.forEach((name, endpoint) -> {
-            if (endpoint instanceof ShutdownPhase destroyable) {
+            if (endpoint instanceof ShutdownPhase) {
                 try {
                     logger.debug("Destroying endpoint '{}'", name);
-                    destroyable.destroy();
+                    destroyEndpoint(endpoint);
                 } catch (Exception e) {
                     logger.warn("Failed to shutdown bean {}: {}", name, e.getMessage());
                     if (logger.isDebugEnabled()) {

@@ -19,6 +19,7 @@ package org.citrusframework.common;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -35,14 +36,21 @@ import org.citrusframework.TestParameterAware;
 import org.citrusframework.TestResult;
 import org.citrusframework.actions.AbstractAsyncTestAction;
 import org.citrusframework.actions.CreateEndpointAction;
+import org.citrusframework.api.common.ShutdownPhase;
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.AbstractEndpointComponent;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.spi.ReferenceResolver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class DefaultMultiTestRunTest {
 
@@ -234,6 +242,73 @@ class DefaultMultiTestRunTest {
 
         Assertions.assertEquals(List.of(), runAll(run));
         Assertions.assertEquals(List.of("env=file", "greeting=file", "finally-a"), steps);
+    }
+
+    @Test
+    void shouldResolveInheritedExpressionsBeforeApplyingChildOverrides() {
+        Consumer<TestCase> parameters = testCase -> ((TestParameterAware) testCase)
+                .setParameters(new String[] { "env" }, new Object[] { "host" });
+        DefaultMultiTestRun run = run(() -> {
+            DefaultTestCase child = test("a", recordVariable("env", "env"), recordVariable("greeting", "greeting"));
+            child.getVariableDefinitions().put("env", "child");
+            return file().beforeAll(List.of(setVariable("env", "file"), setVariable("greeting", "${env}")))
+                    .test(child).build();
+        }, List.of(parameters));
+
+        Assertions.assertEquals(List.of(), runAll(run));
+        Assertions.assertEquals(List.of("env=child", "greeting=file", "finally-a"), steps);
+    }
+
+    @Test
+    void shouldCloseOwnedEndpointsOnceAndKeepHostAliasesOpen() {
+        ManagedEndpoint hostEndpoint = new ManagedEndpoint();
+        ManagedEndpoint ownedEndpoint = new ManagedEndpoint();
+        ManagedEndpoint autoClosedEndpoint = new ManagedEndpoint();
+        citrusContext.getReferenceResolver().bind("hostEndpoint", hostEndpoint);
+        citrusContext.getReferenceResolver().bind("managed", new AbstractEndpointComponent("managed") {
+            @Override
+            protected Endpoint createEndpoint(String path, Map<String, String> parameters, TestContext context) {
+                return "auto".equals(path) ? autoClosedEndpoint : ownedEndpoint;
+            }
+        });
+
+        DefaultMultiTestRun run = run(() -> file()
+                .beforeAll(List.of(CreateEndpointAction.Builder.createEndpoint().uri("hostEndpoint").endpointName("alias"),
+                        CreateEndpointAction.Builder.createEndpoint().type("managed:owned").endpointName("ownedEndpoint"),
+                        CreateEndpointAction.Builder.createEndpoint().type("managed:auto").endpointName("autoClosedEndpoint")
+                                .autoClose(true).autoRemove(true)))
+                .test(test("a", () -> context -> Assertions.assertSame(hostEndpoint,
+                        context.getReferenceResolver().resolve("alias"))))
+                .build());
+
+        Assertions.assertEquals(List.of(), runAll(run));
+        Assertions.assertEquals(0, hostEndpoint.shutdowns.get());
+        Assertions.assertEquals(1, ownedEndpoint.shutdowns.get());
+        Assertions.assertEquals(1, autoClosedEndpoint.shutdowns.get());
+    }
+
+    @Test
+    void shouldUseHostTypeSelectionWhenNoLocalReferenceMatches() {
+        ReferenceResolver hostResolver = mock(ReferenceResolver.class);
+        when(hostResolver.resolve(CharSequence.class)).thenReturn("preferred");
+        when(hostResolver.resolveAll(CharSequence.class)).thenReturn(Map.of("other", "other"));
+        fileContext.setReferenceResolver(hostResolver);
+
+        DefaultMultiTestRun run = run(() -> file()
+                .test(test("a", () -> context -> Assertions.assertEquals("preferred",
+                        context.getReferenceResolver().resolve(CharSequence.class))))
+                .build());
+
+        Assertions.assertEquals(List.of(), runAll(run));
+    }
+
+    private static final class ManagedEndpoint extends DirectEndpoint implements ShutdownPhase {
+        private final AtomicInteger shutdowns = new AtomicInteger();
+
+        @Override
+        public void destroy() {
+            shutdowns.incrementAndGet();
+        }
     }
 
     @Test

@@ -16,6 +16,8 @@
 
 name: multiParameterized
 beforeAll:
+  - action:
+      ref: awaitBothParameterizedRows
   - echo:
       message: "Environment ${env}"
 afterAll:

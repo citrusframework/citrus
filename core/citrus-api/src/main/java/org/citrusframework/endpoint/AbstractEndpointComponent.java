@@ -90,10 +90,15 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
                     .map(Boolean::parseBoolean)
                     .orElseGet(CitrusSettings::isAutoCloseDynamicEndpoints);
             if (autoClose) {
+                EndpointFactory factory = context.getEndpointFactory();
                 context.doFinally(() -> ctx -> {
                     if (endpoint instanceof ShutdownPhase destroyable) {
                         logger.info("Stopping endpoint '{}' due to auto close setting", endpoint.getName());
-                        destroyable.destroy();
+                        if (factory != null) {
+                            factory.destroyEndpoint(endpoint);
+                        } else {
+                            destroyable.destroy();
+                        }
                     }
                 });
             }
