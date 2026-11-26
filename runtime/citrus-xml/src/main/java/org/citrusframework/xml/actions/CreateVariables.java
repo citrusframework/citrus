@@ -61,7 +61,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
                     builder.variable(variable.getName(), variable.getVariableValue().getData());
                 }
             } else {
-                builder.variable(variable.getName(), variable.getValue());
+                builder.variable(variable.getName(), Optional.ofNullable(variable.getValue()).orElse(""));
             }
         }
 

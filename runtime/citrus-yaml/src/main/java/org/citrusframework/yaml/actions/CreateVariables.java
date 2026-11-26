@@ -50,7 +50,7 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
                             variable.getScript().getValue().trim()));
                 }
             } else {
-                builder.variable(variable.getName(), variable.getValue().trim());
+                builder.variable(variable.getName(), Optional.ofNullable(variable.getValue()).map(String::trim).orElse(""));
             }
         }
 
