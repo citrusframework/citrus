@@ -19,6 +19,7 @@ package org.citrusframework.sql.integration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.sql.DataSource;
 
@@ -27,7 +28,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
@@ -100,16 +100,23 @@ public class SqlResultSetValidatorJavaIT implements TestActionSupport {
     public void failingPlainValidatorFailsTest(@CitrusResource TestCaseRunner runner) {
         seed(runner);
 
-        TestCaseFailedException e = Assertions.assertThrows(TestCaseFailedException.class, () ->
-            runner.run(query().dataSource(dataSource)
-                .statement("select DESCRIPTION from ORDERS where ORDER_ID=1")
-                .validator((resultSet, context) -> {
-                    throw new ValidationException("always fails");
-                })));
-        Assertions.assertInstanceOf(ValidationException.class, e.getCause(),
-                "expected a ValidationException as cause, got: " + e.getCause());
-        Assertions.assertTrue(containsCause(e, "always fails"),
-                "expected the validator failure in the cause chain, got: " + e);
+        AtomicReference<Throwable> e = new AtomicReference<>();
+        runner.run(assertException().exception(ValidationException.class).action(ctx -> {
+            try {
+                query().dataSource(dataSource)
+                        .statement("select DESCRIPTION from ORDERS where ORDER_ID=1")
+                        .validator((resultSet, context) -> {
+                            throw new ValidationException("always fails");
+                        }).build().execute(ctx);
+            } catch (Throwable failure) {
+                e.set(failure);
+                throw failure;
+            }
+        }));
+        Assertions.assertInstanceOf(ValidationException.class, e.get(),
+                "expected a ValidationException, got: " + e.get());
+        Assertions.assertTrue(containsCause(e.get(), "always fails"),
+                "expected the validator failure in the cause chain, got: " + e.get());
     }
 
     @Test

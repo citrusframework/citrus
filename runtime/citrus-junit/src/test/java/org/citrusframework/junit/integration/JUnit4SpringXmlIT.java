@@ -19,7 +19,6 @@ package org.citrusframework.junit.integration;
 import org.citrusframework.junit.ShouldFailGroup;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.api.common.TestLoader;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -55,7 +54,7 @@ public class JUnit4SpringXmlIT extends JUnit4CitrusSpringSupport {
     public void JUnit4SpringXml_4_IT() {
     }
 
-    @Test(expected = TestCaseFailedException.class)
+    @Test
     @Category( ShouldFailGroup.class )
     @CitrusTestSource(type = TestLoader.SPRING, name = "FailJUnit4IT")
     public void JUnit4SpringXml_5_IT() {

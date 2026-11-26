@@ -19,6 +19,7 @@ package org.citrusframework.testng.actions.dsl;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.base.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.testng.UnitTestSupport;
@@ -98,7 +99,7 @@ public class AsyncTestActionBuilderTest extends UnitTestSupport {
         assertTrue(container.getActions().get(3).getClass().isAnonymousClass());
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     public void testAsyncError() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.variable("var", "foo");
@@ -108,10 +109,13 @@ public class AsyncTestActionBuilderTest extends UnitTestSupport {
                 fail("Something went wrong!")
             ));
 
-        builder.stop();
+        assertException().exception(TestCaseFailedException.class)
+                .action((TestAction) ctx -> builder.stop())
+                .build()
+                .execute(context);
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     public void testAsyncErrorActions() throws Exception {
         CompletableFuture<Boolean> successActionPerformed = new CompletableFuture<>();
         CompletableFuture<Boolean> errorActionPerformed = new CompletableFuture<>();
@@ -136,7 +140,10 @@ public class AsyncTestActionBuilderTest extends UnitTestSupport {
                     }
                 }));
 
-            builder.stop();
+            assertException().exception(TestCaseFailedException.class)
+                    .action((TestAction) ctx -> builder.stop())
+                    .build()
+                    .execute(context);
         } finally {
             assertFalse(successActionPerformed.isDone());
             errorActionPerformed.get(1000L, TimeUnit.MILLISECONDS);

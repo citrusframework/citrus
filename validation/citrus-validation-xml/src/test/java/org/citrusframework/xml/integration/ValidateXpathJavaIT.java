@@ -22,7 +22,7 @@ import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.api.xml.namespace.NamespaceContextBuilder;
@@ -30,8 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
@@ -238,7 +236,9 @@ public class ValidateXpathJavaIT implements TestActionSupport {
                         "</HelloRequest>")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}"));
-        assertThrows(TestCaseFailedException.class, () -> runner.run(receive("direct:hello")
+        runner.run(assertException()
+                .exception(ValidationException.class)
+                .when(receive("direct:hello")
                 .message()
                 .validate(validation().xpath().expression("//:HelloRequest/:MessageId", "${messageId}"))
                 .validate(validation().xpath().expression("//:HelloRequest/:CorrelationId", "${correlationId}"))

@@ -19,17 +19,18 @@ package org.citrusframework.junit.integration;
 import org.citrusframework.junit.ShouldFailGroup;
 import org.citrusframework.dsl.TestActionSupport;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 public class FailJUnit4JavaIT extends JUnit4CitrusSpringSupport implements TestActionSupport {
 
-    @Test(expected = TestCaseFailedException.class)
+    @Test
     @Category( ShouldFailGroup.class )
     @CitrusTest
     public void failTest() {
-        run(echo("This test should fail because of unknown variable ${foo}"));
+        run(assertException().exception(CitrusRuntimeException.class)
+                .when(echo("This test should fail because of unknown variable ${foo}")));
     }
 }

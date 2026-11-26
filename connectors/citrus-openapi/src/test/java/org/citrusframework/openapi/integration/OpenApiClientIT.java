@@ -26,7 +26,6 @@ import org.citrusframework.api.actions.openapi.OpenApiClientRequestActionBuilder
 import org.citrusframework.api.actions.openapi.OpenApiClientResponseActionBuilder;
 import org.citrusframework.api.openapi.AutoFillType;
 import org.citrusframework.dsl.TestActionSupport;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
@@ -41,6 +40,7 @@ import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.citrusframework.util.SocketUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Named;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -57,7 +57,6 @@ import static java.util.Collections.singletonList;
 import static org.citrusframework.message.MessageType.JSON;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, Config.class})
@@ -231,7 +230,7 @@ public class OpenApiClientIT implements TestActionSupport {
             .message()
             .validate(validation().jsonPath()
                     .expression("$.name", "other name"));
-        assertThrows(TestCaseFailedException.class, () -> runner.then(clientResponseActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(clientResponseActionBuilder));
 
     }
 
@@ -280,7 +279,7 @@ public class OpenApiClientIT implements TestActionSupport {
                   ],
                   "status": "@assertThat(anyOf(equalTo('available'), equalTo('pending'), equalTo('sold')))@"
                 }""");
-        assertThrows(TestCaseFailedException.class, () -> runner.then(clientResponseActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(clientResponseActionBuilder));
 
     }
 
@@ -317,7 +316,7 @@ public class OpenApiClientIT implements TestActionSupport {
                 <some-soap-response>
                 </some-soap-response>
                 """);
-        assertThrows(TestCaseFailedException.class, () -> runner.then(clientResponseActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(clientResponseActionBuilder));
 
     }
 
@@ -351,7 +350,7 @@ public class OpenApiClientIT implements TestActionSupport {
             .client(httpClient)
             .receive("getPetById", OK.name())
             .schemaValidation(true);
-        assertThrows(TestCaseFailedException.class, () -> runner.then(clientResponseActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(clientResponseActionBuilder));
     }
 
     @CitrusTest
@@ -388,7 +387,7 @@ public class OpenApiClientIT implements TestActionSupport {
             .message()
             .type(JSON)
             .body("{}");
-        assertThrows(TestCaseFailedException.class, () -> runner.then(clientResponseActionBuilder));
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(clientResponseActionBuilder));
     }
 
     /**
@@ -423,7 +422,7 @@ public class OpenApiClientIT implements TestActionSupport {
         // We can validate an OpenAPI response against a specific schema,
         // even without explicitly specifying the spec in the context.
         // By default, the OpenApiSpecification will be resolved by the schemaRepository name.
-        assertThrows(TestCaseFailedException.class, () -> runner.then(http().client(httpClient)
+        runner.then(assertException().exception(CitrusRuntimeException.class).when(http().client(httpClient)
                 .receive()
                 .response(OK)
                 .message()
@@ -483,7 +482,7 @@ public class OpenApiClientIT implements TestActionSupport {
                 .receive("addPet", HttpStatus.CREATED.name()));
 
         } else {
-            assertThrows(TestCaseFailedException.class, () -> runner.when(requestActionBuilder));
+            runner.when(assertException().exception(CitrusRuntimeException.class).when(requestActionBuilder));
         }
     }
 
@@ -524,7 +523,7 @@ public class OpenApiClientIT implements TestActionSupport {
         if (shouldPass) {
             runner.then(responseActionBuilder);
         } else {
-            assertThrows(TestCaseFailedException.class, () -> runner.then(responseActionBuilder));
+            runner.then(assertException().exception(CitrusRuntimeException.class).when(responseActionBuilder));
         }
     }
 
@@ -580,7 +579,7 @@ public class OpenApiClientIT implements TestActionSupport {
             .message()
             .body(Resources.create(INVALID_PET_PATH));
 
-        assertThrows(TestCaseFailedException.class, () -> runner.when(addPetBuilder));
+        runner.when(assertException().exception(CitrusRuntimeException.class).when(addPetBuilder));
     }
 
     @CitrusTest
@@ -592,7 +591,7 @@ public class OpenApiClientIT implements TestActionSupport {
             .send("addPet")
             .message()
             .body(Resources.create(VALID_PET_PATH));
-        assertThrows(TestCaseFailedException.class, () -> runner.when(addPetBuilder));
+        runner.when(assertException().exception(CitrusRuntimeException.class).when(addPetBuilder));
     }
 
     @CitrusTest
@@ -636,7 +635,7 @@ public class OpenApiClientIT implements TestActionSupport {
             .schemaValidation(true)
             .message()
             .body(Resources.create(VALID_PET_PATH));
-        assertThrows(TestCaseFailedException.class, () -> runner.when(addPetBuilder));
+        runner.when(assertException().exception(CitrusRuntimeException.class).when(addPetBuilder));
 
     }
 

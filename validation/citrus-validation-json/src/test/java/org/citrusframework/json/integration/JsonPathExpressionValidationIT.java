@@ -21,7 +21,6 @@ import org.citrusframework.annotations.CitrusEndpoint;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
@@ -31,10 +30,9 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.test.context.ContextConfiguration;
+import org.citrusframework.exceptions.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @since 3.3.1
@@ -105,7 +103,7 @@ public class JsonPathExpressionValidationIT implements TestActionSupport {
                 .body(JSON_BODY)
         );
 
-        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
+        runner.$(assertException().exception(ValidationException.class).when(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
                 .validate(validation().jsonPath().expression("$.user", "wrong"))
@@ -138,7 +136,7 @@ public class JsonPathExpressionValidationIT implements TestActionSupport {
                 .body(JSON_BODY)
         );
 
-        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
+        runner.$(assertException().exception(ValidationException.class).when(receive(direct)
                 .message()
                 .body("{\"user\":\"@ignore@\", \"age\": \"@ignore@\"}")
                 .validate(validation().jsonPath().expression("$.user", "christoph"))

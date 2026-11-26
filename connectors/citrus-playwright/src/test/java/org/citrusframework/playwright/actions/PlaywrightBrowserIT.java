@@ -19,8 +19,8 @@ package org.citrusframework.playwright.actions;
 import static org.citrusframework.playwright.actions.PlaywrightActionBuilder.playwright;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.citrusframework.container.Assert.Builder.assertException;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -32,10 +32,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
 import org.citrusframework.container.Sequence;
 import org.citrusframework.context.TestContext;
@@ -115,8 +117,7 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).click().locator("#submit").build().execute(context);
             playwright().browser(browser).waitFor().locator("#message").visible().build().execute(context);
             playwright().browser(browser).verify().locator("#message").text("Citrus:ready").build().execute(context);
-            assertThrows(ValidationException.class,
-                    () -> playwright().browser(browser).verify().locator("#message").text("Citrus:waiting").build().execute(context));
+            assertException().exception(ValidationException.class).when(playwright().browser(browser).verify().locator("#message").text("Citrus:waiting")).build().execute(context);
             playwright().browser(browser).verify().locator("#message").attribute("data-state", "ready").build().execute(context);
             playwright().browser(browser).extract().locator("#message").text().variable("message").build().execute(context);
             playwright().browser(browser).javascript().script("() => document.title").variable("title").build().execute(context);
@@ -577,9 +578,7 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).console().pageErrors().variable("pageErrors")
                     .build().execute(context);
             assertTrue(context.getVariable("pageErrors").contains("option-coverage-boom"));
-            assertThrows(ValidationException.class,
-                    () -> playwright().browser(browser).console().verifyNoPageErrors()
-                            .build().execute(context));
+            assertException().exception(ValidationException.class).when(playwright().browser(browser).console().verifyNoPageErrors()).build().execute(context);
 
             // O2 + O3 - sized recording with a custom overlay.
             playwright().browser(browser).screencast().start(video.toString()).size(640, 480)
@@ -630,13 +629,17 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).open().url(fixture.toExternalForm()).build().execute(context);
 
             // 1. Inert actionability (Playwright 1.65): pointer and input actions time out while subtree is inert.
-            TimeoutError clickInertError = assertThrows(TimeoutError.class,
-                    () -> playwright().browser(browser).click().locator("#inert-btn").build().execute(context));
-            assertTrue(clickInertError.getMessage().contains("inert"), clickInertError.getMessage());
+            AtomicReference<Throwable> clickError = new AtomicReference<>();
+            assertException().exception(TimeoutError.class)
+                    .action(capturing(clickError, ctx -> playwright().browser(browser).click().locator("#inert-btn").build().execute(ctx)))
+                    .build().execute(context);
+            assertTrue(clickError.get().getMessage().contains("inert"), clickError.get().getMessage());
 
-            TimeoutError fillInertError = assertThrows(TimeoutError.class,
-                    () -> playwright().browser(browser).fill().locator("#inert-input").value("blocked").build().execute(context));
-            assertTrue(fillInertError.getMessage().contains("inert"), fillInertError.getMessage());
+            AtomicReference<Throwable> fillError = new AtomicReference<>();
+            assertException().exception(TimeoutError.class)
+                    .action(capturing(fillError, ctx -> playwright().browser(browser).fill().locator("#inert-input").value("blocked").build().execute(ctx)))
+                    .build().execute(context);
+            assertTrue(fillError.get().getMessage().contains("inert"), fillError.get().getMessage());
 
             playwright().browser(browser).javascript()
                     .script("() => document.getElementById('inert-zone').removeAttribute('inert')")
@@ -654,10 +657,8 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).cookies()
                     .verify("hostOnly", "v1").url("https://example.com/dashboard")
                     .build().execute(context);
-            assertThrows(CitrusRuntimeException.class,
-                    () -> playwright().browser(browser).cookies()
-                            .verify("hostOnly", "v1").url("https://sub.example.com/dashboard")
-                            .build().execute(context));
+            assertException().exception(CitrusRuntimeException.class).when(playwright().browser(browser).cookies()
+                            .verify("hostOnly", "v1").url("https://sub.example.com/dashboard")).build().execute(context);
 
             playwright().browser(browser).cookies()
                     .add(CookieSpec.cookie("apiScoped", "v2").domain("example.com").path("/api"))
@@ -665,10 +666,8 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).cookies()
                     .verify("apiScoped", "v2").url("https://example.com/api/orders")
                     .build().execute(context);
-            assertThrows(CitrusRuntimeException.class,
-                    () -> playwright().browser(browser).cookies()
-                            .verify("apiScoped", "v2").url("https://example.com/apiv2")
-                            .build().execute(context));
+            assertException().exception(CitrusRuntimeException.class).when(playwright().browser(browser).cookies()
+                            .verify("apiScoped", "v2").url("https://example.com/apiv2")).build().execute(context);
 
             playwright().browser(browser).cookies()
                     .add(CookieSpec.cookie("slashScoped", "v3").domain("example.com").path("/foo/"))
@@ -676,22 +675,18 @@ class PlaywrightBrowserIT {
             playwright().browser(browser).cookies()
                     .verify("slashScoped", "v3").url("https://example.com/foo/bar")
                     .build().execute(context);
-            assertThrows(CitrusRuntimeException.class,
-                    () -> playwright().browser(browser).cookies()
-                            .verify("slashScoped", "v3").url("https://example.com/foo")
-                            .build().execute(context));
+            assertException().exception(CitrusRuntimeException.class).when(playwright().browser(browser).cookies()
+                            .verify("slashScoped", "v3").url("https://example.com/foo")).build().execute(context);
 
             // 3. ARIA snapshots & accessible names (Playwright 1.65): unrendered text is excluded.
             playwright().browser(browser).verify().locator("#aria-panel")
                     .ariaSnapshotContains("Details Summary").build().execute(context);
             playwright().browser(browser).verify().locator("#aria-panel")
                     .ariaSnapshotContains("Rendered Label").build().execute(context);
-            assertThrows(ValidationException.class,
-                    () -> playwright().browser(browser).verify().locator("#aria-panel")
-                            .ariaSnapshotContains("Direct closed text").build().execute(context));
-            assertThrows(ValidationException.class,
-                    () -> playwright().browser(browser).verify().locator("#aria-panel")
-                            .ariaSnapshotContains("Unslotted Fallback").build().execute(context));
+            assertException().exception(ValidationException.class).when(playwright().browser(browser).verify().locator("#aria-panel")
+                            .ariaSnapshotContains("Direct closed text")).build().execute(context);
+            assertException().exception(ValidationException.class).when(playwright().browser(browser).verify().locator("#aria-panel")
+                            .ariaSnapshotContains("Unslotted Fallback")).build().execute(context);
 
             playwright().browser(browser).verify()
                     .locator(LocatorSpec.role("button").name("Unslotted Fallback"))
@@ -713,11 +708,13 @@ class PlaywrightBrowserIT {
             assertFalse(frameButton.isVisible());
             playwright().browser(browser).verify().locator(frameButtonSpec).hidden().build().execute(context);
 
-            CitrusRuntimeException hiddenFrameError = assertThrows(CitrusRuntimeException.class,
-                    () -> playwright().browser(browser).frame().frame("#hidden-frame")
-                            .click("#secret-frame-btn").build().execute(context));
-            assertTrue(hiddenFrameError.getCause() instanceof TimeoutError,
-                    String.valueOf(hiddenFrameError.getCause()));
+            AtomicReference<Throwable> hiddenFrameError = new AtomicReference<>();
+            assertException().exception(CitrusRuntimeException.class)
+                    .action(capturing(hiddenFrameError, ctx -> playwright().browser(browser).frame().frame("#hidden-frame")
+                            .click("#secret-frame-btn").build().execute(ctx)))
+                    .build().execute(context);
+            assertTrue(hiddenFrameError.get().getCause() instanceof TimeoutError,
+                    String.valueOf(hiddenFrameError.get().getCause()));
 
             playwright().browser(browser).javascript()
                     .script("() => { const f = document.getElementById('hidden-frame'); f.style.visibility = 'visible'; f.style.display = 'none'; }")
@@ -926,18 +923,27 @@ class PlaywrightBrowserIT {
                     .build().execute(context);
             playwright().browser(browser).cookies().verify("keepRoot", "v1").build().execute(context);
             playwright().browser(browser).cookies().verify("dropOrders", "v3").build().execute(context);
-            assertThrows(CitrusRuntimeException.class,
-                    () -> playwright().browser(browser).cookies().verify("dropNamed", "v2").build().execute(context));
+            assertException().exception(CitrusRuntimeException.class).when(playwright().browser(browser).cookies().verify("dropNamed", "v2")).build().execute(context);
 
             playwright().browser(browser).cookies()
                     .clear().domain("example.com").path("/orders")
                     .build().execute(context);
             playwright().browser(browser).cookies().verify("keepRoot", "v1").build().execute(context);
-            assertThrows(CitrusRuntimeException.class,
-                    () -> playwright().browser(browser).cookies().verify("dropOrders", "v3").build().execute(context));
+            assertException().exception(CitrusRuntimeException.class).when(playwright().browser(browser).cookies().verify("dropOrders", "v3")).build().execute(context);
         } finally {
             playwright().browser(browser).stop().build().execute(context);
         }
+    }
+
+    private static TestAction capturing(AtomicReference<Throwable> error, TestAction action) {
+        return ctx -> {
+            try {
+                action.execute(ctx);
+            } catch (Throwable e) {
+                error.set(e);
+                throw e;
+            }
+        };
     }
 
     /**

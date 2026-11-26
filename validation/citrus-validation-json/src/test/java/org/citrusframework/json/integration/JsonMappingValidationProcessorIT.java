@@ -22,7 +22,6 @@ import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.json.dsl.JsonSupport;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
-import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
@@ -33,10 +32,10 @@ import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Assertions;
+import org.citrusframework.exceptions.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
@@ -109,14 +108,18 @@ public class JsonMappingValidationProcessorIT implements TestActionSupport {
                 .body(JSON_BODY)
         );
 
-        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
+        runner.$(assertException().exception(ValidationException.class).when(receive(direct)
                 .message()
                 .validate(JsonSupport.validate(Person.class)
                         .mapper(mapper)
                         .validator((person, headers, context) -> Assertions.assertTrue(person.age > 30)).build())
                 .validate(JsonSupport.validate(Person.class)
                         .mapper(mapper)
-                        .validator((person, headers, context) -> Assertions.assertEquals("should fail", person.name)).build())
+                        .validator((person, headers, context) -> {
+                            if (!"should fail".equals(person.name)) {
+                                throw new ValidationException("Expected name 'should fail' but was '" + person.name + "'");
+                            }
+                        }).build())
         ));
     }
 
@@ -129,11 +132,15 @@ public class JsonMappingValidationProcessorIT implements TestActionSupport {
                 .body(JSON_BODY)
         );
 
-        assertThrows(TestCaseFailedException.class, () -> runner.$(receive(direct)
+        runner.$(assertException().exception(ValidationException.class).when(receive(direct)
                 .message()
                 .validate(JsonSupport.validate(Person.class)
                         .mapper(mapper)
-                        .validator((person, headers, context) -> Assertions.assertEquals("should fail", person.name)).build())
+                        .validator((person, headers, context) -> {
+                            if (!"should fail".equals(person.name)) {
+                                throw new ValidationException("Expected name 'should fail' but was '" + person.name + "'");
+                            }
+                        }).build())
         ));
     }
 

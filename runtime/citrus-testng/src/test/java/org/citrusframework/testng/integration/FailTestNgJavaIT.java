@@ -24,9 +24,10 @@ import org.testng.annotations.Test;
 
 public class FailTestNgJavaIT extends TestNGCitrusSupport implements TestActionSupport {
 
-    @Test(groups = "org.citrusframework.testng.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)
+    @Test(groups = "org.citrusframework.testng.ShouldFailGroup")
     @CitrusTest
     public void shouldFail() {
-        run(echo("This test should fail because of unknown variable ${foo}"));
+        run(assertException().exception(CitrusRuntimeException.class)
+                .when(echo("This test should fail because of unknown variable ${foo}")));
     }
 }

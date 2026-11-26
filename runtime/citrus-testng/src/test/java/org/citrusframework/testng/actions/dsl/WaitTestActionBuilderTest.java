@@ -26,7 +26,7 @@ import org.citrusframework.api.condition.Condition;
 import org.citrusframework.condition.FileCondition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -118,7 +118,7 @@ public class WaitTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getCondition().getClass(), ActionCondition.class);
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     public void testWaitFileBuilderFailed() {
         reset(file);
 
@@ -129,18 +129,18 @@ public class WaitTestActionBuilderTest extends UnitTestSupport {
         final String interval = "500";
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(waitFor().file()
+        builder.$(assertException().exception(CitrusRuntimeException.class).when(waitFor().file()
                     .seconds(seconds)
                     .interval(interval)
-                    .resource(file));
+                    .resource(file)));
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test
     public void testWaitActionBuilderFailed() {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(waitFor().execution()
+        builder.$(assertException().exception(CitrusRuntimeException.class).when(waitFor().execution()
                     .milliseconds(500L)
                     .interval(100L)
-                    .action(fail("I am failing!")));
+                    .action(fail("I am failing!"))));
     }
 }

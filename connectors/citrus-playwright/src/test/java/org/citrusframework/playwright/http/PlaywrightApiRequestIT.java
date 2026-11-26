@@ -32,7 +32,7 @@ import static org.citrusframework.playwright.endpoint.PlaywrightHeaders.PLAYWRIG
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.citrusframework.container.Assert.Builder.assertException;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.microsoft.playwright.Browser;
@@ -52,9 +52,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.zip.GZIPOutputStream;
 
+import org.citrusframework.TestAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.base.annotations.CitrusAnnotations;
 import org.citrusframework.base.DefaultTestCaseRunner;
@@ -260,11 +262,13 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         playwright().browser(browser).context().newContext("admin").build().execute(context);
         HttpClient opsApi = PlaywrightEndpoints.playwright().apiClient().browser(browser).context("ops").build();
 
-        RuntimeException error = assertThrows(RuntimeException.class,
-                () -> http().client(opsApi).send().get("/echo").build().execute(context));
+        AtomicReference<Throwable> error = new AtomicReference<>();
+        assertException().exception(RuntimeException.class)
+                .action(capturing(error, ctx -> http().client(opsApi).send().get("/echo").build().execute(ctx)))
+                .build().execute(context);
 
-        assertTrue(messages(error).contains("'ops'"), messages(error));
-        assertTrue(messages(error).contains("default, admin"), messages(error));
+        assertTrue(messages(error.get()).contains("'ops'"), messages(error.get()));
+        assertTrue(messages(error.get()).contains("default, admin"), messages(error.get()));
         assertTrue(server.lastRequest("/echo").isEmpty());
     }
 
@@ -290,9 +294,12 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
         HttpClientRequestActionBuilder send = http().client(browserApi).send().get("/echo");
         send.message().header("Cookie", "EXTRA=1");
-        RuntimeException error = assertThrows(RuntimeException.class, () -> send.build().execute(context));
+        AtomicReference<Throwable> error = new AtomicReference<>();
+        assertException().exception(RuntimeException.class)
+                .action(capturing(error, ctx -> send.build().execute(ctx)))
+                .build().execute(context);
 
-        assertTrue(messages(error).contains("playwright().cookies().add("), messages(error));
+        assertTrue(messages(error.get()).contains("playwright().cookies().add("), messages(error.get()));
         assertTrue(server.lastRequest("/echo").isEmpty());
     }
 
@@ -460,9 +467,12 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         startBrowser(builder -> { });
         HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser).requestUrl(startHttps()).build();
 
-        RuntimeException error = assertThrows(RuntimeException.class, () -> send(client, "/echo"));
+        AtomicReference<Throwable> error = new AtomicReference<>();
+        assertException().exception(RuntimeException.class)
+                .action(capturing(error, ctx -> send(client, "/echo")))
+                .build().execute(context);
 
-        assertTrue(messages(error).contains("Browser-session request GET https://127.0.0.1"), messages(error));
+        assertTrue(messages(error.get()).contains("Browser-session request GET https://127.0.0.1"), messages(error.get()));
         assertTrue(httpsServer.lastRequest("/echo").isEmpty());
     }
 
@@ -515,9 +525,12 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         startBrowser(builder -> { });
         HttpClient impatient = PlaywrightEndpoints.playwright().apiClient().browser(browser).timeout(300L).build();
 
-        RuntimeException error = assertThrows(RuntimeException.class, () -> send(impatient, "/slow"));
+        AtomicReference<Throwable> error = new AtomicReference<>();
+        assertException().exception(RuntimeException.class)
+                .action(capturing(error, ctx -> send(impatient, "/slow")))
+                .build().execute(context);
 
-        assertTrue(messages(error).contains("300"), messages(error));
+        assertTrue(messages(error.get()).contains("300"), messages(error.get()));
     }
 
     @Test
@@ -554,9 +567,12 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
         try (ResettingServer flaky = new ResettingServer(1)) {
             HttpClient client = PlaywrightEndpoints.playwright().apiClient().browser(browser).requestUrl(flaky.url()).build();
 
-            RuntimeException error = assertThrows(RuntimeException.class, () -> send(client, "/flaky"));
+            AtomicReference<Throwable> error = new AtomicReference<>();
+            assertException().exception(RuntimeException.class)
+                    .action(capturing(error, ctx -> send(client, "/flaky")))
+                    .build().execute(context);
 
-            assertTrue(messages(error).contains("Browser-session request GET " + flaky.url() + "/flaky failed"), messages(error));
+            assertTrue(messages(error.get()).contains("Browser-session request GET " + flaky.url() + "/flaky failed"), messages(error.get()));
             assertEquals(1, flaky.attempts());
         }
     }
@@ -701,6 +717,17 @@ class PlaywrightApiRequestIT extends AbstractDslLoaderTest {
 
     private RecordedRequest lastRequest(String path) {
         return server.lastRequest(path).orElseThrow(() -> new AssertionError("The fixture received no request for " + path));
+    }
+
+    private static TestAction capturing(AtomicReference<Throwable> error, TestAction action) {
+        return ctx -> {
+            try {
+                action.execute(ctx);
+            } catch (Throwable e) {
+                error.set(e);
+                throw e;
+            }
+        };
     }
 
     private static String messages(Throwable error) {
