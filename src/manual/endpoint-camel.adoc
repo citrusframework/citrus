@@ -1331,6 +1331,11 @@ actions:
 
 The Camel integration to stop is identified by its name. Usually this is the file name without the file extension. You can also specify a name when running the integration and reference this name in the stop action.
 
+By default, the stop action waits for the process to actually terminate before returning.
+You can disable this with the `waitForStoppedState=false` option, analogous to `waitForRunningState` on the run action.
+
+TIP: Stopping an integration that has already exited (Camel CLI exit code 3, `NOT_FOUND`) is treated as success and logged at info level instead of failing the test. This is especially useful when `autoRemove` is enabled and the integration has already exited on its own (e.g. due to a startup error caught by a verify action).
+
 === Verify Camel integrations
 
 Each Camel integration reports a state (running or stopped) that Citrus is able to verify. In addition to that the running Camel integration produces a log output that Citrus is able to scan for expected messages.
@@ -1944,6 +1949,9 @@ Settings use the `citrus.camel.cli.*` prefix. The older `citrus.camel.jbang.*` p
 | citrus.camel.cli.wait.for.running.state
 | When set to true, Camel CLI will automatically wait for each integration created to be in running state. (default="true")
 
+| citrus.camel.cli.wait.for.stopped.state
+| When set to true, the stop action waits for the integration process to actually terminate before returning. (default="true")
+
 | citrus.camel.cli.run.auto.set.properties
 | When set to true, the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run. (default="true")
 
@@ -1997,6 +2005,9 @@ Settings use the `citrus.camel.cli.*` prefix. The older `citrus.camel.jbang.*` p
 
 | CITRUS_CAMEL_CLI_WAIT_FOR_RUNNING_STATE
 | When set to true, waits for integrations to reach running state.
+
+| CITRUS_CAMEL_CLI_WAIT_FOR_STOPPED_STATE
+| When set to true, the stop action waits for the integration process to actually terminate.
 
 | CITRUS_CAMEL_CLI_TRUST_URL
 | Comma-separated list of trust URLs for JBang.
