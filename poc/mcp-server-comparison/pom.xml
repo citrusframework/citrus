@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Standalone aggregator: intentionally NO parent. Do not add to Citrus reactor/BOM. -->
+  <groupId>org.citrusframework.poc.mcp</groupId>
+  <artifactId>mcp-server-comparison</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Citrus :: PoC :: MCP Server Comparison</name>
+  <description>Isolated feasibility PoC comparing Quarkus MCP Server and Spring AI MCP hosts. Not part of the Citrus release reactor. See docs/specs/mcp-server-poc/sdd/.</description>
+  <url>https://citrusframework.org</url>
+
+  <modules>
+    <module>common</module>
+    <module>client-driver</module>
+    <module>quarkus-host</module>
+    <module>spring-host</module>
+    <module>quarkus-probe</module>
+    <module>spring-probe</module>
+  </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>17</java.version>
+    <maven.compiler.release>17</maven.compiler.release>
+    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.5.6</maven-failsafe-plugin.version>
+    <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
+    <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+    <maven-help-plugin.version>3.4.1</maven-help-plugin.version>
+    <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+    <junit-jupiter.version>6.1.2</junit-jupiter.version>
+    <assertj.version>3.27.4</assertj.version>
+    <slf4j.version>2.0.17</slf4j.version>
+    <!-- Citrus artifacts under investigation (built from recorded checkout, not remote). -->
+    <citrus.version>5.1.0-SNAPSHOT</citrus.version>
+    <!-- Candidate baselines (Stage 2, fixed; re-pin only via explicit variant). -->
+    <quarkus-mcp.version>2.0.2</quarkus-mcp.version>
+    <spring-ai-mcp.version>2.0.1</spring-ai-mcp.version>
+    <mcp-sdk.version>2.0.0</mcp-sdk.version>
+    <mcp-client.version>2.0.1</mcp-client.version>
+    <!-- Candidate-native dependency trains. -->
+    <quarkus-native.version>3.33.3.1</quarkus-native.version>
+    <spring-native.version>7.0.9</spring-native.version>
+    <spring-boot-native.version>4.1.1</spring-boot-native.version>
+    <!-- Citrus-managed versions (from Citrus root pom at commit 5f42e32c). -->
+    <quarkus-managed.version>3.38.0</quarkus-managed.version>
+    <spring-managed.version>7.0.8</spring-managed.version>
+    <jackson3-managed.version>3.2.2</jackson3-managed.version>
+    <jackson2-managed.version>2.22.2</jackson2-managed.version>
+    <jetty-managed.version>12.1.11</jetty-managed.version>
+    <servlet-managed.version>6.1.0</servlet-managed.version>
+    <!-- Investigation budgets (diagnostic limits, not performance promises). -->
+    <poc.startup-timeout-seconds>60</poc.startup-timeout-seconds>
+    <poc.simulation-timeout-seconds>5</poc.simulation-timeout-seconds>
+    <poc.stop-timeout-seconds>10</poc.stop-timeout-seconds>
+    <poc.scenario-timeout-seconds>120</poc.scenario-timeout-seconds>
+    <!-- Never publish experimental artifacts as Citrus releases. -->
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.citrusframework.poc.mcp</groupId>
+        <artifactId>mcp-poc-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit-jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit-jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${junit-jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-launcher</artifactId>
+        <version>${junit-jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <!--
+        Single networknt for the whole PoC: the server-side jackson3 provider needs 3.0.0
+        (Schema.validate overloads); the client's jackson2 provider only needs its classes
+        present at supplier-load time and never validates. Without this pin, probe JVMs
+        resolve the client's 2.0.4 by nearest-wins and server validation breaks.
+      -->
+      <dependency>
+        <groupId>com.networknt</groupId>
+        <artifactId>json-schema-validator</artifactId>
+        <version>3.0.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <release>${java.version}</release>
+            <parameters>true</parameters>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+          <configuration>
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${maven-surefire-plugin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven-failsafe-plugin.version}</version>
+          <configuration>
+            <includes>
+              <include>**/*IT.java</include>
+            </includes>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${maven-failsafe-plugin.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>integration-tests</id>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven-jar-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven-resources-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Mutually exclusive dependency lanes. Neither changes the Citrus root POM. -->
+  <profiles>
+    <profile>
+      <id>candidate-native</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <quarkus.active.version>${quarkus-native.version}</quarkus.active.version>
+        <spring.active.version>${spring-native.version}</spring.active.version>
+        <!-- No-op pin: identical to the Boot 4.1.1 BOM baseline. -->
+        <spring-framework-active.version>${spring-native.version}</spring-framework-active.version>
+      </properties>
+    </profile>
+    <profile>
+      <id>citrus-managed</id>
+      <properties>
+        <quarkus.active.version>${quarkus-managed.version}</quarkus.active.version>
+        <spring.active.version>${spring-managed.version}</spring.active.version>
+        <!-- Mediation experiment: force Citrus-managed Spring over Boot 4.1.1's baseline. -->
+        <spring-framework-active.version>${spring-managed.version}</spring-framework-active.version>
+      </properties>
+    </profile>
+  </profiles>
+
+</project>

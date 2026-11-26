@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.citrusframework.poc.mcp</groupId>
+    <artifactId>mcp-server-comparison</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>mcp-poc-spring-host</artifactId>
+  <name>Citrus :: PoC :: MCP :: Spring Host</name>
+  <description>Spring AI MCP host adapter with owned Boot context. Candidate Spring AI 2.0.1 / SDK 2.0.0.</description>
+
+  <!--
+    Candidate-native lane: Boot 4.1.1 / Spring 7.0.9 / AI 2.0.1 / SDK 2.0.0.
+    The citrus-managed lane overrides spring-framework to 7.0.8 via the
+    spring-framework.version property to record mediation; AI/SDK pins stay fixed.
+  -->
+  <dependencyManagement>
+    <dependencies>
+      <!-- LIVE-JACKSON-1 (resolved): the SDK's jackson3 provider needs networknt 3.0.0;
+        networknt 3.0.0 is binary-compatible with Boot 4.1.1's tools.jackson 3.1.5 but
+        NOT with the SDK-pom's 3.0.3 (NoSuchMethodError on Schema.validate). A 3.0.3
+        pin was tried and reverted; Boot-managed 3.1.5 is kept and recorded. -->
+      <!-- Lane pin: first declaration wins. Native lane = no-op; managed lane = mediation experiment. -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring-framework-active.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${spring-framework-active.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring-framework-active.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${spring-framework-active.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <version>${spring-framework-active.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot-native.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-bom</artifactId>
+        <version>${spring-ai-mcp.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.citrusframework.poc.mcp</groupId>
+      <artifactId>mcp-poc-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-mcp-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!--
+        Server classpath isolation: the stdio child must resolve the server's
+        pinned SDK 2.0.0, never the probe's 2.0.1 client. This file carries the
+        server-resolved runtime classpath; the IT prepends probe target/classes
+        and asserts the SDK selection before launching the child.
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven-dependency-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>server-classpath</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>build-classpath</goal>
+            </goals>
+            <configuration>
+              <includeScope>runtime</includeScope>
+              <outputFile>${project.build.directory}/server-classpath.txt</outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
