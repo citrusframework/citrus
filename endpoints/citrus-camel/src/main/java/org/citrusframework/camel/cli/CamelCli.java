@@ -58,6 +58,8 @@ public class CamelCli {
 
     // Camel CLI exit code for "not found" (integration already exited)
     private static final int NOT_FOUND_EXIT_CODE = 3;
+    // Camel CLI exit code for "timeout" (integration did not stop in time)
+    private static final int TIMEOUT_EXIT_CODE = 124;
 
     private final ProcessLauncher app;
 
@@ -215,10 +217,7 @@ public class CamelCli {
      */
     public void stop() {
         ProcessAndOutput p = app.run("stop");
-        int exitValue = p.getProcess().exitValue();
-        if (exitValue != OK_EXIT_CODE && exitValue != NOT_FOUND_EXIT_CODE) {
-            throw new CitrusRuntimeException(String.format("Failed to stop Camel integration - exit code %d", exitValue));
-        }
+        checkStopExitCode(p.getProcess().exitValue(), null);
     }
 
     /**
@@ -226,12 +225,27 @@ public class CamelCli {
      */
     public void stop(Long pid) {
         ProcessAndOutput p = app.run("stop", String.valueOf(pid));
-        int exitValue = p.getProcess().exitValue();
-        if (exitValue == NOT_FOUND_EXIT_CODE) {
-            logger.info("Camel integration (pid {}) had already exited", pid);
-        } else if (exitValue != OK_EXIT_CODE) {
-            throw new CitrusRuntimeException(String.format("Failed to stop Camel integration - exit code %d", exitValue));
+        checkStopExitCode(p.getProcess().exitValue(), pid);
+    }
+
+    private void checkStopExitCode(int exitValue, Long pid) {
+        if (exitValue == OK_EXIT_CODE) {
+            return;
         }
+
+        if (exitValue == NOT_FOUND_EXIT_CODE) {
+            if (pid != null) {
+                logger.info("Camel integration (pid {}) had already exited", pid);
+            }
+            return;
+        }
+
+        if (exitValue == TIMEOUT_EXIT_CODE) {
+            throw new CitrusRuntimeException(
+                    "Camel integration%s did not stop within the timeout".formatted(pid != null ? " (pid %d)".formatted(pid) : ""));
+        }
+
+        throw new CitrusRuntimeException(String.format("Failed to stop Camel integration - exit code %d", exitValue));
     }
 
     /**
