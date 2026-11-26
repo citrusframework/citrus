@@ -36,10 +36,11 @@ public class CreateVariablesTest extends AbstractXmlActionTest {
         Assertions.assertEquals(TestCaseMetaInfo.Status.FINAL, result.getMetaInfo().getStatus());
         Assertions.assertEquals(1L, result.getActionCount());
         Assertions.assertEquals(CreateVariablesAction.class, result.getTestAction(0).getClass());
-        Assertions.assertEquals(4L, ((CreateVariablesAction) result.getTestAction(0)).getVariables().size());
+        Assertions.assertEquals(5L, ((CreateVariablesAction) result.getTestAction(0)).getVariables().size());
         Assertions.assertEquals("test1", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var1"));
         Assertions.assertEquals("test2", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var2"));
         Assertions.assertEquals("test3", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var3"));
         Assertions.assertEquals("script:<groovy>return \"test4\"", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var4"));
+        Assertions.assertEquals("", ((CreateVariablesAction) result.getTestAction(0)).getVariables().get("var5"));
     }
 }

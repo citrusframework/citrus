@@ -32,6 +32,7 @@
           <script type="groovy">return "test4"</script>
         </value>
       </variable>
+      <variable name="var5"/>
     </create-variables>
   </actions>
 </test>
