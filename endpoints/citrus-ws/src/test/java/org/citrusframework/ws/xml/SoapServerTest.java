@@ -34,6 +34,7 @@ import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 import org.citrusframework.ws.actions.SendSoapMessageAction;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.citrusframework.ws.validation.SimpleSoapAttachmentValidator;
 import org.citrusframework.xml.XmlTestLoader;
@@ -178,6 +179,17 @@ public class SoapServerTest extends AbstractXmlActionTest {
 
         Assertions.assertEquals(SendSoapMessageAction.class, result.getTestAction(1).getClass());
         Assertions.assertEquals("soap:send-response", result.getTestAction(1).getName());
+    }
+
+    @Test
+    public void shouldRejectMultipleOperationsInSingleAction() {
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/xml/soap-server-multi-operation.citrus.it.xml");
+
+        context.getReferenceResolver().bind("soapServer", soapServer);
+
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class, testLoader::load);
+        Assertions.assertTrue(exception.getMessage().contains("A soap action supports only one of"),
+                "Expected clear error about mutually exclusive operations, got: " + exception.getMessage());
     }
 
     private SoapMessage createSoapMessage(SoapAttachment... attachments) {

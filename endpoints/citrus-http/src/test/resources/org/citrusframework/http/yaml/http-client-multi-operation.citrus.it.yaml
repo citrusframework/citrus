@@ -1,0 +1,14 @@
+name: "HttpClientMultiOperationTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - http:
+      client: "httpClient"
+      sendRequest:
+        POST:
+          path: "/api/test"
+          body:
+            data: '{ "message": "Hello" }'
+      receiveResponse:
+        response:
+          status: "200"

@@ -47,6 +47,7 @@ import org.citrusframework.yaml.actions.Send;
 
 import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 
+@SchemaType(oneOf = { "sendRequest", "receiveResponse", "receiveRequest", "sendResponse" })
 public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private static final String HTTP_GROUP = "http";
@@ -59,6 +60,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     private String description;
     private String actor;
+
+    private String activeOperation;
 
     private ReferenceResolver referenceResolver;
 
@@ -96,9 +99,19 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
+    private void verifyNoOperationSet(String newOperation) {
+        if (activeOperation != null) {
+            throw new CitrusRuntimeException(
+                    String.format("An http action supports only one of sendRequest, receiveResponse, receiveRequest, sendResponse " +
+                            "- write '%s' and '%s' as separate http actions", activeOperation, newOperation));
+        }
+        activeOperation = newOperation;
+    }
+
     @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
             description = "Send a Http request as a client.")
     public void setSendRequest(ClientRequest request) {
+        verifyNoOperationSet("sendRequest");
         HttpClientRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
         if (request.getGET() != null) {
@@ -188,6 +201,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
             description = "Receive an Http response as a client.")
     public void setReceiveResponse(ClientResponse response) {
+        verifyNoOperationSet("receiveResponse");
         HttpClientResponseActionBuilder responseBuilder = asClientBuilder().receive().response().name("http:receive-response");
 
         responseBuilder.description(description);
@@ -250,6 +264,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
             description = "Receive an Http request as a server.")
     public void setReceiveRequest(ServerRequest request) {
+        verifyNoOperationSet("receiveRequest");
         HttpServerRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
         if (request.getGET() != null) {
@@ -347,6 +362,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = ACTION, group = HTTP_GROUP, module=HTTP_MODULE,
             description = "Send an Http response as a server.")
     public void setSendResponse(ServerResponse response) {
+        verifyNoOperationSet("sendResponse");
         HttpServerResponseActionBuilder responseBuilder = asServerBuilder().send().response().name("http:send-response");
 
         responseBuilder.description(description);

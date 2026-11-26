@@ -58,6 +58,8 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     private String description;
     private String actor;
 
+    private String activeOperation;
+
     private ReferenceResolver referenceResolver;
 
     @XmlElement
@@ -80,8 +82,18 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         builder = new HttpActionBuilder().server(httpServer);
     }
 
+    private void verifyNoOperationSet(String newOperation) {
+        if (activeOperation != null) {
+            throw new CitrusRuntimeException(
+                    String.format("An http action supports only one of send-request, receive-response, receive-request, send-response " +
+                            "- write '%s' and '%s' as separate http actions", activeOperation, newOperation));
+        }
+        activeOperation = newOperation;
+    }
+
     @XmlElement(name = "send-request")
     public void setSendRequest(ClientRequest request) {
+        verifyNoOperationSet("send-request");
         HttpClientRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
         if (request.getGet() != null) {
@@ -170,6 +182,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "receive-response")
     public void setReceiveResponse(ClientResponse response) {
+        verifyNoOperationSet("receive-response");
         HttpClientResponseActionBuilder responseBuilder = asClientBuilder().receive().response().name("http:receive-response");
 
         responseBuilder.description(description);
@@ -231,6 +244,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "receive-request")
     public void setReceiveRequest(ServerRequest request) {
+        verifyNoOperationSet("receive-request");
         HttpServerRequestActionBuilder requestBuilder;
         HttpRequest requestMessage;
         if (request.getGet() != null) {
@@ -327,6 +341,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "send-response")
     public void setSendResponse(ServerResponse response) {
+        verifyNoOperationSet("send-response");
         HttpServerResponseActionBuilder responseBuilder = asServerBuilder().send().response().name("http:send-response");
 
         responseBuilder.description(description);

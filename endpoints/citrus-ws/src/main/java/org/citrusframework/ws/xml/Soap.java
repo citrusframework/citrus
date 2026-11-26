@@ -61,6 +61,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     private String actor;
     private String endpoint;
 
+    private String activeOperation;
+
     private ReferenceResolver referenceResolver;
 
     @XmlElement
@@ -88,8 +90,18 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         this.endpoint = endpoint;
     }
 
+    private void verifyNoOperationSet(String newOperation) {
+        if (activeOperation != null) {
+            throw new CitrusRuntimeException(
+                    String.format("A soap action supports only one of send-request, receive-response, receive-request, send-response, send-fault, assert-fault " +
+                            "- write '%s' and '%s' as separate soap actions", activeOperation, newOperation));
+        }
+        activeOperation = newOperation;
+    }
+
     @XmlElement(name = "send-request")
     public void setSendRequest(ClientRequest request) {
+        verifyNoOperationSet("send-request");
         SendSoapMessageAction.Builder requestBuilder = asClientBuilder().send();
         requestBuilder.name("soap:send-request");
         requestBuilder.description(description);
@@ -159,6 +171,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "receive-response")
     public void setReceiveResponse(ClientResponse response) {
+        verifyNoOperationSet("receive-response");
         ReceiveSoapMessageAction.Builder responseBuilder = asClientBuilder().receive();
 
         responseBuilder.name("soap:receive-response");
@@ -239,6 +252,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "receive-request")
     public void setReceiveRequest(ServerRequest request) {
+        verifyNoOperationSet("receive-request");
         ReceiveSoapMessageAction.Builder requestBuilder = asServerBuilder().receive();
 
         requestBuilder.name("soap:receive-request");
@@ -317,6 +331,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "send-response")
     public void setSendResponse(ServerResponse response) {
+        verifyNoOperationSet("send-response");
         SendSoapMessageAction.Builder responseBuilder = asServerBuilder().send();
 
         responseBuilder.name("soap:send-response");
@@ -375,6 +390,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "send-fault")
     public void setSendFault(ServerFaultResponse response) {
+        verifyNoOperationSet("send-fault");
         SendSoapFaultAction.Builder responseBuilder = asServerBuilder().sendFault();
         responseBuilder.name("soap:send-fault");
         responseBuilder.description(description);
@@ -450,6 +466,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlElement(name = "assert-fault")
     public void setAssertFault(ClientAssertFault soapFault) {
+        verifyNoOperationSet("assert-fault");
         AssertSoapFault.Builder assertFault = asClientBuilder().assertFault();
 
         assertFault.name("soap:assert-fault");

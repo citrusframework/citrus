@@ -1,0 +1,16 @@
+name: "HttpServerMultiOperationTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - http:
+      server: "httpServer"
+      receiveRequest:
+        POST:
+          path: "/result"
+          body:
+            data: '{ "message": "Hello" }'
+      sendResponse:
+        response:
+          reasonPhrase: OK
+          body:
+            data: "Thank You!"

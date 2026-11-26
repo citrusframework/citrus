@@ -41,6 +41,7 @@ import org.citrusframework.ws.actions.SoapServerActionBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessageHeaders;
 import org.citrusframework.api.yaml.SchemaProperty;
+import org.citrusframework.api.yaml.SchemaType;
 import org.citrusframework.yaml.TestActions;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
@@ -49,6 +50,7 @@ import org.citrusframework.yaml.actions.Send;
 import static org.citrusframework.api.yaml.SchemaProperty.Kind.ACTION;
 import static org.citrusframework.api.yaml.SchemaProperty.Kind.CONTAINER;
 
+@SchemaType(oneOf = { "sendRequest", "receiveResponse", "receiveRequest", "sendResponse", "sendFault", "assertFault" })
 public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private static final String SOAP_GROUP = "soap";
@@ -61,6 +63,8 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     private String description;
     private String actor;
+
+    private String activeOperation;
 
     private ReferenceResolver referenceResolver;
 
@@ -98,9 +102,19 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         }
     }
 
+    private void verifyNoOperationSet(String newOperation) {
+        if (activeOperation != null) {
+            throw new CitrusRuntimeException(
+                    String.format("A soap action supports only one of sendRequest, receiveResponse, receiveRequest, sendResponse, sendFault, assertFault " +
+                            "- write '%s' and '%s' as separate soap actions", activeOperation, newOperation));
+        }
+        activeOperation = newOperation;
+    }
+
     @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
             description = "Sends a SOAP request as a client.")
     public void setSendRequest(ClientRequest request) {
+        verifyNoOperationSet("sendRequest");
         SendSoapMessageAction.Builder requestBuilder = asClientBuilder().send();
         requestBuilder.name("soap:send-request");
         requestBuilder.description(description);
@@ -163,6 +177,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
             description = "Receives a SOAP response as a client.")
     public void setReceiveResponse(ClientResponse response) {
+        verifyNoOperationSet("receiveResponse");
         ReceiveSoapMessageAction.Builder responseBuilder = asClientBuilder().receive();
 
         responseBuilder.name("soap:receive-response");
@@ -236,6 +251,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
             description = "Receives a SOAP request as a server.")
     public void setReceiveRequest(ServerRequest request) {
+        verifyNoOperationSet("receiveRequest");
         ReceiveSoapMessageAction.Builder requestBuilder = asServerBuilder().receive();
 
         requestBuilder.name("soap:receive-request");
@@ -307,6 +323,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
             description = "Sends a SOAP response as a server.")
     public void setSendResponse(ServerResponse response) {
+        verifyNoOperationSet("sendResponse");
         SendSoapMessageAction.Builder responseBuilder = asServerBuilder().send();
 
         responseBuilder.name("soap:send-response");
@@ -358,6 +375,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = ACTION, group = SOAP_GROUP, module = SOAP_MODULE,
             description = "Sends a SOAP fault response as a server")
     public void setSendFault(ServerFaultResponse response) {
+        verifyNoOperationSet("sendFault");
         SendSoapFaultAction.Builder responseBuilder = asServerBuilder().sendFault();
         responseBuilder.name("soap:send-fault");
         responseBuilder.description(description);
@@ -426,6 +444,7 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @SchemaProperty(kind = CONTAINER, group = SOAP_GROUP, module = SOAP_MODULE,
             description = "Expects a SOAP fault response as a client.")
     public void setAssertFault(ClientAssertFault soapFault) {
+        verifyNoOperationSet("assertFault");
         AssertSoapFault.Builder assertFault = asClientBuilder().assertFault();
 
         assertFault.name("soap:assert-fault");

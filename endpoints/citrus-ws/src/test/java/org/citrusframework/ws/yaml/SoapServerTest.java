@@ -156,6 +156,28 @@ public class SoapServerTest extends AbstractYamlActionTest {
         Assertions.assertEquals("UTF-8", send.getAttachments().get(1).getCharsetName());
     }
 
+    @Test
+    public void shouldRejectMultipleOperationsInSingleAction() {
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/yaml/soap-server-multi-operation.citrus.it.yaml");
+
+        context.getReferenceResolver().bind("soapServer", soapServer);
+
+        Exception exception = Assertions.assertThrows(Exception.class, testLoader::load);
+        Assertions.assertTrue(hasMessageInCauseChain(exception, "A soap action supports only one of"),
+                "Expected clear error about mutually exclusive operations, got: " + exception.getMessage());
+    }
+
+    private boolean hasMessageInCauseChain(Throwable throwable, String expectedMessage) {
+        Throwable current = throwable;
+        while (current != null) {
+            if (current.getMessage() != null && current.getMessage().contains(expectedMessage)) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
+    }
+
     private SoapMessage createSoapMessage(SoapAttachment... attachments) {
         SoapMessage message = new SoapMessage("<TestMessage>Hello Citrus</TestMessage>")
                 .contentType("application/xml");
