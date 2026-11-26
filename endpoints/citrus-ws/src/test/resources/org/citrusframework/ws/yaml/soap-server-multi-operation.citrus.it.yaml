@@ -1,0 +1,14 @@
+name: "SoapServerMultiOperationTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - soap:
+      server: "soapServer"
+      receiveRequest:
+        message:
+          body:
+            data: <TestMessage>Hello Citrus</TestMessage>
+      sendResponse:
+        message:
+          body:
+            data: <TestResponse>Hello User</TestResponse>

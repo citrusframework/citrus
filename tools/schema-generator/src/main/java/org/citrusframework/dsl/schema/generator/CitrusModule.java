@@ -48,12 +48,11 @@ import com.github.victools.jsonschema.generator.impl.module.InlineSchemaModule;
 import com.github.victools.jsonschema.generator.naming.CleanSchemaDefinitionNamingStrategy;
 import com.github.victools.jsonschema.generator.naming.DefaultSchemaDefinitionNamingStrategy;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.dsl.schema.Catalog;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.api.yaml.ExamplesProvider;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.api.yaml.SchemaType;
+import org.citrusframework.dsl.schema.Catalog;
+import org.citrusframework.util.StringUtils;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.BooleanNode;
@@ -100,27 +99,25 @@ public class CitrusModule implements Module {
                 for (String oneOfItem : schemaType.oneOf()) {
                     JsonNode original = schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES)).get(oneOfItem);
 
-                    if (original == null) {
-                        throw new CitrusRuntimeException("Missing declared one of item " + oneOfItem + " in properties for " + schemaNode.asString());
-                    }
-
                     ObjectNode itemNode = oneOf.addObject();
-                    String type = Optional.ofNullable(original.findValue(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TYPE)))
-                            .map(JsonNode::asString)
-                            .orElse("object");
-                    if (type.equals("object")) {
-                        itemNode.put(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TYPE), "object");
-                        ObjectNode propertyNode = itemNode.withObject(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES));
-                        propertyNode.set(oneOfItem, original);
+                    if (original != null) {
+                        String type = Optional.ofNullable(original.findValue(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TYPE)))
+                                .map(JsonNode::asString)
+                                .orElse("object");
+                        if (type.equals("object")) {
+                            itemNode.put(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TYPE), "object");
+                            ObjectNode propertyNode = itemNode.withObject(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES));
+                            propertyNode.set(oneOfItem, original);
 
-                        // remove schema details from old item node, but keep human-readable metadata as an empty element.
-                        // This is required to pass the additionalProperties=false check while preserving catalog descriptions.
-                        ObjectNode placeholder = ((ObjectNode) schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES)))
-                                .putObject(oneOfItem);
-                        copyPropertyMetadata(original, placeholder,
-                                schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TITLE),
-                                schemaGenerationContext.getKeyword(SchemaKeyword.TAG_DESCRIPTION),
-                                "$comment");
+                            // remove schema details from old item node, but keep human-readable metadata as an empty element.
+                            // This is required to pass the additionalProperties=false check while preserving catalog descriptions.
+                            ObjectNode placeholder = ((ObjectNode) schemaNode.get(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_PROPERTIES)))
+                                    .putObject(oneOfItem);
+                            copyPropertyMetadata(original, placeholder,
+                                    schemaGenerationContext.getKeyword(SchemaKeyword.TAG_TITLE),
+                                    schemaGenerationContext.getKeyword(SchemaKeyword.TAG_DESCRIPTION),
+                                    "$comment");
+                        }
                     }
 
                     itemNode.withArray(schemaGenerationContext.getKeyword(SchemaKeyword.TAG_REQUIRED)).add(oneOfItem);

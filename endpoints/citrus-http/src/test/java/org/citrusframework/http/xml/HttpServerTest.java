@@ -42,6 +42,7 @@ import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.context.DefaultMessageValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.xml.XmlMessageValidationContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
@@ -267,6 +268,17 @@ public class HttpServerTest extends AbstractXmlActionTest {
         Assertions.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assertions.assertEquals("httpServer", receiveMessageAction.getEndpointUri());
         Assertions.assertEquals(testActor, receiveMessageAction.getActor());
+    }
+
+    @Test
+    public void shouldRejectMultipleOperationsInSingleAction() {
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/xml/http-server-multi-operation.citrus.it.xml");
+
+        context.getReferenceResolver().bind("httpServer", httpServer);
+
+        CitrusRuntimeException exception = Assertions.assertThrows(CitrusRuntimeException.class, testLoader::load);
+        Assertions.assertTrue(exception.getMessage().contains("An http action supports only one of"),
+                "Expected clear error about mutually exclusive operations, got: " + exception.getMessage());
     }
 
     private jakarta.servlet.http.Cookie createCookie() {

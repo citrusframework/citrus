@@ -320,6 +320,28 @@ public class HttpClientTest extends AbstractYamlActionTest {
     }
 
     @Test
+    public void shouldRejectMultipleOperationsInSingleAction() {
+        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/http/yaml/http-client-multi-operation.citrus.it.yaml");
+
+        context.getReferenceResolver().bind("httpClient", httpClient);
+
+        Exception exception = Assertions.assertThrows(Exception.class, testLoader::load);
+        Assertions.assertTrue(hasMessageInCauseChain(exception, "An http action supports only one of"),
+                "Expected clear error about mutually exclusive operations, got: " + exception.getMessage());
+    }
+
+    private boolean hasMessageInCauseChain(Throwable throwable, String expectedMessage) {
+        Throwable current = throwable;
+        while (current != null) {
+            if (current.getMessage() != null && current.getMessage().contains(expectedMessage)) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
+    }
+
+    @Test
     public void shouldLookupTestActionBuilder() {
         Assertions.assertTrue(YamlTestActionBuilder.lookup().containsKey("http"));
         Assertions.assertTrue(YamlTestActionBuilder.lookup("http").isPresent());
