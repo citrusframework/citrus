@@ -34,10 +34,12 @@ public class VariableExpressionSegmentMatcherTest {
 
         VariableExpressionSegmentMatcher matcher = new VariableExpressionSegmentMatcher(testData.expression);
 
+        int expectedSegmentNumber = 1;
         for (SegmentAttributes attributes : testData.segmentAttributes) {
             assertTrue(matcher.nextMatch());
             assertEquals(attributes.name, matcher.getSegmentExpression());
             assertEquals(attributes.index, matcher.getSegmentIndex());
+            assertEquals(expectedSegmentNumber++, matcher.getSegmentNumber());
         }
         assertFalse(matcher.nextMatch());
     }
