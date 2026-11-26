@@ -1,0 +1,949 @@
+{
+  "scope": "test",
+  "jarCount": 157,
+  "jarBytes": 75122867,
+  "artifacts": [
+    {
+      "artifact": "org.citrusframework:citrus-base:5.1.0-SNAPSHOT",
+      "file": "citrus-base-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-base/5.1.0-SNAPSHOT/citrus-base-5.1.0-SNAPSHOT.jar",
+      "bytes": 519078
+    },
+    {
+      "artifact": "org.citrusframework:citrus-api:5.1.0-SNAPSHOT",
+      "file": "citrus-api-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-api/5.1.0-SNAPSHOT/citrus-api-5.1.0-SNAPSHOT.jar",
+      "bytes": 821483
+    },
+    {
+      "artifact": "jakarta.annotation:jakarta.annotation-api:3.0.0",
+      "file": "jakarta.annotation-api-3.0.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/annotation/jakarta.annotation-api/3.0.0/jakarta.annotation-api-3.0.0.jar",
+      "bytes": 26378
+    },
+    {
+      "artifact": "org.apache.commons:commons-lang3:3.20.0",
+      "file": "commons-lang3-3.20.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar",
+      "bytes": 713862
+    },
+    {
+      "artifact": "commons-codec:commons-codec:1.22.1",
+      "file": "commons-codec-1.22.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/commons-codec/commons-codec/1.22.1/commons-codec-1.22.1.jar",
+      "bytes": 422738
+    },
+    {
+      "artifact": "com.github.mifmif:generex:1.0.2",
+      "file": "generex-1.0.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/github/mifmif/generex/1.0.2/generex-1.0.2.jar",
+      "bytes": 14395
+    },
+    {
+      "artifact": "dk.brics.automaton:automaton:1.11-8",
+      "file": "automaton-1.11-8.jar",
+      "path": "/Users/asuruceanu/.m2/repository/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar",
+      "bytes": 176285
+    },
+    {
+      "artifact": "org.citrusframework:citrus-spring:5.1.0-SNAPSHOT",
+      "file": "citrus-spring-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-spring/5.1.0-SNAPSHOT/citrus-spring-5.1.0-SNAPSHOT.jar",
+      "bytes": 450175
+    },
+    {
+      "artifact": "org.springframework:spring-beans:7.0.9",
+      "file": "spring-beans-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-beans/7.0.9/spring-beans-7.0.9.jar",
+      "bytes": 928155
+    },
+    {
+      "artifact": "org.springframework:spring-context:7.0.9",
+      "file": "spring-context-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-context/7.0.9/spring-context-7.0.9.jar",
+      "bytes": 1399435
+    },
+    {
+      "artifact": "xerces:xercesImpl:2.12.2",
+      "file": "xercesImpl-2.12.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/xerces/xercesImpl/2.12.2/xercesImpl-2.12.2.jar",
+      "bytes": 1446149
+    },
+    {
+      "artifact": "xml-apis:xml-apis:1.4.01",
+      "file": "xml-apis-1.4.01.jar",
+      "path": "/Users/asuruceanu/.m2/repository/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar",
+      "bytes": 220536
+    },
+    {
+      "artifact": "org.citrusframework:citrus-xml:5.1.0-SNAPSHOT",
+      "file": "citrus-xml-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-xml/5.1.0-SNAPSHOT/citrus-xml-5.1.0-SNAPSHOT.jar",
+      "bytes": 170786
+    },
+    {
+      "artifact": "org.glassfish.jaxb:jaxb-runtime:4.0.9",
+      "file": "jaxb-runtime-4.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.9/jaxb-runtime-4.0.9.jar",
+      "bytes": 922445
+    },
+    {
+      "artifact": "org.glassfish.jaxb:jaxb-core:4.0.9",
+      "file": "jaxb-core-4.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.9/jaxb-core-4.0.9.jar",
+      "bytes": 139417
+    },
+    {
+      "artifact": "org.glassfish.jaxb:txw2:4.0.9",
+      "file": "txw2-4.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/glassfish/jaxb/txw2/4.0.9/txw2-4.0.9.jar",
+      "bytes": 73276
+    },
+    {
+      "artifact": "com.sun.istack:istack-commons-runtime:4.1.2",
+      "file": "istack-commons-runtime-4.1.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar",
+      "bytes": 25788
+    },
+    {
+      "artifact": "org.citrusframework:citrus-yaml:5.1.0-SNAPSHOT",
+      "file": "citrus-yaml-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-yaml/5.1.0-SNAPSHOT/citrus-yaml-5.1.0-SNAPSHOT.jar",
+      "bytes": 132910
+    },
+    {
+      "artifact": "org.yaml:snakeyaml:2.6",
+      "file": "snakeyaml-2.6.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/yaml/snakeyaml/2.6/snakeyaml-2.6.jar",
+      "bytes": 340068
+    },
+    {
+      "artifact": "tools.jackson.core:jackson-core:3.2.3",
+      "file": "jackson-core-3.2.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/tools/jackson/core/jackson-core/3.2.3/jackson-core-3.2.3.jar",
+      "bytes": 609986
+    },
+    {
+      "artifact": "tools.jackson.core:jackson-databind:3.2.3",
+      "file": "jackson-databind-3.2.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/tools/jackson/core/jackson-databind/3.2.3/jackson-databind-3.2.3.jar",
+      "bytes": 1982578
+    },
+    {
+      "artifact": "com.fasterxml.jackson.core:jackson-annotations:2.22",
+      "file": "jackson-annotations-2.22.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.22/jackson-annotations-2.22.jar",
+      "bytes": 84211
+    },
+    {
+      "artifact": "org.springframework:spring-core:7.0.9",
+      "file": "spring-core-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-core/7.0.9/spring-core-7.0.9.jar",
+      "bytes": 2035755
+    },
+    {
+      "artifact": "commons-logging:commons-logging:1.4.0",
+      "file": "commons-logging-1.4.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/commons-logging/commons-logging/1.4.0/commons-logging-1.4.0.jar",
+      "bytes": 75828
+    },
+    {
+      "artifact": "org.jspecify:jspecify:1.0.0",
+      "file": "jspecify-1.0.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar",
+      "bytes": 3819
+    },
+    {
+      "artifact": "org.springframework:spring-web:7.0.9",
+      "file": "spring-web-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-web/7.0.9/spring-web-7.0.9.jar",
+      "bytes": 2226342
+    },
+    {
+      "artifact": "io.micrometer:micrometer-observation:1.16.7",
+      "file": "micrometer-observation-1.16.7.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/micrometer/micrometer-observation/1.16.7/micrometer-observation-1.16.7.jar",
+      "bytes": 83914
+    },
+    {
+      "artifact": "io.micrometer:micrometer-commons:1.16.7",
+      "file": "micrometer-commons-1.16.7.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/micrometer/micrometer-commons/1.16.7/micrometer-commons-1.16.7.jar",
+      "bytes": 51745
+    },
+    {
+      "artifact": "org.springframework:spring-webmvc:7.0.9",
+      "file": "spring-webmvc-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-webmvc/7.0.9/spring-webmvc-7.0.9.jar",
+      "bytes": 1107415
+    },
+    {
+      "artifact": "org.springframework:spring-aop:7.0.9",
+      "file": "spring-aop-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-aop/7.0.9/spring-aop-7.0.9.jar",
+      "bytes": 426204
+    },
+    {
+      "artifact": "org.springframework:spring-expression:7.0.9",
+      "file": "spring-expression-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-expression/7.0.9/spring-expression-7.0.9.jar",
+      "bytes": 327140
+    },
+    {
+      "artifact": "org.springframework.integration:spring-integration-http:7.1.0",
+      "file": "spring-integration-http-7.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/integration/spring-integration-http/7.1.0/spring-integration-http-7.1.0.jar",
+      "bytes": 144740
+    },
+    {
+      "artifact": "org.springframework.integration:spring-integration-core:7.1.0",
+      "file": "spring-integration-core-7.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/integration/spring-integration-core/7.1.0/spring-integration-core-7.1.0.jar",
+      "bytes": 1749036
+    },
+    {
+      "artifact": "org.springframework:spring-messaging:7.0.9",
+      "file": "spring-messaging-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-messaging/7.0.9/spring-messaging-7.0.9.jar",
+      "bytes": 613714
+    },
+    {
+      "artifact": "org.springframework:spring-tx:7.0.9",
+      "file": "spring-tx-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-tx/7.0.9/spring-tx-7.0.9.jar",
+      "bytes": 292080
+    },
+    {
+      "artifact": "io.projectreactor:reactor-core:3.8.6",
+      "file": "reactor-core-3.8.6.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/projectreactor/reactor-core/3.8.6/reactor-core-3.8.6.jar",
+      "bytes": 1938752
+    },
+    {
+      "artifact": "org.reactivestreams:reactive-streams:1.0.4",
+      "file": "reactive-streams-1.0.4.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/reactivestreams/reactive-streams/1.0.4/reactive-streams-1.0.4.jar",
+      "bytes": 11640
+    },
+    {
+      "artifact": "org.apache.httpcomponents.client5:httpclient5:5.6.3",
+      "file": "httpclient5-5.6.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/httpcomponents/client5/httpclient5/5.6.3/httpclient5-5.6.3.jar",
+      "bytes": 1056844
+    },
+    {
+      "artifact": "org.apache.httpcomponents.core5:httpcore5:5.4.3",
+      "file": "httpcore5-5.4.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/httpcomponents/core5/httpcore5/5.4.3/httpcore5-5.4.3.jar",
+      "bytes": 955121
+    },
+    {
+      "artifact": "org.apache.httpcomponents.core5:httpcore5-h2:5.4.3",
+      "file": "httpcore5-h2-5.4.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/httpcomponents/core5/httpcore5-h2/5.4.3/httpcore5-h2-5.4.3.jar",
+      "bytes": 263675
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-server:12.1.11",
+      "file": "jetty-server-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-server/12.1.11/jetty-server-12.1.11.jar",
+      "bytes": 705283
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-http:12.1.11",
+      "file": "jetty-http-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-http/12.1.11/jetty-http-12.1.11.jar",
+      "bytes": 480143
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-util:12.1.11",
+      "file": "jetty-util-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-util/12.1.11/jetty-util-12.1.11.jar",
+      "bytes": 731248
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-io:12.1.11",
+      "file": "jetty-io-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-io/12.1.11/jetty-io-12.1.11.jar",
+      "bytes": 386264
+    },
+    {
+      "artifact": "org.eclipse.jetty.ee11:jetty-ee11-servlet:12.1.11",
+      "file": "jetty-ee11-servlet-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/ee11/jetty-ee11-servlet/12.1.11/jetty-ee11-servlet-12.1.11.jar",
+      "bytes": 456213
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-security:12.1.11",
+      "file": "jetty-security-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-security/12.1.11/jetty-security-12.1.11.jar",
+      "bytes": 166552
+    },
+    {
+      "artifact": "org.eclipse.jetty:jetty-session:12.1.11",
+      "file": "jetty-session-12.1.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/jetty/jetty-session/12.1.11/jetty-session-12.1.11.jar",
+      "bytes": 118626
+    },
+    {
+      "artifact": "jakarta.servlet:jakarta.servlet-api:6.1.0",
+      "file": "jakarta.servlet-api-6.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/servlet/jakarta.servlet-api/6.1.0/jakarta.servlet-api-6.1.0.jar",
+      "bytes": 398424
+    },
+    {
+      "artifact": "io.vertx:vertx-core:4.5.31",
+      "file": "vertx-core-4.5.31.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/vertx/vertx-core/4.5.31/vertx-core-4.5.31.jar",
+      "bytes": 1684397
+    },
+    {
+      "artifact": "io.netty:netty-common:4.2.16.Final",
+      "file": "netty-common-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-common/4.2.16.Final/netty-common-4.2.16.Final.jar",
+      "bytes": 819965
+    },
+    {
+      "artifact": "io.netty:netty-buffer:4.2.16.Final",
+      "file": "netty-buffer-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-buffer/4.2.16.Final/netty-buffer-4.2.16.Final.jar",
+      "bytes": 378032
+    },
+    {
+      "artifact": "io.netty:netty-transport:4.2.16.Final",
+      "file": "netty-transport-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-transport/4.2.16.Final/netty-transport-4.2.16.Final.jar",
+      "bytes": 549855
+    },
+    {
+      "artifact": "io.netty:netty-handler:4.2.16.Final",
+      "file": "netty-handler-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-handler/4.2.16.Final/netty-handler-4.2.16.Final.jar",
+      "bytes": 587814
+    },
+    {
+      "artifact": "io.netty:netty-transport-native-unix-common:4.2.16.Final",
+      "file": "netty-transport-native-unix-common-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-transport-native-unix-common/4.2.16.Final/netty-transport-native-unix-common-4.2.16.Final.jar",
+      "bytes": 46877
+    },
+    {
+      "artifact": "io.netty:netty-codec-base:4.2.16.Final",
+      "file": "netty-codec-base-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-base/4.2.16.Final/netty-codec-base-4.2.16.Final.jar",
+      "bytes": 155355
+    },
+    {
+      "artifact": "io.netty:netty-handler-proxy:4.2.16.Final",
+      "file": "netty-handler-proxy-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-handler-proxy/4.2.16.Final/netty-handler-proxy-4.2.16.Final.jar",
+      "bytes": 26791
+    },
+    {
+      "artifact": "io.netty:netty-codec-socks:4.2.16.Final",
+      "file": "netty-codec-socks-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-socks/4.2.16.Final/netty-codec-socks-4.2.16.Final.jar",
+      "bytes": 132178
+    },
+    {
+      "artifact": "io.netty:netty-codec-http:4.2.16.Final",
+      "file": "netty-codec-http-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-http/4.2.16.Final/netty-codec-http-4.2.16.Final.jar",
+      "bytes": 678387
+    },
+    {
+      "artifact": "io.netty:netty-codec-compression:4.2.16.Final",
+      "file": "netty-codec-compression-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-compression/4.2.16.Final/netty-codec-compression-4.2.16.Final.jar",
+      "bytes": 183349
+    },
+    {
+      "artifact": "io.netty:netty-codec-http2:4.1.136.Final",
+      "file": "netty-codec-http2-4.1.136.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-http2/4.1.136.Final/netty-codec-http2-4.1.136.Final.jar",
+      "bytes": 505309
+    },
+    {
+      "artifact": "io.netty:netty-codec:4.2.16.Final",
+      "file": "netty-codec-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec/4.2.16.Final/netty-codec-4.2.16.Final.jar",
+      "bytes": 3953
+    },
+    {
+      "artifact": "io.netty:netty-codec-protobuf:4.2.16.Final",
+      "file": "netty-codec-protobuf-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-protobuf/4.2.16.Final/netty-codec-protobuf-4.2.16.Final.jar",
+      "bytes": 15108
+    },
+    {
+      "artifact": "io.netty:netty-codec-marshalling:4.2.16.Final",
+      "file": "netty-codec-marshalling-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-marshalling/4.2.16.Final/netty-codec-marshalling-4.2.16.Final.jar",
+      "bytes": 20377
+    },
+    {
+      "artifact": "io.netty:netty-resolver:4.2.16.Final",
+      "file": "netty-resolver-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-resolver/4.2.16.Final/netty-resolver-4.2.16.Final.jar",
+      "bytes": 32975
+    },
+    {
+      "artifact": "io.netty:netty-resolver-dns:4.1.136.Final",
+      "file": "netty-resolver-dns-4.1.136.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-resolver-dns/4.1.136.Final/netty-resolver-dns-4.1.136.Final.jar",
+      "bytes": 188774
+    },
+    {
+      "artifact": "io.netty:netty-codec-dns:4.1.136.Final",
+      "file": "netty-codec-dns-4.1.136.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-dns/4.1.136.Final/netty-codec-dns-4.1.136.Final.jar",
+      "bytes": 68662
+    },
+    {
+      "artifact": "com.fasterxml.jackson.core:jackson-core:2.22.3",
+      "file": "jackson-core-2.22.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.22.3/jackson-core-2.22.3.jar",
+      "bytes": 594776
+    },
+    {
+      "artifact": "io.netty:netty-tcnative-classes:2.0.78.Final",
+      "file": "netty-tcnative-classes-2.0.78.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-tcnative-classes/2.0.78.Final/netty-tcnative-classes-2.0.78.Final.jar",
+      "bytes": 37390
+    },
+    {
+      "artifact": "jakarta.xml.bind:jakarta.xml.bind-api:4.0.5",
+      "file": "jakarta.xml.bind-api-4.0.5.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.5/jakarta.xml.bind-api-4.0.5.jar",
+      "bytes": 131219
+    },
+    {
+      "artifact": "jakarta.activation:jakarta.activation-api:2.1.4",
+      "file": "jakarta.activation-api-2.1.4.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.4/jakarta.activation-api-2.1.4.jar",
+      "bytes": 67380
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-jakarta-server:2.55.0",
+      "file": "artemis-jakarta-server-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-jakarta-server/2.55.0/artemis-jakarta-server-2.55.0.jar",
+      "bytes": 123467
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-core-client:2.55.0",
+      "file": "artemis-core-client-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-core-client/2.55.0/artemis-core-client-2.55.0.jar",
+      "bytes": 845003
+    },
+    {
+      "artifact": "org.jgroups:jgroups:5.3.13.Final",
+      "file": "jgroups-5.3.13.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/jgroups/jgroups/5.3.13.Final/jgroups-5.3.13.Final.jar",
+      "bytes": 2395791
+    },
+    {
+      "artifact": "io.netty:netty-transport-native-epoll:4.2.16.Final",
+      "file": "netty-transport-native-epoll-4.2.16.Final-linux-x86_64.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-transport-native-epoll/4.2.16.Final/netty-transport-native-epoll-4.2.16.Final-linux-x86_64.jar",
+      "bytes": 42393
+    },
+    {
+      "artifact": "io.netty:netty-transport-classes-epoll:4.2.16.Final",
+      "file": "netty-transport-classes-epoll-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-transport-classes-epoll/4.2.16.Final/netty-transport-classes-epoll-4.2.16.Final.jar",
+      "bytes": 159935
+    },
+    {
+      "artifact": "io.netty:netty-transport-native-kqueue:4.2.16.Final",
+      "file": "netty-transport-native-kqueue-4.2.16.Final-osx-x86_64.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-transport-native-kqueue/4.2.16.Final/netty-transport-native-kqueue-4.2.16.Final-osx-x86_64.jar",
+      "bytes": 26737
+    },
+    {
+      "artifact": "io.netty:netty-transport-classes-kqueue:4.2.16.Final",
+      "file": "netty-transport-classes-kqueue-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-transport-classes-kqueue/4.2.16.Final/netty-transport-classes-kqueue-4.2.16.Final.jar",
+      "bytes": 116819
+    },
+    {
+      "artifact": "de.dentrassi.crypto:pem-keystore:3.0.0",
+      "file": "pem-keystore-3.0.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/de/dentrassi/crypto/pem-keystore/3.0.0/pem-keystore-3.0.0.jar",
+      "bytes": 25314
+    },
+    {
+      "artifact": "com.hierynomus:asn-one:0.6.0",
+      "file": "asn-one-0.6.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/hierynomus/asn-one/0.6.0/asn-one-0.6.0.jar",
+      "bytes": 67005
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-jakarta-client:2.55.0",
+      "file": "artemis-jakarta-client-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-jakarta-client/2.55.0/artemis-jakarta-client-2.55.0.jar",
+      "bytes": 190137
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-selector:2.55.0",
+      "file": "artemis-selector-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-selector/2.55.0/artemis-selector-2.55.0.jar",
+      "bytes": 113461
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-server:2.55.0",
+      "file": "artemis-server-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-server/2.55.0/artemis-server-2.55.0.jar",
+      "bytes": 2547414
+    },
+    {
+      "artifact": "com.github.ben-manes.caffeine:caffeine:3.2.4",
+      "file": "caffeine-3.2.4.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/github/ben-manes/caffeine/caffeine/3.2.4/caffeine-3.2.4.jar",
+      "bytes": 1029147
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-jdbc-store:2.55.0",
+      "file": "artemis-jdbc-store-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-jdbc-store/2.55.0/artemis-jdbc-store-2.55.0.jar",
+      "bytes": 113980
+    },
+    {
+      "artifact": "org.apache.commons:commons-dbcp2:2.14.0",
+      "file": "commons-dbcp2-2.14.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/commons/commons-dbcp2/2.14.0/commons-dbcp2-2.14.0.jar",
+      "bytes": 222783
+    },
+    {
+      "artifact": "org.apache.commons:commons-pool2:2.13.0",
+      "file": "commons-pool2-2.13.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/commons/commons-pool2/2.13.0/commons-pool2-2.13.0.jar",
+      "bytes": 156676
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-lockmanager-api:2.55.0",
+      "file": "artemis-lockmanager-api-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-lockmanager-api/2.55.0/artemis-lockmanager-api-2.55.0.jar",
+      "bytes": 13353
+    },
+    {
+      "artifact": "org.jctools:jctools-core:4.0.6",
+      "file": "jctools-core-4.0.6.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/jctools/jctools-core/4.0.6/jctools-core-4.0.6.jar",
+      "bytes": 499875
+    },
+    {
+      "artifact": "io.netty:netty-codec-haproxy:4.2.16.Final",
+      "file": "netty-codec-haproxy-4.2.16.Final.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/netty/netty-codec-haproxy/4.2.16.Final/netty-codec-haproxy-4.2.16.Final.jar",
+      "bytes": 39193
+    },
+    {
+      "artifact": "commons-beanutils:commons-beanutils:1.11.0",
+      "file": "commons-beanutils-1.11.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/commons-beanutils/commons-beanutils/1.11.0/commons-beanutils-1.11.0.jar",
+      "bytes": 246806
+    },
+    {
+      "artifact": "org.snakeyaml:snakeyaml-engine:3.0.1",
+      "file": "snakeyaml-engine-3.0.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/snakeyaml/snakeyaml-engine/3.0.1/snakeyaml-engine-3.0.1.jar",
+      "bytes": 299438
+    },
+    {
+      "artifact": "org.apache.commons:commons-configuration2:2.15.1",
+      "file": "commons-configuration2-2.15.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/commons/commons-configuration2/2.15.1/commons-configuration2-2.15.1.jar",
+      "bytes": 689129
+    },
+    {
+      "artifact": "org.apache.commons:commons-text:1.15.0",
+      "file": "commons-text-1.15.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/commons/commons-text/1.15.0/commons-text-1.15.0.jar",
+      "bytes": 264873
+    },
+    {
+      "artifact": "commons-io:commons-io:2.22.0",
+      "file": "commons-io-2.22.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/commons-io/commons-io/2.22.0/commons-io-2.22.0.jar",
+      "bytes": 609182
+    },
+    {
+      "artifact": "commons-collections:commons-collections:3.2.2",
+      "file": "commons-collections-3.2.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar",
+      "bytes": 588337
+    },
+    {
+      "artifact": "io.micrometer:micrometer-core:1.17.0",
+      "file": "micrometer-core-1.17.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/io/micrometer/micrometer-core/1.17.0/micrometer-core-1.17.0.jar",
+      "bytes": 915149
+    },
+    {
+      "artifact": "com.nimbusds:nimbus-jose-jwt:10.9.1",
+      "file": "nimbus-jose-jwt-10.9.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/nimbusds/nimbus-jose-jwt/10.9.1/nimbus-jose-jwt-10.9.1.jar",
+      "bytes": 813607
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-journal:2.55.0",
+      "file": "artemis-journal-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-journal/2.55.0/artemis-journal-2.55.0.jar",
+      "bytes": 229834
+    },
+    {
+      "artifact": "org.apache.activemq:activemq-artemis-native:2.0.0",
+      "file": "activemq-artemis-native-2.0.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/activemq/activemq-artemis-native/2.0.0/activemq-artemis-native-2.0.0.jar",
+      "bytes": 41746
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-commons:2.55.0",
+      "file": "artemis-commons-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-commons/2.55.0/artemis-commons-2.55.0.jar",
+      "bytes": 683626
+    },
+    {
+      "artifact": "org.apache.artemis:artemis-jakarta-service-extensions:2.55.0",
+      "file": "artemis-jakarta-service-extensions-2.55.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/artemis/artemis-jakarta-service-extensions/2.55.0/artemis-jakarta-service-extensions-2.55.0.jar",
+      "bytes": 32601
+    },
+    {
+      "artifact": "jakarta.jms:jakarta.jms-api:3.1.0",
+      "file": "jakarta.jms-api-3.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/jms/jakarta.jms-api/3.1.0/jakarta.jms-api-3.1.0.jar",
+      "bytes": 58964
+    },
+    {
+      "artifact": "jakarta.transaction:jakarta.transaction-api:2.0.1",
+      "file": "jakarta.transaction-api-2.0.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar",
+      "bytes": 28607
+    },
+    {
+      "artifact": "org.apache.xbean:xbean-spring:4.31",
+      "file": "xbean-spring-4.31.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/xbean/xbean-spring/4.31/xbean-spring-4.31.jar",
+      "bytes": 136767
+    },
+    {
+      "artifact": "org.citrusframework:citrus-test-support:5.1.0-SNAPSHOT",
+      "file": "citrus-test-support-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-test-support/5.1.0-SNAPSHOT/citrus-test-support-5.1.0-SNAPSHOT.jar",
+      "bytes": 13689
+    },
+    {
+      "artifact": "org.citrusframework:citrus-testng:5.1.0-SNAPSHOT",
+      "file": "citrus-testng-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-testng/5.1.0-SNAPSHOT/citrus-testng-5.1.0-SNAPSHOT.jar",
+      "bytes": 40758
+    },
+    {
+      "artifact": "org.citrusframework:citrus-spring-integration:5.1.0-SNAPSHOT",
+      "file": "citrus-spring-integration-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-spring-integration/5.1.0-SNAPSHOT/citrus-spring-integration-5.1.0-SNAPSHOT.jar",
+      "bytes": 107588
+    },
+    {
+      "artifact": "org.springframework.ws:spring-xml:5.0.2",
+      "file": "spring-xml-5.0.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/ws/spring-xml/5.0.2/spring-xml-5.0.2.jar",
+      "bytes": 79256
+    },
+    {
+      "artifact": "jakarta.xml.soap:jakarta.xml.soap-api:3.0.2",
+      "file": "jakarta.xml.soap-api-3.0.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/jakarta/xml/soap/jakarta.xml.soap-api/3.0.2/jakarta.xml.soap-api-3.0.2.jar",
+      "bytes": 38035
+    },
+    {
+      "artifact": "org.citrusframework:citrus-jms:5.1.0-SNAPSHOT",
+      "file": "citrus-jms-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-jms/5.1.0-SNAPSHOT/citrus-jms-5.1.0-SNAPSHOT.jar",
+      "bytes": 104310
+    },
+    {
+      "artifact": "org.springframework:spring-jms:7.0.9",
+      "file": "spring-jms-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-jms/7.0.9/spring-jms-7.0.9.jar",
+      "bytes": 294504
+    },
+    {
+      "artifact": "com.sun.xml.messaging.saaj:saaj-impl:3.0.6",
+      "file": "saaj-impl-3.0.6.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/sun/xml/messaging/saaj/saaj-impl/3.0.6/saaj-impl-3.0.6.jar",
+      "bytes": 471859
+    },
+    {
+      "artifact": "org.jvnet.staxex:stax-ex:2.1.0",
+      "file": "stax-ex-2.1.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/jvnet/staxex/stax-ex/2.1.0/stax-ex-2.1.0.jar",
+      "bytes": 38872
+    },
+    {
+      "artifact": "org.eclipse.angus:angus-activation:2.0.3",
+      "file": "angus-activation-2.0.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/eclipse/angus/angus-activation/2.0.3/angus-activation-2.0.3.jar",
+      "bytes": 26729
+    },
+    {
+      "artifact": "org.springframework.ws:spring-ws-core:5.0.2",
+      "file": "spring-ws-core-5.0.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/ws/spring-ws-core/5.0.2/spring-ws-core-5.0.2.jar",
+      "bytes": 549274
+    },
+    {
+      "artifact": "org.springframework:spring-oxm:7.0.9",
+      "file": "spring-oxm-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-oxm/7.0.9/spring-oxm-7.0.9.jar",
+      "bytes": 60103
+    },
+    {
+      "artifact": "org.citrusframework:citrus-groovy:5.1.0-SNAPSHOT",
+      "file": "citrus-groovy-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-groovy/5.1.0-SNAPSHOT/citrus-groovy-5.1.0-SNAPSHOT.jar",
+      "bytes": 94754
+    },
+    {
+      "artifact": "org.codehaus.groovy:groovy:3.0.25",
+      "file": "groovy-3.0.25.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/codehaus/groovy/groovy/3.0.25/groovy-3.0.25.jar",
+      "bytes": 8057404
+    },
+    {
+      "artifact": "org.citrusframework:citrus-validation-xml:5.1.0-SNAPSHOT",
+      "file": "citrus-validation-xml-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-validation-xml/5.1.0-SNAPSHOT/citrus-validation-xml-5.1.0-SNAPSHOT.jar",
+      "bytes": 166278
+    },
+    {
+      "artifact": "wsdl4j:wsdl4j:1.6.3",
+      "file": "wsdl4j-1.6.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/wsdl4j/wsdl4j/1.6.3/wsdl4j-1.6.3.jar",
+      "bytes": 186758
+    },
+    {
+      "artifact": "net.sf.jtidy:jtidy:r938",
+      "file": "jtidy-r938.jar",
+      "path": "/Users/asuruceanu/.m2/repository/net/sf/jtidy/jtidy/r938/jtidy-r938.jar",
+      "bytes": 249924
+    },
+    {
+      "artifact": "org.citrusframework:citrus-validation-json:5.1.0-SNAPSHOT",
+      "file": "citrus-validation-json-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-validation-json/5.1.0-SNAPSHOT/citrus-validation-json-5.1.0-SNAPSHOT.jar",
+      "bytes": 97041
+    },
+    {
+      "artifact": "net.minidev:json-smart:2.6.0",
+      "file": "json-smart-2.6.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/net/minidev/json-smart/2.6.0/json-smart-2.6.0.jar",
+      "bytes": 122808
+    },
+    {
+      "artifact": "net.minidev:accessors-smart:2.6.0",
+      "file": "accessors-smart-2.6.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/net/minidev/accessors-smart/2.6.0/accessors-smart-2.6.0.jar",
+      "bytes": 30245
+    },
+    {
+      "artifact": "org.ow2.asm:asm:9.7.1",
+      "file": "asm-9.7.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar",
+      "bytes": 126093
+    },
+    {
+      "artifact": "com.jayway.jsonpath:json-path:3.0.0",
+      "file": "json-path-3.0.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/jayway/jsonpath/json-path/3.0.0/json-path-3.0.0.jar",
+      "bytes": 287913
+    },
+    {
+      "artifact": "com.networknt:json-schema-validator:3.0.4",
+      "file": "json-schema-validator-3.0.4.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/networknt/json-schema-validator/3.0.4/json-schema-validator-3.0.4.jar",
+      "bytes": 579883
+    },
+    {
+      "artifact": "com.ethlo.time:itu:1.14.0",
+      "file": "itu-1.14.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/com/ethlo/time/itu/1.14.0/itu-1.14.0.jar",
+      "bytes": 57633
+    },
+    {
+      "artifact": "tools.jackson.dataformat:jackson-dataformat-yaml:3.2.3",
+      "file": "jackson-dataformat-yaml-3.2.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/tools/jackson/dataformat/jackson-dataformat-yaml/3.2.3/jackson-dataformat-yaml-3.2.3.jar",
+      "bytes": 68016
+    },
+    {
+      "artifact": "org.citrusframework:citrus-validation-text:5.1.0-SNAPSHOT",
+      "file": "citrus-validation-text-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-validation-text/5.1.0-SNAPSHOT/citrus-validation-text-5.1.0-SNAPSHOT.jar",
+      "bytes": 15378
+    },
+    {
+      "artifact": "org.citrusframework:citrus-validation-binary:5.1.0-SNAPSHOT",
+      "file": "citrus-validation-binary-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-validation-binary/5.1.0-SNAPSHOT/citrus-validation-binary-5.1.0-SNAPSHOT.jar",
+      "bytes": 9944
+    },
+    {
+      "artifact": "org.citrusframework:citrus-validation-hamcrest:5.1.0-SNAPSHOT",
+      "file": "citrus-validation-hamcrest-5.1.0-SNAPSHOT.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/citrusframework/citrus-validation-hamcrest/5.1.0-SNAPSHOT/citrus-validation-hamcrest-5.1.0-SNAPSHOT.jar",
+      "bytes": 27678
+    },
+    {
+      "artifact": "org.hamcrest:hamcrest:3.0",
+      "file": "hamcrest-3.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar",
+      "bytes": 126373
+    },
+    {
+      "artifact": "org.hamcrest:hamcrest-core:3.0",
+      "file": "hamcrest-core-3.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/hamcrest/hamcrest-core/3.0/hamcrest-core-3.0.jar",
+      "bytes": 2403
+    },
+    {
+      "artifact": "org.hamcrest:hamcrest-library:3.0",
+      "file": "hamcrest-library-3.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/hamcrest/hamcrest-library/3.0/hamcrest-library-3.0.jar",
+      "bytes": 2442
+    },
+    {
+      "artifact": "org.slf4j:slf4j-api:2.0.18",
+      "file": "slf4j-api-2.0.18.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/slf4j/slf4j-api/2.0.18/slf4j-api-2.0.18.jar",
+      "bytes": 69982
+    },
+    {
+      "artifact": "org.assertj:assertj-core:3.27.7",
+      "file": "assertj-core-3.27.7.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/assertj/assertj-core/3.27.7/assertj-core-3.27.7.jar",
+      "bytes": 1399383
+    },
+    {
+      "artifact": "net.bytebuddy:byte-buddy:1.18.11",
+      "file": "byte-buddy-1.18.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/net/bytebuddy/byte-buddy/1.18.11/byte-buddy-1.18.11.jar",
+      "bytes": 4656510
+    },
+    {
+      "artifact": "org.springframework:spring-test:7.0.9",
+      "file": "spring-test-7.0.9.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/springframework/spring-test/7.0.9/spring-test-7.0.9.jar",
+      "bytes": 1109299
+    },
+    {
+      "artifact": "org.testng:testng:7.12.0",
+      "file": "testng-7.12.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/testng/testng/7.12.0/testng-7.12.0.jar",
+      "bytes": 992871
+    },
+    {
+      "artifact": "org.jcommander:jcommander:1.83",
+      "file": "jcommander-1.83.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/jcommander/jcommander/1.83/jcommander-1.83.jar",
+      "bytes": 89739
+    },
+    {
+      "artifact": "org.webjars:jquery:3.7.1",
+      "file": "jquery-3.7.1.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/webjars/jquery/3.7.1/jquery-3.7.1.jar",
+      "bytes": 307911
+    },
+    {
+      "artifact": "org.junit.jupiter:junit-jupiter-api:6.1.2",
+      "file": "junit-jupiter-api-6.1.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/junit/jupiter/junit-jupiter-api/6.1.2/junit-jupiter-api-6.1.2.jar",
+      "bytes": 312564
+    },
+    {
+      "artifact": "org.opentest4j:opentest4j:1.3.0",
+      "file": "opentest4j-1.3.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar",
+      "bytes": 14304
+    },
+    {
+      "artifact": "org.junit.platform:junit-platform-commons:6.1.2",
+      "file": "junit-platform-commons-6.1.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/junit/platform/junit-platform-commons/6.1.2/junit-platform-commons-6.1.2.jar",
+      "bytes": 175866
+    },
+    {
+      "artifact": "org.apiguardian:apiguardian-api:1.1.2",
+      "file": "apiguardian-api-1.1.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar",
+      "bytes": 6806
+    },
+    {
+      "artifact": "org.junit.jupiter:junit-jupiter-engine:6.1.2",
+      "file": "junit-jupiter-engine-6.1.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/junit/jupiter/junit-jupiter-engine/6.1.2/junit-jupiter-engine-6.1.2.jar",
+      "bytes": 352589
+    },
+    {
+      "artifact": "org.junit.platform:junit-platform-engine:6.1.2",
+      "file": "junit-platform-engine-6.1.2.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/junit/platform/junit-platform-engine/6.1.2/junit-platform-engine-6.1.2.jar",
+      "bytes": 323941
+    },
+    {
+      "artifact": "org.apache.logging.log4j:log4j-slf4j2-impl:2.25.5",
+      "file": "log4j-slf4j2-impl-2.25.5.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/logging/log4j/log4j-slf4j2-impl/2.25.5/log4j-slf4j2-impl-2.25.5.jar",
+      "bytes": 30212
+    },
+    {
+      "artifact": "org.apache.logging.log4j:log4j-api:2.25.5",
+      "file": "log4j-api-2.25.5.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/logging/log4j/log4j-api/2.25.5/log4j-api-2.25.5.jar",
+      "bytes": 351427
+    },
+    {
+      "artifact": "org.apache.logging.log4j:log4j-core:2.25.5",
+      "file": "log4j-core-2.25.5.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/apache/logging/log4j/log4j-core/2.25.5/log4j-core-2.25.5.jar",
+      "bytes": 2020932
+    },
+    {
+      "artifact": "org.slf4j:jcl-over-slf4j:2.0.18",
+      "file": "jcl-over-slf4j-2.0.18.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/slf4j/jcl-over-slf4j/2.0.18/jcl-over-slf4j-2.0.18.jar",
+      "bytes": 18422
+    },
+    {
+      "artifact": "org.slf4j:jul-to-slf4j:2.0.18",
+      "file": "jul-to-slf4j-2.0.18.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/slf4j/jul-to-slf4j/2.0.18/jul-to-slf4j-2.0.18.jar",
+      "bytes": 6347
+    },
+    {
+      "artifact": "org.mockito:mockito-core:5.23.0",
+      "file": "mockito-core-5.23.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/mockito/mockito-core/5.23.0/mockito-core-5.23.0.jar",
+      "bytes": 720687
+    },
+    {
+      "artifact": "net.bytebuddy:byte-buddy-agent:1.18.11",
+      "file": "byte-buddy-agent-1.18.11.jar",
+      "path": "/Users/asuruceanu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar",
+      "bytes": 267557
+    },
+    {
+      "artifact": "org.objenesis:objenesis:3.3",
+      "file": "objenesis-3.3.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar",
+      "bytes": 49423
+    },
+    {
+      "artifact": "org.mockito:mockito-junit-jupiter:5.23.0",
+      "file": "mockito-junit-jupiter-5.23.0.jar",
+      "path": "/Users/asuruceanu/.m2/repository/org/mockito/mockito-junit-jupiter/5.23.0/mockito-junit-jupiter-5.23.0.jar",
+      "bytes": 9427
+    }
+  ]
+}

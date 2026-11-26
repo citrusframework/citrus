@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-14",
+  "head": "e0a55e10e6de5617c6046f1e6b8f40eb2b75fdf0",
+  "root": "/Users/asuruceanu/development/projects/citrus-vertx-eval",
+  "sha256": {
+    "endpoints/citrus-http/pom.xml": "da978b7fc06d4a9566f1d56262066ceb3bd2d3c8a2731e8f8092de3f62849c5f",
+    "docs/http-server-vertx-evaluation/decision-report.md": "0fb5b98d1d6619d3c2010e5a3617a0e6855dfac9d77407c1058be5352e55b1cf",
+    "docs/http-server-vertx-evaluation/sdd/01-specification.md": "d2f46d83bd47769cbd004454183946a2ebf078aa726ccd55ccbfc66cfb0de850",
+    "docs/http-server-vertx-evaluation/sdd/02-architecture.md": "6baba1bc7aa3e72aebcf073dc2d9eec7e5180f7de9a47fb4ef63322faf6f3d73",
+    "docs/http-server-vertx-evaluation/sdd/03-tasks.md": "2e2f4c5ee40c92d4da859103813f064665311e111480a9ba733090f9d2ff8677",
+    "docs/http-server-vertx-evaluation/sdd/04-implementation.md": "b1a6ce2ddb66ab9ee43351ad721456ad3457b364e8c74723e21731ed07915657",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/integration/VertxHttpServerRoundtripIT.java": "b7dea390104f2303601b174bfeec376ce976560e11a5fb7b27402dbfb4654311",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/FootprintProbe.java": "a16acb88126a1dfa77a5f8db160a32d694bd24f7f258635c935bac196e1f14d2",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxExchangeExecutor.java": "737636b3bdd8240af99167fbac810ffd0543750698e1fb6a27c9a90da6aa6534",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxExchangeExecutorTest.java": "99d13ad9db9e5f0af624ae648eb8354dda55f6d3e87de572df4d22dfb47b3f30",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapper.java": "ec1cfb9f688fdbc349b9dc81f005ee93104fcbe8279f9eb9f2fa461e7ac72aa4",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapperTest.java": "2e966862d1d7e4c196d48cacd52b8610c1b264ee55bd054ca5dbcbb06f6296ad",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java": "a5a816864751170638142dedf13325e52fe617cdfc9e3c491a21e56c18991489",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerCoexistenceIT.java": "9a0df2e49e65f480af95f12c89057f6a1c53441b3ba8c22c03822578c4848bac",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerConcurrencyIT.java": "61dbeb6c5cfcc8b133d419d2acbf20b3f5866138b1bac452f3b74beb13126dff",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerLifecycleIT.java": "3abe9a530aaa0c65bb382d0b19e122d77bbacecfaad8f5a4b005dd4e3d052baa",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerLimitsIT.java": "f6faddfd4e01fa6cc79a7dc55ecfdd9dba2485bc240290318d254d8a464a4ced",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerOptions.java": "cfe1f63311d7e171831fa5813baf30f43d9f5d88777bf1525953c39ba63c463f",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerOptionsTest.java": "a6b259c0c392885f1e4a8bc45fb4b285a5be2d876dfcc5b95b9de49a00cab514",
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxPrototypeAdapters.java": "4b85dc2c8599afcf82011376018942229a0328737237d73782b7d73e42b35cc8",
+    "endpoints/citrus-http/src/test/resources/vertx-evaluation/run-footprint.sh": "de955fcebb4b7d7c7a6051ce1063cfffad54d5e44f096fbf9b8879b43620960e"
+  }
+}

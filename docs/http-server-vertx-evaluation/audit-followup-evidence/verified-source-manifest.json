@@ -1,0 +1,100 @@
+{
+  "commit": "e0a55e10e6de5617c6046f1e6b8f40eb2b75fdf0",
+  "status": "uncommitted test-only evaluation",
+  "javaRuntime": "Temurin 21.0.12.1",
+  "maven": "3.9.8",
+  "compilerRelease": 17,
+  "files": {
+    "endpoints/citrus-http/pom.xml": {
+      "sha256": "da978b7fc06d4a9566f1d56262066ceb3bd2d3c8a2731e8f8092de3f62849c5f",
+      "bytes": 7070
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/integration/VertxHttpServerRoundtripIT.java": {
+      "sha256": "e088e1cfd02d12190c22250791fcfacccc79a769db829f3707b2f39c1b00bae6",
+      "bytes": 10659
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/FootprintProbe.java": {
+      "sha256": "8d241360fd6e066b93804a5b4c9333659e24ebbcc927ade23371e2a8e7227a04",
+      "bytes": 9285
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/FootprintProbeTest.java": {
+      "sha256": "707d8060c811928c9138c4d7be300f25500a67b3816f9a9e4b947fda03486521",
+      "bytes": 1245
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxExchangeExecutor.java": {
+      "sha256": "a43e4ea727075778fa82fe7188ca8366320ee2bff1741098a7f79328d2c39741",
+      "bytes": 3815
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxExchangeExecutorTest.java": {
+      "sha256": "99d13ad9db9e5f0af624ae648eb8354dda55f6d3e87de572df4d22dfb47b3f30",
+      "bytes": 4304
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpContractIT.java": {
+      "sha256": "eee8ab88b6aa9c14b18adccb421e0c628996e46a3fbbb5e6f43b96431b8ebd93",
+      "bytes": 8088
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapper.java": {
+      "sha256": "a79ed655273a87b481bbf60f9b400f4fbc1582482c2b316f163703b6d59f9c39",
+      "bytes": 13167
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapperAuditTest.java": {
+      "sha256": "d67c1da622a3f843c4dffb28f3fcb165fb593349208f097ffedc90be2e84dee6",
+      "bytes": 2803
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpMessageMapperTest.java": {
+      "sha256": "2e966862d1d7e4c196d48cacd52b8610c1b264ee55bd054ca5dbcbb06f6296ad",
+      "bytes": 10868
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServer.java": {
+      "sha256": "cfaa5e79184629e6cadefdbadf1672055d744be278590d10f94c6f79e4cb850b",
+      "bytes": 21498
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerAuditIT.java": {
+      "sha256": "4f4cb962c92403225809125592d8bb04c7280aa95692776b876711c0ce0a08ae",
+      "bytes": 13178
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerCoexistenceIT.java": {
+      "sha256": "9a0df2e49e65f480af95f12c89057f6a1c53441b3ba8c22c03822578c4848bac",
+      "bytes": 3715
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerConcurrencyIT.java": {
+      "sha256": "e7804d340ca2c893a9aed3df9f5302d3815f62bb7bde36387ce885a232e3dab1",
+      "bytes": 8671
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerLifecycleIT.java": {
+      "sha256": "3abe9a530aaa0c65bb382d0b19e122d77bbacecfaad8f5a4b005dd4e3d052baa",
+      "bytes": 6606
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerLimitsIT.java": {
+      "sha256": "f6faddfd4e01fa6cc79a7dc55ecfdd9dba2485bc240290318d254d8a464a4ced",
+      "bytes": 10193
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerOptions.java": {
+      "sha256": "cfe1f63311d7e171831fa5813baf30f43d9f5d88777bf1525953c39ba63c463f",
+      "bytes": 10657
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxHttpServerOptionsTest.java": {
+      "sha256": "a6b259c0c392885f1e4a8bc45fb4b285a5be2d876dfcc5b95b9de49a00cab514",
+      "bytes": 5958
+    },
+    "endpoints/citrus-http/src/test/java/org/citrusframework/http/vertx/VertxPrototypeAdapters.java": {
+      "sha256": "4b85dc2c8599afcf82011376018942229a0328737237d73782b7d73e42b35cc8",
+      "bytes": 5706
+    },
+    "endpoints/citrus-http/src/test/resources/vertx-evaluation/run-footprint.py": {
+      "sha256": "c05d15efcaaa83ccedaa45a766bf775b6f47611806334f7a750bc6d6cabf64cd",
+      "bytes": 6065
+    },
+    "endpoints/citrus-http/src/test/resources/vertx-evaluation/run-footprint.sh": {
+      "sha256": "5f51186a1a8bf54691f9bc20d75ea272381bc92cfc2da125110fd90dcb317a94",
+      "bytes": 288
+    },
+    "endpoints/citrus-http/src/test/resources/vertx-evaluation/test_run_footprint.py": {
+      "sha256": "ea490a4fe783305818867e2437332dec552197c281126529dbc7236aca51f1a3",
+      "bytes": 1692
+    }
+  },
+  "compiledPrototypeClassMajorVersions": [
+    61
+  ]
+}
