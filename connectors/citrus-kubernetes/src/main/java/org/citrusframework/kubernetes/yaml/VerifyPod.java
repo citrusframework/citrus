@@ -40,8 +40,7 @@ public class VerifyPod extends AbstractKubernetesAction.Builder<VerifyPodAction,
 
     @SchemaProperty(description = "Label expression in name=value form used to select the pod.")
     public void setLabel(String labelExpression) {
-        String[] tokens = labelExpression.split("=", 2);
-        this.delegate.label(tokens[0].trim(), tokens[1].trim());
+        this.delegate.labelExpression(labelExpression);
     }
 
     @SchemaProperty(description = "Expected pod phase, such as Running or Stopped.")

@@ -44,8 +44,7 @@ public class DeletePod extends AbstractKubernetesAction.Builder<DeletePodAction,
 
     @SchemaProperty(description = "Label expression in name=value form used to select the pods to delete.")
     public void setLabel(String labelExpression) {
-        String[] tokens = labelExpression.split("=", 2);
-        this.delegate.label(tokens[0].trim(), tokens[1].trim());
+        this.delegate.labelExpression(labelExpression);
     }
 
     @Override

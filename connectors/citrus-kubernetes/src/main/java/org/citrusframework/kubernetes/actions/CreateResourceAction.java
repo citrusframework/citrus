@@ -17,6 +17,7 @@
 package org.citrusframework.kubernetes.actions;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -25,6 +26,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
 
 public class CreateResourceAction extends AbstractKubernetesAction implements KubernetesAction {
 
@@ -47,9 +49,9 @@ public class CreateResourceAction extends AbstractKubernetesAction implements Ku
             is = new ByteArrayInputStream(context.replaceDynamicContentInString(content)
                     .getBytes(StandardCharsets.UTF_8));
         } else if (resource != null) {
-            is = resource.getInputStream();
+            is = resolveContent(resource, context);
         } else if (resourcePath != null) {
-            is = Resources.create(context.replaceDynamicContentInString(resourcePath)).getInputStream();
+            is = resolveContent(Resources.create(context.replaceDynamicContentInString(resourcePath)), context);
         } else {
             throw new CitrusRuntimeException("Missing proper Kubernetes resource content");
         }
@@ -58,6 +60,15 @@ public class CreateResourceAction extends AbstractKubernetesAction implements Ku
                  .load(is)
                  .inNamespace(namespace(context))
                  .createOrReplace();
+    }
+
+    private InputStream resolveContent(Resource resource, TestContext context) {
+        try {
+            String resolved = context.replaceDynamicContentInString(FileUtils.readToString(resource));
+            return new ByteArrayInputStream(resolved.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read Kubernetes resource content", e);
+        }
     }
 
     /**

@@ -180,6 +180,11 @@ public class WatchPodLogsAction extends AbstractKubernetesAction {
             return this;
         }
 
+        public Builder labelExpression(String labelExpression) {
+            this.labelExpression = labelExpression;
+            return this;
+        }
+
         @Override
         public Builder milliseconds(String time) {
             this.timeout = time;

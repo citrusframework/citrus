@@ -44,11 +44,11 @@
         </list-services>
       </execute>
     </kubernetes>
-    <kubernetes client="k8sClient">
+    <kubernetes client="k8sClient" namespace="${namespace}">
       <delete-pod label="server=hello-netty"/>
     </kubernetes>
     <!-- MIGRATION WARNING: The result validation of 'k8s:delete-service' is not supported by the delete action in the plain XML DSL and has been removed -->
-    <kubernetes client="k8sClient">
+    <kubernetes client="k8sClient" namespace="${namespace}">
       <delete-service name="hello-netty"/>
     </kubernetes>
     <repeat-on-error auto-sleep="500" until="@assertThat(greaterThan(9))@">

@@ -24,6 +24,7 @@ import org.citrusframework.TestActor;
 import org.citrusframework.api.yaml.SchemaProperty;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.actions.KubernetesExecuteAction;
+import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
@@ -171,8 +172,7 @@ public class Execute implements TestActionBuilder<KubernetesExecuteAction>, Refe
         }
 
         void labelExpression(String labelExpression) {
-            String[] tokens = labelExpression.split("=", 2);
-            command.label(tokens[0].trim(), tokens[1].trim());
+            command.getParameters().put(KubernetesMessageHeaders.LABEL, labelExpression);
         }
 
         void labels(List<Label> labels) {

@@ -42,6 +42,7 @@ import org.citrusframework.kubernetes.command.ListPods;
 import org.citrusframework.kubernetes.command.ListReplicationControllers;
 import org.citrusframework.kubernetes.command.ListServices;
 import org.citrusframework.kubernetes.client.KubernetesClient;
+import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.StringUtils;
@@ -141,8 +142,7 @@ public class Execute implements TestActionBuilder<KubernetesExecuteAction>, Refe
 
         @XmlAttribute
         public void setLabel(String labelExpression) {
-            String[] tokens = labelExpression.split("=", 2);
-            command.label(tokens[0].trim(), tokens[1].trim());
+            command.getParameters().put(KubernetesMessageHeaders.LABEL, labelExpression);
         }
 
         @XmlElement
