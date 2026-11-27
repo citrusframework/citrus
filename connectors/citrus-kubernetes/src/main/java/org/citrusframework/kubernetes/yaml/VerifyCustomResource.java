@@ -68,8 +68,7 @@ public class VerifyCustomResource extends AbstractKubernetesAction.Builder<Verif
 
     @SchemaProperty(description = "Label expression in name=value form used to select the resource.")
     public void setLabel(String labelExpression) {
-        String[] tokens = labelExpression.split("=", 2);
-        this.delegate.label(tokens[0].trim(), tokens[1].trim());
+        this.delegate.labelExpression(labelExpression);
     }
 
     @SchemaProperty(description = "Maximum number of verification attempts.")

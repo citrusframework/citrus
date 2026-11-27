@@ -288,6 +288,11 @@ public class VerifyPodAction extends AbstractKubernetesAction {
             return this;
         }
 
+        public Builder labelExpression(String labelExpression) {
+            this.labelExpression = labelExpression;
+            return this;
+        }
+
         @Override
         public Builder waitForLogMessage(String logMessage) {
             this.logMessage = logMessage;

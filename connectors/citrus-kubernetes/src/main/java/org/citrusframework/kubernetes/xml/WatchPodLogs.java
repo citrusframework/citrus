@@ -48,8 +48,7 @@ public class WatchPodLogs extends AbstractKubernetesAction.Builder<WatchPodLogsA
 
     @XmlAttribute
     public void setLabel(String labelExpression) {
-        String[] tokens = labelExpression.split("=", 2);
-        this.delegate.label(tokens[0].trim(), tokens[1].trim());
+        this.delegate.labelExpression(labelExpression);
     }
 
     @XmlAttribute

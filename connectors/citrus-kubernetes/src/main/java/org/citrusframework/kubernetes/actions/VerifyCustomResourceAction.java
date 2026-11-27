@@ -402,6 +402,11 @@ public class VerifyCustomResourceAction extends AbstractKubernetesAction {
             return this;
         }
 
+        public Builder labelExpression(String labelExpression) {
+            this.labelExpression = labelExpression;
+            return this;
+        }
+
         @Override
         public Builder maxAttempts(int maxAttempts) {
             this.maxAttempts = maxAttempts;

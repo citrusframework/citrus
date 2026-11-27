@@ -96,6 +96,11 @@ public class DeletePodAction extends AbstractKubernetesAction {
             return this;
         }
 
+        public Builder labelExpression(String labelExpression) {
+            this.labelExpression = labelExpression;
+            return this;
+        }
+
         public Builder labels(Map<String, String> labels) {
             this.labels.putAll(labels);
             return this;

@@ -54,7 +54,7 @@ public interface KubernetesAction extends TestAction {
      */
     default String namespace(TestContext context) {
         if (getNamespace() != null) {
-            return getNamespace();
+            return context.replaceDynamicContentInString(getNamespace());
         }
 
         return KubernetesSupport.getNamespace(context);
