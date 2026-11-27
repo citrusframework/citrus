@@ -135,4 +135,17 @@ public class WebServiceClientTest extends AbstractUnitTest {
         }
 
     }
+
+    @Test
+    public void testInitializeResolvesDefaultUriVariable() {
+        WebServiceClient wsClient = new WebServiceClient();
+        wsClient.getEndpointConfiguration().setDefaultUri("http://${soapHost}:${soapPort}/services");
+
+        context.setVariable("soapHost", "soap.example.com");
+        context.setVariable("soapPort", "8443");
+
+        wsClient.initialize(context);
+
+        Assertions.assertEquals("http://soap.example.com:8443/services", wsClient.getEndpointConfiguration().getDefaultUri());
+    }
 }

@@ -314,6 +314,12 @@ public class HttpServer extends AbstractServer {
     }
 
     @Override
+    public void initialize(TestContext context) {
+        contextPath = context.replaceDynamicContentInString(contextPath);
+        initialize();
+    }
+
+    @Override
     public void exposeConnectionSettings(TestContext context) {
         context.setVariable(getName() + ".port", String.valueOf(port));
 

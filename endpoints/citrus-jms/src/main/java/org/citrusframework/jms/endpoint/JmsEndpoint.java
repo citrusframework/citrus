@@ -18,6 +18,7 @@ package org.citrusframework.jms.endpoint;
 
 import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.api.common.ShutdownPhase;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.spring.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.AbstractEndpoint;
@@ -26,6 +27,7 @@ import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Jms message endpoint capable of sending/receiving messages from Jms message destination. Either uses a Jms connection factory or
@@ -120,6 +122,21 @@ public class JmsEndpoint extends AbstractEndpoint implements InitializingPhase, 
 
             createConsumer();
         }
+    }
+
+    @Override
+    public void initialize(TestContext context) {
+        if (StringUtils.hasText(getEndpointConfiguration().getDestinationName())) {
+            getEndpointConfiguration().setDestinationName(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getDestinationName()));
+        }
+
+        if (StringUtils.hasText(getEndpointConfiguration().getDurableSubscriberName())) {
+            getEndpointConfiguration().setDurableSubscriberName(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getDurableSubscriberName()));
+        }
+
+        initialize();
     }
 
     @Override

@@ -318,4 +318,19 @@ public class JmsEndpointConsumerTest extends AbstractUnitTest {
 
         verify(connection).start();
     }
+
+    @Test
+    public void testInitializeResolvesDestinationNameVariable() {
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setDestinationName("${queueName}");
+        endpoint.getEndpointConfiguration().setDurableSubscriberName("${subscriberName}");
+
+        context.setVariable("queueName", "my.test.queue");
+        context.setVariable("subscriberName", "my-subscriber");
+
+        endpoint.initialize(context);
+
+        Assertions.assertEquals("my.test.queue", endpoint.getEndpointConfiguration().getDestinationName());
+        Assertions.assertEquals("my-subscriber", endpoint.getEndpointConfiguration().getDurableSubscriberName());
+    }
 }

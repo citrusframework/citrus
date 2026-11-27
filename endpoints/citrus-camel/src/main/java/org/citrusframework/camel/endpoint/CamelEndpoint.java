@@ -16,14 +16,17 @@
 
 package org.citrusframework.camel.endpoint;
 
+import org.citrusframework.api.common.InitializingPhase;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @since 1.4.1
  */
-public class CamelEndpoint extends AbstractEndpoint {
+public class CamelEndpoint extends AbstractEndpoint implements InitializingPhase {
 
     /** Cached producer or consumer */
     private CamelConsumer camelConsumer;
@@ -66,5 +69,17 @@ public class CamelEndpoint extends AbstractEndpoint {
     @Override
     public CamelEndpointConfiguration getEndpointConfiguration() {
         return (CamelEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void initialize(TestContext context) {
+        if (StringUtils.hasText(getEndpointConfiguration().getEndpointUri())) {
+            getEndpointConfiguration().setEndpointUri(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getEndpointUri()));
+        }
     }
 }

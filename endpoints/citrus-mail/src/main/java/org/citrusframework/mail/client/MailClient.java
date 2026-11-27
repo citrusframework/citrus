@@ -141,6 +141,26 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
         }
     }
 
+    @Override
+    public void initialize(TestContext context) {
+        if (StringUtils.hasText(getEndpointConfiguration().getHost())) {
+            getEndpointConfiguration().setHost(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getHost()));
+        }
+
+        if (StringUtils.hasText(getEndpointConfiguration().getUsername())) {
+            getEndpointConfiguration().setUsername(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getUsername()));
+        }
+
+        if (StringUtils.hasText(getEndpointConfiguration().getPassword())) {
+            getEndpointConfiguration().setPassword(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getPassword()));
+        }
+
+        initialize();
+    }
+
     void setMailSender(MailSender mailSenderMock) {
         this.mailSender = mailSenderMock;
     }

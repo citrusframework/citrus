@@ -591,4 +591,17 @@ public class HttpClientTest extends AbstractUnitTest {
 
         verify(restTemplate).setInterceptors(anyList());
     }
+
+    @Test
+    public void testInitializeResolvesRequestUrlVariable() {
+        HttpClient httpClient = new HttpClient();
+        httpClient.getEndpointConfiguration().setRequestUrl("http://${host}:${port}/api");
+
+        context.setVariable("host", "myserver");
+        context.setVariable("port", "8443");
+
+        httpClient.initialize(context);
+
+        Assertions.assertEquals("http://myserver:8443/api", httpClient.getEndpointConfiguration().getRequestUrl());
+    }
 }

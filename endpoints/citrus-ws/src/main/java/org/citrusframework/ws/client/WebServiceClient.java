@@ -16,6 +16,7 @@
 
 package org.citrusframework.ws.client;
 
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -51,7 +52,7 @@ import java.io.IOException;
  * SOAP response message.
  * @since 1.4
  */
-public class WebServiceClient extends AbstractEndpoint implements Producer, ReplyConsumer {
+public class WebServiceClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingPhase {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(WebServiceClient.class);
 
@@ -78,6 +79,18 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     @Override
     public WebServiceEndpointConfiguration getEndpointConfiguration() {
         return (WebServiceEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void initialize(TestContext context) {
+        if (getEndpointConfiguration().getDefaultUri() != null) {
+            getEndpointConfiguration().setDefaultUri(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getDefaultUri()));
+        }
     }
 
     @Override
