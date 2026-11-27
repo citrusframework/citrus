@@ -29,6 +29,10 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestResult;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.base.DefaultTestCase;
+import org.citrusframework.container.SequenceAfterTest;
+import org.citrusframework.container.SequenceBeforeTest;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -140,6 +144,64 @@ class TestFlowReporterConcurrencyTest {
         reporter.onTestActionFinish(test, echo);
 
         assertThat(publishedEntry(reporter).getActions()).hasSize(1);
+    }
+
+    @Test
+    void shouldRecordBeforeAndAfterTestActionsConcurrently() throws InterruptedException {
+        int runsPerThread = 50;
+        TestFlowReporter reporter = new TestFlowReporter();
+        SequenceBeforeTest beforeTest = SequenceBeforeTest.Builder.beforeTest().name("beforeCommon").build();
+        SequenceAfterTest afterTest = SequenceAfterTest.Builder.afterTest().name("afterCommon").build();
+        TestContext context = TestContextFactory.newInstance().getObject();
+
+        List<Throwable> errors = runConcurrently(() -> {
+            DefaultTestCase testCase = new DefaultTestCase();
+            testCase.setName(TEST_NAME);
+
+            for (int run = 0; run < runsPerThread; run++) {
+                reporter.onTestStart(testCase);
+                reporter.onBeforeTestStart(testCase);
+                reporter.onNestedActionSuccess(beforeTest, echo, context);
+                reporter.onNestedActionSuccess(beforeTest, echo, context);
+                reporter.onBeforeTestEnd(testCase);
+                reporter.onTestActionFinish(testCase, echo);
+                reporter.onTestSuccess(testCase);
+                reporter.onAfterTestStart(testCase);
+                reporter.onNestedActionSuccess(afterTest, echo, context);
+                reporter.onNestedActionSuccess(afterTest, echo, context);
+                reporter.onAfterTestEnd(testCase);
+                reporter.onTestEnd(testCase);
+            }
+        });
+
+        assertThat(errors).isEmpty();
+        TestFlowReporter.ReportEntry entry = publishedEntry(reporter);
+        assertThat(entry.getBeforeTestActions()).hasSize(2);
+        assertThat(entry.getActions()).hasSize(1);
+        assertThat(entry.getAfterTestActions()).hasSize(2);
+        assertThat(reporter.getJsonReport()).contains("\"beforeTest\"").contains("\"afterTest\"");
+    }
+
+    @Test
+    void shouldIsolateBoundaryActionsAcrossTests() {
+        TestFlowReporter reporter = new TestFlowReporter();
+        TestCase first = mockTestCase();
+        TestCase second = mockTestCase();
+        SequenceBeforeTest beforeTest = SequenceBeforeTest.Builder.beforeTest().name("beforeCommon").build();
+        TestContext context = TestContextFactory.newInstance().getObject();
+
+        reporter.onTestStart(first);
+        reporter.onBeforeTestStart(first);
+        reporter.onNestedActionSuccess(beforeTest, echo, context);
+        reporter.onBeforeTestEnd(first);
+
+        reporter.onTestStart(second);
+        reporter.onTestActionFinish(second, echo);
+        reporter.onTestSuccess(second);
+
+        TestFlowReporter.ReportEntry entry = publishedEntry(reporter);
+        assertThat(entry.getBeforeTestActions()).isEmpty();
+        assertThat(entry.getActions()).hasSize(1);
     }
 
     private TestCase mockTestCase() {
