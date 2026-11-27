@@ -238,6 +238,11 @@ public final class ParentDelegatingWebApplicationContext implements WebApplicati
     }
 
     @Override
+    public <T> T getBean(String name, ParameterizedTypeReference<T> requiredType) throws BeansException {
+        return delegate.getBean(name, requiredType);
+    }
+
+    @Override
     public <T> ObjectProvider<T> getBeanProvider(ParameterizedTypeReference<T> requiredType) {
         return delegate.getBeanProvider(requiredType);
     }

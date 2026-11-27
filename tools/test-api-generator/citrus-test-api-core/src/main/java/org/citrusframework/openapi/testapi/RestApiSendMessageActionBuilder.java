@@ -375,9 +375,14 @@ public class RestApiSendMessageActionBuilder extends OpenApiClientRequestActionB
                     if (value == null) {
                         return null;
                     }
-                    return value.stream().map(
-                        v -> v instanceof String string ? context.replaceDynamicContentInString(
-                            string) : v).toList();
+                    return value.stream().map(v -> {
+                        if (v instanceof String string) {
+                            return (Object) context.replaceDynamicContentInString(string);
+                        } else if (v instanceof Number || v instanceof Boolean) {
+                            return (Object) context.replaceDynamicContentInString(v.toString());
+                        }
+                        return v;
+                    }).toList();
                 });
                 message.setPayload(formParameters);
             }

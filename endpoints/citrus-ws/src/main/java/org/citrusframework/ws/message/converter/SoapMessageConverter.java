@@ -16,10 +16,28 @@
 
 package org.citrusframework.ws.message.converter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.xml.namespace.QName;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.soap.MimeHeader;
 import jakarta.xml.soap.MimeHeaders;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.api.xml.StringResult;
+import org.citrusframework.api.xml.StringSource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -30,8 +48,6 @@ import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.message.SoapMessageHeaders;
-import org.citrusframework.api.xml.StringResult;
-import org.citrusframework.api.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UrlPathHelper;
@@ -48,22 +64,6 @@ import org.springframework.ws.transport.http.HttpServletConnection;
 import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
-import javax.xml.namespace.QName;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Default converter implementation for SOAP messages. By default strips away the SOAP envelope and constructs internal message representation
@@ -377,8 +377,8 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         if (messageContext == null) { return; }
 
         final String[] propertyNames = messageContext.getPropertyNames();
-        if (propertyNames != null) {
-            for (final String propertyName : propertyNames) {
+        for (final String propertyName : propertyNames) {
+            if (!propertyName.startsWith("org.springframework")) {
                 message.setHeader(propertyName, messageContext.getProperty(propertyName));
             }
         }
