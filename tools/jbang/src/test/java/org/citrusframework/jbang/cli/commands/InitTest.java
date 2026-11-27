@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.List;
 
 import org.citrusframework.jbang.cli.CitrusJBangMain;
 import org.junit.jupiter.api.Assertions;
@@ -52,7 +53,7 @@ public class InitTest extends CommandTest {
     }
 
     @Test
-    public void shouldInitYamlTest() {
+    public void shouldInitYamlTest() throws IOException {
         Path targetDir = workingDir.resolve("test");
 
         CitrusJBangMain main = createCitrusJBangMain();
@@ -60,7 +61,14 @@ public class InitTest extends CommandTest {
                 "--directory", targetDir.toString());
 
         Assertions.assertEquals("", printer.getOutput());
-        Assertions.assertTrue(targetDir.resolve("sample.citrus.it.yaml").toFile().exists());
+        Path yamlFile = targetDir.resolve("sample.citrus.it.yaml");
+        Assertions.assertTrue(yamlFile.toFile().exists());
+
+        List<String> lines = Files.readAllLines(yamlFile);
+        Assertions.assertTrue(lines.getFirst().startsWith("# yaml-language-server: $schema="),
+                "YAML test should start with schema comment line");
+        Assertions.assertTrue(lines.stream().anyMatch(l -> l.startsWith("name: ")),
+                "YAML test should contain the test name");
     }
 
     @Test

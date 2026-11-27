@@ -134,6 +134,164 @@ You can easily integrate the test into your project with Maven, or you can just 
 citrus run HelloServiceIT.java
 ```
 
+For AI agents
+---------
+
+If you are an AI agent writing Citrus tests in YAML or XML, start here:
+
+* **YAML test case JSON schema** - Use this schema for validation and auto-completion:
+  `https://citrusframework.org/schema/json/testcase/citrus-testcase.json`
+  Add the schema line at the top of every YAML test: `# yaml-language-server: $schema=https://citrusframework.org/schema/json/testcase/citrus-testcase.json`
+
+* **XML test case XSD schemas** - For XML tests use the namespace and schema location:
+  `http://citrusframework.org/schema/xml/testcase` with `http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd`
+  Protocol-specific XSDs follow the pattern `citrus-<protocol>-testcase.xsd` (e.g. `citrus-http-testcase.xsd`, `citrus-kafka-testcase.xsd`).
+
+* **Action and endpoint catalogs** - Machine-readable JSON catalogs with descriptions, property schemas, and test variables for all actions, containers, and endpoints:
+  `https://citrusframework.org/schema/catalog/<version>/citrus-catalog-aggregate-test-actions.json`
+  `https://citrusframework.org/schema/catalog/<version>/citrus-catalog-aggregate-endpoints.json`
+
+* **MCP server** - `tools/mcp-server` provides tool-based access to the catalogs and test scaffolding.
+
+* **Claude Code plugin** - `plugins/citrus-mcp` integrates the MCP server with Claude Code.
+
+* **LLM overview** - `https://citrusframework.org/llms.txt` (see [llmstxt.org](https://llmstxt.org))
+
+### YAML test examples
+
+Minimal, correct examples that can be run with `citrus run <file>` (JBang, no project setup required).
+
+**Very simple test printing a log message with variables**
+
+```yaml
+# yaml-language-server: $schema=https://citrusframework.org/schema/json/testcase/citrus-testcase.json
+name: SimpleTest
+variables:
+  - name: user
+    value: Citrus
+actions:
+  - echo:
+      message: "Hello ${user}"
+```
+
+**Send and receive a plaintext message via a direct endpoint**
+
+```yaml
+# yaml-language-server: $schema=https://citrusframework.org/schema/json/testcase/citrus-testcase.json
+name: DirectMessageTest
+endpoints:
+  - direct:
+      name: greets
+      autoCreateQueue: true
+      queue: greetings
+actions:
+  - send:
+      endpoint: greets
+      message:
+        body:
+          data: "Hello from Citrus!"
+  - receive:
+      endpoint: greets
+      message:
+        body:
+          data: "Hello from Citrus!"
+```
+
+**HTTP GET request with JSON response validation**
+
+```yaml
+# yaml-language-server: $schema=https://citrusframework.org/schema/json/testcase/citrus-testcase.json
+name: HttpGetJsonTest
+actions:
+  - http:
+      client: "httpClient"
+      sendRequest:
+        uri: "http://localhost:8080/test"
+        GET: {}
+  - http:
+      client: "httpClient"
+      receiveResponse:
+        response:
+          status: "200"
+          body:
+            data: '{"message": "Hello World!"}'
+```
+
+**Start Kafka with Testcontainers, run a Camel integration, send and receive Kafka messages, verify the Camel log**
+
+```yaml
+# yaml-language-server: $schema=https://citrusframework.org/schema/json/testcase/citrus-testcase.json
+name: KafkaCamelIT
+description: Start Kafka, run Camel route, verify messages and log output
+actions:
+  - testcontainers:
+      start:
+        kafka:
+          topics:
+            - "simple-topic"
+  - camel:
+      cli:
+        run:
+          integration:
+            name: "simple-route"
+            file: "simple-route.yaml"
+  - send:
+      endpoint: "kafka:simple-topic"
+      message:
+        body:
+          data: "Hello Kafka!"
+  - receive:
+      endpoint: "kafka:processed-topic"
+      message:
+        body:
+          data: "Citrus said: Hello Kafka!"
+  - camel:
+      cli:
+        verify:
+          integration: "simple-route"
+          logMessage: "Inbound message: Hello Kafka!"
+```
+
+**Start PostgreSQL with Testcontainers, send an HTTP POST, verify the DB insert**
+
+```yaml
+# yaml-language-server: $schema=https://citrusframework.org/schema/json/testcase/citrus-testcase.json
+name: HttpPostgresIT
+description: Start PostgreSQL, send HTTP POST, verify DB entry
+actions:
+  - testcontainers:
+      start:
+        postgresql:
+          database: testdb
+          username: test
+          password: test
+          dataSourceName: usersDS
+          initScript:
+            value: |
+              CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR, email VARCHAR);
+  - http:
+      client: "http://localhost:8080/api/users"
+      sendRequest:
+        POST:
+          body:
+            data: '{"name": "Jane", "email": "jane@example.org"}'
+  - http:
+      client: "http://localhost:8080/api/users"
+      receiveResponse:
+        response:
+          status: "201"
+  - sql:
+      dataSource: "usersDS"
+      statements:
+        - statement: SELECT name FROM users WHERE email='jane@example.org'
+      validate:
+        - column: name
+          value: Jane
+```
+
+The `testcontainers: start: postgresql` action sets test variables `CITRUS_TESTCONTAINERS_POSTGRESQL_HOST`, `_PORT`, `_URL`, etc. that you can reference with `${CITRUS_TESTCONTAINERS_POSTGRESQL_URL}`.
+The `testcontainers: start: kafka` action sets `CITRUS_TESTCONTAINERS_KAFKA_BOOTSTRAP_SERVERS` etc.
+
 Developing
 ---------
 

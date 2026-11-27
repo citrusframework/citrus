@@ -73,7 +73,8 @@ public class Cli implements CamelActionBuilderWrapper<AbstractCamelCliAction.Bui
         return kameletsVersion;
     }
 
-    @SchemaProperty(kind = ACTION, group = CAMEL_CLI_GROUP, description = "Runs a Camel integration.")
+    @SchemaProperty(kind = ACTION, group = CAMEL_CLI_GROUP, description = "Runs a Camel integration. " +
+            "Sets test variables {integrationName}:pid and {integrationName}:process.")
     public void setRun(RunIntegration run) {
         this.builder = run.getBuilder();
     }

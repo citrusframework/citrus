@@ -58,14 +58,18 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
 
     private StartTestcontainersAction.AbstractBuilder<?, ?, ?> delegate;
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a generic Testcontainers container.")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a generic Testcontainers container. " +
+            "Sets test variables CITRUS_TESTCONTAINERS_{name}_{property} where name represents the container and property is one of HOST, PORT, CONTAINER_IP, CONTAINER_ID, CONTAINER_NAME.")
     public void setContainer(Container container) {
         StartTestcontainersAction.Builder<?> builder = new StartTestcontainersAction.Builder<>();
         configureStartActionBuilder(builder, container);
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a LocalStack Testcontainers container.")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a LocalStack Testcontainers container. " +
+            "Sets test variables CITRUS_TESTCONTAINERS_LOCALSTACK_{property} where property is one of " +
+            "HOST, PORT, CONTAINER_IP, CONTAINER_ID, CONTAINER_NAME, REGION, ACCESS_KEY, SECRET_KEY, " +
+            "SERVICE_PORT, SERVICE_LOCAL_URL, SERVICE_NAME, SERVICE_URL, KUBE_DOCK_SERVICE_URL, KUBE_DOCK_HOST.")
     public void setLocalstack(LocalStack container) {
         StartLocalStackAction.Builder builder = new StartLocalStackAction.Builder();
         if (container.getVersion() != null) {
@@ -103,7 +107,10 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Floci Testcontainers container.")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Floci Testcontainers container. " +
+            "Sets test variables CITRUS_TESTCONTAINERS_FLOCI_{property} where property is one of " +
+            "HOST, PORT, CONTAINER_IP, CONTAINER_ID, CONTAINER_NAME, REGION, ACCESS_KEY, SECRET_KEY, " +
+            "SERVICE_PORT, SERVICE_LOCAL_URL, SERVICE_NAME, SERVICE_URL, KUBE_DOCK_SERVICE_URL, KUBE_DOCK_HOST.")
     public void setFloci(Floci container) {
         StartFlociAction.Builder builder = new StartFlociAction.Builder();
         if (container.getVersion() != null) {
@@ -137,7 +144,10 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a MongoDB Testcontainers container.")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a MongoDB Testcontainers container. " +
+            "Sets test variables CITRUS_TESTCONTAINERS_MONGODB_{property} where property is one of " +
+            "HOST, PORT, CONTAINER_IP, CONTAINER_ID, CONTAINER_NAME, LOCAL_URL, SERVICE_PORT, SERVICE_LOCAL_URL, " +
+            "SERVICE_NAME, SERVICE_URL, URL, CONNECTION_STRING, KUBE_DOCK_SERVICE_URL, KUBE_DOCK_HOST.")
     public void setMongodb(MongoDB container) {
         StartMongoDBAction.Builder builder = new StartMongoDBAction.Builder();
         if (container.getVersion() != null) {
@@ -149,7 +159,11 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Kafka Testcontainers container.")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Kafka Testcontainers container. " +
+            "Sets test variables CITRUS_TESTCONTAINERS_KAFKA_{property} where property is one of " +
+            "HOST, PORT, CONTAINER_IP, CONTAINER_ID, CONTAINER_NAME, SERVICE_PORT, LOCAL_BOOTSTRAP_SERVERS, " +
+            "SERVICE_LOCAL_BOOTSTRAP_SERVERS, SERVICE_NAME, SERVICE_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVERS, " +
+            "KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS, KUBE_DOCK_HOST.")
     public void setKafka(Kafka container) {
         StartKafkaAction.Builder builder = new StartKafkaAction.Builder();
         if (container.getVersion() != null) {
@@ -173,7 +187,11 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Redpanda Testcontainers container.")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a Redpanda Testcontainers container. " +
+            "Sets test variables CITRUS_TESTCONTAINERS_REDPANDA_{property} where property is one of " +
+            "HOST, PORT, CONTAINER_IP, CONTAINER_ID, CONTAINER_NAME, LOCAL_BOOTSTRAP_SERVERS, SERVICE_PORT, " +
+            "SERVICE_LOCAL_BOOTSTRAP_SERVERS, ADMIN_ADDRESS, SCHEMA_REGISTRY_ADDRESS, SERVICE_NAME, " +
+            "SERVICE_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVERS, KUBE_DOCK_SERVICE_BOOTSTRAP_SERVERS, KUBE_DOCK_HOST.")
     public void setRedpanda(Redpanda container) {
         StartRedpandaAction.Builder builder = new StartRedpandaAction.Builder();
         if (container.getVersion() != null) {
@@ -193,7 +211,10 @@ public class Start extends AbstractTestcontainersAction.Builder<StartTestcontain
         delegate = builder;
     }
 
-    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a PostgreSQL Testcontainers container.")
+    @SchemaProperty(kind = ACTION, group = "testcontainers:start", description = "Starts a PostgreSQL Testcontainers container. " +
+            "Sets test variables CITRUS_TESTCONTAINERS_POSTGRESQL_{property} where property is one of " +
+            "HOST, PORT, CONTAINER_IP, CONTAINER_ID, CONTAINER_NAME, SERVICE_PORT, LOCAL_URL, SERVICE_LOCAL_URL, " +
+            "SERVICE_NAME, SERVICE_URL, URL, DRIVER, DB_NAME, USERNAME, PASSWORD, KUBE_DOCK_SERVICE_URL, KUBE_DOCK_HOST.")
     public void setPostgresql(PostgreSQL container) {
         StartPostgreSQLAction.Builder builder = new StartPostgreSQLAction.Builder();
         if (container.getVersion() != null) {
