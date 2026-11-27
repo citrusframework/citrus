@@ -181,6 +181,13 @@
       "defaultValue": true
     },
     {
+      "name": "citrus.camel.cli.wait.for.stopped.state",
+      "type": "java.lang.Boolean",
+      "description": "When set to true the stop action waits for the integration to reach stopped state before returning.",
+      "sourceType": "org.citrusframework.camel.cli.CamelCliSettings",
+      "defaultValue": true
+    },
+    {
       "name": "citrus.camel.cli.run.auto.set.properties",
       "type": "java.lang.Boolean",
       "description": "When set to true the Camel CLI run action automatically resolves component properties from Camel infra service variables and sets them as system properties on the integration run.",
