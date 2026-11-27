@@ -67,7 +67,7 @@ public class CreateBrokerAction extends AbstractKnativeAction {
                     .build();
 
             PropertyUtils.configure(resolvedBrokerName, brokerServer, context.getReferenceResolver());
-            brokerServer.initialize();
+            brokerServer.initialize(context);
             context.getReferenceResolver().bind(resolvedBrokerName, brokerServer);
         } else {
             brokerServer = context.getReferenceResolver().resolve(resolvedBrokerName, HttpServer.class);

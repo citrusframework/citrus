@@ -23,13 +23,14 @@ import java.util.function.Predicate;
 
 import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.citrusframework.dsl.DefaultTestActions;
 import org.citrusframework.api.actions.ReceiveMessageBuilderFactory;
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.api.common.ShutdownPhase;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.dsl.DefaultTestActions;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelector;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
-
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -46,7 +47,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  *
  * @since 2.8
  */
-public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
+public class KafkaEndpoint extends AbstractEndpoint implements InitializingPhase, ShutdownPhase {
 
     /**
      * Cached producer or consumer
@@ -161,6 +162,32 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
     @Override
     public KafkaEndpointConfiguration getEndpointConfiguration() {
         return (KafkaEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void initialize(TestContext context) {
+        getEndpointConfiguration().setBootstrapServers(
+                context.replaceDynamicContentInString(getEndpointConfiguration().getBootstrapServers()));
+
+        if (hasText(getEndpointConfiguration().getTopic())) {
+            getEndpointConfiguration().setTopic(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getTopic()));
+        }
+
+        if (hasText(getEndpointConfiguration().getClientId())) {
+            getEndpointConfiguration().setClientId(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getClientId()));
+        }
+
+        getEndpointConfiguration().setConsumerGroup(
+                context.replaceDynamicContentInString(getEndpointConfiguration().getConsumerGroup()));
+
+        getEndpointConfiguration().setOffsetReset(
+                context.replaceDynamicContentInString(getEndpointConfiguration().getOffsetReset()));
     }
 
     @Override

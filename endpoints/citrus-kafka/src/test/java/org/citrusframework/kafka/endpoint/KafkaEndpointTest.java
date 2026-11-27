@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 
 import java.util.stream.Stream;
 
+import org.citrusframework.context.TestContext;
 import org.citrusframework.kafka.endpoint.selector.KafkaMessageSelectorFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -347,5 +348,108 @@ public class KafkaEndpointTest {
 
         verify(kafkaConsumerMock).stop();
         verify(threadLocalKafkaConsumerMock).remove();
+    }
+
+    @Test
+    public void initialize_resolvesVariablesInBootstrapServers() {
+        var context = new TestContext();
+        context.setVariable("servers", "broker1:9092,broker2:9092");
+
+        var fixture = new KafkaEndpoint();
+        fixture.getEndpointConfiguration().setBootstrapServers("${servers}");
+
+        fixture.initialize(context);
+
+        assertThat(fixture.getEndpointConfiguration().getBootstrapServers())
+                .isEqualTo("broker1:9092,broker2:9092");
+    }
+
+    @Test
+    public void initialize_resolvesVariablesInTopic() {
+        var context = new TestContext();
+        context.setVariable("topicName", "my-topic");
+
+        var fixture = new KafkaEndpoint();
+        fixture.getEndpointConfiguration().setTopic("${topicName}");
+
+        fixture.initialize(context);
+
+        assertThat(fixture.getEndpointConfiguration().getTopic())
+                .isEqualTo("my-topic");
+    }
+
+    @Test
+    public void initialize_resolvesVariablesInClientId() {
+        var context = new TestContext();
+        context.setVariable("clientId", "test-client");
+
+        var fixture = new KafkaEndpoint();
+        fixture.getEndpointConfiguration().setClientId("${clientId}");
+
+        fixture.initialize(context);
+
+        assertThat(fixture.getEndpointConfiguration().getClientId())
+                .isEqualTo("test-client");
+    }
+
+    @Test
+    public void initialize_resolvesVariablesInConsumerGroup() {
+        var context = new TestContext();
+        context.setVariable("group", "my-consumer-group");
+
+        var fixture = new KafkaEndpoint();
+        fixture.getEndpointConfiguration().setConsumerGroup("${group}");
+
+        fixture.initialize(context);
+
+        assertThat(fixture.getEndpointConfiguration().getConsumerGroup())
+                .isEqualTo("my-consumer-group");
+    }
+
+    @Test
+    public void initialize_resolvesVariablesInOffsetReset() {
+        var context = new TestContext();
+        context.setVariable("offsetReset", "latest");
+
+        var fixture = new KafkaEndpoint();
+        fixture.getEndpointConfiguration().setOffsetReset("${offsetReset}");
+
+        fixture.initialize(context);
+
+        assertThat(fixture.getEndpointConfiguration().getOffsetReset())
+                .isEqualTo("latest");
+    }
+
+    @Test
+    public void initialize_resolvesMixedContentWithVariables() {
+        var context = new TestContext();
+        context.setVariable("host", "broker1");
+        context.setVariable("port", "9092");
+
+        var fixture = new KafkaEndpoint();
+        fixture.getEndpointConfiguration().setBootstrapServers("${host}:${port}");
+
+        fixture.initialize(context);
+
+        assertThat(fixture.getEndpointConfiguration().getBootstrapServers())
+                .isEqualTo("broker1:9092");
+    }
+
+    @Test
+    public void initialize_leavesLiteralsUnchanged() {
+        var context = new TestContext();
+
+        var fixture = new KafkaEndpoint();
+        fixture.getEndpointConfiguration().setBootstrapServers("localhost:9092");
+        fixture.getEndpointConfiguration().setTopic("test-topic");
+        fixture.getEndpointConfiguration().setConsumerGroup("citrus_kafka_group");
+        fixture.getEndpointConfiguration().setOffsetReset("earliest");
+
+        fixture.initialize(context);
+
+        assertThat(fixture.getEndpointConfiguration().getBootstrapServers()).isEqualTo("localhost:9092");
+        assertThat(fixture.getEndpointConfiguration().getTopic()).isEqualTo("test-topic");
+        assertThat(fixture.getEndpointConfiguration().getConsumerGroup()).isEqualTo("citrus_kafka_group");
+        assertThat(fixture.getEndpointConfiguration().getOffsetReset()).isEqualTo("earliest");
     }
 }

@@ -92,7 +92,7 @@ public class CreateEndpointAction extends AbstractTestAction {
                 context.getReferenceResolver().bind(resolvedEndpointName, endpoint);
 
                 if (endpoint instanceof InitializingPhase initializingPhase) {
-                    initializingPhase.initialize();
+                    initializingPhase.initialize(context);
                 }
 
                 endpoint.exposeConnectionSettings(context);

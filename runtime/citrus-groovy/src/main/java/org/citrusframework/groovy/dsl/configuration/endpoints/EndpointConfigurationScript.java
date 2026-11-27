@@ -70,7 +70,7 @@ public class EndpointConfigurationScript implements ReferenceResolverAware {
             PropertyUtils.configure(endpoint.getName(), endpoint, resolverToUse);
 
             if (endpoint instanceof InitializingPhase initializingBean) {
-                initializingBean.initialize();
+                initializingBean.initialize(context);
             }
 
             onCreate(endpoint);

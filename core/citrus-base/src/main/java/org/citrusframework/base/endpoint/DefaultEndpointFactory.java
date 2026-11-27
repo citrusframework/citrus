@@ -100,7 +100,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
         PropertyUtils.configure(endpointName, endpoint, context.getReferenceResolver());
 
         if (endpoint instanceof InitializingPhase initializingBean) {
-            initializingBean.initialize();
+            initializingBean.initialize(context);
         }
     }
 
