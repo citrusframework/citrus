@@ -16,16 +16,19 @@
 
 package org.citrusframework.websocket.endpoint;
 
+import org.citrusframework.api.common.InitializingPhase;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
-import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
 
 /**
  * Endpoint constructs web socket consumer and producer with given endpoint configuration.
  * @since 2.3
  */
-public class WebSocketEndpoint extends AbstractEndpoint {
+public class WebSocketEndpoint extends AbstractEndpoint implements InitializingPhase {
     /**
      * Cached producer or consumer
      */
@@ -62,6 +65,18 @@ public class WebSocketEndpoint extends AbstractEndpoint {
     @Override
     public WebSocketEndpointConfiguration getEndpointConfiguration() {
         return (WebSocketEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void initialize(TestContext context) {
+        if (StringUtils.hasText(getEndpointConfiguration().getEndpointUri())) {
+            getEndpointConfiguration().setEndpointUri(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getEndpointUri()));
+        }
     }
 
     /**

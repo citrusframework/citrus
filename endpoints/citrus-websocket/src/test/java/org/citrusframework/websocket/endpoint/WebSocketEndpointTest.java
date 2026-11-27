@@ -155,4 +155,18 @@ public class WebSocketEndpointTest extends AbstractUnitTest {
         }
 
     }
+
+    @Test
+    public void testInitializeResolvesEndpointUriVariable() {
+        WebSocketServerEndpointConfiguration endpointConfiguration = new WebSocketServerEndpointConfiguration();
+        WebSocketEndpoint webSocketEndpoint = new WebSocketEndpoint(endpointConfiguration);
+        endpointConfiguration.setEndpointUri("ws://${wsHost}:${wsPort}/ws");
+
+        context.setVariable("wsHost", "wsserver");
+        context.setVariable("wsPort", "9090");
+
+        webSocketEndpoint.initialize(context);
+
+        Assertions.assertEquals("ws://wsserver:9090/ws", endpointConfiguration.getEndpointUri());
+    }
 }

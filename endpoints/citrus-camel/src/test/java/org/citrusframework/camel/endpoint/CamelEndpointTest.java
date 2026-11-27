@@ -169,4 +169,16 @@ public class CamelEndpointTest extends org.citrusframework.junit.jupiter.Abstrac
 
         verify(messageListeners).onOutboundMessage(requestMessage, context);
     }
+
+    @Test
+    public void testInitializeResolvesEndpointUriVariable() {
+        CamelEndpoint camelEndpoint = new CamelEndpoint();
+        camelEndpoint.getEndpointConfiguration().setEndpointUri("direct:${routeName}");
+
+        context.setVariable("routeName", "myRoute");
+
+        camelEndpoint.initialize(context);
+
+        Assertions.assertEquals("direct:myRoute", camelEndpoint.getEndpointConfiguration().getEndpointUri());
+    }
 }

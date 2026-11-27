@@ -19,6 +19,7 @@ package org.citrusframework.http.client;
 import java.net.URI;
 import java.util.Optional;
 
+import org.citrusframework.api.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.MessageTimeoutException;
@@ -31,6 +32,7 @@ import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.ReplyConsumer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -48,7 +50,7 @@ import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCause;
  *
  * @since 1.4
  */
-public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsumer {
+public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingPhase {
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
@@ -76,6 +78,18 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     @Override
     public HttpEndpointConfiguration getEndpointConfiguration() {
         return (HttpEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void initialize(TestContext context) {
+        if (StringUtils.hasText(getEndpointConfiguration().getRequestUrl())) {
+            getEndpointConfiguration().setRequestUrl(
+                    context.replaceDynamicContentInString(getEndpointConfiguration().getRequestUrl()));
+        }
     }
 
     @Override

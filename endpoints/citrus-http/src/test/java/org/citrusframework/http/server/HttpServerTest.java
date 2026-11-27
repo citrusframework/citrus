@@ -316,4 +316,17 @@ public class HttpServerTest extends AbstractUnitTest {
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
+
+    @Test
+    public void testInitializeResolvesContextPathVariable() {
+        HttpServer server = new HttpServer();
+        server.setContextPath("${contextPath}");
+
+        TestContext ctx = testContextFactory.getObject();
+        ctx.setVariable("contextPath", "/my-api");
+
+        server.initialize(ctx);
+
+        Assertions.assertEquals("/my-api", server.getContextPath());
+    }
 }

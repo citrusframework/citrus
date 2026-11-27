@@ -134,4 +134,22 @@ class MailClientTest extends AbstractUnitTest {
 
         return builder.toString();
     }
+
+    @Test
+    void testInitializeResolvesVariables() {
+        MailClient mailClient = new MailClient();
+        mailClient.getEndpointConfiguration().setHost("${mailHost}");
+        mailClient.getEndpointConfiguration().setUsername("${mailUser}");
+        mailClient.getEndpointConfiguration().setPassword("${mailPass}");
+
+        context.setVariable("mailHost", "smtp.example.com");
+        context.setVariable("mailUser", "testuser");
+        context.setVariable("mailPass", "secret");
+
+        mailClient.initialize(context);
+
+        Assertions.assertEquals("smtp.example.com", mailClient.getEndpointConfiguration().getHost());
+        Assertions.assertEquals("testuser", mailClient.getEndpointConfiguration().getUsername());
+        Assertions.assertEquals("secret", mailClient.getEndpointConfiguration().getPassword());
+    }
 }
