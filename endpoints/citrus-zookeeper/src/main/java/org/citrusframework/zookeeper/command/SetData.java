@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.lang.Integer.parseInt;
+import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.DEFAULT_VERSION;
 
 /**
  * @since 2.5
@@ -41,6 +42,7 @@ public class SetData extends AbstractZooCommand<ZooResponse> {
      */
     public SetData() {
         super("zookeeper:set");
+        version(DEFAULT_VERSION);
     }
 
     @Override
