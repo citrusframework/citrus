@@ -46,7 +46,7 @@ public class FtpEndpointComponent extends AbstractEndpointComponent {
                 getEndpointConfigurationParameters(parameters, FtpEndpointConfiguration.class), context);
 
         try {
-            ftpClient.initialize();
+            ftpClient.initialize(context);
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to create dynamic endpoint", e);
         }

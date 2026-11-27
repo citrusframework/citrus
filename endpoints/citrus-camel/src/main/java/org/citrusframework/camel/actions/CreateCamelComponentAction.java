@@ -54,33 +54,30 @@ public class CreateCamelComponentAction extends AbstractCamelAction implements R
             toCreate = new GroovySupport()
                     .withTestContext(context)
                     .load(context.replaceDynamicContentInString(script), "org.apache.camel.*");
-
-            if (toCreate instanceof InitializingPhase initializingBean) {
-                initializingBean.initialize();
-            }
         } else {
             toCreate = component;
         }
 
-        bindComponent(context.replaceDynamicContentInString(name), toCreate);
+        bindComponent(name, toCreate, context);
     }
 
-    private void bindComponent(String name, Object component) {
+    private void bindComponent(String name, Object component, TestContext context) {
         if (component instanceof ReferenceResolverAware referenceResolverAware) {
             referenceResolverAware.setReferenceResolver(referenceResolver);
         }
 
-        PropertyUtils.configure(name, component, referenceResolver);
+        String resolvedName = context.replaceDynamicContentInString(name);
+        PropertyUtils.configure(resolvedName, component, referenceResolver);
 
         if (component instanceof InitializingPhase initializingBean) {
-            initializingBean.initialize();
+            initializingBean.initialize(context);
         }
 
         if (referenceResolver instanceof CamelReferenceResolver camelReferenceResolver) {
-            camelReferenceResolver.bind(name, component);
+            camelReferenceResolver.bind(resolvedName, component);
         } else {
-            camelContext.getRegistry().bind(name, component);
-            referenceResolver.bind(name, component);
+            camelContext.getRegistry().bind(resolvedName, component);
+            referenceResolver.bind(resolvedName, component);
         }
     }
 

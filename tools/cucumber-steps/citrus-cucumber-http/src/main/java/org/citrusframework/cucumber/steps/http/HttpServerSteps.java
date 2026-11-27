@@ -464,7 +464,7 @@ public class HttpServerSteps implements HttpSteps {
         if ("basic".equals(authMethod)) {
             try {
                 SecurityHandlerFactory securityHandlerFactory = basicAuthSecurityHandler();
-                securityHandlerFactory.initialize();
+                securityHandlerFactory.initialize(context);
                 httpServer.setSecurityHandler(securityHandlerFactory.getObject());
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to configure basic auth on server", e);
@@ -474,7 +474,7 @@ public class HttpServerSteps implements HttpSteps {
         }
 
         citrus.getCitrusContext().getReferenceResolver().bind(serverName, httpServer);
-        httpServer.initialize();
+        httpServer.initialize(context);
 
         return httpServer;
     }

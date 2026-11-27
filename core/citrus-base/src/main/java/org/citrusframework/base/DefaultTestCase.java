@@ -516,7 +516,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 context.getReferenceResolver().bind(endpoint.getName(), endpoint);
 
                 if (endpoint instanceof InitializingPhase initializingEndpoint) {
-                    initializingEndpoint.initialize();
+                    initializingEndpoint.initialize(context);
                 }
 
                 endpoint.exposeConnectionSettings(context);

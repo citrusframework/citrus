@@ -38,4 +38,16 @@ public class CreateEndpointActionTest extends UnitTestSupport {
 
         createEndpointAction.execute(context);
     }
+
+	@Test
+	public void testCreateFromUriWithVariables() {
+		context.setVariable("queueName", "resolvedQueue");
+
+		CreateEndpointAction createEndpointAction = new CreateEndpointAction.Builder()
+                .endpointName("myEndpoint")
+                .uri("direct?queueName=${queueName}")
+                .build();
+
+		createEndpointAction.execute(context);
+	}
 }

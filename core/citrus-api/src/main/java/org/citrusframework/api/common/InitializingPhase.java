@@ -16,6 +16,8 @@
 
 package org.citrusframework.api.common;
 
+import org.citrusframework.context.TestContext;
+
 @FunctionalInterface
 public interface InitializingPhase {
 
@@ -23,4 +25,16 @@ public interface InitializingPhase {
      * Initialize component.
      */
     void initialize();
+
+    /**
+     * Initialize component with given test context.
+     * The given test context is the context where the component is being created with.
+     * Test variables and other dynamic components may be resolved during initialization using this context.
+     * The initialization is only called once when the component is created.
+     * The default implementation delegates to the initialize logic without the test context but subclasses may add their own logic.
+     * @param context the context when the component is created.
+     */
+    default void initialize(TestContext context) {
+        initialize();
+    }
 }
