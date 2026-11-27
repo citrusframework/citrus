@@ -545,6 +545,62 @@ component provides some more customization possibilities when it comes to endpoi
 discussed in a separate section link:#endpoint-adapter[endpoint-adapter]. Up to now we keep it simple by synchronously receiving
 and sending messages in the test case.
 
+=== Dynamic port allocation
+
+When tests run in parallel or alongside other services a fixed port may cause conflicts.
+Set `port` to *0* and the embedded Jetty server will bind to a free ephemeral port.
+After startup Citrus automatically exposes two test variables:
+
+* `{serverName}.port` -- the actual port the server is listening on
+* `{serverName}.url` -- the base URL including context path (`http://localhost:<port><contextPath>`)
+
+These variables are available before the first test action runs, so you can pass them to the system under test.
+
+.YAML
+[source,yaml,indent=0,role="primary"]
+----
+endpoints:
+  - http:
+      server:
+        name: probe
+        port: 0
+        autoStart: true
+actions:
+  - echo:
+      message: "Server listening on ${probe.url}"
+  - http:
+      client: "http://localhost:${probe.port}"
+      sendRequest:
+        fork: true
+        POST:
+          body:
+            data: hello
+  - http:
+      server: probe
+      receiveRequest:
+        POST:
+          body:
+            data: hello
+  - http:
+      server: probe
+      sendResponse:
+        response:
+          status: "200"
+----
+
+.Java
+[source,java,indent=0,role="secondary"]
+----
+HttpServer server = new HttpServerBuilder()
+    .port(0)
+    .autoStart(true)
+    .name("probe")
+    .build();
+
+// after startup:
+int port = server.getPort(); // resolved ephemeral port
+----
+
 TIP: The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored
 too internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by
 purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}*

@@ -139,6 +139,8 @@ public class Catalog {
             String module = Optional.ofNullable(schemaType).map(SchemaType::module).filter(moduleName -> !moduleName.isBlank()).orElse("citrus-base");
             String description = Optional.ofNullable(schemaType).map(SchemaType::description).filter(text -> !text.isBlank()).orElse(null);
 
+            List<TestVariableEntry> testVariables = extractTestVariables(builder.getValue().getClass());
+
             catalog.put(builder.getKey().replaceAll("\\.", "-"),
                     new CatalogEntry(SchemaProperty.Kind.ENDPOINT.getCatalogKind(),
                             CitrusVersion.version(),
@@ -147,7 +149,8 @@ public class Catalog {
                             module,
                             "%s%s".formatted(StringUtils.convertFirstCharToUpperCase(group), StringUtils.convertFirstCharToUpperCase(name)),
                             description,
-                            jsonSchema));
+                            jsonSchema,
+                            testVariables));
         }
 
         return catalog;

@@ -94,6 +94,8 @@ public class CreateEndpointAction extends AbstractTestAction {
                 if (endpoint instanceof InitializingPhase initializingPhase) {
                     initializingPhase.initialize();
                 }
+
+                endpoint.exposeConnectionSettings(context);
             }
         }
     }
