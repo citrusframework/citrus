@@ -21,9 +21,14 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
+import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Sequence;
+import org.citrusframework.container.SequenceAfterTest;
+import org.citrusframework.container.SequenceBeforeTest;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.log.LogColors;
 import org.citrusframework.report.LoggingReporter;
@@ -32,6 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -48,9 +54,11 @@ import static org.citrusframework.util.ReflectionHelper.setField;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Isolated("Replaces LoggingReporter's static logger and resets its static banner flag")
 @ExtendWith(MockitoExtension.class)
@@ -255,6 +263,137 @@ public class LoggingReporterTest {
 
         TestResults testResults = new TestResults();
         fixture.generate(testResults);
+    }
+
+    @Test
+    public void testLoggingReporterBeforeAndAfterTestSequences() {
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.getTestListeners().addTestListener(fixture);
+        context.getTestActionListeners().addTestActionListener(fixture);
+
+        context.getBeforeTest().add(SequenceBeforeTest.Builder.beforeTest()
+                .name("beforeCommon")
+                .actions(namedAction("create-variables"), new EchoAction.Builder().build())
+                .build());
+        context.getBeforeTest().add(SequenceBeforeTest.Builder.beforeTest()
+                .name("skippedBefore")
+                .onTests("Unmatched*")
+                .actions(new EchoAction.Builder().build())
+                .build());
+        context.getAfterTest().add(SequenceAfterTest.Builder.afterTest()
+                .name("afterCommon")
+                .actions(namedAction("purge-endpoint"))
+                .build());
+
+        test.execute(context);
+        test.finish(context);
+
+        InOrder ordered = inOrder(logger);
+        ordered.verify(logger).info("➤ TEST START: SampleIT (org.citrusframework.sample)");
+        ordered.verify(logger).info("➤ before test (beforeCommon)");
+        ordered.verify(logger).info("  ✔ create-variables");
+        ordered.verify(logger).info("  ✔ echo");
+        ordered.verify(logger).info("");
+        ordered.verify(logger).info("✔ echo");
+        ordered.verify(logger).info(argThat(line -> line.startsWith("✔ TEST SUCCESS: SampleIT")));
+        ordered.verify(logger).info("➤ after test (afterCommon)");
+        ordered.verify(logger).info("  ✔ purge-endpoint");
+
+        verify(logger, never()).info("➤ before test (skippedBefore)");
+        verify(logger, never()).debug(anyString());
+    }
+
+    @Test
+    public void testLoggingReporterBeforeAndAfterTestFailures() {
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.getTestListeners().addTestListener(fixture);
+        context.getTestActionListeners().addTestActionListener(fixture);
+
+        context.getBeforeTest().add(SequenceBeforeTest.Builder.beforeTest()
+                .name("beforeFail")
+                .actions(namedAction("create-variables"), failingAction("failingSetup", "Setup failed"))
+                .build());
+        context.getAfterTest().add(SequenceAfterTest.Builder.afterTest()
+                .name("afterCleanup")
+                .actions(failingAction("failingCleanup", "Cleanup failed"))
+                .build());
+
+        try {
+            test.execute(context);
+        } catch (CitrusRuntimeException expected) {
+            // Expected failure in before-test sequence
+        } finally {
+            test.finish(context);
+        }
+
+        verify(logger).info("➤ before test (beforeFail)");
+        verify(logger).info("  ✔ create-variables");
+        verify(logger).info("  ✘ failingSetup");
+        verify(logger).info("      CitrusRuntimeException: Setup failed");
+        verify(logger).info("➤ after test (afterCleanup)");
+        verify(logger).info("  ✘ failingCleanup");
+        verify(logger).info("      CitrusRuntimeException: Cleanup failed");
+    }
+
+    @Test
+    public void testLoggingReporterNestedContainerDebugLogging() {
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.getTestListeners().addTestListener(fixture);
+        context.getTestActionListeners().addTestActionListener(fixture);
+
+        DefaultTestCase containerTest = new DefaultTestCase();
+        containerTest.setName("ContainerIT");
+        containerTest.setPackageName("org.citrusframework.sample");
+        containerTest.addTestAction(Sequence.Builder.sequential().actions(new EchoAction.Builder().build()).build());
+
+        when(logger.isDebugEnabled()).thenReturn(false);
+        containerTest.execute(context);
+        containerTest.finish(context);
+
+        verify(logger).info("➤ sequential - container with (1) embedded actions");
+        verify(logger).info("✔ sequential");
+        verify(logger, never()).info("  ✔ echo");
+        verify(logger, never()).debug(anyString());
+
+        clearInvocations(logger);
+        when(logger.isDebugEnabled()).thenReturn(true);
+
+        DefaultTestCase debugTest = new DefaultTestCase();
+        debugTest.setName("ContainerDebugIT");
+        debugTest.setPackageName("org.citrusframework.sample");
+        debugTest.addTestAction(Sequence.Builder.sequential().actions(new EchoAction.Builder().build()).build());
+
+        debugTest.execute(context);
+        debugTest.finish(context);
+
+        verify(logger).debug("  ➤ echo");
+        verify(logger).debug("  ✔ echo");
+        verify(logger, never()).info("  ✔ echo");
+    }
+
+    private static AbstractTestAction namedAction(String name) {
+        return new AbstractTestAction() {
+            {
+                setName(name);
+            }
+
+            @Override
+            public void doExecute(TestContext context) {
+            }
+        };
+    }
+
+    private static AbstractTestAction failingAction(String name, String message) {
+        return new AbstractTestAction() {
+            {
+                setName(name);
+            }
+
+            @Override
+            public void doExecute(TestContext context) {
+                throw new CitrusRuntimeException(message);
+            }
+        };
     }
 
     @AfterEach

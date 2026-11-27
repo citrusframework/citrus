@@ -20,6 +20,8 @@ import java.io.StringWriter;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
+import org.citrusframework.api.container.TestActionContainer;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.report.OutputStreamReporter;
 import org.citrusframework.base.report.TestFlowReporter;
 import org.citrusframework.report.TestResults;
@@ -91,6 +93,12 @@ public class AgentTestListener extends OutputStreamReporter {
     }
 
     @Override
+    public void onTestActionStart(TestCase testCase, TestAction testAction) {
+        testFlowReporter.onTestActionStart(testCase, testAction);
+        super.onTestActionStart(testCase, testAction);
+    }
+
+    @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         testFlowReporter.onTestActionFinish(testCase, testAction);
         super.onTestActionFinish(testCase, testAction);
@@ -103,9 +111,75 @@ public class AgentTestListener extends OutputStreamReporter {
     }
 
     @Override
+    public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
+        testFlowReporter.onTestActionSkipped(testCase, testAction);
+        super.onTestActionSkipped(testCase, testAction);
+    }
+
+    @Override
+    public void onNestedActionStart(TestActionContainer container, TestAction action, TestContext context) {
+        testFlowReporter.onNestedActionStart(container, action, context);
+        super.onNestedActionStart(container, action, context);
+    }
+
+    @Override
+    public void onNestedActionSuccess(TestActionContainer container, TestAction action, TestContext context) {
+        testFlowReporter.onNestedActionSuccess(container, action, context);
+        super.onNestedActionSuccess(container, action, context);
+    }
+
+    @Override
+    public void onNestedActionFailed(TestActionContainer container, TestAction action, TestContext context, Throwable cause) {
+        testFlowReporter.onNestedActionFailed(container, action, context, cause);
+        super.onNestedActionFailed(container, action, context, cause);
+    }
+
+    @Override
+    public void onNestedActionSkipped(TestActionContainer container, TestAction action, TestContext context) {
+        testFlowReporter.onNestedActionSkipped(container, action, context);
+        super.onNestedActionSkipped(container, action, context);
+    }
+
+    @Override
     public void onTestStart(TestCase test) {
         testFlowReporter.onTestSuccess(test);
         super.onTestStart(test);
+    }
+
+    @Override
+    public void onBeforeTestStart(TestCase test) {
+        testFlowReporter.onBeforeTestStart(test);
+        super.onBeforeTestStart(test);
+    }
+
+    @Override
+    public void onBeforeTestEnd(TestCase test) {
+        testFlowReporter.onBeforeTestEnd(test);
+        super.onBeforeTestEnd(test);
+    }
+
+    @Override
+    public void onAfterTestStart(TestCase test) {
+        testFlowReporter.onAfterTestStart(test);
+        super.onAfterTestStart(test);
+    }
+
+    @Override
+    public void onAfterTestEnd(TestCase test) {
+        testFlowReporter.onAfterTestEnd(test);
+        super.onAfterTestEnd(test);
+    }
+
+    @Override
+    public void onFinalActionsStart(TestCase test) {
+        testFlowReporter.onFinalActionsStart(test);
+        super.onFinalActionsStart(test);
+    }
+
+    @Override
+    public void onFinalActionsEnd(TestCase test) {
+        testFlowReporter.onFinalActionsEnd(test);
+        super.onFinalActionsEnd(test);
     }
 
     @Override
@@ -127,6 +201,12 @@ public class AgentTestListener extends OutputStreamReporter {
         pending.addResult(test.getTestResult());
         testFlowReporter.onTestSkipped(test);
         super.onTestSkipped(test);
+    }
+
+    @Override
+    public void onTestEnd(TestCase test) {
+        testFlowReporter.onTestEnd(test);
+        super.onTestEnd(test);
     }
 
     public void reset() {

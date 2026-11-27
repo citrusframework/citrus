@@ -29,12 +29,15 @@ import java.util.Optional;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestResult;
+import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.base.DefaultTestCase;
 import org.citrusframework.container.Iterate;
 import org.citrusframework.container.Sequence;
+import org.citrusframework.container.SequenceAfterTest;
+import org.citrusframework.container.SequenceBeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -1279,6 +1282,217 @@ public class TestFlowReporterTest {
             restoreProperty(REPORT_DIRECTORY_PROPERTY, previousReportDirectory);
             restoreProperty(REPORT_HISTORY_PROPERTY, previousHistory);
         }
+    }
+
+    @Test
+    public void shouldGetJsonReportWithBeforeAndAfterTestSequences() {
+        TestFlowReporter reporter = new TestFlowReporter();
+        TestResults results = new TestResults();
+        TestResult result = TestResult.success("fooTest", "FooTest");
+        result.withDuration(Duration.ofSeconds(2));
+        results.addResult(result);
+
+        when(test.getName()).thenReturn("fooTest");
+        when(test.getTestResult()).thenReturn(result);
+        when(test.getActionIndex(echo)).thenReturn(0);
+
+        when(sequence.getName()).thenReturn("sequence");
+        when(sequence.getExecutedActions()).thenReturn(List.of(echo));
+        when(sequence.getActionIndex(echo)).thenReturn(0);
+
+        SequenceBeforeTest beforeTest = SequenceBeforeTest.Builder.beforeTest().name("beforeCommon").build();
+        SequenceAfterTest afterTest = SequenceAfterTest.Builder.afterTest().name("afterCommon").build();
+        TestContext context = TestContextFactory.newInstance().getObject();
+
+        reporter.onTestStart(test);
+        reporter.onBeforeTestStart(test);
+        reporter.onNestedActionSuccess(beforeTest, send, context);
+        reporter.onNestedActionSuccess(beforeTest, sequence, context);
+        reporter.onBeforeTestEnd(test);
+
+        reporter.onTestActionStart(test, echo);
+        reporter.onTestActionFinish(test, echo);
+        reporter.onTestSuccess(test);
+
+        reporter.onAfterTestStart(test);
+        reporter.onNestedActionSuccess(afterTest, send, context);
+        reporter.onNestedActionFailed(afterTest, receive, context, new CitrusRuntimeException("Failed to purge endpoint"));
+        reporter.onAfterTestEnd(test);
+        reporter.onTestEnd(test);
+
+        reporter.generate(results);
+        assertThat(reporter.getJsonReport()).isEqualToNormalizingNewlines("""
+        [
+          {
+            "name": "fooTest",
+            "result": {
+              "name": "fooTest",
+              "className": "FooTest",
+              "result": "SUCCESS",
+              "duration": 2000
+            },
+            "beforeTest": [
+              {
+                "name": "send",
+                "path": "beforeTest.0.send"
+              },
+              {
+                "name": "sequence",
+                "path": "beforeTest.1.sequence",
+                "actions": [
+                  {
+                    "name": "echo",
+                    "path": "beforeTest.1.sequence.actions.0.echo"
+                  }
+                ]
+              }
+            ],
+            "actions": [
+              {
+                "name": "echo",
+                "path": "actions.0.echo"
+              }
+            ],
+            "afterTest": [
+              {
+                "name": "send",
+                "path": "afterTest.0.send"
+              },
+              {
+                "name": "receive",
+                "path": "afterTest.1.receive",
+                "error": "Failed to purge endpoint"
+              }
+            ]
+          }
+        ]""");
+    }
+
+    @Test
+    public void shouldGetYamlReportWithBeforeAndAfterTestSequences() {
+        TestFlowReporter reporter = new TestFlowReporter();
+        TestResults results = new TestResults();
+        TestResult result = TestResult.success("fooTest", "FooTest");
+        result.withDuration(Duration.ofSeconds(2));
+        results.addResult(result);
+
+        when(test.getName()).thenReturn("fooTest");
+        when(test.getTestResult()).thenReturn(result);
+        when(test.getActionIndex(echo)).thenReturn(0);
+
+        SequenceBeforeTest beforeTest = SequenceBeforeTest.Builder.beforeTest().name("beforeCommon").build();
+        SequenceAfterTest afterTest = SequenceAfterTest.Builder.afterTest().name("afterCommon").build();
+        TestContext context = TestContextFactory.newInstance().getObject();
+
+        reporter.onTestStart(test);
+        reporter.onBeforeTestStart(test);
+        reporter.onNestedActionSuccess(beforeTest, echo, context);
+        reporter.onBeforeTestEnd(test);
+
+        reporter.onTestActionStart(test, echo);
+        reporter.onTestActionFinish(test, echo);
+        reporter.onTestSuccess(test);
+
+        reporter.onAfterTestStart(test);
+        reporter.onNestedActionSuccess(afterTest, send, context);
+        reporter.onNestedActionFailed(afterTest, receive, context, new CitrusRuntimeException("Failed to purge endpoint"));
+        reporter.onAfterTestEnd(test);
+        reporter.onTestEnd(test);
+
+        reporter.generate(results);
+        Assertions.assertEquals("""
+        - name: "fooTest"
+          result:
+            name: "fooTest"
+            className: "FooTest"
+            result: "SUCCESS"
+            duration: 2000
+          beforeTest:
+          - name: "echo"
+            path: "beforeTest.0.echo"
+          actions:
+          - name: "echo"
+            path: "actions.0.echo"
+          afterTest:
+          - name: "send"
+            path: "afterTest.0.send"
+          - name: "receive"
+            path: "afterTest.1.receive"
+            error: |
+              Failed to purge endpoint
+        """, reporter.getYamlReport());
+    }
+
+    @Test
+    public void shouldReportBeforeAndAfterTestSequencesInDefaultTestCase() {
+        TestFlowReporter reporter = new TestFlowReporter();
+        TestContext context = TestContextFactory.newInstance().getObject();
+        context.getTestListeners().addTestListener(reporter);
+        context.getTestActionListeners().addTestActionListener(reporter);
+
+        context.getBeforeTest().add(SequenceBeforeTest.Builder.beforeTest()
+                .name("beforeCommon")
+                .actions(namedNoopAction("create-variables"), Sequence.Builder.sequential().actions(new EchoAction.Builder().build()).build())
+                .build());
+        context.getBeforeTest().add(SequenceBeforeTest.Builder.beforeTest()
+                .name("skippedBefore")
+                .onTests("Unmatched*")
+                .actions(namedNoopAction("ignored-action"))
+                .build());
+        context.getAfterTest().add(SequenceAfterTest.Builder.afterTest()
+                .name("afterCommon")
+                .actions(namedNoopAction("purge-endpoint"), failingAction("cleanup-error", "Cleanup failed"))
+                .build());
+
+        DefaultTestCase testCase = new DefaultTestCase();
+        testCase.setName("fooTest");
+        testCase.addTestAction(new EchoAction.Builder().build());
+
+        testCase.execute(context);
+        testCase.finish(context);
+
+        assertThat(reporter.getJsonReport())
+                .contains("\"beforeTest\": [")
+                .contains("\"path\": \"beforeTest.0.create-variables\"")
+                .contains("\"path\": \"beforeTest.1.sequential.actions.0.echo\"")
+                .contains("\"path\": \"actions.0.echo\"")
+                .contains("\"afterTest\": [")
+                .contains("\"path\": \"afterTest.0.purge-endpoint\"")
+                .contains("\"path\": \"afterTest.1.cleanup-error\"")
+                .contains("\"error\": \"Cleanup failed\"")
+                .doesNotContain("ignored-action");
+
+        assertThat(reporter.getYamlReport())
+                .contains("beforeTest:")
+                .contains("path: \"beforeTest.0.create-variables\"")
+                .contains("afterTest:")
+                .contains("path: \"afterTest.0.purge-endpoint\"")
+                .contains("Cleanup failed");
+    }
+
+    private static AbstractTestAction namedNoopAction(String name) {
+        return new AbstractTestAction() {
+            {
+                setName(name);
+            }
+
+            @Override
+            public void doExecute(TestContext context) {
+            }
+        };
+    }
+
+    private static AbstractTestAction failingAction(String name, String error) {
+        return new AbstractTestAction() {
+            {
+                setName(name);
+            }
+
+            @Override
+            public void doExecute(TestContext context) {
+                throw new CitrusRuntimeException(error);
+            }
+        };
     }
 
     private void generateReportForSuccessfulTest(TestFlowReporter reporter, String testName) {

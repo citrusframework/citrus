@@ -28,6 +28,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestResult;
 import org.citrusframework.api.common.Described;
 import org.citrusframework.api.common.ShutdownPhase;
+import org.citrusframework.api.container.AfterTest;
+import org.citrusframework.api.container.BeforeTest;
 import org.citrusframework.api.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.log.CitrusLogSettings;
@@ -55,7 +57,7 @@ import static java.util.Objects.nonNull;
  * meaning that this class should primarily focus on logging operations and not extend beyond that functionality.
  */
 public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener,
-        TestListener, TestActionListener, ShutdownPhase {
+        TestListener, TestActionListener, TestActionContainerListener, ShutdownPhase {
 
     private static Logger logger = LoggerFactory.getLogger(LoggingReporter.class);
 
@@ -77,6 +79,8 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     private static final String ARROW_INBOUND = "←";
 
     private final boolean stackTraceOutputEnabled;
+
+    private final ThreadLocal<TestActionContainer> activeBoundaryContainer = new ThreadLocal<>();
 
     protected static void initialized(boolean value) {
         LoggingReporter.initialized.set(value);
@@ -205,6 +209,34 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     }
 
     @Override
+    public void onBeforeTestStart(TestCase test) {
+        activeBoundaryContainer.remove();
+    }
+
+    @Override
+    public void onBeforeTestEnd(TestCase test) {
+        if (activeBoundaryContainer.get() != null) {
+            activeBoundaryContainer.remove();
+            newLine();
+        }
+    }
+
+    @Override
+    public void onAfterTestStart(TestCase test) {
+        activeBoundaryContainer.remove();
+    }
+
+    @Override
+    public void onAfterTestEnd(TestCase test) {
+        activeBoundaryContainer.remove();
+    }
+
+    @Override
+    public void onTestEnd(TestCase test) {
+        activeBoundaryContainer.remove();
+    }
+
+    @Override
     public void onTestSuccess(TestCase test) {
         newLine();
         info(SINGLE_SEPARATOR);
@@ -311,50 +343,132 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
-        String actionName = resolveActionName(testAction);
-
-        if (testAction instanceof TestActionContainer container) {
-            // Containers like applied test behaviors only know their nested actions once they have run
-            String embedded = container.getActionCount() > 0 ? " with (" + container.getActionCount() + ") embedded actions" : "";
-            info(LogColors.start(INDICATOR_START) + " " + actionName + " - container" + embedded);
-        } else {
-            debug(LogColors.start(INDICATOR_START) + " " + actionName);
-        }
-
-        if (testAction instanceof Described described && (described.getDescription() != null && !described.getDescription().isEmpty())) {
-            debug("    " + LogColors.dim(described.getDescription()));
-        }
+        logActionStart("", testAction, true);
     }
 
     @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
-        String actionName = resolveActionName(testAction);
-
-        var duration = formatDuration(testCase);
-        String line = LogColors.success(INDICATOR_SUCCESS) + " " + actionName;
-        if (!duration.isEmpty()) {
-            line += LogColors.dim("  " + duration);
-        }
-        info(line);
+        logActionSuccess("", testCase, testAction, true);
     }
 
     @Override
     public void onTestActionFailed(TestCase testCase, TestAction testAction, Throwable cause) {
-        String actionName = resolveActionName(testAction);
-
-        var duration = formatDuration(testCase);
-        String line = LogColors.failed(INDICATOR_FAILED) + " " + actionName;
-        if (!duration.isEmpty()) {
-            line += LogColors.dim("  " + duration);
-        }
-        info(line);
-        info("    " + LogColors.failed(cause.getClass().getSimpleName() + ": " + cause.getMessage()));
+        logActionFailed("", testCase, testAction, cause, true);
     }
 
     @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         String actionName = resolveActionName(testAction);
         debug(LogColors.skipped(INDICATOR_SKIPPED) + " " + actionName);
+    }
+
+    @Override
+    public void onNestedActionStart(TestActionContainer container, TestAction action, TestContext context) {
+        boolean boundary = isBoundaryContainer(container);
+        if (boundary) {
+            ensureBoundarySectionHeader(container);
+        }
+        logActionStart("  ", action, boundary);
+    }
+
+    @Override
+    public void onNestedActionSuccess(TestActionContainer container, TestAction action, TestContext context) {
+        boolean boundary = isBoundaryContainer(container);
+        if (boundary) {
+            ensureBoundarySectionHeader(container);
+        }
+        logActionSuccess("  ", null, action, boundary);
+    }
+
+    @Override
+    public void onNestedActionFailed(TestActionContainer container, TestAction action, TestContext context, Throwable cause) {
+        boolean boundary = isBoundaryContainer(container);
+        if (boundary) {
+            ensureBoundarySectionHeader(container);
+        }
+        logActionFailed("  ", null, action, cause, boundary);
+    }
+
+    @Override
+    public void onNestedActionSkipped(TestActionContainer container, TestAction action, TestContext context) {
+        if (isDebugEnabled()) {
+            if (isBoundaryContainer(container)) {
+                ensureBoundarySectionHeader(container);
+            }
+            debug("  " + LogColors.skipped(INDICATOR_SKIPPED) + " " + resolveActionName(action));
+        }
+    }
+
+    private static boolean isBoundaryContainer(TestActionContainer container) {
+        return container instanceof BeforeTest || container instanceof AfterTest;
+    }
+
+    private void ensureBoundarySectionHeader(TestActionContainer container) {
+        if (activeBoundaryContainer.get() != container) {
+            activeBoundaryContainer.set(container);
+            String sectionType = container instanceof BeforeTest ? "before test" : "after test";
+            info(LogColors.start(INDICATOR_START) + " " + sectionType + " (" + resolveActionName(container) + ")");
+        }
+    }
+
+    private void logActionStart(String indent, TestAction testAction, boolean containerAsInfo) {
+        String actionName = resolveActionName(testAction);
+
+        if (testAction instanceof TestActionContainer container) {
+            // Containers like applied test behaviors only know their nested actions once they have run
+            String embedded = container.getActionCount() > 0 ? " with (" + container.getActionCount() + ") embedded actions" : "";
+            String line = indent + LogColors.start(INDICATOR_START) + " " + actionName + " - container" + embedded;
+            if (containerAsInfo) {
+                info(line);
+            } else {
+                debug(line);
+            }
+        } else {
+            debug(indent + LogColors.start(INDICATOR_START) + " " + actionName);
+        }
+
+        if (testAction instanceof Described described && (described.getDescription() != null && !described.getDescription().isEmpty())) {
+            debug(indent + "    " + LogColors.dim(described.getDescription()));
+        }
+    }
+
+    private void logActionSuccess(String indent, TestCase testCase, TestAction testAction, boolean infoLevel) {
+        String actionName = resolveActionName(testAction);
+        String duration = testCase != null ? formatDuration(testCase) : "";
+        String line = indent + LogColors.success(INDICATOR_SUCCESS) + " " + actionName;
+        if (!duration.isEmpty()) {
+            line += LogColors.dim("  " + duration);
+        }
+
+        if (infoLevel) {
+            info(line);
+        } else {
+            debug(line);
+        }
+    }
+
+    private void logActionFailed(String indent, TestCase testCase, TestAction testAction, Throwable cause, boolean infoLevel) {
+        String actionName = resolveActionName(testAction);
+        String duration = testCase != null ? formatDuration(testCase) : "";
+        String line = indent + LogColors.failed(INDICATOR_FAILED) + " " + actionName;
+        if (!duration.isEmpty()) {
+            line += LogColors.dim("  " + duration);
+        }
+        String causeLine = cause != null
+                ? indent + "    " + LogColors.failed(cause.getClass().getSimpleName() + ": " + cause.getMessage())
+                : null;
+
+        if (infoLevel) {
+            info(line);
+            if (causeLine != null) {
+                info(causeLine);
+            }
+        } else {
+            debug(line);
+            if (causeLine != null) {
+                debug(causeLine);
+            }
+        }
     }
 
     @Override
