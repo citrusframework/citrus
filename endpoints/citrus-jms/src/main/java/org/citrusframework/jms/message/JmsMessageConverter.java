@@ -119,7 +119,7 @@ public class JmsMessageConverter implements MessageConverter<jakarta.jms.Message
                 return message;
             }
         } catch (JMSException e) {
-            throw new CitrusRuntimeException("Failed to convert jms message", e);
+            throw new CitrusRuntimeException("Failed to convert JMS message: %s - %s".formatted(e.getClass().getName(), e.getMessage()), e);
         }
     }
 
@@ -166,7 +166,7 @@ public class JmsMessageConverter implements MessageConverter<jakarta.jms.Message
 
             return jmsMessage;
         } catch (JMSException e) {
-            throw new CitrusRuntimeException("Failed to convert jms message", e);
+            throw new CitrusRuntimeException("Failed to convert JMS message: %s - %s".formatted(e.getClass().getName(), e.getMessage()), e);
         }
     }
 }

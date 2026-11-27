@@ -79,6 +79,7 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
         if (requestMessageConverters.isEmpty()) {
             requestMessageConverters.add(byteArrayHttpMessageConverter);
             requestMessageConverters.add(new StringHttpMessageConverter());
+            requestMessageConverters.add(new FormHttpMessageConverter());
             requestMessageConverters.add(new AllEncompassingFormHttpMessageConverter());
         }
 
@@ -87,6 +88,7 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
             StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter();
             stringHttpMessageConverter.setWriteAcceptCharset(false);
             responseMessageConverters.add(stringHttpMessageConverter);
+            responseMessageConverters.add(new FormHttpMessageConverter());
             responseMessageConverters.add(new AllEncompassingFormHttpMessageConverter());
         }
 
@@ -117,6 +119,8 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
             return ((ByteArrayHttpMessageConverter)delegate).read(byte[].class, inputMessage);
         } else if (delegate instanceof StringHttpMessageConverter) {
             return ((StringHttpMessageConverter)delegate).read(String.class, inputMessage);
+        } else if (delegate instanceof FormHttpMessageConverter) {
+            return ((FormHttpMessageConverter)delegate).read(MultiValueMap.class, inputMessage);
         } else {
             return delegate.read(null, inputMessage);
         }

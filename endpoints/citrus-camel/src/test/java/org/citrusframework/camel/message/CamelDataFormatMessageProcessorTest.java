@@ -77,7 +77,7 @@ public class CamelDataFormatMessageProcessorTest extends org.citrusframework.jun
                 .setHeader("operation", "sayHello");
         messageProcessor.process(in, context);
 
-        Assertions.assertEquals("Hello from Citrus!", in.getPayload(String.class));
+        Assertions.assertEquals("Hello from Citrus!", new String(in.getPayload(byte[].class)));
         Assertions.assertEquals("sayHello", in.getHeader("operation"));
     }
 }
