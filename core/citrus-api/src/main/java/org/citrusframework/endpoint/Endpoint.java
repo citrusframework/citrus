@@ -18,6 +18,7 @@ package org.citrusframework.endpoint;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.api.common.Named;
+import org.citrusframework.context.TestContext;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
 
@@ -64,4 +65,16 @@ public interface Endpoint extends Named {
      * @return
      */
     String getName();
+
+    /**
+     * Exposes connection settings such as dynamically resolved ports and URLs
+     * as test variables on the given context. Called after the endpoint is
+     * initialized and (if auto-started) running.
+     * <p>
+     * The default implementation does nothing. Endpoints that bind to a dynamic
+     * port (port 0) should override this to set variables like
+     * {@code <name>.port} and {@code <name>.url}.
+     */
+    default void exposeConnectionSettings(TestContext context) {
+    }
 }

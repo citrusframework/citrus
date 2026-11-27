@@ -518,6 +518,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 if (endpoint instanceof InitializingPhase initializingEndpoint) {
                     initializingEndpoint.initialize();
                 }
+
+                endpoint.exposeConnectionSettings(context);
             }
         }
     }

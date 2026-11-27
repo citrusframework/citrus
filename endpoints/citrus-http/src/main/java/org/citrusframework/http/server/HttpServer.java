@@ -31,6 +31,7 @@ import org.citrusframework.http.servlet.GzipServletFilter;
 import org.citrusframework.http.servlet.RequestCachingServletFilter;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.base.server.AbstractServer;
+import org.citrusframework.context.TestContext;
 import org.eclipse.jetty.ee11.servlet.FilterHolder;
 import org.eclipse.jetty.ee11.servlet.FilterMapping;
 import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
@@ -310,6 +311,17 @@ public class HttpServer extends AbstractServer {
                     .filter(interceptor -> !interceptor.hasMessageListeners())
                     .forEach(interceptor -> interceptor.setMessageListener(messageListeners));
         }
+    }
+
+    @Override
+    public void exposeConnectionSettings(TestContext context) {
+        context.setVariable(getName() + ".port", String.valueOf(port));
+
+        String baseUrl = "http://localhost:" + port;
+        if (!"/".equals(contextPath)) {
+            baseUrl += contextPath;
+        }
+        context.setVariable(getName() + ".url", baseUrl);
     }
 
     /**

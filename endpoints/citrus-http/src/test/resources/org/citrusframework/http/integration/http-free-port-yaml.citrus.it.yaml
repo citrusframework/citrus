@@ -1,0 +1,42 @@
+name: "HttpFreePortYamlIT"
+author: "Citrus"
+status: "FINAL"
+endpoints:
+  - http:
+      server:
+        name: probe
+        port: 0
+        autoStart: true
+        timeout: 5000
+actions:
+  - echo:
+      message: "Server port: ${probe.port}"
+  - echo:
+      message: "Server URL: ${probe.url}"
+  - http:
+      client: "http://localhost:${probe.port}"
+      sendRequest:
+        fork: true
+        POST:
+          body:
+            data: "hello"
+  - http:
+      server: probe
+      receiveRequest:
+        POST:
+          body:
+            data: "hello"
+  - http:
+      server: probe
+      sendResponse:
+        response:
+          status: "200"
+          body:
+            data: "ok"
+  - http:
+      client: "http://localhost:${probe.port}"
+      receiveResponse:
+        response:
+          status: "200"
+          body:
+            data: "ok"

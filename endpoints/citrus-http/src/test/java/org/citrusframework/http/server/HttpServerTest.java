@@ -248,6 +248,53 @@ public class HttpServerTest extends AbstractUnitTest {
     }
 
     @Test
+    public void testExposeConnectionSettings() {
+        TestContext testContext = testContextFactory.getObject();
+
+        HttpServer dynamicPortServer = new HttpServer();
+        dynamicPortServer.setName("probe");
+        dynamicPortServer.setPort(0);
+        dynamicPortServer.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
+        dynamicPortServer.setUseRootContextAsParent(true);
+        dynamicPortServer.setContextConfigLocation("classpath:org/citrusframework/http/HttpServerTest-http-servlet.xml");
+
+        try {
+            dynamicPortServer.startup();
+            dynamicPortServer.exposeConnectionSettings(testContext);
+
+            assertThat(testContext.getVariable("probe.port"))
+                    .isEqualTo(String.valueOf(dynamicPortServer.getPort()));
+            assertThat(testContext.getVariable("probe.url"))
+                    .isEqualTo("http://localhost:" + dynamicPortServer.getPort());
+        } finally {
+            dynamicPortServer.shutdown();
+        }
+    }
+
+    @Test
+    public void testExposeConnectionSettingsWithContextPath() {
+        TestContext testContext = testContextFactory.getObject();
+
+        HttpServer dynamicPortServer = new HttpServer();
+        dynamicPortServer.setName("probe");
+        dynamicPortServer.setPort(0);
+        dynamicPortServer.setContextPath("/api");
+        dynamicPortServer.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
+        dynamicPortServer.setUseRootContextAsParent(true);
+        dynamicPortServer.setContextConfigLocation("classpath:org/citrusframework/http/HttpServerTest-http-servlet.xml");
+
+        try {
+            dynamicPortServer.startup();
+            dynamicPortServer.exposeConnectionSettings(testContext);
+
+            assertThat(testContext.getVariable("probe.url"))
+                    .isEqualTo("http://localhost:" + dynamicPortServer.getPort() + "/api");
+        } finally {
+            dynamicPortServer.shutdown();
+        }
+    }
+
+    @Test
     public void testHttpResponseErrorHandlerWithPropagateStrategy() {
         TestContext context = testContextFactory.getObject();
 
