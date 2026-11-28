@@ -62,7 +62,7 @@ public class CitrusSchemaGenerator {
                 throw new RuntimeException("Failed to create output directory: " + outputDir);
             }
 
-            String version = args.length > 1 ? args[1] : "5.3.0-SNAPSHOT";
+            String version = args.length > 1 ? args[1] : "5.2.1";
             if (!StringUtils.hasText(version)) {
                 throw new CitrusRuntimeException(
                         "Unable to resolve Citrus version for catalog generation. Ensure META-INF/citrus.version is on the classpath.");
