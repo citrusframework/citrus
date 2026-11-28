@@ -20,6 +20,7 @@ import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusContextProvider;
 import org.citrusframework.spring.config.CitrusSpringConfig;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -36,29 +37,41 @@ public class CitrusSpringContextProvider implements CitrusContextProvider {
     private static CitrusSpringContext context;
 
     private final ApplicationContext applicationContext;
+    private final boolean ownsApplicationContext;
 
     public CitrusSpringContextProvider() {
         this.applicationContext = null;
+        this.ownsApplicationContext = true;
     }
 
     public CitrusSpringContextProvider(Class<? extends CitrusSpringConfig> configClass) {
-        this(new AnnotationConfigApplicationContext(configClass));
+        this.applicationContext = new AnnotationConfigApplicationContext(configClass);
+        this.ownsApplicationContext = true;
     }
 
     public CitrusSpringContextProvider(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+        this.ownsApplicationContext = false;
     }
 
     @Override
     public CitrusContext create() {
-        if (applicationContext == null) {
-            context = CitrusSpringContext.create();
-        } else if (context == null) {
-            context = CitrusSpringContext.create(applicationContext);
-        } else if (!context.getApplicationContext().equals(applicationContext)) {
-            context = CitrusSpringContext.create(applicationContext);
-        }
+        synchronized (CitrusSpringContextProvider.class) {
+            if (applicationContext == null) {
+                context = CitrusSpringContext.create();
+            } else if (ownsApplicationContext) {
+                context = new CitrusSpringContext.Builder()
+                        .withApplicationContext(applicationContext)
+                        .ownsApplicationContext(true)
+                        .build();
+            } else if (context == null
+                    || !context.getApplicationContext().equals(applicationContext)
+                    || (context.getApplicationContext() instanceof ConfigurableApplicationContext configurableApplicationContext
+                        && !configurableApplicationContext.isActive())) {
+                context = CitrusSpringContext.create(applicationContext);
+            }
 
-        return context;
+            return context;
+        }
     }
 }

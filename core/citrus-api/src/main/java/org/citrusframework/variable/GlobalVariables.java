@@ -16,6 +16,7 @@
 
 package org.citrusframework.variable;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class GlobalVariables {
 	 * Fluent builder.
 	 */
 	public static class Builder {
-		private final Map<String, Object> variables = new LinkedHashMap<>();
+		private final Map<String, Object> variables = Collections.synchronizedMap(new LinkedHashMap<>());
 
 		public Builder variable(String name, Object value) {
 			this.variables.put(name, value);
@@ -55,7 +56,9 @@ public class GlobalVariables {
 		}
 
 		public Builder variables(Map<String, Object> variables) {
-			this.variables.putAll(variables);
+			synchronized (variables) {
+				this.variables.putAll(variables);
+			}
 			return this;
 		}
 

@@ -18,9 +18,12 @@ package org.citrusframework.base;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.citrusframework.CitrusContext;
 import org.citrusframework.base.annotations.CitrusAnnotations;
@@ -126,22 +129,26 @@ public class DefaultCitrusContext implements CitrusContext {
 
     @Override
     public void parseConfiguration(Class<?> configClass) {
-        if (configurationClasses.contains(configClass)) {
-            return;
-        }
+        synchronized (configurationClasses) {
+            if (configurationClasses.contains(configClass)) {
+                return;
+            }
 
-        configurationClasses.add(configClass);
-        CitrusAnnotations.parseConfiguration(configClass, this);
+            configurationClasses.add(configClass);
+            CitrusAnnotations.parseConfiguration(configClass, this);
+        }
     }
 
     @Override
     public void parseConfiguration(Object configuration) {
-        if (configurationClasses.contains(configuration.getClass())) {
-            return;
-        }
+        synchronized (configurationClasses) {
+            if (configurationClasses.contains(configuration.getClass())) {
+                return;
+            }
 
-        configurationClasses.add(configuration.getClass());
-        CitrusAnnotations.parseConfiguration(configuration, this);
+            configurationClasses.add(configuration.getClass());
+            CitrusAnnotations.parseConfiguration(configuration, this);
+        }
     }
 
     @Override
@@ -400,9 +407,14 @@ public class DefaultCitrusContext implements CitrusContext {
             }
 
             if (component instanceof GlobalVariables vars) {
-                globalVariables.getVariables().putAll(vars.getVariables());
+                Map<String, Object> sourceVariables = vars.getVariables();
+                Map<String, Object> snapshot;
+                synchronized (sourceVariables) {
+                    snapshot = new LinkedHashMap<>(sourceVariables);
+                }
+                globalVariables.getVariables().putAll(snapshot);
                 if (!globalVariables.equals(testContextFactory.getGlobalVariables())) {
-                    testContextFactory.getGlobalVariables().getVariables().putAll(vars.getVariables());
+                    testContextFactory.getGlobalVariables().getVariables().putAll(snapshot);
                 }
             }
         }
@@ -418,8 +430,8 @@ public class DefaultCitrusContext implements CitrusContext {
         private TestActionListeners testActionListeners = new TestActionListeners();
         private TestReporters testReporters = new DefaultTestReporters();
 
-        private final List<BeforeSuite> beforeSuite = new ArrayList<>();
-        private final List<AfterSuite> afterSuite = new ArrayList<>();
+        private final List<BeforeSuite> beforeSuite = new CopyOnWriteArrayList<>();
+        private final List<AfterSuite> afterSuite = new CopyOnWriteArrayList<>();
 
         private FunctionRegistry functionRegistry = new DefaultFunctionRegistry();
         private ValidationMatcherRegistry validationMatcherRegistry = new DefaultValidationMatcherRegistry();

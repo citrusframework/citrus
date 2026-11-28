@@ -16,9 +16,9 @@
 
 package org.citrusframework.message;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.citrusframework.Scoped;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -30,7 +30,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  */
 public class MessageProcessors {
 
-    private List<MessageProcessor> messageProcessors = new ArrayList<>();
+    private List<MessageProcessor> messageProcessors = new CopyOnWriteArrayList<>();
 
     /**
      * Sets the messageProcessors property.
@@ -38,7 +38,7 @@ public class MessageProcessors {
      * @param messageProcessors
      */
     public void setMessageProcessors(List<MessageProcessor> messageProcessors) {
-        this.messageProcessors = messageProcessors;
+        this.messageProcessors = messageProcessors != null ? new CopyOnWriteArrayList<>(messageProcessors) : null;
     }
 
     /**

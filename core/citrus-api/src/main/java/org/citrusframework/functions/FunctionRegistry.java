@@ -16,9 +16,9 @@
 
 package org.citrusframework.functions;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchFunctionLibraryException;
@@ -30,7 +30,7 @@ import org.citrusframework.exceptions.NoSuchFunctionLibraryException;
 public class FunctionRegistry {
 
     /** list of libraries providing custom functions */
-    private List<FunctionLibrary> functionLibraries = new ArrayList<>();
+    private List<FunctionLibrary> functionLibraries = new CopyOnWriteArrayList<>();
 
     /**
      * Check if variable expression is a custom function.
@@ -87,7 +87,7 @@ public class FunctionRegistry {
     /**
      * Adds given function library to this registry.
      */
-    public void addFunctionLibrary(FunctionLibrary functionLibrary) {
+    public synchronized void addFunctionLibrary(FunctionLibrary functionLibrary) {
         boolean prefixAlreadyUsed = this.functionLibraries.stream()
                 .anyMatch(lib -> lib.getPrefix().equals(functionLibrary.getPrefix()));
 
@@ -99,8 +99,8 @@ public class FunctionRegistry {
         this.functionLibraries.add(functionLibrary);
     }
 
-    public void setFunctionLibraries(List<FunctionLibrary> functionLibraries) {
-        this.functionLibraries = functionLibraries;
+    public synchronized void setFunctionLibraries(List<FunctionLibrary> functionLibraries) {
+        this.functionLibraries = functionLibraries != null ? new CopyOnWriteArrayList<>(functionLibraries) : null;
     }
 
     public List<FunctionLibrary> getFunctionLibraries() {
