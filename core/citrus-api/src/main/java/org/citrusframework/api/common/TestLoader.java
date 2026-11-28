@@ -16,6 +16,7 @@
 
 package org.citrusframework.api.common;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -76,6 +77,17 @@ public interface TestLoader {
      * @return
      */
     TestCase getTestCase();
+
+    /**
+     * Gets all test cases this loader has run, in execution order. A loader running a single test source
+     * returns a one-element list once the test case has been loaded, and an empty list before.
+     * Loaders that run several test cases (e.g. a multi-test source) return all of them.
+     * @return the test cases run by this loader, never null.
+     * @since 5.3
+     */
+    default List<TestCase> getTestCases() {
+        return Optional.ofNullable(getTestCase()).map(List::of).orElseGet(List::of);
+    }
 
     /**
      * Resolves all available test loader from resource path lookup. Scans classpath for test loader meta information

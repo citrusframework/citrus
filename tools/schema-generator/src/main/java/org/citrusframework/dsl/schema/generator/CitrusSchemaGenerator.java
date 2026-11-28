@@ -42,6 +42,7 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 
 /**
@@ -50,6 +51,11 @@ import tools.jackson.databind.node.ObjectNode;
 public class CitrusSchemaGenerator {
 
     private static final String DEFINITIONS = "definitions";
+    private static final String REQUIRED = "required";
+    private static final String PROPERTIES = "properties";
+    private static final String ANY_OF = "anyOf";
+    private static final String NAME = "name";
+    private static final String TESTS = "tests";
     private static final String REF = "$ref";
     private static final String DEFINITION_REF_PREFIX = "#/definitions/";
     private static final String TEST_ACTIONS_DEFINITION = "TestActions";
@@ -87,6 +93,7 @@ public class CitrusSchemaGenerator {
 
             Catalog catalog = new Catalog();
             JsonNode jsonSchema = generateSchema(Test.class, catalog, new CitrusModule());
+            allowMultiTestRoot(jsonSchema);
             writeFile(versionWorkingDir, "citrus-testcase.json", jsonSchema.toString());
 
             String xsdSchema = FileUtils.readToString(Resources.fromClasspath("org/citrusframework/schema/xml/testcase/citrus-testcase.xsd"));
@@ -201,6 +208,42 @@ public class CitrusSchemaGenerator {
             objectNode.properties().forEach(entry -> collectGenericTestActionReferences(entry.getValue(), found));
         } else if (node.isArray()) {
             node.forEach(item -> collectGenericTestActionReferences(item, found));
+        }
+    }
+
+    /**
+     * The test file root accepts a single test (requires name) and a multi-test file (requires tests). The root name
+     * stays optional when tests are present, so it falls back to the file name. Each form permits only its own
+     * root properties, while sharing the definitions for name, description and test actions.
+     */
+    static void allowMultiTestRoot(JsonNode jsonSchema) {
+        if (!(jsonSchema instanceof ObjectNode root) || !(root.path(REQUIRED) instanceof ArrayNode required)) {
+            return;
+        }
+
+        for (int i = required.size() - 1; i >= 0; i--) {
+            if (NAME.equals(required.get(i).asString(""))) {
+                required.remove(i);
+            }
+        }
+
+        if (required.isEmpty()) {
+            root.remove(REQUIRED);
+        }
+
+        ArrayNode anyOf = root.putArray(ANY_OF);
+        addRootVariant(anyOf, NAME, TESTS, "beforeAll", "beforeEach", "afterEach", "afterAll");
+        addRootVariant(anyOf, TESTS, "author", "status", "variables", "endpoints", "configuration", "actions", "finally");
+
+        ((ObjectNode) root.path(PROPERTIES).path(TESTS)).put("minItems", 1);
+    }
+
+    private static void addRootVariant(ArrayNode variants, String required, String... forbiddenProperties) {
+        ObjectNode variant = variants.addObject();
+        variant.putArray(REQUIRED).add(required);
+        ObjectNode properties = variant.putObject(PROPERTIES);
+        for (String property : forbiddenProperties) {
+            properties.put(property, false);
         }
     }
 

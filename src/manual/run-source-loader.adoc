@@ -97,6 +97,10 @@ How these test sources are reported depends on the test framework:
 * TestNG runs every loaded test source as a separate test invocation, so each source appears as its own test in the TestNG report.
 * JUnit Jupiter runs all sources declared on one annotated method as a single JUnit test. Each source still runs as its own Citrus test case and appears separately in the Citrus report. If any source fails, the JUnit test fails and the failure message names the failed sources.
 
+A YAML file that holds several tests (see link:#run-yaml-multiple-tests[Multiple tests in one file]) is one test source.
+All its tests run as part of the one TestNG invocation or JUnit test, and each of them appears separately in the Citrus report.
+When a test of the file fails, the TestNG invocation or JUnit test fails; with this file as the only source, the failure message names the failed tests.
+
 You can also mix the various `@CitrusTestSource` annotations in a single Java class.
 The class can have several methods with different annotations. Each annotated method represents one or more Citrus XML test cases.
 

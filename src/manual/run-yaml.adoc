@@ -42,6 +42,120 @@ actions:
       message: "${message}"
 ----
 
+[[run-yaml-multiple-tests]]
+=== Multiple tests in one file
+
+One YAML file can hold several tests that share their setup, for example a success path and some error paths of the same feature.
+A file whose root has a `tests` list is a multi-test file.
+The tests share their setup and teardown through four hooks, much like the `@BeforeAll`, `@BeforeEach`, `@AfterEach` and `@AfterAll` methods of a JUnit test class.
+
+.orders.citrus.it.yaml
+[source,yaml]
+----
+name: orders
+description: Order service tests
+beforeAll:
+  - createVariables:
+      variables:
+        - name: orderId
+          value: "1001"
+  - createEndpoint:
+      name: orderEndpoint
+      type: direct:multiOrders
+  - echo:
+      message: "Start order service"
+beforeEach:
+  - echo:
+      message: "Reset orders for ${citrus.test.name}"
+afterEach:
+  - echo:
+      message: "Clean up after ${citrus.test.name}"
+afterAll:
+  - echo:
+      message: "Stop order service"
+tests:
+  - name: createOrder_ok
+    description: Order is created
+    actions:
+      - send:
+          endpoint: orderEndpoint
+          message:
+            body:
+              data: "<order id=\"${orderId}\"/>"
+      - receive:
+          endpoint: orderEndpoint
+          message:
+            body:
+              data: "<order id=\"${orderId}\"/>"
+  - name: createOrder_otherId
+    variables:
+      - name: orderId
+        value: "1002"
+    actions:
+      - send:
+          endpoint: orderEndpoint
+          message:
+            body:
+              data: "<order id=\"${orderId}\"/>"
+      - receive:
+          endpoint: orderEndpoint
+          message:
+            body:
+              data: "<order id=\"1002\"/>"
+----
+
+The root of a multi-test file accepts these keys, all optional except `tests`:
+
+name:: The name of the file in reports and log messages. Defaults to the file name.
+description:: The description of the file.
+beforeAll:: Test actions that run once, before the first test.
+beforeEach:: Test actions that run at the start of every test.
+afterEach:: Test actions that run at the end of every test.
+afterAll:: Test actions that run once, after the last test.
+tests:: The tests. Each entry accepts the same keys as a single-test file (`name`, `description`, `author`, `status`, `variables`, `endpoints`, `configuration`, `actions` and `finally`) and needs a `name` that is unique in the file.
+
+As for all other keys, you can write the hooks in camelCase (`beforeAll`) or kebab-case (`before-all`).
+Use `createVariables` and `createEndpoint` in `beforeAll` for shared setup. Use `beforeEach` to set up each test separately.
+
+The tests of a file run one after another in the order they are declared, in this sequence:
+
+. `beforeAll`
+. for every test: its variables, beans and endpoints, the global before-test actions, `beforeEach`, its actions, its `finally` actions, `afterEach`, the cleanups of the test (for example auto-closed endpoints), the global after-test actions
+. `afterAll`, then the cleanups registered in the file context
+
+The tests of one file never run at the same time, even when the test runner runs tests in parallel.
+
+*Shared state.* Each test runs with its own test context.
+It starts with its own copy of the variables from `beforeAll`, such as the host and port of a container started by the hook.
+A variable that a test declares with the same name overrides the shared value for this test only.
+Variables that a test creates or changes are not visible to the next test or to `afterAll`.
+Inherited strings that contain variable references or function expressions can be evaluated again when each test starts.
+Objects such as lists or maps are shared by reference. Treat them as read-only in the tests.
+Endpoints and containers created by `beforeAll` can be used by all tests in the file.
+Each file invocation has its own registry for new bindings and can still look up resources registered by the host.
+With the default endpoint factory, different file invocations can reuse the same endpoint name for separate endpoints.
+Citrus waits for asynchronous `beforeAll` actions before starting the tests and for asynchronous `afterAll` actions before running file cleanups.
+
+*Failures.*
+
+* When `beforeAll` fails, none of the tests run: each test is reported as failed with an error that names the file and `beforeAll`. `afterAll` still runs.
+* When an action, `beforeEach` or `afterEach` fails, only this test fails. Its `finally` actions and `afterEach` still run, and the next test runs normally.
+* When `afterAll` fails, the results of the tests stay as they are, and one extra failed result named `<file name>.afterAll` is reported.
+* A file that has no test, a test without name, two tests with the same name, or a root key other than the ones listed above is rejected before anything runs, and reported as one failed test named after the file.
+
+*Disabled tests.* A test with `status: DISABLED` is skipped without its `beforeEach` and `afterEach`.
+When all tests in a file are disabled, Citrus skips `beforeAll` and `afterAll`.
+
+*Test parameters.* When a parameterized test or a data provider runs a multi-test file (see link:#run-yaml-data-driven[Data-driven tests]), every invocation runs the whole file.
+Citrus sets the parameters as variables before `beforeAll`, so every hook and test can use them.
+A value set by `beforeAll` overrides a parameter with the same name. A test's own definition takes precedence within that test.
+
+*Reporting.* The Citrus reports list every test of a multi-test file with its own result.
+How the test runner counts the tests depends on how the file is run:
+
+* `citrus run` (JBang), the Citrus main application, and a JUnit Jupiter `@CitrusTestFactory` that uses `packageScanNodes(...)` or `dynamicNodes(...)` (see link:#runtime-junit-jupiter[JUnit Jupiter]) show the file as one container with one test per test of the file.
+* A `@CitrusTestSource` method in JUnit Jupiter or TestNG, the TestNG engine, and the other `CitrusTestFactorySupport` methods run the whole file as one test. This test fails when any test of the file fails, and the failure message names the failed tests.
+
 [[run-yaml-bean-definitions]]
 === Bean definitions
 
@@ -478,6 +592,7 @@ IMPORTANT: JUnit resolves all parameters of a parameterized test method itself, 
 parameter cannot be injected on the method. Use field injection as shown above.
 
 The YAML file refers to the injected values as ordinary test variables.
+A multi-test file receives the values in all its tests and hooks, see link:#run-yaml-multiple-tests[Multiple tests in one file].
 
 .data-driven.citrus.it.yaml
 [source,yaml]

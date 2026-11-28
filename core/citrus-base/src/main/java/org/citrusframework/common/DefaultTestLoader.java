@@ -19,6 +19,7 @@ package org.citrusframework.common;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
@@ -28,6 +29,7 @@ import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.api.common.MultiTestRun;
 import org.citrusframework.api.common.TestLoader;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -62,6 +64,9 @@ public class DefaultTestLoader implements TestLoader {
 
     protected final List<Consumer<TestCase>> configurer = new ArrayList<>();
     protected final List<Consumer<TestCase>> handler = new ArrayList<>();
+
+    /** Test cases of a multi-test source run by this loader, null for a single-test source */
+    private List<TestCase> multiTestCases;
 
     /**
      * Default constructor for full control over the loader.
@@ -115,8 +120,104 @@ public class DefaultTestLoader implements TestLoader {
 
             throw new TestCaseFailedException(e);
         }  finally {
-            runner.stop();
+            if (multiTestCases == null) {
+                runner.stop();
+            }
         }
+    }
+
+    /**
+     * Runs all test cases of the given multi-test run in declaration order as part of this one load, then
+     * closes the run. The runner's own test case is not used. The loaded test case is the first failed test
+     * case (the failed afterAll result when only afterAll failed), else the last test case. The handlers are
+     * called once, only when all test cases passed.
+     * @param run the multi-test run to execute.
+     * @throws TestCaseFailedException when at least one test case or afterAll failed, naming all of them.
+     * @since 5.3
+     */
+    protected void runMultiTest(MultiTestRun run) {
+        multiTestCases = new ArrayList<>();
+
+        List<String> failed = new ArrayList<>();
+        RuntimeException firstFailure = null;
+        try {
+            for (int i = 0; i < run.getTestNames().size(); i++) {
+                try {
+                    run.runTest(i);
+                } catch (TestCaseFailedException e) {
+                    failed.add(run.getTestNames().get(i));
+                    if (firstFailure == null) {
+                        firstFailure = e;
+                    }
+                }
+            }
+        } finally {
+            try {
+                run.close();
+            } catch (CitrusRuntimeException e) {
+                failed.add(run.getName() + ".afterAll");
+                if (firstFailure == null) {
+                    firstFailure = e;
+                }
+            }
+
+            multiTestCases = run.getTestCases();
+        }
+
+        testCase = multiTestCases.stream()
+                .filter(it -> it.getTestResult() != null && it.getTestResult().isFailed())
+                .findFirst()
+                .orElseGet(() -> multiTestCases.isEmpty() ? runner.getTestCase() : multiTestCases.get(multiTestCases.size() - 1));
+
+        if (!failed.isEmpty()) {
+            throw new TestCaseFailedException(new CitrusRuntimeException("%d of %d tests in '%s' failed: %s"
+                    .formatted(failed.size(), run.getTestNames().size(), run.getName(), String.join(", ", failed)), firstFailure));
+        }
+
+        handler.forEach(it -> it.accept(testCase));
+    }
+
+    /**
+     * Creates the run of a multi-test source with this loader's test context, test identity and configurers.
+     * @param definition the first, validated parse of the source.
+     * @param parser supplies a new parse of the source for each test case.
+     * @return the multi-test run.
+     * @since 5.3
+     */
+    protected DefaultMultiTestRun createMultiTestRun(MultiTestDefinition definition, Supplier<MultiTestDefinition> parser) {
+        return new DefaultMultiTestRun(definition, parser, context, getOrCreateCitrusContext(), testClass, packageName, configurer);
+    }
+
+    /**
+     * Makes sure the loader has a test context without creating the test runner, so a multi-test source can be
+     * opened before or instead of {@link #load()}.
+     * @since 5.3
+     */
+    protected void initializeTestContext() {
+        if (context == null) {
+            context = getOrCreateCitrusContext().createTestContext();
+        }
+    }
+
+    private CitrusContext getOrCreateCitrusContext() {
+        if (citrusContext != null) {
+            return citrusContext;
+        }
+
+        if (citrus == null) {
+            throw new CitrusRuntimeException("Missing Citrus framework instance for loading test");
+        }
+
+        return citrus.getCitrusContext();
+    }
+
+    @Override
+    public List<TestCase> getTestCases() {
+        if (multiTestCases != null) {
+            return multiTestCases;
+        }
+
+        return TestLoader.super.getTestCases();
     }
 
     /**

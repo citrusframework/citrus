@@ -209,6 +209,10 @@ actions:
 citrus run my.citrus.it.yaml
 ----
 
+A YAML file can hold several tests (see link:#run-yaml-multiple-tests[Multiple tests in one file]).
+`citrus run` reports each of these tests on its own and counts each of them in the summary.
+The run exits with a non-zero status when any test fails, and also when the `afterAll` actions of a file fail.
+
 ==== Groovy test sources
 
 .Initialize my.citrus.it.groovy
